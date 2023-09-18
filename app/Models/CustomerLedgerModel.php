@@ -1,0 +1,167 @@
+<?php
+
+namespace App\Models;
+
+use CodeIgniter\Model;
+
+
+class CustomerLedgerModel extends Model
+{
+    protected $DBGroup          = 'default';
+    protected $table            = 'customer_ledgers';
+    protected $primaryKey       = 'id';
+    protected $useAutoIncrement = true;
+    protected $returnType       = 'object';
+    protected $useSoftDeletes   = false;
+    protected $protectFields    = true;
+    protected $allowedFields    = [
+        'tdate',
+        'store_id',
+        'sale_id',
+        'sales_return_id',
+        'customer_id',
+        'debit',
+        'credit',
+        'user_id',
+        'payment_type',
+        'ledger_type',
+        'store_closing_id',
+    ];
+
+    // Dates
+    protected $useTimestamps = false;
+    protected $dateFormat    = 'datetime';
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+    protected $deletedField  = 'deleted_at';
+
+    // Validation
+    protected $validationRules      = [];
+    protected $validationMessages   = [];
+    protected $skipValidation       = false;
+    protected $cleanValidationRules = true;
+
+    // Callbacks
+    protected $allowCallbacks = true;
+    protected $beforeInsert   = ['setDefaultId'];
+    protected $afterInsert    = [];
+    protected $beforeUpdate   = ['setDefaultId'];
+    protected $afterUpdate    = [];
+    protected $beforeFind     = [];
+    protected $afterFind      = ['setRelation'];
+    protected $beforeDelete   = [];
+    protected $afterDelete    = [];
+
+    protected function setDefaultId(array $data)
+    {
+        if (isset($data['data']['customer_id']) && empty($data['data']['customer_id']))
+            $data['data']['customer_id'] = NULL;
+
+        return $data;
+    }
+
+    protected function setRelation($model)
+    {
+        if ($model && $model['data']) {
+            $userModel = new UserModel();
+            $saleModel = new SalesModel();
+            $returnModel = new SalesReturnModel();
+            $cusModel = new CustomerModel();
+
+            if ($model['singleton']) {
+                $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
+                $model['data']->sale = $saleModel->where('id', $model['data']->sale_id)->first();
+                $model['data']->sales_return = $returnModel->where('id', $model['data']->sales_return_id)->first();
+                $model['data']->customer = $cusModel->where('id', $model['data']->customer_id)->first();
+            } else {
+                $bal = 0;
+
+                foreach (array_reverse($model['data'], true) as $key => $row) {
+                    $model['data'][$key]->user = $userModel->builder()->where('id', $row->user_id)->get()->getFirstRow();
+                    $model['data'][$key]->sale = $saleModel->builder()->where('id', $row->sale_id)->get()->getFirstRow();
+                    $model['data'][$key]->sales_return = $returnModel->builder()->where('id', $row->sales_return_id)->get()->getFirstRow();
+                    $model['data'][$key]->customer = $cusModel->builder()->where('id', $row->customer_id)->get()->getFirstRow();
+                    $bal +=  $model['data'][$key]->credit - $model['data'][$key]->debit;
+                    $model['data'][$key]->balance = $bal;
+                }
+            }
+        }
+        return $model;
+    }
+
+    public function getTodayTotalCredit($storeId = null): float
+    {
+        $builder = $this->builder();
+        $builder->selectSum('credit', 'total')
+            ->where('tdate', date('Y-m-d', time()));
+
+        if ($storeId) $builder->where('store_id', $storeId);
+        $total = $builder
+            ->get()
+            ->getFirstRow()
+            ->total;
+        return $total ? $total : 0.00;
+    }
+
+    public function getTodayTotalDebit(): float
+    {
+        $total = $this->builder()
+            ->selectSum('debit', 'total')
+            ->where('tdate', date('Y-m-d', time()))
+            ->get()
+            ->getFirstRow()
+            ->total;
+        return $total ? $total : 0.00;
+    }
+
+    public function makePayment($data)
+    {
+        $salesModel = new SalesModel();
+        $data['tdate'] = date('Y-m-d', strtotime($data['tdate']));
+        $where = [
+            'payment_status' => 'due',
+            'customer_id' => $data['customer_id'],
+            'store_id' =>  $data['store_id'],
+        ];
+        $sales = $salesModel->where($where)
+            ->orderBy('sales_date', 'asc')
+            ->findAll();
+
+        $ledgers = [];
+        $amount = $data['credit'];
+
+        foreach ($sales as $row) {
+            $due = $row->total_amount - $row->paid;
+            if ($due >= $amount) {
+                array_push($ledgers, array_merge($data, [
+                    'sale_id' => $row->id,
+                    'ledger_type' => $data['ledger_type'] ?? 'sales',
+                    'credit' => $amount,
+                    'store_id' => $row->store_id,
+                ]));
+                $amount = 0;
+                break;
+            } else {
+                array_push($ledgers, array_merge($data, [
+                    'sale_id' => $row->id,
+                    'ledger_type' => $data['ledger_type'] ?? 'sales',
+                    'credit' => $due,
+                    'store_id' => $row->store_id,
+                ]));
+            }
+            $amount -= $due;
+        }
+
+        if (sizeof($ledgers) > 0  && $this->insertBatch($ledgers)) {
+            foreach ($sales as $row)
+                $salesModel->updatePaymentStatus($row->id);
+
+            $message = $amount > 0 ? " Change of GHS " . number_format($amount, 2) : "";
+            return (object)[
+                'balance' => $amount,
+                'message' => $message
+            ];
+        }
+        return false;
+    }
+}

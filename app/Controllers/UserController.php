@@ -1,0 +1,234 @@
+<?php
+
+namespace App\Controllers;
+
+use App\Controllers\BaseController;
+use App\Models\StoreModel;
+use App\Models\UserModel;
+use App\Models\UserStoreModel;
+use CodeIgniter\Events\Events;
+use CodeIgniter\HTTP\Response;
+use CodeIgniter\Shield\Entities\User;
+
+class UserController extends BaseController
+{
+    /**
+     * return view for list
+     * @return Response - http response
+     */
+    public function index()
+    {
+        $data = [
+            'title' => 'User List',
+        ];
+        return view('pages/users/list_user', $data);
+    }
+
+    /**
+     * return view for edit
+     * @return Response - http response
+     */
+    public function edit($id = null)
+    {
+        $stores = (new UserModel())->getMyStores();
+
+        $data = [
+            'title' => 'Create User',
+            'stores' => $stores
+        ];
+
+        if ($id) {
+            $model = new UserModel();
+            $data = array_merge($data, [
+                'user' => $model->where('id', $id)->first(),
+                'title' => 'Edit User',
+            ]);
+        }
+        return view('pages/users/edit_user', $data);
+    }
+    /**
+     * return view for show
+     * @return Response - http response
+     */
+    public function show($id)
+    {
+
+        $data = [
+            'title' => 'User Details'
+        ];
+        $model = new UserModel();
+        $user = $model->find($id);
+        if ($user)
+            $data = array_merge($data, [
+                'user' => $user,
+            ]);
+
+        return view('pages/users/show_user', $data);
+    }
+
+    public function save()
+    {
+        $model = new UserModel();
+        $inputs = $this->request->getVar();
+        if (auth()->user())
+            $inputs['user_id'] = auth()->user()->id;
+
+        if (isset($inputs['email']) && empty($inputs['email']))
+            $inputs['email'] = null;
+
+        $id = $this->request->getPost('id');
+        $user = $model->where('id', $id)->first();
+
+        if ($user) {
+            if (!auth()->user()->can('users.edit'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to edit this record!"
+                ]);
+
+            if ($model->save($inputs)) {
+                if (isset($inputs['groups']))
+                    $user->syncGroups(...$inputs['groups']);
+
+                if ($user && isset($inputs['stores'])) {
+                    (new UserStoreModel())->where('user_id', $id)->delete();
+
+                    if (sizeof($inputs['stores']) > 0) (new UserStoreModel())->builder()->upsert(array_map(function ($item) use ($id) {
+                        return [
+                            'user_id' => $id,
+                            'store_id' => $item
+                        ];
+                    }, $inputs['stores']));
+                }
+
+                return $this->response->setJSON([
+                    'status' => true,
+                    'message' => "User updated successfully!",
+                    'data' => $model->find($id),
+                    'input' => $inputs,
+                ]);
+            }
+        } else {
+            if (!auth()->user()->can('users.create'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to create this record!"
+                ]);
+
+            $rules  = setting('Validation.registration');
+
+            if (!$this->validateData($inputs, $rules)) {
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => join(" and ", array_map(function ($error) {
+                        return $error;
+                    }, $this->validator->getErrors()))
+                ]);
+            }
+
+            $user = new User();
+            $user->fill($this->request->getPost(array_keys($rules)));
+
+            $model->save($user);
+            $id = $model->getInsertID();
+            $user = $model->findById($id);
+            if ($user && isset($inputs['stores']) && sizeof($inputs['stores']) > 0) {
+                (new UserStoreModel())->builder()->upsert(array_map(function ($store_id) use ($id) {
+                    return [
+                        'user_id' => $id,
+                        'store_id' => $store_id
+                    ];
+                }, $inputs['stores']));
+            }
+            $user->syncGroups(...$inputs['groups']);
+            Events::trigger('register', $user);
+
+            return $this->response->setJSON([
+                'status' => true,
+                'message' => "User created successfully!",
+                'input' => $inputs,
+                'data' => $user,
+            ]);
+        }
+    }
+    /**
+     * return json for savePermissions
+     * @return Response - http response
+     */
+    public function save_permissions($user_id = null)
+    {
+        $inputs = $this->request->getVar();
+        $model = new UserModel();
+        $user = $model->where('id', $user_id)->first();
+
+        if (!$user) return $this->response->setJSON(
+            [
+                'status' => false,
+                'message' => "No User Selected!",
+                'input' => $inputs,
+            ]
+        );
+
+        if (isset($inputs['permissions'])) {
+            $user->syncPermissions(...$inputs['permissions']);
+            return $this->response->setJSON(
+                [
+                    'status' => true,
+                    'data' => $user->getPermissions(),
+                    'message' => "Permission Saved Successfully!",
+                    'input' => $inputs,
+                ]
+            );
+        } else {
+            return $this->response->setJSON(
+                [
+                    'status' => false,
+                    'message' => "No Permissions Selected!",
+                    'input' => $inputs,
+                ]
+            );
+        }
+    }
+
+    /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new UserModel();
+        $model->select('users.*');
+        $model->join('auth_groups_users', 'auth_groups_users.user_id=users.id', 'left');
+        $model->whereNotIn('group', ['developer']);
+        $model->groupBy('users.id');
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+    /**
+     * return json for delete
+     * @return Response - http response
+     */
+    public function delete($id = null)
+    {
+        if (!auth()->user()->can('users.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
+        $model = new UserModel();
+        if ($model->delete($id, true)) {
+            $res = [
+                'status' => true,
+                'message' => "User deleted successfully!",
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'message' => "Couldn't be deleted!"
+            ];
+        }
+        return $this->response->setJSON($res);
+    }
+}
