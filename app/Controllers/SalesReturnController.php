@@ -1,0 +1,280 @@
+<?php
+
+namespace App\Controllers;
+
+use App\Controllers\BaseController;
+use App\Models\CustomerLedgerModel;
+use App\Models\SalesModel;
+use App\Models\SalesReturnItemModel;
+use App\Models\SalesReturnModel;
+use App\Models\StockModel;
+use App\Models\UserModel;
+use CodeIgniter\Database\Exceptions\DatabaseException;
+use CodeIgniter\HTTP\Response;
+use Config\Database;
+
+class SalesReturnController extends BaseController
+{
+    /**
+     * return view for list
+     * @return Response - http response
+     */
+    public function index()
+    {
+        $stores = (new UserModel())->getMyStores();
+
+        $data = [
+            'title' => 'Sales Return List',
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
+            'stores' => $stores,
+        ];
+        return view('pages/sales_returns/list_sales_return', $data);
+    }
+
+    /**
+     * return view for edit
+     * @return Response - http response
+     */
+    public function edit()
+    {
+        $invoice = $this->request->getVar('invoice');
+        $model = new SalesReturnModel();
+        $saleModel = new SalesModel();
+        $lastItem = $model->where('return_date', date('Y-m-d', time()))->orderBy('id', 'desc')->first();
+        $invoiceNo = $lastItem ? intval($lastItem->invoice) + 1 : (date('y',time())+1).date('md', time()) . str_pad('1', 4, '0', STR_PAD_LEFT);
+
+        $stores = (new UserModel())->getMyStores();
+
+        $data = [
+            'title' => 'Create Sales Return',
+            'invoice' => $invoiceNo,
+            'stores' => $stores,
+        ];
+        $whereInvoice = [
+            'invoice' => $invoice,
+            'order_status' => 'completed'
+        ];
+        $sales = $saleModel->where($whereInvoice)->first();
+        if ($invoice && $sales) {
+            $data = array_merge($data, ['sales' => $sales]);
+        } else if ($invoice) {
+            $data = array_merge($data, ['error' => "This invoice doesn't exist or not completed!",]);
+        }
+        return view('pages/sales_returns/edit_sales_return', $data);
+    }
+
+    /**
+     * return view for show
+     * @return Response - http response
+     */
+    public function show($id)
+    {
+        $data = [
+            'title' => 'Sales Return Details'
+        ];
+        $model = new SalesReturnModel();
+        $data = array_merge($data, [
+            'return' => $model->find($id),
+        ]);
+
+        return view('pages/sales_returns/invoice', $data);
+    }
+
+    /**
+     * return json for save
+     * @return Response - http response
+     */
+    public function save()
+    {
+        if (!auth()->user()->can('sales-returns.create'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to create this record!"
+            ]);
+
+        $model = new SalesReturnModel();
+        $returnItemModel = new SalesReturnItemModel();
+        $stockModel = new StockModel();
+        $ledger = new CustomerLedgerModel();
+
+        $inputs = $this->request->getVar();
+        if (auth()->user())
+            $inputs['user_id'] = (auth()->user()->id ?? 0);
+        $inputs['return_date'] = date('Y-m-d', strtotime($inputs['return_date']));
+        $lastItem = $model->where('return_date', $inputs['return_date'])->orderBy('id', 'desc')->first();
+        $inputs['invoice'] = $lastItem ? intval($lastItem->invoice) + 1 :(date('y',strtotime($inputs['return_date']))+1).date('md', strtotime($inputs['return_date'])) . str_pad('1', 4, '0', STR_PAD_LEFT);
+        $items = $this->request->getVar('items');
+        if (!$items) return $this->response->setJSON(
+            [
+                'status' => false,
+                'data' => null,
+                'message' => "No product selected!",
+                'input' => $inputs,
+            ]
+        );
+        $id = $this->request->getPost('id');
+
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => "Sales couldn't be save!",
+            'input' => $inputs,
+        ];
+        $this->db = Database::connect();
+
+        $res = array_merge($res, ['message' => "Sales Returns created successfully!"]);
+
+        try {
+            $this->db->transException(true)->transStart();
+            $saved = $model->save($inputs, true);
+            if ($saved) {
+                $id = $model->getInsertID();
+                $returnItems = [];
+                $builder = $stockModel->builder();
+                foreach ($items as $k => $row) {
+                    $items[$k]['sales_return_id'] = $id;
+
+                    array_push($returnItems, $items[$k]);
+                    $stockWhere = [
+                        'product_id' => $items[$k]['product_id'],
+                        'store_id' => $items[$k]['store_id']
+                    ];
+
+                    if ($builder->where($stockWhere)->get()->getRowObject()) {
+                        $builder->set('instock', '(instock + ' . $items[$k]['qty'] . ')', false)
+                            ->set('updated_at', date('Y-m-d H:i:s'))
+                            ->update(null, $stockWhere);
+                    } else {
+                        $builder->insert([
+                            'product_id' => $items[$k]['product_id'],
+                            'store_id' =>  $items[$k]['store_id'],
+                            'instock' => $items[$k]['qty']
+                        ]);
+                    }
+                }
+                $returnItemModel->insertBatch($returnItems);
+                if ($inputs['customer_id']) {
+                    $data = [
+                        'tdate' => $inputs['return_date'],
+                        'customer_id' => $inputs['customer_id'],
+                        'sale_id' => $inputs['sale_id'],
+                        'store_id' => $inputs['store_id'],
+                        'sales_return_id' => $id,
+                        'payment_type' => 'cash',
+                        'ledger_type' => 'returns',
+                        'credit' => $inputs['total_amount'] - $inputs['paid'],
+                        'debit' => 0,
+                        'user_id' => isset($inputs['user_id']) ? $inputs['user_id'] : null,
+                    ];
+                    $ledger->makePayment($data);
+                }
+            }
+            $this->db->transComplete();
+        } catch (DatabaseException $e) {
+            $res = array_merge($res, [
+                'message' => $e->getMessage(),
+            ]);
+            return $this->response->setJSON($res);
+        }
+        if ($this->db->transStatus()) {
+            $returns = $model->find($id);
+            $res = array_merge($res, [
+                'status' => true,
+                'data' => $returns,
+                'receipt' => view('pages/sales_returns/pos_receipt', ['returns' => $returns])
+            ]);
+        } else {
+            $res = array_merge($res, ['status' => false]);
+        }
+        return $this->response->setJSON($res);
+    }
+
+    /**
+     * return json for receipt
+     */
+    public function print($id): Response
+    {
+        $model = new SalesReturnModel();
+        $return = $model->where('id', $id)->first();
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => "Invoice not found!",
+        ];
+        if ($return) {
+            $res = array_merge($res, [
+                'status' => true,
+                'data' => $return,
+                'receipt' =>  view('pages/sales_returns/pos_receipt', ['returns' => $return]),
+                'message' => "Invoice found!",
+            ]);
+        }
+        return $this->response->setJSON($res);
+    }
+
+
+    /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new SalesReturnModel();
+        $model->select('sales_returns.*');
+        $model->join('sales', 'sales.id=sales_returns.sale_id');
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+    /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function stock_report_datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new SalesReturnModel();
+        $builder = $model->builder();
+        $builder->select('sales_returns.*, sales.customer_id')
+            ->selectSum('sales_returns_items.qty', 'qty')
+            ->join('sales_returns_items', 'sales_returns_items.sales_return_id=sales_returns.id')
+            ->join('sales', 'sales.id=sales_returns.sale_id')
+            ->where('product_id', $inputs['product_id'] ?? '')
+            ->where('sales_returns.order_status', 'completed')
+            ->groupBy('sales_returns.id');
+
+        return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) {
+            $item->customer = model('CustomerModel')->where('id', $item->customer_id)->first();
+            $item->store = model('StoreModel')->where('id', $item->store_id)->first();
+            return $item;
+        }));
+    }
+
+    /**
+     * return json for delete
+     * @return Response - http response
+     */
+    public function delete($id = null)
+    {
+        if (!auth()->user()->can('sales-returns.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
+        $model = new SalesReturnModel();
+        if ($model->delete($id)) {
+            $res = [
+                'status' => true,
+                'message' => "Sales Return deleted successfully!",
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'message' => "Couldn't be deleted!"
+            ];
+        }
+        return $this->response->setJSON($res);
+    }
+}

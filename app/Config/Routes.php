@@ -1,0 +1,325 @@
+<?php
+
+use App\Controllers\AccountController;
+use App\Controllers\AdjustmentController;
+use App\Controllers\BrandController;
+use App\Controllers\CategoryController;
+use App\Controllers\ClosingController;
+use App\Controllers\CustomerController;
+use App\Controllers\CustomerLedgerController;
+use App\Controllers\ExpenseCategoryController;
+use App\Controllers\ExpenseController;
+use App\Controllers\ExpenseSubCategoryController;
+use App\Controllers\ImportController;
+use App\Controllers\InventoryController;
+use App\Controllers\ProductController;
+use App\Controllers\ProductTransferController;
+use App\Controllers\ProductUnitTransferController;
+use App\Controllers\PurchaseController;
+use App\Controllers\PurchaseReturnController;
+use App\Controllers\QuoteController;
+use App\Controllers\SalesController;
+use App\Controllers\SalesReturnController;
+use App\Controllers\SettingController;
+use App\Controllers\StoreController;
+use App\Controllers\StoreLedgerController;
+use App\Controllers\SupplierController;
+use App\Controllers\SupplierLedgerController;
+use App\Controllers\TaxController;
+use App\Controllers\UnitController;
+use App\Controllers\UserController;
+use CodeIgniter\Router\RouteCollection;
+
+/**
+ * @var RouteCollection $routes
+ */
+$routes->get('/', 'DashboardController::index');
+$routes->get('products/search', 'ProductController::search');
+$routes->get('products/sales/search', 'ProductController::sale_search');
+$routes->get('products/purchases/search', 'ProductController::purchase_search');
+$routes->group('settings', static function (RouteCollection $routes) {
+    $routes->post('/', [SettingController::class, 'save_settings']);
+    $routes->post('context', [SettingController::class, 'save_context_settings']);
+    $routes->get('general', [SettingController::class, 'general']);
+    $routes->get('group-permissions/(:any)', [SettingController::class, 'group_permissions/$1']);
+    $routes->get('groups', [SettingController::class, 'groups']);
+    $routes->delete('groups/(:any)', [SettingController::class, 'delete_group/$1']);
+    $routes->post('group-permissions', [SettingController::class, 'save_permissions']);
+    $routes->post('groups', [SettingController::class, 'save_group']);
+    $routes->post('taxes', [TaxController::class, 'save']);
+    $routes->get('taxes', [TaxController::class, 'index']);
+    $routes->get('taxes/datatable', [TaxController::class, 'datatable']);
+    $routes->delete('taxes/(:num)', [TaxController::class, 'delete']);
+});
+
+$routes->group('reports', static function (RouteCollection $routes) {
+    $routes->get('closing', [ClosingController::class, 'report'],['filter' => 'permission:closing.report']);
+    $routes->get('sales', [SalesController::class, 'daily_report'],['filter' => 'permission:sales.report']);
+    $routes->get('sales/print', [SalesController::class, 'daily_report_print']);
+    $routes->get('purchases', [PurchaseController::class, 'daily_report'],['filter' => 'permission:purchases.report']);
+    $routes->get('purchases/print', [PurchaseController::class, 'daily_report_print']);
+    $routes->get('stocks', [InventoryController::class, 'stock_report'],['filter' => 'permission:stocks.report']);
+    $routes->get('stocks/product/(:num)', [InventoryController::class, 'view_stock_report'],['filter' => 'permission:stocks.report']);
+    $routes->get('stocks/datatable', [InventoryController::class, 'stock_report_datatable'],['filter' => 'permission:stocks.report']);
+    $routes->get('ledgers/customers', [CustomerLedgerController::class, 'customer_reports'],['filter' => 'permission:customer-ledgers.report']);
+    $routes->get('debts/customers', [CustomerLedgerController::class, 'customer_debt_reports'],['filter' => 'permission:customer-ledgers.report']);
+    $routes->get('ledgers/customers/datatable', [CustomerLedgerController::class, 'report_datatable'],['filter' => 'permission:customer-ledgers.report']);
+    $routes->get('debts/customers/datatable', [CustomerLedgerController::class, 'debt_report_datatable'],['filter' => 'permission:customer-ledgers.report']);
+    $routes->get('ledgers/suppliers', [SupplierLedgerController::class, 'supplier_reports'],['filter' => 'permission:supplier-ledgers.report']);
+    $routes->get('debts/suppliers', [SupplierLedgerController::class, 'supplier_debt_reports'],['filter' => 'permission:supplier-ledgers.report']);
+    $routes->get('ledgers/suppliers/datatable', [SupplierLedgerController::class, 'report_datatable'],['filter' => 'permission:supplier-ledgers.report']);
+    $routes->get('debts/suppliers/datatable', [SupplierLedgerController::class, 'debt_report_datatable'],['filter' => 'permission:supplier-ledgers.report']);
+});
+
+$routes->group('reports/overdue', static function (RouteCollection $routes) {
+    $routes->get('sales', [SalesController::class, 'overdue_report']);
+    $routes->get('sales/datatable', [SalesController::class, 'overdue_datatable']);
+    $routes->get('purchases', [PurchaseController::class, 'overdue_report']);
+});
+
+
+$routes->group('print', static function (RouteCollection $routes) {
+    $routes->get('sales/(:num)', [SalesController::class, 'print/$1']);
+    $routes->get('purchases/(:num)', [PurchaseController::class, 'print/$1']);
+    $routes->get('sales/returns/(:num)', [SalesReturnController::class, 'print/$1']);
+    $routes->get('purchases/returns/(:num)', [PurchaseReturnController::class, 'print/$1']);
+    $routes->get('adjustments/(:num)', [SalesController::class, 'print/$1']);
+    $routes->get('transfers/products/(:num)', [ProductTransferController::class, 'print/$1']);
+    $routes->get('closing/(:num)', [ClosingController::class, 'print/$1']);
+});
+
+//indexs
+$routes->get('users', [UserController::class, 'index'], ['filter' => 'permission:users.view']);
+$routes->get('account/profile', [AccountController::class, 'profile']);
+$routes->get('account/settings', [AccountController::class, 'settings']);
+$routes->get('adjustments', [AdjustmentController::class, 'index'], ['filter' => 'permission:adjustments.view']);
+$routes->get('brands', [BrandController::class, 'index'], ['filter' => 'permission:brands.view']);
+$routes->get('categories', [CategoryController::class, 'index'], ['filter' => 'permission:categories.view']);
+$routes->get('customers', [CustomerController::class, 'index'], ['filter' => 'permission:customers.view']);
+$routes->get('account-debts/customers', [CustomerLedgerController::class, 'customer_debts'], ['filter' => 'permission:customer-ledgers.view']);
+$routes->get('expenses/categories', [ExpenseCategoryController::class, 'index'], ['filter' => 'permission:expense-categories.view']);
+$routes->get('expenses/subcategories', [ExpenseSubCategoryController::class, 'index'], ['filter' => 'permission:expense-categories.view']);
+$routes->get('expenses', [ExpenseController::class, 'index'], ['filter' => 'permission:expenses.view']);
+$routes->get('products', [ProductController::class, 'index'], ['filter' => 'permission:products.view']);
+$routes->get('inventory/short-stocks', [InventoryController::class, 'short_stocks'], ['filter' => 'permission:stocks.view']);
+$routes->get('inventory/instocks', [InventoryController::class, 'instocks'], ['filter' => 'permission:stocks.view']);
+$routes->get('inventory/outofstocks', [InventoryController::class, 'outofstocks'], ['filter' => 'permission:stocks.view']);
+$routes->get('transfers/products', [ProductTransferController::class, 'index'], ['filter' => 'permission:product-transfers.view']);
+$routes->get('transfers/units', [ProductUnitTransferController::class, 'index'], ['filter' => 'permission:unit-transfers.view']);
+$routes->get('purchases', [PurchaseController::class, 'index'], ['filter' => 'permission:purchases.view']);
+$routes->get('purchases/returns', [PurchaseReturnController::class, 'index'], ['filter' => 'permission:purchase-returns.view']);
+$routes->get('quotes', [QuoteController::class, 'index'], ['filter' => 'permission:quotes.view']);
+$routes->get('sales', [SalesController::class, 'index'], ['filter' => 'permission:sales.view']);
+$routes->get('sales/returns', [SalesReturnController::class, 'index'], ['filter' => 'permission:sales-returns.view']);
+$routes->get('stores', [StoreController::class, 'index'], ['filter' => 'permission:stores.view']);
+$routes->get('suppliers', [SupplierController::class, 'index'], ['filter' => 'permission:suppliers.view']);
+$routes->get('account-debts/suppliers', [SupplierLedgerController::class, 'supplier_debts'], ['filter' => 'permission:supplier-ledgers.view']);
+$routes->get('units', [UnitController::class, 'index'], ['filter' => 'permission:units.view']);
+$routes->get('taxes', [TaxController::class, 'index']);
+$routes->get('closing', [ClosingController::class, 'index'], ['filter' => 'permission:closing.view']);
+
+//shows
+$routes->get('users/(:num)', [UserController::class, 'show/$1'], ['filter' => 'permission:users.view']);
+$routes->get('adjustments/(:num)', [AdjustmentController::class, 'show/$1'], ['filter' => 'permission:adjustments.view']);
+$routes->get('customers/(:num)', [CustomerController::class, 'show/$1'], ['filter' => 'permission:customers.view']);
+$routes->get('products/(:num)', [ProductController::class, 'show/$1'], ['filter' => 'permission:products.view']);
+$routes->get('transfers/products/(:num)', [ProductTransferController::class, 'show/$1'], ['filter' => 'permission:product-transfers.view']);
+$routes->get('transfers/units/(:num)', [ProductUnitTransferController::class, 'show/$1'], ['filter' => 'permission:unit-transfers.view']);
+$routes->get('purchases/(:num)', [PurchaseController::class, 'show/$1'], ['filter' => 'permission:purchases.view']);
+$routes->get('purchases/returns/(:num)', [PurchaseReturnController::class, 'show/$1'], ['filter' => 'permission:purchase-returns.view']);
+$routes->get('quotes/(:num)', [QuoteController::class, 'show/$1'], ['filter' => 'permission:quotes.view']);
+$routes->get('sales/(:num)', [SalesController::class, 'show/$1'], ['filter' => 'permission:sales.view']);
+$routes->get('sales/returns/(:num)', [SalesReturnController::class, 'show/$1'], ['filter' => 'permission:sales-returns.view']);
+$routes->get('stores/(:num)', [StoreController::class, 'show/$1'], ['filter' => 'permission:stores.view']);
+$routes->get('suppliers/(:num)', [SupplierController::class, 'show/$1'], ['filter' => 'permission:suppliers.view']);
+$routes->get('closing/(:num)', [ClosingController::class, 'show/$1'], ['filter' => 'permission:closing.view']);
+
+//edit
+$routes->get('users/edit/(:num)', [UserController::class, 'edit/$1'],['filter'=>'permission:users.edit']);
+$routes->get('adjustments/edit/(:num)', [AdjustmentController::class, 'edit/$1'],['filter'=>'permission:adjustments.edit']);
+$routes->get('brands/edit/(:num)', [BrandController::class, 'edit/$1'],['filter'=>'permission:brands.edit']);
+$routes->get('categories/edit/(:num)', [CategoryController::class, 'edit/$1'],['filter'=>'permission:categories.edit']);
+$routes->get('customers/edit/(:num)', [CustomerController::class, 'edit/$1'],['filter'=>'permission:customers.edit']);
+$routes->get('expenses/categories/edit/(:num)', [ExpenseCategoryController::class, 'edit/$1'],['filter'=>'permission:expense-categories.edit']);
+$routes->get('expenses/subcategories/edit/(:num)', [ExpenseSubCategoryController::class, 'edit/$1'],['filter'=>'permission:expense-categories.edit']);
+$routes->get('expenses/edit/(:num)', [ExpenseController::class, 'edit/$1'],['filter'=>'permission:expenses.edit']);
+$routes->get('products/edit/(:num)', [ProductController::class, 'edit/$1'],['filter'=>'permission:products.edit']);
+$routes->get('purchases/edit/(:num)', [PurchaseController::class, 'edit/$1'],['filter'=>'permission:purchases.edit']);
+$routes->get('quotes/edit/(:num)', [QuoteController::class, 'edit/$1'],['filter'=>'permission:quotes.edit']);
+$routes->get('sales/pos/(:num)', [SalesController::class, 'pos/$1'],['filter'=>'permission:sales.edit']);
+$routes->get('stores/edit/(:num)', [StoreController::class, 'edit/$1'],['filter'=>'permission:stores.edit']);
+$routes->get('suppliers/edit/(:num)', [SupplierController::class, 'edit/$1'],['filter'=>'permission:suppliers.edit']);
+$routes->get('units/edit/(:num)', [UnitController::class, 'edit/$1'],['filter'=>'permission:units.edit']);
+
+//create
+$routes->get('users/create', [UserController::class, 'edit'],['filter'=>'permission:users.create']);
+$routes->get('adjustments/create', [AdjustmentController::class, 'edit'],['filter'=>'permission:adjustments.create']);
+$routes->get('brands/create', [BrandController::class, 'edit'],['filter'=>'permission:brands.create']);
+$routes->get('categories/create', [CategoryController::class, 'edit'],['filter'=>'permission:categories.create']);
+$routes->get('customers/create', [CustomerController::class, 'edit'],['filter'=>'permission:customers.create']);
+$routes->get('expenses/categories/create', [ExpenseCategoryController::class, 'edit'],['filter'=>'permission:expense-categories.create']);
+$routes->get('expenses/subcategories/create', [ExpenseSubCategoryController::class, 'edit'],['filter'=>'permission:expense-categories.create']);
+$routes->get('expenses/create', [ExpenseController::class, 'edit'],['filter'=>'permission:expenses.create']);
+$routes->get('products/create', [ProductController::class, 'edit'],['filter'=>'permission:products.create']);
+$routes->get('transfers/products/create', [ProductTransferController::class, 'edit'],['filter'=>'permission:product-transfers.create']);
+$routes->get('transfers/units/create', [ProductUnitTransferController::class, 'edit'],['filter'=>'permission:unit-transfers.create']);
+$routes->get('purchases/create', [PurchaseController::class, 'edit'],['filter'=>'permission:purchases.create']);
+$routes->get('purchases/returns/create', [PurchaseReturnController::class, 'edit'],['filter'=>'permission:purchase-returns.create']);
+$routes->get('quotes/create', [QuoteController::class, 'edit'],['filter'=>'permission:quotes.create']);
+$routes->get('sales/pos', [SalesController::class, 'pos'],['filter'=>'permission:sales.create']);
+$routes->get('sales/returns/create', [SalesReturnController::class, 'edit'],['filter'=>'permission:sales-returns.create']);
+$routes->get('stores/create', [StoreController::class, 'edit'],['filter'=>'permission:stores.create']);
+$routes->get('suppliers/create', [SupplierController::class, 'edit'],['filter'=>'permission:suppliers.create']);
+$routes->get('units/create', [UnitController::class, 'edit'],['filter'=>'permission:units.create']);
+$routes->get('products/import', [ImportController::class, 'index'],['filter'=>'permission:imports.create']);
+$routes->get('closing/store', [ClosingController::class, 'store'],['filter'=>'permission:closing.create']);
+$routes->get('cashup', [StoreLedgerController::class, 'edit'],['filter'=>'permission:cashup.create']);
+
+//datatables
+$routes->get('users/datatable', [UserController::class, 'datatable']);
+$routes->get('adjustments/datatable', [AdjustmentController::class, 'datatable']);
+$routes->get('adjustments/reports/datatable', [AdjustmentController::class, 'stock_report_datatable']);
+$routes->get('brands/datatable', [BrandController::class, 'datatable']);
+$routes->get('categories/datatable', [CategoryController::class, 'datatable']);
+$routes->get('customers/datatable', [CustomerController::class, 'datatable']);
+$routes->get('customers/ledger/datatable', [CustomerLedgerController::class, 'datatable']);
+$routes->get('customers/debtors/datatable', [CustomerLedgerController::class, 'debtors_datatable']);
+$routes->get('expenses/categories/datatable', [ExpenseCategoryController::class, 'datatable']);
+$routes->get('expenses/subcategories/datatable', [ExpenseSubCategoryController::class, 'datatable']);
+$routes->get('expenses/datatable', [ExpenseController::class, 'datatable']);
+$routes->get('products/datatable', [ProductController::class, 'datatable']);
+$routes->get('products/expired/datatable', [ProductController::class, 'expired_datatable']);
+$routes->get('instock/datatable', [InventoryController::class, 'instock_datatable']);
+$routes->get('short-stock/datatable', [InventoryController::class, 'short_stock_datatable']);
+$routes->get('outofstock/datatable', [InventoryController::class, 'outofstock_datatable']);
+$routes->get('transfers/products/datatable', [ProductTransferController::class, 'datatable']);
+$routes->get('transfers/products/reports/datatable', [ProductTransferController::class, 'stock_report_datatable']);
+$routes->get('transfers/units/datatable', [ProductUnitTransferController::class, 'datatable']);
+$routes->get('transfers/units/reports/datatable', [ProductUnitTransferController::class, 'stock_report_datatable']);
+$routes->get('purchases/datatable', [PurchaseController::class, 'datatable']);
+$routes->get('purchases/returns/datatable', [PurchaseReturnController::class, 'datatable']);
+$routes->get('purchases/stocks/datatable', [PurchaseController::class, 'stock_report_datatable']);
+$routes->get('purchases/returns/stocks/datatable', [PurchaseReturnController::class, 'stock_report_datatable']);
+$routes->get('quotes/datatable', [QuoteController::class, 'datatable']);
+$routes->get('quotes/stocks/datatable', [QuoteController::class, 'stock_report_datatable']);
+$routes->get('sales/datatable', [SalesController::class, 'datatable']);
+$routes->get('daily-sales/datatable', [SalesController::class, 'daily_datatable']);
+$routes->get('daily-purchases/datatable', [PurchaseController::class, 'daily_datatable']);
+$routes->get('sales/returns/datatable', [SalesReturnController::class, 'datatable']);
+$routes->get('sales/stocks/datatable', [SalesController::class, 'stock_report_datatable']);
+$routes->get('sales/returns/stocks/datatable', [SalesReturnController::class, 'stock_report_datatable']);
+$routes->get('stores/datatable', [StoreController::class, 'datatable']);
+$routes->get('suppliers/datatable', [SupplierController::class, 'datatable']);
+$routes->get('suppliers/ledger/datatable', [SupplierLedgerController::class, 'datatable']);
+$routes->get('cashup/datatable', [StoreLedgerController::class, 'datatable']);
+$routes->get('suppliers/creditors/datatable', [SupplierLedgerController::class, 'creditors_datatable']);
+$routes->get('units/datatable', [UnitController::class, 'datatable']);
+$routes->get('closing/datatable', [ClosingController::class, 'datatable']);
+
+//select2
+$routes->get('users/select2', [UserController::class, 'select2']);
+$routes->get('adjustments/select2', [AdjustmentController::class, 'select2']);
+$routes->get('brands/select2', [BrandController::class, 'select2']);
+$routes->get('categories/select2', [CategoryController::class, 'select2']);
+$routes->get('customers/select2', [CustomerController::class, 'select2']);
+$routes->get('expenses/categories/select2', [ExpenseCategoryController::class, 'select2']);
+$routes->get('expenses/subcategories/select2', [ExpenseSubCategoryController::class, 'select2']);
+$routes->get('expenses/select2', [ExpenseController::class, 'select2']);
+$routes->get('products/select2', [ProductController::class, 'select2']);
+$routes->get('purchases/select2', [PurchaseController::class, 'select2']);
+$routes->get('purchases/returns/select2', [PurchaseReturnController::class, 'select2']);
+$routes->get('quotes/select2', [QuoteController::class, 'select2']);
+$routes->get('sales/select2', [SalesController::class, 'select2']);
+$routes->get('sales/returns/select2', [SalesReturnController::class, 'select2']);
+$routes->get('stores/select2', [StoreController::class, 'select2']);
+$routes->get('suppliers/select2', [SupplierController::class, 'select2']);
+$routes->get('units/select2', [UnitController::class, 'select2']);
+
+// post requests
+$routes->post('users', [UserController::class, 'save']);
+$routes->post('account', [AccountController::class, 'save']);
+$routes->post('account/update-password', [AccountController::class, 'update_password']);
+
+$routes->post('users/(:num)/permissions', [UserController::class, 'save_permissions/$1']);
+$routes->post('adjustments', [AdjustmentController::class, 'save']);
+$routes->post('adjustments/reset', [AdjustmentController::class, 'save_reset']);
+$routes->post('brands', [BrandController::class, 'save']);
+$routes->post('categories', [CategoryController::class, 'save']);
+$routes->post('customers', [CustomerController::class, 'save']);
+$routes->post('customers/debit', [CustomerController::class, 'save_debit']);
+$routes->post('expenses/categories', [ExpenseCategoryController::class, 'save']);
+$routes->post('expenses/subcategories', [ExpenseSubCategoryController::class, 'save']);
+$routes->post('expenses', [ExpenseController::class, 'save']);
+$routes->post('products', [ProductController::class, 'save']);
+$routes->post('suppliers/ledgers', [SupplierLedgerController::class, 'save']);
+$routes->post('suppliers/credit', [SupplierController::class, 'save_credit']);
+$routes->post('suppliers/ledgers/bulk', [SupplierLedgerController::class, 'bulk_payment']);
+$routes->post('customers/ledgers', [CustomerLedgerController::class, 'save']);
+$routes->post('customers/ledgers/bulk', [CustomerLedgerController::class, 'bulk_payment']);
+$routes->post('transfers/products', [ProductTransferController::class, 'save']);
+$routes->post('transfers/units', [ProductUnitTransferController::class, 'save']);
+$routes->post('purchases', [PurchaseController::class, 'save']);
+$routes->post('purchases/returns', [PurchaseReturnController::class, 'save']);
+$routes->post('quotes', [QuoteController::class, 'save']);
+$routes->post('sales', [SalesController::class, 'save']);
+$routes->post('sales/hold', [SalesController::class, 'hold']);
+$routes->post('sales/returns', [SalesReturnController::class, 'save']);
+$routes->post('stores', [StoreController::class, 'save']);
+$routes->post('suppliers', [SupplierController::class, 'save']);
+$routes->post('units', [UnitController::class, 'save']);
+$routes->post('cashup', [StoreLedgerController::class, 'save']);
+$routes->post('closing/save', [ClosingController::class, 'save']);
+$routes->post('closing/update', [ClosingController::class, 'update']);
+
+$routes->put('users/(:num)/permissions', [UserController::class, 'save_permissions/$1']);
+$routes->put('adjustments', [AdjustmentController::class, 'save']);
+$routes->put('brands', [BrandController::class, 'save']);
+$routes->put('categories', [CategoryController::class, 'save']);
+$routes->put('customers', [CustomerController::class, 'save']);
+$routes->put('expenses/categories', [ExpenseCategoryController::class, 'save']);
+$routes->put('expenses/subcategories', [ExpenseSubCategoryController::class, 'save']);
+$routes->put('expenses', [ExpenseController::class, 'save']);
+$routes->put('products', [ProductController::class, 'save']);
+$routes->put('suppliers/ledgers', [SupplierLedgerController::class, 'save']);
+$routes->put('customers/ledgers', [CustomerLedgerController::class, 'save']);
+$routes->put('transfers/products', [ProductTransferController::class, 'save']);
+$routes->put('transfers/units', [ProductUnitTransferController::class, 'save']);
+$routes->put('purchases', [PurchaseController::class, 'save']);
+$routes->put('purchases/returns', [PurchaseReturnController::class, 'save']);
+$routes->put('quotes', [QuoteController::class, 'save']);
+$routes->put('sales', [SalesController::class, 'save']);
+$routes->put('sales/hold', [SalesController::class, 'hold']);
+$routes->put('sales/returns', [SalesReturnController::class, 'save']);
+$routes->put('stores', [StoreController::class, 'save']);
+$routes->put('suppliers', [SupplierController::class, 'save']);
+$routes->put('units', [UnitController::class, 'save']);
+$routes->put('cashup', [StoreLedgerController::class, 'save']);
+$routes->put('closing/save', [ClosingController::class, 'save']);
+$routes->put('users', [UserController::class, 'save']);
+
+// delete requests
+$routes->delete('adjustments/(:num)', [AdjustmentController::class, 'delete']);
+$routes->delete('brands/(:num)', [BrandController::class, 'delete']);
+$routes->delete('categories/(:num)', [CategoryController::class, 'delete']);
+$routes->delete('customers/(:num)', [CustomerController::class, 'delete']);
+$routes->delete('customers/ledger/(:num)', [CustomerLedgerController::class, 'delete']);
+$routes->delete('expenses/categories/(:num)', [ExpenseCategoryController::class, 'delete']);
+$routes->delete('expenses/subcategories/(:num)', [ExpenseSubCategoryController::class, 'delete']);
+$routes->delete('expenses/(:num)', [ExpenseController::class, 'delete']);
+$routes->delete('products/(:num)', [ProductController::class, 'delete']);
+$routes->delete('transfers/products/(:num)', [ProductTransferController::class, 'delete']);
+$routes->delete('transfers/units/(:num)', [ProductUnitTransferController::class, 'delete']);
+$routes->delete('purchases/(:num)', [PurchaseController::class, 'delete']);
+$routes->delete('purchases/returns/(:num)', [PurchaseReturnController::class, 'delete']);
+$routes->delete('quotes/(:num)', [QuoteController::class, 'delete']);
+$routes->delete('sales/(:num)', [SalesController::class, 'delete']);
+$routes->delete('sales/returns/(:num)', [SalesReturnController::class, 'delete']);
+$routes->delete('stores/(:num)', [StoreController::class, 'delete']);
+$routes->delete('suppliers/(:num)', [SupplierController::class, 'delete']);
+$routes->delete('suppliers/ledger/(:num)', [SupplierLedgerController::class, 'delete']);
+$routes->delete('units/(:num)', [UnitController::class, 'delete']);
+$routes->delete('cashup/(:num)', [StoreLedgerController::class, 'delete']);
+$routes->delete('users/(:num)', [UserController::class, 'delete']);
+$routes->delete('closing/(:num)', [ClosingController::class, 'delete']);
+
+service('auth')->routes($routes);
