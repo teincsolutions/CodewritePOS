@@ -33,7 +33,7 @@ class SalesController extends BaseController
         if ($id) {
             $model = new SalesModel();
             $data = array_merge($data, [
-                'sale' => $model->find($id),
+                'sale' => (object)$model->find($id),
                 'title' => 'POS',
             ]);
         }
@@ -51,7 +51,7 @@ class SalesController extends BaseController
         ];
         $model = new SalesModel();
         $data = array_merge($data, [
-            'sale' => $model->find($id),
+            'sale' => (object)$model->find($id),
         ]);
 
         return view('pages/sales/show_sale', $data);

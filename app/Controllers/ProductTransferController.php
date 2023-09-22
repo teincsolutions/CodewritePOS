@@ -33,7 +33,7 @@ class ProductTransferController extends BaseController
         if ($id) {
             $model = new ProductTransferModel();
             $data = array_merge($data, [
-                'product' => $model->find($id),
+                'product' => (object)$model->find($id),
                 'title' => 'Edit Product Transfer',
             ]);
         }
@@ -51,7 +51,7 @@ class ProductTransferController extends BaseController
         ];
         $model = new ProductTransferModel();
         $data = array_merge($data, [
-            'product' => $model->find($id),
+            'product' => (object)$model->find($id),
         ]);
 
         return view('pages/transfers/show_product_transfer', $data);

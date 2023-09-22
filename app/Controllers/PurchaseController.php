@@ -33,7 +33,7 @@ class PurchaseController extends BaseController
         if ($id) {
             $model = new PurchaseModel();
             $data = array_merge($data, [
-                'purchase' => $model->find($id),
+                'purchase' => (object)$model->find($id),
                 'title' => 'Edit Purchase',
             ]);
         }
@@ -51,7 +51,7 @@ class PurchaseController extends BaseController
         ];
         $model = new PurchaseModel();
         $data = array_merge($data, [
-            'purchase' => $model->find($id),
+            'purchase' => (object)$model->find($id),
         ]);
 
         return view('pages/purchases/show_purchase', $data);

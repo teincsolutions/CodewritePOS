@@ -33,7 +33,7 @@ class StoreController extends BaseController
         if ($id) {
             $model = new StoreModel();
             $data = array_merge($data, [
-                'store' => $model->find($id),
+                'store' => (object)$model->find($id),
                 'title' => 'Edit Store',
             ]);
         }
@@ -51,7 +51,7 @@ class StoreController extends BaseController
         ];
         $model = new StoreModel();
         $data = array_merge($data, [
-            'store' => $model->find($id),
+            'store' => (object)$model->find($id),
         ]);
 
         return view('pages/stores/show_store', $data);

@@ -33,7 +33,7 @@ class ProductController extends BaseController
         if ($id) {
             $model = new ProductModel();
             $data = array_merge($data, [
-                'product' => $model->find($id),
+                'product' => (object)$model->find($id),
                 'title' => 'Edit Product',
             ]);
         }
@@ -51,7 +51,7 @@ class ProductController extends BaseController
             'title' => 'Product Details'
         ];
         $model = new ProductModel();
-        $product = $model->find($id);
+        $product = (object)$model->find($id);
         if ($product)
             $data = array_merge($data, [
                 'product' => $product,
