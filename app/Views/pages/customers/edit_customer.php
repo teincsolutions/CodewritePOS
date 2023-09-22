@@ -10,14 +10,14 @@
 
     <form action="<?=site_url('customers') ?>" class="card post-form" method="post">
          <?= csrf_field() ?>
-        <input type="hidden" name="id" value="<?= isset($category) ? $category->id : null ?>">
-        <input type="hidden" name="_method" value="<?= isset($category) ? 'put' : 'post' ?>"> 
+        <input type="hidden" name="id" value="<?= isset($customer) ? $customer->id : null ?>">
+        <input type="hidden" name="_method" value="<?= isset($category) ? 'put' : 'post' ?>">
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Customer Name</label>
-                        <input name="name" type="text" value="Thomas" required>
+                        <input name="name" type="text" value="<?=isset($customer)?$customer->name:null ?>" required>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
@@ -63,8 +63,8 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <button type="submit" class="btn btn-submit me-2">Update</button>
-                    <a class="btn btn-cancel">Cancel</a>
+                    <button type="submit" class="btn btn-submit me-2">Save</button>
+                    <a href="<?=site_url('customers') ?>" class="btn btn-cancel">Cancel</a>
                 </div>
             </div>
         </div>

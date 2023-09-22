@@ -59,6 +59,9 @@ $(function () {
       { data: "phone", name: "customers.phone" },
       { data: "email", name: "customers.email" },
       { data: "address", name: "customers.address" },
+      { data: "user", name: "customers.user_id",render:function(data, type, row){
+        return data?data.username:null;
+      } },
       {
         data: "status",
         name: "customers.status",

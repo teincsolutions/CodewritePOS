@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\CustomerModel;
+use CodeIgniter\Shield\Models\UserModel;
 use CodeIgniter\HTTP\Response;
 
 class CustomerController extends BaseController
@@ -65,7 +66,11 @@ class CustomerController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new CustomerModel();
-        return $this->response->setJSON(toDatatableResult($model, $inputs));
+        return $this->response->setJSON(toDatatableResult($model, $inputs, function($item){
+            $model = new UserModel();
+            $item->user = $model->where('id',$item->user_id)->first();
+            return $item;
+        }));
     }
 
        /**
@@ -76,6 +81,8 @@ class CustomerController extends BaseController
     {
         $model = new CustomerModel();
         $inputs = $this->request->getVar();
+        if(auth()->user())
+        $inputs['user_id'] = auth()->user()->id;
         $id = $this->request->getPost('id');
         $res = [
             'status' => false,
