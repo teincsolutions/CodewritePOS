@@ -1,0 +1,79 @@
+<?php
+
+namespace App\Models;
+
+use CodeIgniter\Database\RawSql;
+use CodeIgniter\Model;
+
+class ProductModel extends Model
+{
+    protected $DBGroup          = 'default';
+    protected $table            = 'products';
+    protected $primaryKey       = 'id';
+    protected $useAutoIncrement = true;
+    protected $returnType       = 'array';
+    protected $useSoftDeletes   = false;
+    protected $protectFields    = true;
+    protected $allowedFields    = [];
+
+    // Dates
+    protected $useTimestamps = false;
+    protected $dateFormat    = 'datetime';
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+    protected $deletedField  = 'deleted_at';
+
+    // Validation
+    protected $validationRules      = [];
+    protected $validationMessages   = [];
+    protected $skipValidation       = false;
+    protected $cleanValidationRules = true;
+
+    // Callbacks
+    protected $allowCallbacks = true;
+    protected $beforeInsert   = [];
+    protected $afterInsert    = [];
+    protected $beforeUpdate   = [];
+    protected $afterUpdate    = [];
+    protected $beforeFind     = [];
+    protected $afterFind      = [];
+    protected $beforeDelete   = [];
+    protected $afterDelete    = [];
+
+    public function toDatatableResult(array $inputs = null): array
+    {
+        $total = $this->countAllResults();
+        if (isset($inputs['date_from']) || isset($inputs['date_to'])) {
+            if (!empty($inputs['date_from']) || !empty($inputs['date_to'])) {
+                $this->groupStart();
+                $this->where(new RawSql("DATE(" . $inputs['date_range_column'] . ")" . ' >='), $inputs['date_from']);
+                $this->where(new RawSql("DATE(" . $inputs['date_range_column'] . ")" . ' <='), $inputs['date_to']);
+                $this->groupEnd();
+            }
+        }
+
+        if ($inputs['columns']) {
+            $this->groupStart();
+            foreach ($inputs['columns'] as $col) {
+                if (isset($col['searchable']) && $col['searchable'])
+                    $this->orLike($col['name'], $inputs['search']['value'], 'both');
+                else   $this->orLike($col['name'], $inputs['search']['value'], 'both');;
+            }
+            $this->groupEnd();
+        }
+        if (isset($inputs['order'])) {
+            foreach ($inputs['order'] as $order) {
+                $this->orderBy($inputs['columns'][$order['column']]['name'], $order['dir']);
+            }
+        }
+        $data = $this->findAll();
+        $filtered = sizeof($data);
+
+        return  [
+            'draw' => isset($inputs['draw']) ? $inputs['draw'] : 1,
+            'recordsTotal' => $total,
+            'recordsFiltered' => $filtered,
+            'data' => $data,
+        ];
+    }
+}

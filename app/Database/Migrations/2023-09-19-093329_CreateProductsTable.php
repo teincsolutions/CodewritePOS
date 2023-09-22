@@ -1,0 +1,109 @@
+<?php
+
+namespace App\Database\Migrations;
+
+use CodeIgniter\Database\Migration;
+use Config\Database;
+use CodeIgniter\Database\RawSql;
+
+class CreateProductsTable extends Migration
+{
+    public function up()
+    {
+        $forge = Database::forge();
+        $fields = [
+            'id' => [
+                'type'           => 'INT',
+                'constraint'     => 11,
+                'unsigned'       => true,
+                'auto_increment' => true,
+            ],
+            'name' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 200,
+                'null' => false,
+            ],
+            'barcode' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 100,
+                'null' => true,
+                'unique' => true,
+            ],
+            'sku' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 40,
+                'null' => true,
+                'unique' => true,
+            ],
+            'brand_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'       => true,
+                'null' => true,
+            ],
+            'category_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'       => true,
+                'null' => true,
+            ],
+            'unit_cost' => [
+                'type' => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => true,
+            ],
+            'unit_price' => [
+                'type' => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+            ],
+            'unit_id' => [
+                'type'       => 'INT',
+                'constraint' => 5,
+                'unsigned'       => true,
+                'null' => false,
+            ],
+            'description' => [
+                'type' => 'TEXT',
+                'null' => true,
+            ],
+            'image_uri' => [
+                'type' => 'TEXT',
+                'null' => true,
+            ],
+            'discontinued' => [
+                'type' => 'BOOLEAN',
+                'default' => 0
+            ],
+            'user_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
+                'null' => true,
+            ],
+            'created_at' => [
+                'type'    => 'TIMESTAMP',
+                'default' => new RawSql('CURRENT_TIMESTAMP'),
+            ],
+            'updated_at' => [
+                'type' => 'TIMESTAMP',
+                'default' => new RawSql('CURRENT_TIMESTAMP'),
+            ]
+        ];
+
+        $forge->addField($fields);
+        $forge->addPrimaryKey('id');
+        $forge->addForeignKey('brand_id', 'brands', 'id', 'CASCADE', 'CASCADE', 'fk_product_brand_id');
+        $forge->addForeignKey('category_id', 'categories', 'id', 'CASCADE', 'CASCADE', 'fk_product_cateogry_id');
+        $forge->addForeignKey('unit_id', 'units', 'id', 'CASCADE', 'CASCADE', 'fk_product_unit_id');
+
+        $attributes = ['ENGINE' => 'InnoDB'];
+        $forge->createTable('products', true, $attributes);
+    }
+
+    public function down()
+    {
+        $forge = Database::forge();
+        $forge->dropTable('products', true);
+    }
+}
