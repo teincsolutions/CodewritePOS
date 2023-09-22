@@ -11,7 +11,7 @@
     <form action="<?=site_url('customers') ?>" class="card post-form" method="post">
          <?= csrf_field() ?>
         <input type="hidden" name="id" value="<?= isset($category) ? $category->id : null ?>">
-        <input type="hidden" name="_method" value="<?= isset($category) ? 'put' : 'post' ?>">
+        <input type="hidden" name="_method" value="<?= isset($category) ? 'put' : 'post' ?>"> 
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-3 col-sm-6 col-12">
