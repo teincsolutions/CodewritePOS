@@ -45,6 +45,17 @@ class CreateCustomersTable extends Migration
                 'type' => 'TEXT',
                 'null' => true,
             ],
+            
+            'status' => [
+                'type'       => 'ENUM',
+                'constraint' => ['opened', 'closed'],
+                'default'    => 'opened',
+            ],
+            'type' => [
+                'type'       => 'ENUM',
+                'constraint' => ['wholeseller', 'retailer'],
+                'default'    => 'retailer',
+            ],
             'user_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,

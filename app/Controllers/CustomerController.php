@@ -67,4 +67,72 @@ class CustomerController extends BaseController
         $model = new CustomerModel();
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
+
+       /**
+     * return json for save
+     * @return Response - http response
+     */
+    public function save()
+    {
+        $model = new CustomerModel();
+        $inputs = $this->request->getVar();
+        $id = $this->request->getPost('id');
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => null,
+            'input' => $inputs,
+        ];
+        $Customer = $model->find($id);
+
+        if ($Customer) {
+            if ($model->save($inputs)) {
+                $res = array_merge($res, [
+                    'status' => true,
+                    'message' => "Customer updated successfully!",
+                    'data' => $model->find($id),
+                ]);
+            } else {
+                $res = array_merge($res, [
+                    'status' => false,
+                    'message' => "Couldn't be updated!"
+                ]);
+            }
+        } else {
+            if ($model->save($inputs)) {
+                $res = array_merge($res, [
+                    'status' => true,
+                    'message' => "Customer created successfully!",
+                    'data' => $model->find($model->getInsertID()),
+                ]);
+            } else {
+                $res = array_merge($res, [
+                    'status' => false,
+                    'message' => "Couldn't be created!"
+                ]);
+            }
+        }
+        return $this->response->setJSON($res);
+    }
+
+    /**
+     * return jwon for delete
+     * @return Response - http response
+     */
+    public function delete($id = null)
+    {
+        $model = new CustomerModel();
+        if ($model->delete($id)) {
+            $res = [
+                'status' => true,
+                'message' => "Customer deleted successfully!",
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'message' => "Couldn't be deleted!"
+            ];
+        }
+        return $this->response->setJSON($res);
+    }
 }

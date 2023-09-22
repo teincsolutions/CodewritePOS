@@ -8,25 +8,28 @@
         </div>
     </div>
 
-    <div class="card">
+    <form action="<?=site_url('customers') ?>" class="card post-form" method="post">
+         <?= csrf_field() ?>
+        <input type="hidden" name="id" value="<?= isset($category) ? $category->id : null ?>">
+        <input type="hidden" name="_method" value="<?= isset($category) ? 'put' : 'post' ?>">
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Customer Name</label>
-                        <input type="text" value="Thomas">
+                        <input name="name" type="text" value="Thomas" required>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="text" value="Thomas@example.com">
+                        <input name="email" type="text" value="Thomas@example.com">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Phone</label>
-                        <input type="text" value="+12163547758 ">
+                        <input name="phone" type="text" value="+12163547758 ">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
@@ -60,11 +63,15 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <a class="btn btn-submit me-2">Update</a>
+                    <button type="submit" class="btn btn-submit me-2">Update</button>
                     <a class="btn btn-cancel">Cancel</a>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
+<?= $this->endSection() ?>
+
+<?= $this->section('script') ?>
+<script src="<?= base_url('assets/js/handle-post.js') ?>"></script>
 <?= $this->endSection() ?>
