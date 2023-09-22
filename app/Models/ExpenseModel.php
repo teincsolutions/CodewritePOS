@@ -13,7 +13,13 @@ class ExpenseModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+        'expense_date',
+        'store_id',
+        'expense_category_id',
+        'amount',
+        'user_id',
+    ];
 
     // Dates
     protected $useTimestamps = false;

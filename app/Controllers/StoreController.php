@@ -65,6 +65,10 @@ class StoreController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new StoreModel();
-        return $this->response->setJSON(toDatatableResult($model,$inputs));
+        return $this->response->setJSON(toDatatableResult($model,$inputs,function($item){
+            $model = new UserModel();
+            $item->user = $model->where('id',$item->user_id)->first();
+            return $item;
+        }));
     }
 }

@@ -30,6 +30,7 @@ class ExpenseCategoryController extends BaseController
             'title' => 'Create Expense Category'
         ];
 
+
         if ($id) {
             $model = new ExpenseCategoryModel();
             $data = array_merge($data, [
@@ -38,6 +39,50 @@ class ExpenseCategoryController extends BaseController
             ]);
         }
         return view('pages/expenses/edit_category', $data);
+    }
+    public function save()
+    {
+        $model = new ExpenseCategoryModel();
+        $inputs = $this->request->getVar();
+        if(auth()->user())
+        $inputs['user_id'] = auth()->user()->id;
+        $id = $this->request->getPost('id');
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => null,
+            'input' => $inputs,
+        ];
+        $Category = $model->where('id',$id)->first();
+
+        if ($Category) {
+            if ($model->save($inputs)) {
+                $res = array_merge($res, [
+                    'status' => true,
+                    'message' => "Category updated successfully!",
+                    'data' => $model->find($id),
+                ]);
+            } else {
+                $res = array_merge($res, [
+                    'status' => false,
+                    'message' => "Couldn't be updated!"
+                ]);
+            }
+        } else {
+            if ($model->save($inputs)) {
+                $res = array_merge($res, [
+                    'status' => true,
+                    'message' => "Category created successfully!",
+                    'data' => $model->find($model->getInsertID()),
+                ]);
+            } else {
+                $res = array_merge($res, [
+                    'status' => false,
+                    'message' => "Couldn't be created!"
+                ]);
+            }
+        }
+        return $this->response->setJSON($res);
     }
 
     /**
@@ -49,5 +94,26 @@ class ExpenseCategoryController extends BaseController
         $inputs = $this->request->getVar();
         $model = new ExpenseCategoryModel();
         return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+     /**
+     * return json for delete
+     * @return Response - http response
+     */
+    public function delete($id = null)
+    {
+        $model = new ExpenseCategoryModel();
+        if ($model->delete($id)) {
+            $res = [
+                'status' => true,
+                'message' => "Category deleted successfully!",
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'message' => "Couldn't be deleted!"
+            ];
+        }
+        return $this->response->setJSON($res);
     }
 }
