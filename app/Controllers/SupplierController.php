@@ -33,7 +33,7 @@ class SupplierController extends BaseController
         if ($id) {
             $model = new SupplierModel();
             $data = array_merge($data, [
-                'supplier' => (object)$model->find($id),
+                'supplier' => $model->find($id),
                 'title' => 'Edit Supplier',
             ]);
         }
@@ -94,7 +94,7 @@ class SupplierController extends BaseController
         ];
         $model = new SupplierModel();
         $data = array_merge($data, [
-            'supplier' => (object)$model->find($id),
+            'supplier' => $model->find($id),
         ]);
 
         return view('pages/suppliers/show_supplier', $data);

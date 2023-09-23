@@ -75,3 +75,8 @@ form.on("submit", function (e) {
     });
   }
 });
+
+$(".select2-category,.select2-brand, .select2-unit").select2({
+  placeholder: "Choose an option",
+  clear: true,
+});

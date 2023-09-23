@@ -10,7 +10,7 @@ class PurchaseReturnModel extends Model
     protected $table            = 'purchase_returns';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
+    protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [];

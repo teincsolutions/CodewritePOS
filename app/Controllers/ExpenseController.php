@@ -33,7 +33,7 @@ class ExpenseController extends BaseController
         if ($id) {
             $model = new ExpenseModel();
             $data = array_merge($data, [
-                'expense' => (object)$model->find($id),
+                'expense' => $model->find($id),
                 'title' => 'Edit Expense',
             ]);
         }

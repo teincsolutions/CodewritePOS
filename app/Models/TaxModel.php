@@ -4,21 +4,16 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class ExpenseModel extends Model
+class TaxModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'expenses';
+    protected $table            = 'taxes';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'object';
+    protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [
-        'expense_date',
-        'store_id',
-        'expense_category_id',
-        'amount',
-    ];
+    protected $allowedFields    = [];
 
     // Dates
     protected $useTimestamps = false;

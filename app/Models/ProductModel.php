@@ -5,13 +5,15 @@ namespace App\Models;
 use CodeIgniter\Database\RawSql;
 use CodeIgniter\Model;
 
+use function PHPUnit\Framework\isNull;
+
 class ProductModel extends Model
 {
     protected $DBGroup          = 'default';
     protected $table            = 'products';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
+    protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
@@ -46,9 +48,9 @@ class ProductModel extends Model
 
     // Callbacks
     protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
+    protected $beforeInsert   = ['setDefaultBrandId'];
     protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
+    protected $beforeUpdate   = ['setDefaultBrandId'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
     protected $afterFind      = [];
@@ -90,5 +92,12 @@ class ProductModel extends Model
             'recordsFiltered' => $filtered,
             'data' => $data,
         ];
+    }
+
+    protected function setDefaultBrandId(array $data)
+    {
+        if (isNull($data['data']['brand_id']))
+            $data['data']['brand_id'] = NULL;
+        return $data;
     }
 }

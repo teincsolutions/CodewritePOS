@@ -33,7 +33,7 @@ class QuoteController extends BaseController
         if ($id) {
             $model = new QuoteModel();
             $data = array_merge($data, [
-                'quote' => (object)$model->find($id),
+                'quote' => $model->find($id),
                 'title' => 'Edit Quote',
             ]);
         }

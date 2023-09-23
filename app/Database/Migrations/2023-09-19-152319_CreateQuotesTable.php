@@ -44,6 +44,29 @@ class CreateQuotesTable extends Migration
                 'constraint' => ['walk-in','customer'],
                 'default' => 'walk-in'
             ],
+            'tax_id' => [
+                'type'       => 'INT',
+                'constraint' => 5,
+                'unsigned'   => true,
+                'null' => true,
+            ],
+            'tax' => [
+                'type' => 'DECIMAL',
+                'constraint' => "10,2",
+                'default' => 0,
+            ],
+            'discount' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'defaut' => 0.00
+            ],
+            'shipping' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'defaut' => 0.00
+            ],
             'user_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,
@@ -65,6 +88,7 @@ class CreateQuotesTable extends Migration
         $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_quotes_store_id');
         $forge->addForeignKey('customer_id', 'customers', 'id', 'CASCADE', 'CASCADE', 'fk_quotes_customer_id');
         $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_quote_user_id');
+        $forge->addForeignKey('tax_id', 'taxes', 'id', 'RESTRICT', 'RESTRICT', 'fk_quote_tax_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('quotes', true, $attributes);

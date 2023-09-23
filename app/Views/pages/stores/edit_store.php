@@ -4,7 +4,7 @@
     <div class="page-header">
         <div class="page-title">
             <h4>Store Management</h4>
-            <h6>Create New Store</h6>
+            <h6><?=isset($subtitle)?$subtitle:'Add a new Store' ?></h6>
         </div>
     </div>
 
@@ -17,20 +17,20 @@
             <div class="row">
                 <div class="col-lg-6 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Category Name</label>
-                        <input type="text" name="label" required placeholder="Store Category" value="<?=isset($store)?$store->label:null ?>">
+                        <label>Store Name</label>
+                        <input type="text" name="name" required placeholder="Store name" value="<?=isset($store)?$store->name:null ?>" required>
                     </div>
                 </div>
                 <div class="col-lg-6 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Location</label>
-                        <input type="text" name="location" required placeholder="Store Category" value="<?=isset($store)?$store->location:null ?>">
+                        <input type="text" name="location" required placeholder="Store location" value="<?=isset($store)?$store->location:null ?>">
                     </div>
                 </div>
                 <div class="col-lg-12">
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea class="form-control" name="description"><?=isset($store)?$store->description:null ?></textarea>
+                        <textarea class="form-control" name="description" placeholder="Description here"><?=isset($store)?$store->description:null ?></textarea>
                     </div>
                 </div>
                 <div class="col-lg-12">

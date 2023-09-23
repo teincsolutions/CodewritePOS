@@ -33,7 +33,7 @@ class SalesReturnController extends BaseController
         if ($id) {
             $model = new SalesReturnModel();
             $data = array_merge($data, [
-                'sales_return' => (object)$model->find($id),
+                'sales_return' => $model->find($id),
                 'title' => 'Edit Sales Return',
             ]);
         }
@@ -51,7 +51,7 @@ class SalesReturnController extends BaseController
         ];
         $model = new SalesReturnModel();
         $data = array_merge($data, [
-            'sales_return' => (object)$model->find($id),
+            'sales_return' => $model->find($id),
         ]);
 
         return view('pages/sales_returns/show_sales_return', $data);

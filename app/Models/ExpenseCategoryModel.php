@@ -10,7 +10,7 @@ class ExpenseCategoryModel extends Model
     protected $table            = 'expense_categories';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
+    protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [

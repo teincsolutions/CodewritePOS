@@ -33,12 +33,41 @@ class CreateSalesReturnsTable extends Migration
                 'unsigned'   => true,
                 'null' => true,
             ],
+            'tax_id' => [
+                'type'       => 'INT',
+                'constraint' => 5,
+                'unsigned'   => true,
+                'null' => true,
+            ],
+            'tax' => [
+                'type' => 'DECIMAL',
+                'constraint' => "10,2",
+                'default' => 0,
+            ],
+            'discount' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'defaut' => 0.00
+            ],
+            'shipping' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'defaut' => 0.00
+            ],
+            'paid' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'defaut' => 0.00
+            ],
             'user_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
                 'null' => true,
-            ],
+            ], 
             'created_at' => [
                 'type'    => 'TIMESTAMP',
                 'default' => new RawSql('CURRENT_TIMESTAMP'),
@@ -51,6 +80,7 @@ class CreateSalesReturnsTable extends Migration
 
         $forge->addField($fields);
         $forge->addPrimaryKey('id');
+        $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_sales_returns_user_id');
         $forge->addForeignKey('sale_id', 'sales', 'id', 'CASCADE', 'CASCADE', 'fk_sales_returns_sale_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];

@@ -33,7 +33,7 @@ class CategoryController extends BaseController
         if ($id) {
             $model = new CategoryModel();
             $data = array_merge($data, [
-                'category' => (object)$model->find($id),
+                'category' => $model->find($id),
                 'title' => 'Edit Product',
             ]);
         }

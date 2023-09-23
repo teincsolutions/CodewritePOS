@@ -33,7 +33,7 @@ class BrandController extends BaseController
         if ($id) {
             $model = new BrandModel();
             $data = array_merge($data, [
-                'brand' => (object)$model->find($id),
+                'brand' => $model->find($id),
                 'title' => 'Edit Brand',
             ]);
         }

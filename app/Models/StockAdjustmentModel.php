@@ -10,7 +10,7 @@ class StockAdjustmentModel extends Model
     protected $table            = 'stock_adjustments';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
+    protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [];

@@ -3,8 +3,14 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\BrandModel;
+use App\Models\CategoryModel;
 use App\Models\ProductModel;
+use App\Models\TaxModel;
+use App\Models\UnitModel;
+use App\Models\UserModel;
 use CodeIgniter\HTTP\Response;
+use SebastianBergmann\CodeCoverage\Report\Xml\Unit;
 
 class ProductController extends BaseController
 {
@@ -26,14 +32,21 @@ class ProductController extends BaseController
      */
     public function edit($id = null)
     {
+        $catModel = new CategoryModel();
+        $unitModel = new UnitModel();
+        $brandModel = new BrandModel();
+
         $data = [
-            'title' => 'Create Product'
+            'title' => 'Create Product',
+            'categories' => $catModel->findAll(),
+            'units' => $unitModel->findAll(),
+            'brands' => $brandModel->findAll(),
         ];
 
         if ($id) {
             $model = new ProductModel();
             $data = array_merge($data, [
-                'product' => (object)$model->find($id),
+                'product' => $model->find($id),
                 'title' => 'Edit Product',
             ]);
         }
@@ -43,8 +56,9 @@ class ProductController extends BaseController
     {
         $model = new ProductModel();
         $inputs = $this->request->getVar();
-        if(auth()->user())
-        $inputs['user_id'] = auth()->user()->id;
+        if (auth()->user())
+            $inputs['user_id'] = auth()->user()->id;
+  
         $id = $this->request->getPost('id');
         $res = [
             'status' => false,
@@ -52,7 +66,8 @@ class ProductController extends BaseController
             'message' => null,
             'input' => $inputs,
         ];
-        $Product = $model->where('id',$id)->first();
+
+        $Product = $model->where('id', $id)->first();
 
         if ($Product) {
             if ($model->save($inputs)) {
@@ -94,7 +109,7 @@ class ProductController extends BaseController
             'title' => 'Product Details'
         ];
         $model = new ProductModel();
-        $product = (object)$model->find($id);
+        $product = $model->find($id);
         if ($product)
             $data = array_merge($data, [
                 'product' => $product,
@@ -111,6 +126,18 @@ class ProductController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new ProductModel();
-        return $this->response->setJSON(toDatatableResult($model, $inputs));
+        return $this->response->setJSON(toDatatableResult($model, $inputs,function($item){
+            $model = new UserModel();
+            $item->user = $model->where('id',$item->user_id)->first();
+            $model = new BrandModel();
+            $item->brand = $model->where('id',$item->brand_id)->first();
+            $model = new CategoryModel();
+            $item->category = $model->where('id',$item->category_id)->first();
+            $model = new UnitModel();
+            $item->unit = $model->where('id',$item->unit_id)->first();
+            $model = new TaxModel();
+            $item->tax = $model->where('id',$item->tax_id)->first()->amount;
+            return $item;
+        }));
     }
 }

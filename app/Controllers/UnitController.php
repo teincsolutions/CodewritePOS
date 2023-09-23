@@ -33,7 +33,7 @@ class UnitController extends BaseController
         if ($id) {
             $model = new UnitModel();
             $data = array_merge($data, [
-                'unit' => (object)$model->find($id),
+                'unit' => $model->find($id),
                 'title' => 'Edit Unit',
             ]);
         }

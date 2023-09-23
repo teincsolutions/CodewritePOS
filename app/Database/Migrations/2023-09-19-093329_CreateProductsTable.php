@@ -40,6 +40,7 @@ class CreateProductsTable extends Migration
                 'constraint' => 11,
                 'unsigned'       => true,
                 'null' => true,
+                'default' => null,
             ],
             'category_id' => [
                 'type'       => 'INT',
@@ -57,12 +58,17 @@ class CreateProductsTable extends Migration
                 'constraint' => "32,2",
                 'null' => false,
             ],
+            'tax_id' => [
+                'type'       => 'INT',
+                'constraint' => 5,
+                'unsigned'   => true,
+                'null' => true,
+            ],
             'tax' => [
                 'type' => 'DECIMAL',
                 'constraint' => "8,2",
                 'default' => 0,
             ],
-            
             'discount' => [
                 'type' => 'DECIMAL',
                 'constraint' => "8,2",
@@ -79,12 +85,6 @@ class CreateProductsTable extends Migration
                 'constraint' => 5,
                 'unsigned'       => true,
                 'null' => false,
-            ],
-            'tax_id' => [
-                'type'       => 'INT',
-                'constraint' => 5,
-                'unsigned'   => true,
-                'null' => true,
             ],
             'description' => [
                 'type' => 'TEXT',
@@ -120,9 +120,11 @@ class CreateProductsTable extends Migration
 
         $forge->addField($fields);
         $forge->addPrimaryKey('id');
-        $forge->addForeignKey('brand_id', 'brands', 'id', 'CASCADE', 'CASCADE', 'fk_product_brand_id');
-        $forge->addForeignKey('category_id', 'categories', 'id', 'CASCADE', 'CASCADE', 'fk_product_cateogry_id');
-        $forge->addForeignKey('unit_id', 'units', 'id', 'CASCADE', 'CASCADE', 'fk_product_unit_id');
+        $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_product_user_id');
+        $forge->addForeignKey('brand_id', 'brands', 'id', 'RESTRICT', 'RESTRICT', 'fk_product_brand_id');
+        $forge->addForeignKey('category_id', 'categories', 'id', 'RESTRICT', 'RESTRICT', 'fk_product_cateogry_id');
+        $forge->addForeignKey('unit_id', 'units', 'id', 'RESTRICT', 'RESTRICT', 'fk_product_unit_id');
+        $forge->addForeignKey('tax_id', 'taxes', 'id', 'RESTRICT', 'RESTRICT', 'fk_product_tax_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('products', true, $attributes);

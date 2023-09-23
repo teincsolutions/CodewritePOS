@@ -140,6 +140,8 @@ $routes->post('units', [UnitController::class, 'save']);
 //Put Request
 $routes->put('expense-categories', [ExpenseCategoryController::class, 'save']);
 $routes->put('expenses', [ExpenseController::class, 'save']);
+$routes->put('categories', [CategoryController::class, 'save']);
+$routes->put('products', [ProductController::class, 'save']);
 $routes->put('purchases', [PurchaseController::class, 'save']);
 $routes->put('returns/purchase', [PurchaseReturnController::class, 'save']);
 $routes->put('quotes', [QuoteController::class, 'save']);

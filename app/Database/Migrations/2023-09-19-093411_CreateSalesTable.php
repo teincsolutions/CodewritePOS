@@ -60,6 +60,35 @@ class CreateSalesTable extends Migration
                 'unsigned'   => true,
                 'null' => true,
             ],
+            'tax_id' => [
+                'type'       => 'INT',
+                'constraint' => 5,
+                'unsigned'   => true,
+                'null' => true,
+            ],
+            'tax' => [
+                'type' => 'DECIMAL',
+                'constraint' => "10,2",
+                'default' => 0,
+            ],
+            'discount' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'defaut' => 0.00
+            ],
+            'shipping' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'defaut' => 0.00
+            ],
+            'paid' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'defaut' => 0.00
+            ],
             'created_at' => [
                 'type'    => 'TIMESTAMP',
                 'default' => new RawSql('CURRENT_TIMESTAMP'),
@@ -72,8 +101,11 @@ class CreateSalesTable extends Migration
 
         $forge->addField($fields);
         $forge->addPrimaryKey('id');
+
+        $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_sales_user_id');
         $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_sales_store_id');
         $forge->addForeignKey('customer_id', 'customers', 'id', 'CASCADE', 'CASCADE', 'fk_sales_customer_id');
+        $forge->addForeignKey('tax_id', 'taxes', 'id', 'RESTRICT', 'RESTRICT', 'fk_sales_tax_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('sales', true, $attributes);

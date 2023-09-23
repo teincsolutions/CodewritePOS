@@ -33,7 +33,7 @@ class PurchaseReturnController extends BaseController
         if ($id) {
             $model = new PurchaseReturnModel();
             $data = array_merge($data, [
-                'purchase_return' => (object)$model->find($id),
+                'purchase_return' => $model->find($id),
                 'title' => 'Edit Purchase Return',
             ]);
         }
@@ -51,7 +51,7 @@ class PurchaseReturnController extends BaseController
         ];
         $model = new PurchaseReturnModel();
         $data = array_merge($data, [
-            'purchase_return' => (object)$model->find($id),
+            'purchase_return' => $model->find($id),
         ]);
 
         return view('pages/purchase_returns/show_purchase_return', $data);

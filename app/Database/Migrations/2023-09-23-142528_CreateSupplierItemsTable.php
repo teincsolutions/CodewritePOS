@@ -4,9 +4,8 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 use Config\Database;
-use CodeIgniter\Database\RawSql;
 
-class CreateStocksTable extends Migration
+class CreateSupplierItemsTable extends Migration
 {
     public function up()
     {
@@ -18,31 +17,18 @@ class CreateStocksTable extends Migration
                 'constraint'     => 11,
                 'unsigned'       => true,
             ],
-            'store_id' => [
+            'supplier_id' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
                 'unsigned'       => true,
-            ],
-            'instock' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'     => true,
-            ],
-            'created_at' => [
-                'type'    => 'TIMESTAMP',
-                'default' => new RawSql('CURRENT_TIMESTAMP'),
-            ],
-            'updated_at' => [
-                'type' => 'TIMESTAMP',
-                'default' => new RawSql('CURRENT_TIMESTAMP'),
-            ],
+            ]
         ];
 
         $forge->addField($fields);
-        $forge->addPrimaryKey(['product_id', 'store_id']);
+        $forge->addPrimaryKey(['product_id', 'supplier_id']);
         $forge->addForeignKey('product_id', 'products', 'id', 'CASCADE', 'CASCADE', 'fk_stock_product_id');
-        $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_stock_store_id');
-        
+        $forge->addForeignKey('supplier_id', 'suppliers', 'id', 'CASCADE', 'CASCADE', 'fk_stock_supplier_id');
+
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('stocks', true, $attributes);
     }

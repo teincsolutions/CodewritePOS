@@ -55,6 +55,7 @@ class CreateCategoriesTable extends Migration
 
         $forge->addField($fields);
         $forge->addPrimaryKey('id');
+        $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_category_user_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('categories', true, $attributes);

@@ -55,6 +55,7 @@ class CreateExpenseCategoriesTable extends Migration
 
         $forge->addField($fields);
         $forge->addPrimaryKey('id');
+        $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_expense_category_user_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('expense_categories', true, $attributes);

@@ -78,6 +78,7 @@ class CreateCustomersTable extends Migration
 
         $forge->addField($fields);
         $forge->addPrimaryKey('id');
+        $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_customer_user_id');
        
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('customers', true, $attributes);

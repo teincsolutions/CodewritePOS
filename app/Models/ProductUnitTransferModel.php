@@ -10,7 +10,7 @@ class ProductUnitTransferModel extends Model
     protected $table            = 'productunittransfers';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
+    protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [];

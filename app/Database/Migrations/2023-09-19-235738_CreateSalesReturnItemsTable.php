@@ -35,10 +35,40 @@ class CreateSalesReturnItemsTable extends Migration
                 'unsigned'  => true,
                 'null' => true,
             ],
+            'unit_price' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'default' => 0
+            ],
             'qty' => [
                 'type'       => 'DECIMAL',
                 'constraint' => "10,2",
                 'null' => false,
+            ],
+            'tax_id' => [
+                'type'       => 'INT',
+                'constraint' => 5,
+                'unsigned'   => true,
+                'null' => true,
+            ],
+            'tax' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'default' => 0
+            ],
+            'discount' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'default' => 0
+            ],
+            'subtotal' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'default' => 0
             ],
         ];
 
@@ -46,7 +76,8 @@ class CreateSalesReturnItemsTable extends Migration
         $forge->addPrimaryKey('id');
         $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_sales_returns_items_store_id');
         $forge->addForeignKey('sales_return_id', 'sales_returns', 'id', 'CASCADE', 'CASCADE', 'fk_sales_returns_items_sales_return_id');
-        $forge->addForeignKey('product_id', 'products', 'id', 'CASCADE', 'CASCADE', 'fk_sales_returns_items_product_id');
+        $forge->addForeignKey('product_id', 'products', 'id', 'RESTRICT', 'RESTRICT', 'fk_sales_returns_items_product_id');
+        $forge->addForeignKey('tax_id', 'taxes', 'id', 'RESTRICT', 'RESTRICT', 'fk_sales_return_item_tax_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('sales_returns_items', true, $attributes);

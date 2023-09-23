@@ -3,10 +3,10 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
-use Config\Database;
 use CodeIgniter\Database\RawSql;
+use Config\Database;
 
-class CreateUnitsTable extends Migration
+class CreateTaxesTable extends Migration
 {
     public function up()
     {
@@ -21,7 +21,7 @@ class CreateUnitsTable extends Migration
             ],
             'label' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 20,
+                'constraint' => 100,
                 'unique'     => true,
             ],
             'description' => [
@@ -55,15 +55,15 @@ class CreateUnitsTable extends Migration
 
         $forge->addField($fields);
         $forge->addPrimaryKey('id');
-        $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_unit_user_id');
+        $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_tax_user_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
-        $forge->createTable('units', true, $attributes);
+        $forge->createTable('taxes', true, $attributes);
     }
 
     public function down()
     {
         $forge = Database::forge();
-        $forge->dropTable('units', true);
+        $forge->dropTable('taxes', true);
     }
 }

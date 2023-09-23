@@ -67,6 +67,7 @@ class CreateSuppliersTable extends Migration
 
         $forge->addField($fields);
         $forge->addPrimaryKey('id');
+        $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_supplier_user_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('suppliers', true, $attributes);

@@ -95,7 +95,7 @@
                                     </div>
                                     <div class="col-lg-2 col-sm-2 col-2 ps-0">
                                         <div class="add-icon">
-                                            <a href="<?= site_url('customers/create') ?>" class="btn btn-icon"><i class="fa fa-plus"></i></a>
+                                            <a target="_blank" href="<?= site_url('customers/create') ?>" class="btn btn-icon"><i class="fa fa-plus"></i></a>
                                         </div>
                                     </div>
                                 </div>
@@ -110,7 +110,7 @@
                                     if (isset($stores))
                                         foreach ($stores as $row) { ?>
                                         <option value="<?= $row->id ?>" <?= isset($sales) ? ($row->id === $sales->store_id ? 'selected' : '') : '' ?>>
-                                            <?= $row->name; ?><?= $row->address ? "($row->address)" : null; ?>
+                                            <?= $row->name; ?><?= $row->location ? "($row->location)" : null; ?>
                                         </option>
                                     <?php } ?>
                                 </select>
@@ -257,6 +257,9 @@
                                 <h6 class="grandTotal">0.00</h6>
                             </li>
                         </ul>
+                    </div>
+                    <div class="setvalue">
+                            <input type="number" name="paid" min="0" class="form-control" placeholder="Enter paid amount">
                     </div>
                     <div class="setvaluecash">
                         <ul>
@@ -442,7 +445,7 @@
                                         <div class="increment-decrement">
                                             <div class="input-groups">
                                                 <input type="button" value="-" class="button-minus dec button">
-                                                <input onkeyup="updateRow(this)" min="1" type="text" name="qty" value="1" class="quantity-field">
+                                                <input onkeyup="updateRow(this)" min="1" type="text" name="qty" value="1" class="quantity-field" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>

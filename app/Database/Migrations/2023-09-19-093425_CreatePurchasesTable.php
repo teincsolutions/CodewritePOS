@@ -49,6 +49,35 @@ class CreatePurchasesTable extends Migration
                 'constraint' => ['due', 'paid'],
                 'default' => 'due'
             ],
+            'tax_id' => [
+                'type'       => 'INT',
+                'constraint' => 5,
+                'unsigned'   => true,
+                'null' => true,
+            ],
+            'tax' => [
+                'type' => 'DECIMAL',
+                'constraint' => "10,2",
+                'default' => 0,
+            ],
+            'discount' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'defaut' => 0.00
+            ],
+            'shipping' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'defaut' => 0.00
+            ],
+            'paid' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'defaut' => 0.00
+            ],
             'user_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,
@@ -67,8 +96,10 @@ class CreatePurchasesTable extends Migration
 
         $forge->addField($fields);
         $forge->addPrimaryKey('id');
+        $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_purchase_user_id');
         $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_purchase_store_id');
         $forge->addForeignKey('supplier_id', 'suppliers', 'id', 'CASCADE', 'CASCADE', 'fk_purchase_supplier_id');
+        $forge->addForeignKey('tax_id', 'taxes', 'id', 'RESTRICT', 'RESTRICT', 'fk_purchase_tax_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('purchases', true, $attributes);

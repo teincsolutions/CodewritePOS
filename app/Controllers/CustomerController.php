@@ -34,7 +34,7 @@ class CustomerController extends BaseController
         if ($id) {
             $model = new CustomerModel();
             $data = array_merge($data, [
-                'customer' => (object)$model->find($id),
+                'customer' => $model->find($id),
                 'title' => 'Edit Customer',
             ]);
         }
@@ -52,7 +52,7 @@ class CustomerController extends BaseController
         ];
         $model = new CustomerModel();
         $data = array_merge($data, [
-            'customer' => (object)$model->find($id),
+            'customer' => $model->find($id),
         ]);
 
         return view('pages/customers/show_customer', $data);
