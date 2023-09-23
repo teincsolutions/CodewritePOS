@@ -55,8 +55,8 @@ $(function () {
           return null;
         },
       },
-      { data: "name", name: "units.label" },
-      { data: "phone", name: "units.description" },
+      { data: "label", name: "units.label" },
+      { data: "description", name: "units.description" },
       {
         data: "status",
         name: "units.status",

@@ -55,29 +55,18 @@ $(function () {
           return null;
         },
       },
-      { data: "name", name: "expenses.date" },
-      { data: "phone", name: "expenses.store_id" },
-      { data: "email", name: "expenses.expense_category_id" },
-      { data: "address", name: "expenses.amount" },
+      { data: "expense_date", name: "expenses.expense_date" },
+      { data: "store_id", name: "expenses.store_id" },
+      { data: "expense_category_id", name: "expenses.expense_category_id" },
+      { data: "amount", name: "expenses.amount" },
       {
-        data: "status",
-        name: "expenses.status",
+        data: "id",
+        name: "expenses.id",
         render: function (data, type, row) {
           if (type === "display") {
-            let status = ["'closed'", "'opened'"];
+            
             return `<div class="d-flex justify-content-between align-items-center">
-                        <div class="me-3 status-toggle d-flex justify-content-between align-items-center">
-                        <input type="checkbox" ${
-                          ["", "checked"][data == "opened" ? 1 : 0]
-                        } id="user${row.id}" onchange="updateRow(table,{id:${
-              row.id
-            },status:${
-              status[data == "opened" ? 0 : 1]
-            }}, '${baseUrl}/expenses')" class="check">
-                        <label for="user${
-                          row.id
-                        }" class="checktoggle">checkbox</label>
-                        </div>
+                       
                         <a class="me-3 text-secondary" href="${baseUrl}/expenses/edit/${
               row.id
             }"><i class="fa fa-edit fa-lg"></i></a>

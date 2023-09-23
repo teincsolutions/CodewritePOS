@@ -137,6 +137,21 @@ $routes->post('stores', [StoreController::class, 'save']);
 $routes->post('suppliers', [SupplierController::class, 'save']);
 $routes->post('units', [UnitController::class, 'save']);
 
+//Put Request
+$routes->put('expense-categories', [ExpenseCategoryController::class, 'save']);
+$routes->put('expenses', [ExpenseController::class, 'save']);
+$routes->put('purchases', [PurchaseController::class, 'save']);
+$routes->put('returns/purchase', [PurchaseReturnController::class, 'save']);
+$routes->put('quotes', [QuoteController::class, 'save']);
+$routes->put('sales', [SalesController::class, 'save']);
+$routes->put('returns/sales', [SalesReturnController::class, 'save']);
+$routes->put('stores', [StoreController::class, 'save']);
+$routes->put('suppliers', [SupplierController::class, 'save']);
+$routes->put('units', [UnitController::class, 'save']);
+$routes->post('products', [ProductController::class, 'save']);
+
+$routes->post('transfers/product', [ProductTransferController::class, 'save']);
+$routes->post('transfers/product-unit', [ProductUnitTransferController::class, 'save']);
 
 // delete requests
 $routes->delete('product-adjustments/(:num)', [AdjustmentController::class, 'delete']);

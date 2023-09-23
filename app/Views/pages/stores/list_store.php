@@ -3,11 +3,13 @@
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h4>Store List</h4>
-            <h6>Manage your Store</h6>
+            <h4>Store list</h4>
+            <h6>View/Search Store</h6>
         </div>
         <div class="page-btn">
-            <a href="https://dreamspos.dreamguystech.com/html/template/addstore.html" class="btn btn-added"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus.svg" alt="img" class="me-2">Add Store</a>
+            <a href="<?= site_url('stores/create') ?>" class="btn btn-added">
+                <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus.svg" class="me-1" alt="img">Add Store
+            </a>
         </div>
     </div>
 
@@ -26,44 +28,27 @@
                     </div>
                 </div>
                 <div class="wordset">
-                    <ul>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/pdf.svg" alt="img"></a>
-                        </li>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/excel.svg" alt="img"></a>
-                        </li>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/printer.svg" alt="img"></a>
-                        </li>
-                    </ul>
+
                 </div>
             </div>
 
             <div class="card" id="filter_inputs">
                 <div class="card-body pb-0">
                     <div class="row">
-                        <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
-                                <input type="text" placeholder="Store Name">
+                                <input name="name" type="text" placeholder="Enter Store Name">
                             </div>
                         </div>
-                        <div class="col-lg-2 col-sm-6 col-12">
+
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
-                                <input type="text" placeholder="Enter Phone">
+                                <input name="description" type="text" placeholder="Enter Store Description">
                             </div>
                         </div>
-                        <div class="col-lg-2 col-sm-6 col-12">
+                         <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
-                                <input type="text" placeholder="Enter Email">
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-sm-6 col-12">
-                            <div class="form-group">
-                                <select class="select">
-                                    <option>Disable</option>
-                                    <option>Enable</option>
-                                </select>
+                                <input name="location" type="text" placeholder="Enter Store Location">
                             </div>
                         </div>
                         <div class="col-lg-1 col-sm-6 col-12 ms-auto">
@@ -76,465 +61,24 @@
             </div>
 
             <div class="table-responsive">
-                <table class="table  datanew">
+                <table id="storestable" class="table">
                     <thead>
                         <tr>
-                            <th>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </th>
-                            <th>Store name </th>
-                            <th>User name </th>
-                            <th>Phone</th>
-                            <th>email</th>
-                            <th>Status</th>
+                            <th></th>
+                            <th>Store Name</th>
+                            <th>Description</th>
+                            <th>Location</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox" id="select-all">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>Thomas</td>
-                            <td>Thomas21 </td>
-                            <td>+12163547758 </td>
-                            <td><a href="https://dreamspos.dreamguystech.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="abdfc3c4c6cad8ebced3cac6dbc7ce85c8c4c6">[email&#160;protected]</a>
-                            </td>
-                            <td>
-                                <div class="status-toggle d-flex justify-content-between align-items-center">
-                                    <input type="checkbox" id="user1" class="check">
-                                    <label for="user1" class="checktoggle">checkbox</label>
-                                </div>
-                            </td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editstore.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>Benjamin</td>
-                            <td>504Benjamin </td>
-                            <td>123-456-888</td>
-                            <td><a href="https://dreamspos.dreamguystech.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f794828483989a9285b7928f969a879b92d994989a">[email&#160;protected]</a>
-                            </td>
-                            <td>
-                                <div class="status-toggle d-flex justify-content-between align-items-center">
-                                    <input type="checkbox" id="user2" class="check" checked>
-                                    <label for="user2" class="checktoggle">checkbox</label>
-                                </div>
-                            </td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editstore.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>James</td>
-                            <td>James 524 </td>
-                            <td>+12163547758 </td>
-                            <td><a href="https://dreamspos.dreamguystech.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="482229252d3b082d30292538242d662b2725">[email&#160;protected]</a>
-                            </td>
-                            <td>
-                                <div class="status-toggle d-flex justify-content-between align-items-center">
-                                    <input type="checkbox" id="user3" class="check" checked>
-                                    <label for="user3" class="checktoggle">checkbox</label>
-                                </div>
-                            </td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editstore.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>Bruklin</td>
-                            <td>Bruklin2022</td>
-                            <td>123-456-888</td>
-                            <td><a href="https://dreamspos.dreamguystech.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fd9f8f8896919493bd98859c908d9198d39e9290">[email&#160;protected]</a>
-                            </td>
-                            <td>
-                                <div class="status-toggle d-flex justify-content-between align-items-center">
-                                    <input type="checkbox" id="user4" class="check" checked>
-                                    <label for="user4" class="checktoggle">checkbox</label>
-                                </div>
-                            </td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editstore.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>Franklin</td>
-                            <td>BeverlyWIN25</td>
-                            <td>+12163547758 </td>
-                            <td><a href="https://dreamspos.dreamguystech.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2260475447504e5b62475a434f524e470c414d4f">[email&#160;protected]</a>
-                            </td>
-                            <td>
-                                <div class="status-toggle d-flex justify-content-between align-items-center">
-                                    <input type="checkbox" id="user5" class="check">
-                                    <label for="user5" class="checktoggle">checkbox</label>
-                                </div>
-                            </td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editstore.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>B. Huber </td>
-                            <td>BeverlyWIN25</td>
-                            <td>+12163547758 </td>
-                            <td><a href="https://dreamspos.dreamguystech.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6b231e090e192b0e130a061b070e45080406">[email&#160;protected]</a>
-                            </td>
-                            <td>
-                                <div class="status-toggle d-flex justify-content-between align-items-center">
-                                    <input type="checkbox" id="user6" class="check">
-                                    <label for="user6" class="checktoggle">checkbox</label>
-                                </div>
-                            </td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editstore.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>Alwin</td>
-                            <td>Alwin243</td>
-                            <td>+12163547758 </td>
-                            <td><a href="https://dreamspos.dreamguystech.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="debdabadaab1b3bbac9ebba6bfb3aeb2bbf0bdb1b3">[email&#160;protected]</a>
-                            </td>
-                            <td>
-                                <div class="status-toggle d-flex justify-content-between align-items-center">
-                                    <input type="checkbox" id="user7" class="check">
-                                    <label for="user7" class="checktoggle">checkbox</label>
-                                </div>
-                            </td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editstore.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>Fred john</td>
-                            <td>FredJ25</td>
-                            <td>+12163547758 </td>
-                            <td><a href="https://dreamspos.dreamguystech.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2b414443456b4e534a465b474e05484446">[email&#160;protected]</a>
-                            </td>
-                            <td>
-                                <div class="status-toggle d-flex justify-content-between align-items-center">
-                                    <input type="checkbox" id="user15" class="check">
-                                    <label for="user15" class="checktoggle">checkbox</label>
-                                </div>
-                            </td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editstore.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>Rasmussen </td>
-                            <td>Cras56</td>
-                            <td>+12163547758 </td>
-                            <td><a href="https://dreamspos.dreamguystech.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6a380b19071f19190f042a0f120b071a060f44090507">[email&#160;protected]</a>
-                            </td>
-                            <td>
-                                <div class="status-toggle d-flex justify-content-between align-items-center">
-                                    <input type="checkbox" id="user9" class="check" checked>
-                                    <label for="user9" class="checktoggle">checkbox</label>
-                                </div>
-                            </td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editstore.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>Grace </td>
-                            <td>Grace2022</td>
-                            <td>+12163547758 </td>
-                            <td><a href="https://dreamspos.dreamguystech.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3a594f494e55575f487a5f425b574a565f14595557">[email&#160;protected]</a>
-                            </td>
-                            <td>
-                                <div class="status-toggle d-flex justify-content-between align-items-center">
-                                    <input type="checkbox" id="user10" class="check" checked>
-                                    <label for="user10" class="checktoggle">checkbox</label>
-                                </div>
-                            </td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editstore.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>Rasmussen </td>
-                            <td>Cras56</td>
-                            <td>+12163547758 </td>
-                            <td><a href="https://dreamspos.dreamguystech.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cd9facbea0b8bebea8a38da8b5aca0bda1a8e3aea2a0">[email&#160;protected]</a>
-                            </td>
-                            <td>
-                                <div class="status-toggle d-flex justify-content-between align-items-center">
-                                    <input type="checkbox" id="user19" class="check" checked>
-                                    <label for="user19" class="checktoggle">checkbox</label>
-                                </div>
-                            </td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editstore.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>Grace </td>
-                            <td>Grace2022</td>
-                            <td>+12163547758 </td>
-                            <td><a href="https://dreamspos.dreamguystech.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fc9f898f889391998ebc99849d918c9099d29f9391">[email&#160;protected]</a>
-                            </td>
-                            <td>
-                                <div class="status-toggle d-flex justify-content-between align-items-center">
-                                    <input type="checkbox" id="user18" class="check" checked>
-                                    <label for="user18" class="checktoggle">checkbox</label>
-                                </div>
-                            </td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editstore.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
+
                 </table>
             </div>
         </div>
     </div>
-
 </div>
 <?= $this->endSection() ?>
-
-<?= $this->section('modal') ?>
-<div class="modal fade" id="showpayment" tabindex="-1" aria-labelledby="showpayment" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Show Payments</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Reference</th>
-                                <th>Amount </th>
-                                <th>Paid By </th>
-                                <th>Paid By </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="bor-b1">
-                                <td>2022-03-07 </td>
-                                <td>INV/SL0101</td>
-                                <td>$ 1500.00 </td>
-                                <td>Cash</td>
-                                <td>
-                                    <a class="me-2" href="javascript:void(0);">
-                                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/printer.svg" alt="img">
-                                    </a>
-                                    <a class="me-2" href="javascript:void(0);" data-bs-target="#editpayment" data-bs-toggle="modal" data-bs-dismiss="modal">
-                                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                    </a>
-                                    <a class="me-2 confirm-text" href="javascript:void(0);">
-                                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="createpayment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Create Payment</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label>Customer</label>
-                            <div class="input-group">
-                                <input type="text" value="2022-03-07" class="datetimepicker">
-                                <a class="scanner-set input-group-text">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/datepicker.svg" alt="img">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label>Reference</label>
-                            <input type="text" value="INV/SL0101">
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label>Received Amount</label>
-                            <input type="text" value="1500.00">
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label>Paying Amount</label>
-                            <input type="text" value="1500.00">
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label>Payment type</label>
-                            <select class="select">
-                                <option>Cash</option>
-                                <option>Online</option>
-                                <option>Inprogress</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <label>Note</label>
-                            <textarea class="form-control"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-submit">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
+<?= $this->section('script') ?>
+<script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/stores.js') ?>"></script>
 <?= $this->endSection() ?>

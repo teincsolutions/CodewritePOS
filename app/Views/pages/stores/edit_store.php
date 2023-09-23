@@ -4,64 +4,45 @@
     <div class="page-header">
         <div class="page-title">
             <h4>Store Management</h4>
-            <h6>Add/Update Store</h6>
+            <h6>Create New Store</h6>
         </div>
     </div>
 
-    <div class="card">
+    <form action="<?=site_url('stores') ?>" class="post-form" method="post">
+         <?= csrf_field() ?>
+        <input type="hidden" name="id" value="<?= isset($store) ? $store->id : null ?>">
+        <input type="hidden" name="_method" value="<?= isset($store) ? 'put' : 'post' ?>">
+        <div class="card">
         <div class="card-body">
             <div class="row">
-                <div class="col-lg-3 col-sm-6 col-12">
+                <div class="col-lg-6 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Store Name</label>
-                        <input type="text">
+                        <label>Category Name</label>
+                        <input type="text" name="label" required placeholder="Store Category" value="<?=isset($store)?$store->label:null ?>">
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 col-12">
+                <div class="col-lg-6 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>User Name</label>
-                        <input type="text">
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Password</label>
-                        <div class="pass-group">
-                            <input type="password" class=" pass-input">
-                            <span class="fas toggle-password fa-eye-slash"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Phone</label>
-                        <input type="text">
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="text">
+                        <label>Location</label>
+                        <input type="text" name="location" required placeholder="Store Category" value="<?=isset($store)?$store->location:null ?>">
                     </div>
                 </div>
                 <div class="col-lg-12">
                     <div class="form-group">
-                        <label> Store Image</label>
-                        <div class="image-upload">
-                            <input type="file">
-                            <div class="image-uploads">
-                                <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/upload.svg" alt="img">
-                                <h4>Drag and drop a file to upload</h4>
-                            </div>
-                        </div>
+                        <label>Description</label>
+                        <textarea class="form-control" name="description"><?=isset($store)?$store->description:null ?></textarea>
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <a href="javascript:void(0);" class="btn btn-submit me-2">Submit</a>
-                    <a href="https://dreamspos.dreamguystech.com/html/template/storelist.html" class="btn btn-cancel">Cancel</a>
+                    <button type="submit" class="btn btn-submit me-2">Submit</button>
+                    <a href="<?=site_url('stores') ?>" class="btn btn-cancel">Cancel</a>
                 </div>
             </div>
         </div>
     </div>
+    </form>
 </div>
+<?= $this->endSection() ?>
+<?= $this->section('script') ?>
+<script src="<?= base_url('assets/js/handle-post.js') ?>"></script>
 <?= $this->endSection() ?>

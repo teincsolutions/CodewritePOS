@@ -3,9 +3,9 @@
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h4>Edit Customer Management</h4>
-            <h6>Edit/Update Customer</h6>
-        </div>
+            <h4>Customer Management</h4>
+            <h6>Save/Update Customer</h6>
+        </div> 
     </div>
 
     <form action="<?=site_url('customers') ?>" class="card post-form" method="post">
@@ -23,45 +23,22 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Email</label>
-                        <input name="email" type="text" value="Thomas@example.com">
+                        <input name="email" type="text" value="<?=isset($customer)?$customer->email:null ?>">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Phone</label>
-                        <input name="phone" type="text" value="+12163547758 ">
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Choose Country</label>
-                        <select class="select">
-                            <option>United States</option>
-                            <option>India</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>City</label>
-                        <select class="select">
-                            <option>Newyork</option>
-                            <option>City</option>
-                        </select>
+                        <input name="phone" type="text" value="<?=isset($customer)?$customer->phone:null ?> ">
                     </div>
                 </div>
                 <div class="col-lg-9 col-12">
                     <div class="form-group">
                         <label>Address</label>
-                        <input type="text" value="132, My Street, Kingston, New York ">
+                        <input type="text" value="<?=isset($customer)?$customer->address:null ?>">
                     </div>
                 </div>
-                <div class="col-lg-12">
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea class="form-control">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text </textarea>
-                    </div>
-                </div>
+                
                 <div class="col-lg-12">
                     <button type="submit" class="btn btn-submit me-2">Save</button>
                     <a href="<?=site_url('customers') ?>" class="btn btn-cancel">Cancel</a>

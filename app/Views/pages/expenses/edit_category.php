@@ -18,14 +18,14 @@
                 <div class="col-lg-6 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Category Name</label>
-                        <input type="text" name="label" required placeholder="Expense Category">
+                        <input type="text" name="label" required placeholder="Expense Category" value="<?=isset($expense_category)?$expense_category->label:null ?>">
                     </div>
                 </div>
                 <div class="col-lg-6"></div>
                 <div class="col-lg-12">
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea class="form-control" name="description"></textarea>
+                        <textarea class="form-control" name="description"><?=isset($expense_category)?$expense_category->description:null ?></textarea>
                     </div>
                 </div>
                 <div class="col-lg-12">

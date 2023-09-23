@@ -9,7 +9,7 @@
         <div class="page-btn">
             <a href="<?=site_url('customers/create') ?>" class="btn btn-added"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus.svg" alt="img">Add Customer</a>
         </div>
-    </div>
+    </div> 
 
     <div class="card">
         <div class="card-body">
@@ -50,7 +50,7 @@
                         </div>
                         <div class="col-lg-1 col-sm-6 col-12  ms-auto">
                             <div class="form-group">
-                                <a class="btn btn-filters ms-auto"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/search-whites.svg" alt="img"></a>
+                                <a class="btn btn-filters filter ms-auto"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/search-whites.svg" alt="img"></a>
                             </div>
                         </div>
                     </div>
@@ -126,7 +126,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> 
 <div class="modal fade" id="createpayment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

@@ -39,7 +39,50 @@ class ProductController extends BaseController
         }
         return view('pages/products/edit_product', $data);
     }
+    public function save()
+    {
+        $model = new ProductModel();
+        $inputs = $this->request->getVar();
+        if(auth()->user())
+        $inputs['user_id'] = auth()->user()->id;
+        $id = $this->request->getPost('id');
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => null,
+            'input' => $inputs,
+        ];
+        $Product = $model->where('id',$id)->first();
 
+        if ($Product) {
+            if ($model->save($inputs)) {
+                $res = array_merge($res, [
+                    'status' => true,
+                    'message' => "Product updated successfully!",
+                    'data' => $model->find($id),
+                ]);
+            } else {
+                $res = array_merge($res, [
+                    'status' => false,
+                    'message' => "Couldn't be updated!"
+                ]);
+            }
+        } else {
+            if ($model->save($inputs)) {
+                $res = array_merge($res, [
+                    'status' => true,
+                    'message' => "Product created successfully!",
+                    'data' => $model->find($model->getInsertID()),
+                ]);
+            } else {
+                $res = array_merge($res, [
+                    'status' => false,
+                    'message' => "Couldn't be created!"
+                ]);
+            }
+        }
+        return $this->response->setJSON($res);
+    }
     /**
      * return view for show
      * @return Response - http response

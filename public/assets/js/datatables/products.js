@@ -56,29 +56,28 @@ $(function () {
         },
       },
       { data: "name", name: "products.name" },
-      { data: "address", name: "products.description" },
-      { data: "phone", name: "products.barcode" },
-      { data: "email", name: "products.sku" },
-      { data: "address", name: "products.brand_id" },
-      { data: "address", name: "products.category_id" },
-      { data: "address", name: "products.unit_cost" },
-      { data: "address", name: "products.unit_price" },
-      { data: "address", name: "products.unit_id" },
-      { data: "address", name: "products.discounted" },
+      { data: "description", name: "products.description" },
+      { data: "barcode", name: "products.barcode" },
+      { data: "sku", name: "products.sku" },
+      { data: "brand_id", name: "products.brand_id" },
+      { data: "category_id", name: "products.category_id" },
+      { data: "unit_cost", name: "products.unit_cost" },
+      { data: "unit_price", name: "products.unit_price" },
+      { data: "unit_id", name: "products.unit_id" },
       {
-        data: "status",
-        name: "products.status",
+        data: "discontinued",
+        name: "products.discontinued",
         render: function (data, type, row) {
           if (type === "display") {
-            let status = ["'closed'", "'opened'"];
+            let discontinued = ["'closed'", "'opened'"];
             return `<div class="d-flex justify-content-between align-items-center">
                         <div class="me-3 status-toggle d-flex justify-content-between align-items-center">
                         <input type="checkbox" ${
                           ["", "checked"][data == "opened" ? 1 : 0]
                         } id="user${row.id}" onchange="updateRow(table,{id:${
               row.id
-            },status:${
-              status[data == "opened" ? 0 : 1]
+            },discontinued:${
+              discontinued[data == "opened" ? 0 : 1]
             }}, '${baseUrl}/products')" class="check">
                         <label for="user${
                           row.id

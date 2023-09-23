@@ -39,7 +39,50 @@ class StoreController extends BaseController
         }
         return view('pages/stores/edit_store', $data);
     }
+    public function save()
+    {
+        $model = new StoreModel();
+        $inputs = $this->request->getVar();
+        if(auth()->user())
+        $inputs['user_id'] = auth()->user()->id;
+        $id = $this->request->getPost('id');
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => null,
+            'input' => $inputs,
+        ];
+        $Store = $model->where('id',$id)->first();
 
+        if ($Store) {
+            if ($model->save($inputs)) {
+                $res = array_merge($res, [
+                    'status' => true,
+                    'message' => "Store updated successfully!",
+                    'data' => $model->find($id),
+                ]);
+            } else {
+                $res = array_merge($res, [
+                    'status' => false,
+                    'message' => "Couldn't be updated!"
+                ]);
+            }
+        } else {
+            if ($model->save($inputs)) {
+                $res = array_merge($res, [
+                    'status' => true,
+                    'message' => "Store created successfully!",
+                    'data' => $model->find($model->getInsertID()),
+                ]);
+            } else {
+                $res = array_merge($res, [
+                    'status' => false,
+                    'message' => "Couldn't be created!"
+                ]);
+            }
+        }
+        return $this->response->setJSON($res);
+    }
     /**
      * return view for show
      * @return Response - http response

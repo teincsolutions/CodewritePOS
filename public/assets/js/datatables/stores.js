@@ -1,9 +1,9 @@
 let table;
 
 $(function () {
-  table = $("#supplierstable").DataTable({
+  table = $("#storestable").DataTable({
     ajax: {
-      url: baseUrl + "/suppliers/datatable",
+      url: baseUrl + "/stores/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
@@ -55,13 +55,12 @@ $(function () {
           return null;
         },
       },
-      { data: "name", name: "suppliers.name" },
-      { data: "email", name: "suppliers.email" },
-      { data: "phone", name: "suppliers.phone" },
-      { data: "address", name: "suppliers.address" },
+      { data: "name", name: "stores.name" },
+      { data: "description", name: "stores.description" },
+      { data: "location", name: "stores.location" },
       {
         data: "status",
-        name: "suppliers.status",
+        name: "stores.status",
         render: function (data, type, row) {
           if (type === "display") {
             let status = ["'closed'", "'opened'"];
@@ -73,17 +72,17 @@ $(function () {
               row.id
             },status:${
               status[data == "opened" ? 0 : 1]
-            }}, '${baseUrl}/suppliers')" class="check">
+            }}, '${baseUrl}/stores')" class="check">
                         <label for="user${
                           row.id
                         }" class="checktoggle">checkbox</label>
                         </div>
-                        <a class="me-3 text-secondary" href="${baseUrl}/suppliers/edit/${
+                        <a class="me-3 text-secondary" href="${baseUrl}/stores/edit/${
               row.id
             }"><i class="fa fa-edit fa-lg"></i></a>
                         <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${
                           row.id
-                        }, '${baseUrl}/suppliers')"><i class="fa fa-trash fa-lg"></i></a>
+                        }, '${baseUrl}/stores')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;

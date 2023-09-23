@@ -13,7 +13,11 @@ class StoreModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+        'name',
+        'description',
+        'location',
+    ];
 
     // Dates
     protected $useTimestamps = false;

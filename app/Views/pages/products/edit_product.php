@@ -8,39 +8,64 @@
         </div>
     </div>
 
-    <div class="card">
+   <form action="<?=site_url('products') ?>" class="card post-form" method="post">
+         <?= csrf_field() ?>
+        <input type="hidden" name="id" value="<?= isset($product) ? $customer->id : null ?>">
+        <input type="hidden" name="_method" value="<?= isset($product) ? 'put' : 'post' ?>">
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
+                        <label>Product SKU</label>
+                        <input type="text" name="sku" value="<?=isset($product)?$product->sku:null ?>" required>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
                         <label>Product Name</label>
-                        <input type="text">
+                        <input type="text" name="name" value="<?=isset($product)?$product->name:null ?>" required>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Product Barcode</label>
+                        <input type="text" name="barcode" value="<?=isset($product)?$product->barcode:null ?>" required>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Unit Cost</label>
+                        <input type="text" name="unit_cost" value="<?=isset($product)?$product->unit_cost:null ?>" required>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Selling Price</label>
+                        <input type="text" name="unit_price" value="<?=isset($product)?$product->unit_price:null ?>" required>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Min. Quantity</label>
+                        <input type="number" name="min_quantiy" value="<?=isset($product)?$product->unit_price:null ?>" >
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Category</label>
-                        <select class="select">
+                        <select class="select" name="category_id">
                             <option>Choose Category</option>
-                            <option>Computers</option>
+                            <option value="1">Computers</option>
                         </select>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Sub Category</label>
-                        <select class="select">
-                            <option>Choose Sub Category</option>
-                            <option>Fruits</option>
-                        </select>
-                    </div>
-                </div>
+                
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Brand</label>
                         <select class="select">
                             <option>Choose Brand</option>
-                            <option>Brand</option>
+                            <option value="1">Brand</option>
                         </select>
                     </div>
                 </div>
@@ -49,32 +74,15 @@
                         <label>Unit</label>
                         <select class="select">
                             <option>Choose Unit</option>
-                            <option>Unit</option>
+                            <option value="1">Unit</option>
                         </select>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>SKU</label>
-                        <input type="text">
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Minimum Qty</label>
-                        <input type="text">
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Quantity</label>
-                        <input type="text">
-                    </div>
-                </div>
+                
                 <div class="col-lg-12">
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea class="form-control"></textarea>
+                        <textarea class="form-control" name="description"><?=isset($product)?$product->description:null ?></textarea>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
@@ -96,21 +104,6 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Price</label>
-                        <input type="text">
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label> Status</label>
-                        <select class="select">
-                            <option>Closed</option>
-                            <option>Open</option>
-                        </select>
-                    </div>
-                </div>
                 <div class="col-lg-12">
                     <div class="form-group">
                         <label> Product Image</label>
@@ -124,11 +117,14 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <a href="javascript:void(0);" class="btn btn-submit me-2">Submit</a>
-                    <a href="https://dreamspos.dreamguystech.com/html/template/productlist.html" class="btn btn-cancel">Cancel</a>
+                   <button type="submit" class="btn btn-submit me-2">Save</button>
+                    <a href="<?=site_url('products') ?>" class="btn btn-cancel">Cancel</a>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
+<?= $this->endSection() ?>
+<?= $this->section('script') ?>
+<script src="<?= base_url('assets/js/handle-post.js') ?>"></script>
 <?= $this->endSection() ?>
