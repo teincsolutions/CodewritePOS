@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\StoreModel;
+use App\Models\UserModel;
 use CodeIgniter\HTTP\Response;
 
 class StoreController extends BaseController

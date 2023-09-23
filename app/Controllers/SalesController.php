@@ -3,7 +3,9 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\CustomerModel;
 use App\Models\SalesModel;
+use App\Models\StoreModel;
 use CodeIgniter\HTTP\Response;
 
 class SalesController extends BaseController
@@ -26,14 +28,21 @@ class SalesController extends BaseController
      */
     public function pos($id = null)
     {
+        $model = new SalesModel();
+        $lastItem = $model->orderBy('id', 'asc')->first();
+        $lastId = $lastItem?$lastItem->id:1;
+        $storeModel = new StoreModel();
+        $cusModel = new CustomerModel();
         $data = [
-            'title' => 'Point of Sales'
+            'title' => 'Point of Sales',
+            'invoice' => date('ymd').str_pad($lastId%10000,4,"0",STR_PAD_LEFT),
+            'stores' => $storeModel->findAll(),
+            'customers' => $cusModel->findAll(),
         ];
 
         if ($id) {
-            $model = new SalesModel();
             $data = array_merge($data, [
-                'sale' => (object)$model->find($id),
+                'sale' => (object)$model->where('id',$id)->first(),
                 'title' => 'POS',
             ]);
         }

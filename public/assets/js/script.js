@@ -44,10 +44,6 @@ $(document).ready(function () {
     $(this).parent().parent().parent().hide();
   });
 
-  $(document).on("click", ".delete-set", function () {
-    $(this).parent().parent().hide();
-  });
-
   // Owl Carousel
   if ($(".product-slide").length > 0) {
     $(".product-slide").owlCarousel({

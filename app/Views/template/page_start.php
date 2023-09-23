@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://dreamspos.dreamguystech.com/html/template/assets/plugins/owlcarousel/owl.carousel.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://dreamspos.dreamguystech.com/html/template/assets/css/style.css">
-
+    <?= $this->renderSection('link') ?>
 </head>
 
 <body class="<?= isset($bodyClass) ? $bodyClass : null ?>">

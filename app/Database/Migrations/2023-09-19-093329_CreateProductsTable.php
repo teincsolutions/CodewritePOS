@@ -57,14 +57,41 @@ class CreateProductsTable extends Migration
                 'constraint' => "32,2",
                 'null' => false,
             ],
+            'tax' => [
+                'type' => 'DECIMAL',
+                'constraint' => "8,2",
+                'default' => 0,
+            ],
+            
+            'discount' => [
+                'type' => 'DECIMAL',
+                'constraint' => "8,2",
+                'default' => 0
+            ],
+            'min_qty' => [
+                'type' => 'DECIMAL',
+                'constraint' => "10,2",
+                'null' => false,
+                'default' => 10
+            ],
             'unit_id' => [
                 'type'       => 'INT',
                 'constraint' => 5,
                 'unsigned'       => true,
                 'null' => false,
             ],
+            'tax_id' => [
+                'type'       => 'INT',
+                'constraint' => 5,
+                'unsigned'   => true,
+                'null' => true,
+            ],
             'description' => [
                 'type' => 'TEXT',
+                'null' => true,
+            ],
+            'expiration' => [
+                'type'       => 'DATE',
                 'null' => true,
             ],
             'image_uri' => [

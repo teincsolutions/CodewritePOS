@@ -22,6 +22,8 @@ class ProductModel extends Model
         'category_id',
         'unit_cost',
         'unit_price',
+        'tax',
+        'discount',
         'unit_id',
         'description',
         'image_uri',
