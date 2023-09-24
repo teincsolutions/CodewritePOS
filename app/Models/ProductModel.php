@@ -24,7 +24,7 @@ class ProductModel extends Model
         'category_id',
         'unit_cost',
         'unit_price',
-        'tax',
+        'tax_id',
         'discount',
         'unit_id',
         'description',
@@ -53,7 +53,7 @@ class ProductModel extends Model
     protected $beforeUpdate   = ['setDefaultBrandId'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
-    protected $afterFind      = [];
+    protected $afterFind      = ['setInstock'];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
@@ -96,8 +96,21 @@ class ProductModel extends Model
 
     protected function setDefaultBrandId(array $data)
     {
-        if (isNull($data['data']['brand_id']))
+        if (isset($data['data']['brand_id']) && isNull($data['data']['brand_id']))
             $data['data']['brand_id'] = NULL;
         return $data;
+    }
+
+    protected function setInstock($model)
+    {
+        $stockModel = new StockModel();
+        if ($model['singleton']) {
+            $model['data']->inventory = $stockModel->where('product_id', $model['data']->id)->findAll();
+        } else {
+            foreach ($model['data'] as $key => $row) {
+                $model['data'][$key]->inventory = $stockModel->where('product_id', $row->id)->findAll();
+            }
+        }
+        return $model;
     }
 }

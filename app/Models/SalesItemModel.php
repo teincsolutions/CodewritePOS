@@ -4,6 +4,8 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
+use function PHPUnit\Framework\isNull;
+
 class SalesItemModel extends Model
 {
     protected $DBGroup          = 'default';
@@ -13,7 +15,16 @@ class SalesItemModel extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+        'product_id',
+        'unit_price',
+        'sale_id',
+        'qty',
+        'tax',
+       'tax_id',
+        'discount',
+        'subtotal'
+    ];
 
     // Dates
     protected $useTimestamps = false;
@@ -30,12 +41,19 @@ class SalesItemModel extends Model
 
     // Callbacks
     protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
+    protected $beforeInsert   = ['setDefaultId'];
     protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
+    protected $beforeUpdate   = ['setDefaultId'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    protected function setDefaultId(array $data)
+    {
+        if (isset($data['data']['tax_id']) && isNull($data['data']['tax_id']))
+            $data['data']['tax_id'] = NULL;
+        return $data;
+    }
 }

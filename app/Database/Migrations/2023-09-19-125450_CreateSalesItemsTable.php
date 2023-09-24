@@ -28,12 +28,13 @@ class CreateSalesItemsTable extends Migration
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'  => true,
+                'null' => false,
             ],
             'sale_id' => [
                 'type'       => 'BIGINT',
                 'constraint' => 18,
                 'unsigned'  => true,
-                'null' => true,
+                'null' => false,
             ],
             'unit_price' => [
                 'type'       => 'DECIMAL',
@@ -51,6 +52,7 @@ class CreateSalesItemsTable extends Migration
                 'constraint' => 5,
                 'unsigned'   => true,
                 'null' => true,
+                'default' =>null
             ],
             'tax' => [
                 'type'       => 'DECIMAL',

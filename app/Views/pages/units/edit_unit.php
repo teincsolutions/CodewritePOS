@@ -18,7 +18,7 @@
                 <div class="col-lg-6 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Unit Name</label>
-                        <input type="text" name="label" required placeholder="Expense Category" value="<?=isset($unit)?$unit->label:null ?>">
+                        <input type="text" name="label" required placeholder="Unit label" value="<?=isset($unit)?$unit->label:null ?>">
                     </div>
                 </div>
                 <div class="col-lg-6"></div>

@@ -24,6 +24,11 @@ class CreateTaxesTable extends Migration
                 'constraint' => 100,
                 'unique'     => true,
             ],
+            'rate' => [
+                'type' => 'DECIMAL',
+                'constraint' => "6,3",
+                'null' => false,
+            ],
             'description' => [
                 'type' => 'TEXT',
                 'null' => true,

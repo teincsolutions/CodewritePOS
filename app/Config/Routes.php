@@ -150,10 +150,10 @@ $routes->put('returns/sales', [SalesReturnController::class, 'save']);
 $routes->put('stores', [StoreController::class, 'save']);
 $routes->put('suppliers', [SupplierController::class, 'save']);
 $routes->put('units', [UnitController::class, 'save']);
-$routes->post('products', [ProductController::class, 'save']);
+$routes->put('products', [ProductController::class, 'save']);
 
-$routes->post('transfers/product', [ProductTransferController::class, 'save']);
-$routes->post('transfers/product-unit', [ProductUnitTransferController::class, 'save']);
+$routes->put('transfers/product', [ProductTransferController::class, 'save']);
+$routes->put('transfers/product-unit', [ProductUnitTransferController::class, 'save']);
 
 // delete requests
 $routes->delete('product-adjustments/(:num)', [AdjustmentController::class, 'delete']);

@@ -64,11 +64,6 @@ class CreateProductsTable extends Migration
                 'unsigned'   => true,
                 'null' => true,
             ],
-            'tax' => [
-                'type' => 'DECIMAL',
-                'constraint' => "8,2",
-                'default' => 0,
-            ],
             'discount' => [
                 'type' => 'DECIMAL',
                 'constraint' => "8,2",
@@ -85,6 +80,12 @@ class CreateProductsTable extends Migration
                 'constraint' => 5,
                 'unsigned'       => true,
                 'null' => false,
+            ],
+            'unit_qty' => [
+                'type' => 'DECIMAL',
+                'constraint' => "6,2",
+                'null' => false,
+                'default' => 1
             ],
             'description' => [
                 'type' => 'TEXT',

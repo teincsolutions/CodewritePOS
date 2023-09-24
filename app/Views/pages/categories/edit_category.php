@@ -7,7 +7,7 @@
             <h6>Create new product Category</h6>
         </div>
         <div class="page-btn">
-            <a href="<?= site_url('categories') ?>" class="btn btn-added"><i  class="fa fa-arrow-left me-2"></i>List Brands</a>
+            <a href="<?= site_url('categories') ?>" class="btn btn-added"><i  class="fa fa-arrow-left me-2"></i>List Category</a>
         </div>
     </div>
 

@@ -59,36 +59,67 @@ $(function () {
       { data: "description", name: "products.description" },
       { data: "barcode", name: "products.barcode" },
       { data: "sku", name: "products.sku" },
-      { data: "brand_id", name: "products.brand_id" },
-      { data: "category_id", name: "products.category_id" },
+      {
+        data: "brand",
+        name: "products.brand_id",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return data
+              ? `<a target="_blank" href="${baseUrl}/brands/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+              : "";
+          }
+          return data ? data.id : null;
+        },
+      },
+      {
+        data: "category",
+        name: "products.category_id",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return data
+              ? `<a target="_blank" href="${baseUrl}/categories/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+              : "";
+          }
+          return data ? data.id : null;
+        },
+      },
       { data: "unit_cost", name: "products.unit_cost" },
       { data: "unit_price", name: "products.unit_price" },
-      { data: "unit_id", name: "products.unit_id" },
+      {
+        data: "unit",
+        name: "products.unit_id",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return data ? data.label : "";
+          }
+          return data ? data.id : null;
+        },
+      },
       {
         data: "discontinued",
         name: "products.discontinued",
         render: function (data, type, row) {
           if (type === "display") {
-            let discontinued = ["'closed'", "'opened'"];
-            return `<div class="d-flex justify-content-between align-items-center">
-                        <div class="me-3 status-toggle d-flex justify-content-between align-items-center">
-                        <input type="checkbox" ${
-                          ["", "checked"][data == "opened" ? 1 : 0]
-                        } id="user${row.id}" onchange="updateRow(table,{id:${
+            return `<label class="checkboxs"><input type="checkbox"
+                        ${
+                          ["", "checked"][data]
+                        }><span onclick="updateRow(table,{id:${
               row.id
             },discontinued:${
-              discontinued[data == "opened" ? 0 : 1]
-            }}, '${baseUrl}/products')" class="check">
-                        <label for="user${
-                          row.id
-                        }" class="checktoggle">checkbox</label>
-                        </div>
-                        <a class="me-3 text-secondary" href="${baseUrl}/products/edit/${
-              row.id
-            }"><i class="fa fa-edit fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${
-                          row.id
-                        }, '${baseUrl}/products')"><i class="fa fa-trash fa-lg"></i></a>
+              data == 0 ? 1 : 0
+            }},'${baseUrl}/products')" class="checkmarks"></span></label>`;
+          }
+          return data;
+        },
+      },
+      {
+        data: "id",
+        name: "products.id",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return `<div class="d-flex justify-content-between align-items-center">
+                        <a class="me-3 text-secondary" href="${baseUrl}/products/edit/${row.id}"><i class="fa fa-edit fa-lg"></i></a>
+                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${row.id}, '${baseUrl}/products')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;

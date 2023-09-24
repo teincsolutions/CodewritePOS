@@ -76,7 +76,11 @@ form.on("submit", function (e) {
   }
 });
 
-$(".select2-category,.select2-brand, .select2-unit").select2({
+$(".select2-category,.select2-brand, .select2-unit, .select2-tax").select2({
   placeholder: "Choose an option",
-  clear: true,
+  allowClear: true,
+});
+
+$(".select2-tax").on('change', (e)=>{
+  $("[name='tax']").val($(this).data('rate'))
 });

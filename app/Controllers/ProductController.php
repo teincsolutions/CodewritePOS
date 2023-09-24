@@ -35,11 +35,13 @@ class ProductController extends BaseController
         $catModel = new CategoryModel();
         $unitModel = new UnitModel();
         $brandModel = new BrandModel();
+        $taxModel = new TaxModel();
 
         $data = [
             'title' => 'Create Product',
             'categories' => $catModel->findAll(),
             'units' => $unitModel->findAll(),
+            'taxes' => $taxModel->findAll(),
             'brands' => $brandModel->findAll(),
         ];
 
@@ -136,7 +138,7 @@ class ProductController extends BaseController
             $model = new UnitModel();
             $item->unit = $model->where('id',$item->unit_id)->first();
             $model = new TaxModel();
-            $item->tax = $model->where('id',$item->tax_id)->first()->amount;
+            $item->tax = $model->where('id',$item->tax_id)->first();
             return $item;
         }));
     }

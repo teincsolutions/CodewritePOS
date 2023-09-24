@@ -8,12 +8,16 @@ class StockModel extends Model
 {
     protected $DBGroup          = 'default';
     protected $table            = 'stocks';
-    protected $primaryKey       = 'id';
-    protected $useAutoIncrement = true;
+    protected $primaryKey       = 'product_id';
+    protected $useAutoIncrement = false;
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+        'product_id',
+        'store_id',
+        'instock'
+    ];
 
     // Dates
     protected $useTimestamps = false;

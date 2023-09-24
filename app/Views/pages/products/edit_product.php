@@ -47,7 +47,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Min. Quantity</label>
-                        <input type="number" name="min_quantiy" class="form-control" value="<?= isset($product) ? $product->unit_price : 10 ?>" placeholder="Minimum quantity">
+                        <input type="number" name="min_qty" class="form-control" value="<?= isset($product) ? $product->min_qty : 10 ?>" placeholder="Minimum quantity">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
@@ -105,7 +105,12 @@
                         </select>
                     </div>
                 </div>
-
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Unit Quantity</label>
+                        <input type="number" name="unit_qty" class="form-control" value="<?= isset($product) ? $product->unit_qty : 1 ?>" placeholder="Unit quantity">
+                    </div>
+                </div>
                 <div class="col-lg-12">
                     <div class="form-group">
                         <label>Description</label>
@@ -115,12 +120,12 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Tax</label>
-                        <select name="tax_id" class="select">
+                        <select name="tax_id" class="select2-tax">
                             <option value=""></option>
                             <?php
                             if (isset($taxes) && isset($product))
                                 foreach ($taxes as $row) { ?>
-                                <option taxes="<?= $row->id ?>" <?= $row->id === $product->tax_id ? 'selected' : '' ?>><?= $row->label; ?></option>
+                                <option value="<?= $row->id ?>" <?= $row->id == $product->tax_id ? 'selected' : '' ?>><?= $row->label; ?></option>
                                 <?php }
                             else if (isset($taxes)) {
                                 foreach ($taxes as $row) { ?>
@@ -132,8 +137,8 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Discount Type</label>
-                        <input type="number" name="discount" class="form-control" value="<?= isset($product) ? $product->discount : 0.00 ?>" placeholder="Discount amount">
+                        <label>Product Discount</label>
+                        <input type="number" name="discount" step="any" class="form-control" value="<?= isset($product) ? $product->discount : "0.00" ?>" placeholder="Discount amount">
                     </div>
                 </div>
                 <div class="col-lg-12">
