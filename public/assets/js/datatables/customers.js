@@ -8,10 +8,14 @@ $(function () {
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $("#filter_inputs input, #filter_inputs select");
+        let filterForm = $("#filter_inputs input, #filter_inputs select:selected");
         filterForm.each((i, item) => {
           field = $(item);
-          filter[field.attr("name")] = field.val();
+         if (field.prop("tagName") === "SELECT"){
+ if (typeof field
+                .children("option:selected").val() !== "undefined" && field.children("option:selected").val() !='')
+              filter[field.attr("name")] = field.children("option:selected").val();
+            }else {filter[field.attr("name")] = field.val();}
         });
 
         params.fields = filter;
@@ -59,9 +63,23 @@ $(function () {
       { data: "phone", name: "customers.phone" },
       { data: "email", name: "customers.email" },
       { data: "address", name: "customers.address" },
-      { data: "user", name: "customers.user_id",render:function(data, type, row){
-        return data?data.username:null;
-      } },
+      {
+        data: "balance",
+        render: function (data, type, row) {
+          return data < 0
+            ? `(GHS ${Math.abs(data).toFixed(2)})`
+            : `GHS ${data}`;
+        },
+      },
+      {
+        data: "user",
+        name: "customers.user_id",
+        render: function (data, type, row) {
+          if (type === "display")
+            return data ? `${data.firstname} ${data.lastname}` : null;
+            return data ? data.id : null;
+        },
+      },
       {
         data: "status",
         name: "customers.status",

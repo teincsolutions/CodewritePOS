@@ -22,7 +22,8 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Dashboard::index');
+$routes->get('/', 'DashboardController::index');
+$routes->get('products/search', 'ProductController::search');
 
 //indexs
 $routes->get('product-adjustments', [AdjustmentController::class, 'index']);

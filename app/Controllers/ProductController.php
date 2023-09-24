@@ -9,6 +9,7 @@ use App\Models\ProductModel;
 use App\Models\TaxModel;
 use App\Models\UnitModel;
 use App\Models\UserModel;
+use CodeIgniter\Database\RawSql;
 use CodeIgniter\HTTP\Response;
 use SebastianBergmann\CodeCoverage\Report\Xml\Unit;
 
@@ -128,18 +129,17 @@ class ProductController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new ProductModel();
-        return $this->response->setJSON(toDatatableResult($model, $inputs,function($item){
-            $model = new UserModel();
-            $item->user = $model->where('id',$item->user_id)->first();
-            $model = new BrandModel();
-            $item->brand = $model->where('id',$item->brand_id)->first();
-            $model = new CategoryModel();
-            $item->category = $model->where('id',$item->category_id)->first();
-            $model = new UnitModel();
-            $item->unit = $model->where('id',$item->unit_id)->first();
-            $model = new TaxModel();
-            $item->tax = $model->where('id',$item->tax_id)->first();
-            return $item;
-        }));
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+    /**
+     * return json for search
+     * @return Response - http response
+     */
+    public function search(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new ProductModel();
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 }

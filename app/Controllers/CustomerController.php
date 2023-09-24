@@ -66,14 +66,10 @@ class CustomerController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new CustomerModel();
-        return $this->response->setJSON(toDatatableResult($model, $inputs, function($item){
-            $model = new UserModel();
-            $item->user = $model->where('id',$item->user_id)->first();
-            return $item;
-        }));
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
-       /**
+    /**
      * return json for save
      * @return Response - http response
      */
@@ -81,8 +77,8 @@ class CustomerController extends BaseController
     {
         $model = new CustomerModel();
         $inputs = $this->request->getVar();
-        if(auth()->user())
-        $inputs['user_id'] = auth()->user()->id;
+        if (auth()->user())
+            $inputs['user_id'] = auth()->user()->id;
         $id = $this->request->getPost('id');
         $res = [
             'status' => false,
@@ -90,9 +86,9 @@ class CustomerController extends BaseController
             'message' => null,
             'input' => $inputs,
         ];
-        $Customer = $model->find($id);
+        $customer = $model->where('id',$id)->first();
 
-        if ($Customer) {
+        if ($customer) {
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,

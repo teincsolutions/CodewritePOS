@@ -3,13 +3,11 @@
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h4>PURCHASE LIST</h4>
+            <h4>Purchases List</h4>
             <h6>Manage your purchases</h6>
         </div>
         <div class="page-btn">
-            <a href="https://dreamspos.dreamguystech.com/html/template/addpurchase.html" class="btn btn-added">
-                <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus.svg" alt="img">Add New Purchases
-            </a>
+            <a href="<?=site_url('purchases/create') ?>" class="btn btn-added"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus.svg" alt="img" class="me-1">Add Purchases</a>
         </div>
     </div>
 
@@ -28,60 +26,43 @@
                     </div>
                 </div>
                 <div class="wordset">
-                    <ul>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/pdf.svg" alt="img"></a>
-                        </li>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/excel.svg" alt="img"></a>
-                        </li>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/printer.svg" alt="img"></a>
-                        </li>
-                    </ul>
                 </div>
             </div>
 
             <div class="card" id="filter_inputs">
                 <div class="card-body pb-0">
                     <div class="row">
-                        <div class="col-lg col-sm-6 col-12">
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
-                                <input type="text" class="datetimepicker cal-icon" placeholder="Choose Date">
-                            </div>
-                        </div>
-                        <div class="col-lg col-sm-6 col-12">
-                            <div class="form-group">
-                                <input type="text" placeholder="Enter Reference">
-                            </div>
-                        </div>
-                        <div class="col-lg col-sm-6 col-12">
-                            <div class="form-group">
-                                <select class="select">
-                                    <option>Choose Supplier</option>
-                                    <option>Supplier</option>
+                                <select name="supplier_id" class="select2-supplier">
+                                    <option value=""></option>
+                                    <?php
+                                    if (isset($suppliers))
+                                        foreach ($suppliers as $row) { ?>
+                                        <option value="<?= $row->id ?>">
+                                            <?= $row->name; ?><?= $row->address ? "($row->address)" : "($row->phone)"; ?>
+                                        </option>
+                                    <?php } ?>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg col-sm-6 col-12">
+                        <div class="col-lg-2 col-sm-6 col-12">
                             <div class="form-group">
-                                <select class="select">
-                                    <option>Choose Status</option>
-                                    <option>Inprogress</option>
+                                <input type="text" name="invoice" placeholder="Enter Reference No" value="">
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-sm-6 col-12">
+                            <div class="form-group">
+                                <select name="payment_status" class="select">
+                                    <option value="">Select a status</option>
+                                    <option value="pending">Due</option>
+                                    <option value="paid">Paid</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg col-sm-6 col-12">
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
-                                <select class="select">
-                                    <option>Choose Payment Status</option>
-                                    <option>Payment Status</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-1 col-sm-6 col-12">
-                            <div class="form-group">
-                                <a class="btn btn-filters ms-auto"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/search-whites.svg" alt="img"></a>
+                                <a class="btn btn-filters ms-auto filter"><i class="fa fa-search"></i></a>
                             </div>
                         </div>
                     </div>
@@ -89,367 +70,206 @@
             </div>
 
             <div class="table-responsive">
-                <table class="table datanew">
+                <table id="dt-purchases" class="table">
                     <thead>
                         <tr>
                             <th>
-                                <label class="checkboxs">
-                                    <input type="checkbox" id="select-all">
-                                    <span class="checkmarks"></span>
-                                </label>
                             </th>
+                            <th>Date</th>
                             <th>Supplier Name</th>
                             <th>Reference</th>
-                            <th>Date</th>
                             <th>Status</th>
-                            <th>Grand Total</th>
+                            <th>Payment</th>
+                            <th>Total</th>
                             <th>Paid</th>
                             <th>Due</th>
-                            <th>Payment Status</th>
-                            <th>Action</th>
+                            <th>Biller</th>
+                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td class="text-bolds">Apex Computers</td>
-                            <td>PT001</td>
-                            <td>19 Nov 2022</td>
-                            <td><span class="badges bg-lightgreen">Received</span></td>
-                            <td>550</td>
-                            <td>120</td>
-                            <td>550</td>
-                            <td><span class="badges bg-lightgreen">Paid</span></td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editpurchase.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td class="text-bolds">Modern Automobile</td>
-                            <td>PT002</td>
-                            <td>19 Nov 2022</td>
-                            <td><span class="badges bg-lightgreen">Received</span></td>
-                            <td>410</td>
-                            <td>410</td>
-                            <td>410</td>
-                            <td><span class="badges bg-lightgreen">Paid</span></td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editpurchase.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td class="text-bolds">AIM Infotech</td>
-                            <td>PT003</td>
-                            <td>19 Nov 2022</td>
-                            <td><span class="badges bg-lightred">Pending</span></td>
-                            <td>210</td>
-                            <td>120</td>
-                            <td>210</td>
-                            <td><span class="badges bg-lightred">Unpaid</span></td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editpurchase.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td class="text-bolds">Best Power Tools</td>
-                            <td>PT004</td>
-                            <td>19 Nov 2022</td>
-                            <td><span class="badges bg-lightgreen">Received</span></td>
-                            <td>210</td>
-                            <td>120</td>
-                            <td>210</td>
-                            <td><span class="badges bg-lightred">Unpaid</span></td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editpurchase.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td class="text-bolds">Best Power Tools</td>
-                            <td>PT005</td>
-                            <td>19 Nov 2022</td>
-                            <td><span class="badges bg-lightred">Pending</span></td>
-                            <td>210</td>
-                            <td>120</td>
-                            <td>210</td>
-                            <td><span class="badges bg-lightred">UnPaid</span></td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editpurchase.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td class="text-bolds">Best Power Tools</td>
-                            <td>PT006</td>
-                            <td>19 Nov 2022</td>
-                            <td><span class="badges bg-lightgreen">Received</span></td>
-                            <td>210</td>
-                            <td>120</td>
-                            <td>210</td>
-                            <td><span class="badges bg-lightgreen">paid</span></td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editpurchase.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td class="text-bolds">Apex Computers</td>
-                            <td>PT007</td>
-                            <td>19 Nov 2022</td>
-                            <td><span class="badges bg-lightyellow">Ordered</span></td>
-                            <td>1000</td>
-                            <td>500</td>
-                            <td>1000</td>
-                            <td><span class="badges bg-lightyellow">Partial</span></td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editpurchase.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td class="text-bolds">Apex Computers</td>
-                            <td>PT008</td>
-                            <td>19 Nov 2022</td>
-                            <td><span class="badges bg-lightgreen">Received</span></td>
-                            <td>550</td>
-                            <td>120</td>
-                            <td>550</td>
-                            <td><span class="badges bg-lightgreen">Paid</span></td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editpurchase.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td class="text-bolds">Modern Automobile</td>
-                            <td>PT009</td>
-                            <td>19 Nov 2022</td>
-                            <td><span class="badges bg-lightgreen">Received</span></td>
-                            <td>410</td>
-                            <td>410</td>
-                            <td>410</td>
-                            <td><span class="badges bg-lightgreen">Paid</span></td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editpurchase.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td class="text-bolds">AIM Infotech</td>
-                            <td>PT010</td>
-                            <td>19 Nov 2022</td>
-                            <td><span class="badges bg-lightred">Pending</span></td>
-                            <td>210</td>
-                            <td>120</td>
-                            <td>210</td>
-                            <td><span class="badges bg-lightred">Unpaid</span></td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editpurchase.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td class="text-bolds">Best Power Tools</td>
-                            <td>PT011</td>
-                            <td>19 Nov 2022</td>
-                            <td><span class="badges bg-lightgreen">Received</span></td>
-                            <td>210</td>
-                            <td>120</td>
-                            <td>210</td>
-                            <td><span class="badges bg-lightred">Unpaid</span></td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editpurchase.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td class="text-bolds">Best Power Tools</td>
-                            <td>PT012</td>
-                            <td>19 Nov 2022</td>
-                            <td><span class="badges bg-lightred">Pending</span></td>
-                            <td>210</td>
-                            <td>120</td>
-                            <td>210</td>
-                            <td><span class="badges bg-lightred">UnPaid</span></td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editpurchase.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td class="text-bolds">Best Power Tools</td>
-                            <td>PT013</td>
-                            <td>19 Nov 2022</td>
-                            <td><span class="badges bg-lightgreen">Received</span></td>
-                            <td>210</td>
-                            <td>120</td>
-                            <td>210</td>
-                            <td><span class="badges bg-lightgreen">paid</span></td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editpurchase.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td class="text-bolds">Apex Computers</td>
-                            <td>PT014</td>
-                            <td>19 Nov 2022</td>
-                            <td><span class="badges bg-lightyellow">Ordered</span></td>
-                            <td>1000</td>
-                            <td>500</td>
-                            <td>1000</td>
-                            <td><span class="badges bg-lightyellow">Partial</span></td>
-                            <td>
-                                <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editpurchase.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+<?= $this->endSection() ?>
+
+<?= $this->section('modal') ?>
+<div class="modal fade" id="showpayment" tabindex="-1" aria-labelledby="showpayment" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Show Payments</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Reference</th>
+                                <th>Amount </th>
+                                <th>Paid By </th>
+                                <th>Paid By </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bor-b1">
+                                <td>2022-03-07 </td>
+                                <td>INV/SL0101</td>
+                                <td>$ 0.00 </td>
+                                <td>Cash</td>
+                                <td>
+                                    <a class="me-2" href="javascript:void(0);">
+                                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/printer.svg" alt="img">
+                                    </a>
+                                    <a class="me-2" href="javascript:void(0);" data-bs-target="#editpayment" data-bs-toggle="modal" data-bs-dismiss="modal">
+                                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
+                                    </a>
+                                    <a class="me-2 confirm-text" href="javascript:void(0);">
+                                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="createpayment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Supplier</label>
+                            <div class="input-groupicon">
+                                <input type="text" value="2022-03-07" class="datetimepicker">
+                                <div class="addonset">
+                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/calendars.svg" alt="img">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Reference</label>
+                            <input type="text" value="INV/SL0101">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Received Amount</label>
+                            <input type="text" value="0.00">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Paying Amount</label>
+                            <input type="text" value="0.00">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Payment type</label>
+                            <select class="select">
+                                <option>Cash</option>
+                                <option>Online</option>
+                                <option>Inprogress</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group mb-0">
+                            <label>Note</label>
+                            <textarea class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-submit">Submit</button>
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editpayment" tabindex="-1" aria-labelledby="editpayment" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Payment</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Supplier</label>
+                            <div class="input-groupicon">
+                                <input type="text" value="2022-03-07" class="datetimepicker">
+                                <div class="addonset">
+                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/datepicker.svg" alt="img">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Reference</label>
+                            <input type="text" value="INV/SL0101">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Received Amount</label>
+                            <input type="text" value="0.00">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Paying Amount</label>
+                            <input type="text" value="0.00">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Payment type</label>
+                            <select class="select">
+                                <option>Cash</option>
+                                <option>Online</option>
+                                <option>Inprogress</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group mb-0">
+                            <label>Note</label>
+                            <textarea class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-submit">Submit</button>
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<?= $this->endSection() ?>
+
+<?= $this->section('script') ?>
+<script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/purchases.js') ?>"></script>
 <?= $this->endSection() ?>

@@ -59,6 +59,10 @@ class BrandController extends BaseController
     {
         $model = new BrandModel();
         $inputs = $this->request->getVar();
+        if (auth()->user())
+            $inputs['user_id'] = auth()->user()->id;
+
+
         $id = $this->request->getPost('id');
         $res = [
             'status' => false,

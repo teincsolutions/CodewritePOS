@@ -26,44 +26,52 @@
                     </div>
                 </div>
                 <div class="wordset">
-                    <ul>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/pdf.svg" alt="img"></a>
-                        </li>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/excel.svg" alt="img"></a>
-                        </li>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/printer.svg" alt="img"></a>
-                        </li>
-                    </ul>
                 </div>
             </div>
 
             <div class="card" id="filter_inputs">
                 <div class="card-body pb-0">
                     <div class="row">
-                        <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="col-lg-2 col-sm-6 col-12">
                             <div class="form-group">
-                                <input type="text" placeholder="Enter Name">
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 col-12">
-                            <div class="form-group">
-                                <input type="text" placeholder="Enter Reference No">
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 col-12">
-                            <div class="form-group">
-                                <select class="select">
-                                    <option>Completed</option>
-                                    <option>Paid</option>
+                                <select name="type" class="select">
+                                    <option value="">Select type</option>
+                                    <option value="walk-in-customer">walk-in-customer</option>
+                                    <option value="customer">regular customer</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
-                                <a class="btn btn-filters ms-auto"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/search-whites.svg" alt="img"></a>
+                                <select name="customer_id" class="select2-customer">
+                                    <option value=""></option>
+                                    <?php
+                                    if (isset($customers))
+                                        foreach ($customers as $row) { ?>
+                                        <option value="<?= $row->id ?>">
+                                            <?= $row->name; ?><?= $row->address ? "($row->address)" : "($row->phone)"; ?>
+                                        </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-sm-6 col-12">
+                            <div class="form-group">
+                                <input type="text" name="invoice" placeholder="Enter Reference No" value="">
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-sm-6 col-12">
+                            <div class="form-group">
+                                <select name="payment_status" class="select">
+                                    <option value="">Select a status</option>
+                                    <option value="pending">Due</option>
+                                    <option value="paid">Paid</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <a class="btn btn-filters ms-auto filter"><i class="fa fa-search"></i></a>
                             </div>
                         </div>
                     </div>
@@ -71,14 +79,10 @@
             </div>
 
             <div class="table-responsive">
-                <table class="table  datanew">
+                <table id="dt-sales" class="table">
                     <thead>
                         <tr>
                             <th>
-                                <label class="checkboxs">
-                                    <input type="checkbox" id="select-all">
-                                    <span class="checkmarks"></span>
-                                </label>
                             </th>
                             <th>Date</th>
                             <th>Customer Name</th>
@@ -92,470 +96,6 @@
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>walk-in-customer</td>
-                            <td>19 Nov 2022</td>
-                            <td>SL0101</td>
-                            <td><span class="badges bg-lightgreen">Completed</span></td>
-                            <td><span class="badges bg-lightgreen">Paid</span></td>
-                            <td>0.00</td>
-                            <td>0.00</td>
-                            <td class="text-red">100.00</td>
-                            <td>Admin</td>
-                            <td class="text-center">
-                                <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
-                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/sales-details.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/eye1.svg" class="me-2" alt="img">Sale Detail</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/edit-sales.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" class="me-2" alt="img">Edit Sale</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#showpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/dollar-square.svg" class="me-2" alt="img">Show Payments</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus-circle.svg" class="me-2" alt="img">Create Payment</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/download.svg" class="me-2" alt="img">Download pdf</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item confirm-text"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete1.svg" class="me-2" alt="img">Delete Sale</a>
-                                    </li>
-                                </ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>walk-in-customer</td>
-                            <td>19 Nov 2022</td>
-                            <td>SL0102</td>
-                            <td><span class="badges bg-lightgreen">Completed</span></td>
-                            <td><span class="badges bg-lightgreen">Paid</span></td>
-                            <td>0.00</td>
-                            <td>0.00</td>
-                            <td class="text-red">100.00</td>
-                            <td>Admin</td>
-                            <td class="text-center">
-                                <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
-                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/sales-details.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/eye1.svg" class="me-2" alt="img">Sale Detail</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/edit-sales.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" class="me-2" alt="img">Edit Sale</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#showpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/dollar-square.svg" class="me-2" alt="img">Show Payments</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus-circle.svg" class="me-2" alt="img">Create Payment</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/download.svg" class="me-2" alt="img">Download pdf</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item confirm-text"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete1.svg" class="me-2" alt="img">Delete Sale</a>
-                                    </li>
-                                </ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>walk-in-customer</td>
-                            <td>19 Nov 2022</td>
-                            <td>SL0103</td>
-                            <td><span class="badges bg-lightgreen">Completed</span></td>
-                            <td><span class="badges bg-lightgreen">Paid</span></td>
-                            <td>0.00</td>
-                            <td class="text-green">100.00</td>
-                            <td>0.00</td>
-                            <td>Admin</td>
-                            <td class="text-center">
-                                <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
-                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/sales-details.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/eye1.svg" class="me-2" alt="img">Sale Detail</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/edit-sales.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" class="me-2" alt="img">Edit Sale</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#showpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/dollar-square.svg" class="me-2" alt="img">Show Payments</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus-circle.svg" class="me-2" alt="img">Create Payment</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/download.svg" class="me-2" alt="img">Download pdf</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item confirm-text"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete1.svg" class="me-2" alt="img">Delete Sale</a>
-                                    </li>
-                                </ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>Fred C. Rasmussen</td>
-                            <td>19 Nov 2022</td>
-                            <td>SL0104</td>
-                            <td><span class="badges bg-lightred">Pending</span></td>
-                            <td><span class="badges bg-lightred">Due</span></td>
-                            <td>0.00</td>
-                            <td class="text-green">100.00</td>
-                            <td>0.00</td>
-                            <td>Admin</td>
-                            <td class="text-center">
-                                <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
-                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/sales-details.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/eye1.svg" class="me-2" alt="img">Sale Detail</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/edit-sales.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" class="me-2" alt="img">Edit Sale</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#showpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/dollar-square.svg" class="me-2" alt="img">Show Payments</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus-circle.svg" class="me-2" alt="img">Create Payment</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/download.svg" class="me-2" alt="img">Download pdf</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item confirm-text"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete1.svg" class="me-2" alt="img">Delete Sale</a>
-                                    </li>
-                                </ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>Thomas M. Martin</td>
-                            <td>19 Nov 2022</td>
-                            <td>SL0105</td>
-                            <td><span class="badges bg-lightred">Pending</span></td>
-                            <td><span class="badges bg-lightred">Due</span></td>
-                            <td>0.00</td>
-                            <td>0.00</td>
-                            <td class="text-green">100.00</td>
-                            <td>Admin</td>
-                            <td class="text-center">
-                                <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
-                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/sales-details.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/eye1.svg" class="me-2" alt="img">Sale Detail</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/edit-sales.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" class="me-2" alt="img">Edit Sale</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#showpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/dollar-square.svg" class="me-2" alt="img">Show Payments</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus-circle.svg" class="me-2" alt="img">Create Payment</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/download.svg" class="me-2" alt="img">Download pdf</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item confirm-text"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete1.svg" class="me-2" alt="img">Delete Sale</a>
-                                    </li>
-                                </ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>Thomas M. Martin</td>
-                            <td>19 Nov 2022</td>
-                            <td>SL0106</td>
-                            <td><span class="badges bg-lightgreen">Completed</span></td>
-                            <td><span class="badges bg-lightgreen">Paid</span></td>
-                            <td>0.00</td>
-                            <td>0.00</td>
-                            <td class="text-red">100.00</td>
-                            <td>Admin</td>
-                            <td class="text-center">
-                                <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
-                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/sales-details.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/eye1.svg" class="me-2" alt="img">Sale Detail</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/edit-sales.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" class="me-2" alt="img">Edit Sale</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#showpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/dollar-square.svg" class="me-2" alt="img">Show Payments</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus-circle.svg" class="me-2" alt="img">Create Payment</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/download.svg" class="me-2" alt="img">Download pdf</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item confirm-text"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete1.svg" class="me-2" alt="img">Delete Sale</a>
-                                    </li>
-                                </ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>walk-in-customer</td>
-                            <td>19 Nov 2022</td>
-                            <td>SL0107</td>
-                            <td><span class="badges bg-lightgreen">Completed</span></td>
-                            <td><span class="badges bg-lightgreen">Paid</span></td>
-                            <td>0.00</td>
-                            <td>0.00</td>
-                            <td class="text-red">100.00</td>
-                            <td>Admin</td>
-                            <td class="text-center">
-                                <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
-                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/sales-details.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/eye1.svg" class="me-2" alt="img">Sale Detail</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/edit-sales.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" class="me-2" alt="img">Edit Sale</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#showpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/dollar-square.svg" class="me-2" alt="img">Show Payments</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus-circle.svg" class="me-2" alt="img">Create Payment</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/download.svg" class="me-2" alt="img">Download pdf</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item confirm-text"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete1.svg" class="me-2" alt="img">Delete Sale</a>
-                                    </li>
-                                </ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>walk-in-customer</td>
-                            <td>19 Nov 2022</td>
-                            <td>SL0108</td>
-                            <td><span class="badges bg-lightred">Pending</span></td>
-                            <td><span class="badges bg-lightred">Due</span></td>
-                            <td>0.00</td>
-                            <td class="text-green">100.00</td>
-                            <td>0.00</td>
-                            <td>Admin</td>
-                            <td class="text-center">
-                                <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
-                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/sales-details.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/eye1.svg" class="me-2" alt="img">Sale Detail</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/edit-sales.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" class="me-2" alt="img">Edit Sale</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#showpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/dollar-square.svg" class="me-2" alt="img">Show Payments</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus-circle.svg" class="me-2" alt="img">Create Payment</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/download.svg" class="me-2" alt="img">Download pdf</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item confirm-text"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete1.svg" class="me-2" alt="img">Delete Sale</a>
-                                    </li>
-                                </ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>walk-in-customer</td>
-                            <td>19 Nov 2022</td>
-                            <td>SL0109</td>
-                            <td><span class="badges bg-lightred">Pending</span></td>
-                            <td><span class="badges bg-lightred">Due</span></td>
-                            <td>0.00</td>
-                            <td class="text-green">100.00</td>
-                            <td>0.00</td>
-                            <td>Admin</td>
-                            <td class="text-center">
-                                <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
-                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/sales-details.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/eye1.svg" class="me-2" alt="img">Sale Detail</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/edit-sales.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" class="me-2" alt="img">Edit Sale</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#showpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/dollar-square.svg" class="me-2" alt="img">Show Payments</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus-circle.svg" class="me-2" alt="img">Create Payment</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/download.svg" class="me-2" alt="img">Download pdf</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item confirm-text"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete1.svg" class="me-2" alt="img">Delete Sale</a>
-                                    </li>
-                                </ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>walk-in-customer</td>
-                            <td>19 Nov 2022</td>
-                            <td>SL0110</td>
-                            <td><span class="badges bg-lightred">Pending</span></td>
-                            <td><span class="badges bg-lightred">Due</span></td>
-                            <td>0.00</td>
-                            <td class="text-green">100.00</td>
-                            <td>0.00</td>
-                            <td>Admin</td>
-                            <td class="text-center">
-                                <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
-                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/sales-details.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/eye1.svg" class="me-2" alt="img">Sale Detail</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/edit-sales.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" class="me-2" alt="img">Edit Sale</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#showpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/dollar-square.svg" class="me-2" alt="img">Show Payments</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus-circle.svg" class="me-2" alt="img">Create Payment</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/download.svg" class="me-2" alt="img">Download pdf</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item confirm-text"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete1.svg" class="me-2" alt="img">Delete Sale</a>
-                                    </li>
-                                </ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>walk-in-customer</td>
-                            <td>19 Nov 2022</td>
-                            <td>SL0111</td>
-                            <td><span class="badges bg-lightred">Pending</span></td>
-                            <td><span class="badges bg-lightred">Due</span></td>
-                            <td>0.00</td>
-                            <td>0.00</td>
-                            <td>0.00</td>
-                            <td>Admin</td>
-                            <td class="text-center">
-                                <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
-                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/sales-details.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/eye1.svg" class="me-2" alt="img">Sale Detail</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://dreamspos.dreamguystech.com/html/template/edit-sales.html" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" class="me-2" alt="img">Edit Sale</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#showpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/dollar-square.svg" class="me-2" alt="img">Show Payments</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createpayment"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus-circle.svg" class="me-2" alt="img">Create Payment</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/download.svg" class="me-2" alt="img">Download pdf</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item confirm-text"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete1.svg" class="me-2" alt="img">Delete Sale</a>
-                                    </li>
-                                </ul>
-                            </td>
-                        </tr>
-                    </tbody>
                 </table>
             </div>
         </div>
@@ -736,4 +276,9 @@
         </div>
     </div>
 </div>
+<?= $this->endSection() ?>
+
+<?= $this->section('script') ?>
+<script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/sales.js') ?>"></script>
 <?= $this->endSection() ?>

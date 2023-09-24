@@ -43,8 +43,8 @@ class SupplierController extends BaseController
     {
         $model = new SupplierModel();
         $inputs = $this->request->getVar();
-        if(auth()->user())
-        $inputs['user_id'] = auth()->user()->id;
+        if (auth()->user())
+            $inputs['user_id'] = auth()->user()->id;
         $id = $this->request->getPost('id');
         $res = [
             'status' => false,
@@ -52,7 +52,7 @@ class SupplierController extends BaseController
             'message' => null,
             'input' => $inputs,
         ];
-        $Supplier = $model->where('id',$id)->first();
+        $Supplier = $model->where('id', $id)->first();
 
         if ($Supplier) {
             if ($model->save($inputs)) {

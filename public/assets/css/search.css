@@ -42,3 +42,8 @@
     background-color: DodgerBlue !important;
     color: #ffffff;
 }
+
+.quantity-field{
+    background-color: #8e8c8a0c  !important;
+    min-width: 50px;
+}

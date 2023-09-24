@@ -51,7 +51,7 @@ class CategoryController extends BaseController
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
-      /**
+    /**
      * return json for save
      * @return Response - http response
      */
@@ -59,6 +59,9 @@ class CategoryController extends BaseController
     {
         $model = new CategoryModel();
         $inputs = $this->request->getVar();
+        if (auth()->user())
+            $inputs['user_id'] = auth()->user()->id;
+
         $id = $this->request->getPost('id');
         $res = [
             'status' => false,
@@ -119,4 +122,3 @@ class CategoryController extends BaseController
         return $this->response->setJSON($res);
     }
 }
-

@@ -11,7 +11,15 @@ $(function () {
         let filterForm = $("#filter_inputs input, #filter_inputs select");
         filterForm.each((i, item) => {
           field = $(item);
-          filter[field.attr("name")] = field.val();
+          if (field.prop("tagName") === "SELECT") {
+            if (typeof field
+                .children("option:selected").val() !== "undefined" && field.children("option:selected").val() !='')
+              filter[field.attr("name")] = field
+                .children("option:selected")
+                .val();
+          } else {
+            filter[field.attr("name")] = field.val();
+          }
         });
 
         params.fields = filter;
@@ -64,15 +72,10 @@ $(function () {
         name: "expenses.id",
         render: function (data, type, row) {
           if (type === "display") {
-            
             return `<div class="d-flex justify-content-between align-items-center">
                        
-                        <a class="me-3 text-secondary" href="${baseUrl}/expenses/edit/${
-              row.id
-            }"><i class="fa fa-edit fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${
-                          row.id
-                        }, '${baseUrl}/expenses')"><i class="fa fa-trash fa-lg"></i></a>
+                        <a class="me-3 text-secondary" href="${baseUrl}/expenses/edit/${row.id}"><i class="fa fa-edit fa-lg"></i></a>
+                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${row.id}, '${baseUrl}/expenses')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;

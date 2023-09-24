@@ -11,7 +11,11 @@ $(function () {
         let filterForm = $("#filter_inputs input, #filter_inputs select");
         filterForm.each((i, item) => {
           field = $(item);
-          filter[field.attr("name")] = field.val();
+         if (field.prop("tagName") === "SELECT"){
+ if (typeof field
+                .children("option:selected").val() !== "undefined" && field.children("option:selected").val() !='')
+              filter[field.attr("name")] = field.children("option:selected").val();
+            }else {filter[field.attr("name")] = field.val();}
         });
 
         params.fields = filter;
@@ -95,6 +99,7 @@ $(function () {
           return data ? data.id : null;
         },
       },
+      { data: "instock" },
       {
         data: "discontinued",
         name: "products.discontinued",

@@ -40,10 +40,6 @@ class CreateCustomerLedgerTable extends Migration
                 'constraint' => "32,2",
                 'unsigned'     => true,
             ],
-            'balance' => [
-                'type'       => 'DECIMAL',
-                'constraint' => "32,2"
-            ],
             'user_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,

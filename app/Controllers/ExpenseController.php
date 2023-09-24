@@ -8,7 +8,7 @@ use CodeIgniter\HTTP\Response;
 
 class ExpenseController extends BaseController
 {
-   /**
+    /**
      * return view for list
      * @return Response - http response
      */
@@ -43,8 +43,9 @@ class ExpenseController extends BaseController
     {
         $model = new ExpenseModel();
         $inputs = $this->request->getVar();
-        if(auth()->user())
-        $inputs['user_id'] = auth()->user()->id;
+        if (auth()->user())
+            $inputs['user_id'] = auth()->user()->id;
+            
         $id = $this->request->getPost('id');
         $res = [
             'status' => false,
@@ -52,7 +53,7 @@ class ExpenseController extends BaseController
             'message' => null,
             'input' => $inputs,
         ];
-        $Expense = $model->where('id',$id)->first();
+        $Expense = $model->where('id', $id)->first();
 
         if ($Expense) {
             if ($model->save($inputs)) {
@@ -83,7 +84,7 @@ class ExpenseController extends BaseController
         }
         return $this->response->setJSON($res);
     }
-     /**
+    /**
      * return json for datatables
      * @return Response - http response
      */
@@ -91,6 +92,6 @@ class ExpenseController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new ExpenseModel();
-        return $this->response->setJSON(toDatatableResult($model,$inputs));
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 }

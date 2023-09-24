@@ -43,8 +43,8 @@ class UnitController extends BaseController
     {
         $model = new UnitModel();
         $inputs = $this->request->getVar();
-        if(auth()->user())
-        $inputs['user_id'] = auth()->user()->id;
+        if (auth()->user())
+            $inputs['user_id'] = auth()->user()->id;
         $id = $this->request->getPost('id');
         $res = [
             'status' => false,
@@ -52,7 +52,7 @@ class UnitController extends BaseController
             'message' => null,
             'input' => $inputs,
         ];
-        $Unit = $model->where('id',$id)->first();
+        $Unit = $model->where('id', $id)->first();
 
         if ($Unit) {
             if ($model->save($inputs)) {

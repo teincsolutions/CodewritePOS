@@ -1,3 +1,33 @@
+/**
+ * For search params
+ */
+const searchParams = {
+  columns: [
+    {
+      name: "products.name",
+      searchable: "true",
+    },
+    {
+      name: "products.description",
+      searchable: "true",
+    },
+    {
+      name: "products.barcode",
+      searchable: "true",
+    },
+    {
+      name: "products.sku",
+      searchable: "true",
+    },
+  ],
+  start: "0",
+  length: "10",
+  search: {
+    value: "",
+    regex: "false",
+  },
+};
+
 table = $(".tr-items").DataTable({
   dom: "ftpi",
   length: 10,
@@ -75,7 +105,7 @@ $(".tr-items").on("click", ".inc.button", function () {
 });
 $(".tr-items").on("click", ".dec.button", function () {
   var $this = $(this),
-    $input = $this.next("input"),
+    $input = $(".quantity-field"),
     $parent = $input.closest("div"),
     newValue = parseInt($input.val()) - 1;
   $parent.find(".inc").addClass("a" + newValue);
@@ -100,8 +130,9 @@ function autocomplete(inp) {
     a.setAttribute("id", this.id + "autocomplete-list");
     a.setAttribute("class", "autocomplete-items");
     this.parentNode.appendChild(a);
+    searchParams.search.value = val;
 
-    $.get(baseUrl + "/products/datatable", (d, s) => {
+    $.get(`${baseUrl}/products/search`, searchParams, (d, s) => {
       if (s !== "success") {
         // if fail
         b = document.createElement("DIV");
@@ -123,16 +154,19 @@ function autocomplete(inp) {
           (item.category ? info.push(item.category.name) : null) ||
             (item.brand ? info.push(item.brand.name) : null);
           let instock = 0;
-          if ($(".select2-store").val() == "") {
-            item.inventory.forEach((stock, i) => {
-              instock += parseFloat(stock.instock);
-            });
-          } else {
-            const storeId = $(".select2-store").val();
-            stock = item.inventory.filter(
-              (stock, i) => storeId == stock.store_id
-            );
-            if (stock.length > 0) instock = stock[0].instock;
+
+          if (item.inventory) {
+            if ($(".select2-store").val() == "") {
+              item.inventory.forEach((stock, i) => {
+                instock += parseFloat(stock.instock);
+              });
+            } else {
+              const storeId = $(".select2-store").val();
+              const stock = item.inventory.filter(
+                (stock, i) => storeId == stock.store_id
+              );
+              if (stock.length > 0) instock = stock[0].instock;
+            }
           }
           info.push(`instock<strong>(${instock})</strong>`);
 
@@ -151,6 +185,10 @@ function autocomplete(inp) {
                 text: "You have (" + instock + ") stock left for " + item.name,
               });
             }
+            let store = "";
+            if ($(".select2-store").val() != "") {
+              store = "(" + $(".select2-store option:selected").text() + ")";
+            }
             inp.value = "";
             let row = ` <tr>
                                         <td>
@@ -163,7 +201,7 @@ function autocomplete(inp) {
                                         }
                                             <a target="_blank" href="${baseUrl}/products/${
               item.id
-            }">${item.name}</a></td>
+            }">${item.name}${store}</a></td>
                                         <td>
                                         <div class="increment-decrement">
                                             <div class="input-groups">
@@ -191,7 +229,7 @@ function autocomplete(inp) {
               item?.discount +
               (item.unit_price * (item.tax ? item.tax.rate : 0.0)) / 100
             }">
-                                                <input onkeyup="updateRow(this)" min="1" type="text" name="items[${i}][qty]" value="1" class="quantity-field" required>
+                                                <input onblur="updateRow(this)" min="1" type="text" name="items[${i}][qty]" value="1" class="quantity-field" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>
@@ -337,7 +375,7 @@ form.on("submit", function (e) {
         if (d.status === true) {
           if (typeof d.input === "object") {
             if (d.input._method === "post") {
-                window.location.reload();
+              window.location.reload();
             }
           }
 
@@ -364,6 +402,10 @@ form.on("submit", function (e) {
 
 $(".select2-customer").select2({
   placeholder: "Seach a customer",
+  allowClear: true,
+});
+$(".select2-supplier").select2({
+  placeholder: "Seach a supplier",
   allowClear: true,
 });
 $(".select2-store").select2({

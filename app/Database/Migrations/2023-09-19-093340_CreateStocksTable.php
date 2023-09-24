@@ -26,7 +26,7 @@ class CreateStocksTable extends Migration
             'instock' => [
                 'type'       => 'INT',
                 'constraint' => 11,
-                'unsigned'     => true,
+                'unsigned'     => false,
             ],
             'created_at' => [
                 'type'    => 'TIMESTAMP',

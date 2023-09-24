@@ -30,7 +30,8 @@ class ProductModel extends Model
         'description',
         'image_uri',
         'discontinued',
-        'user_id',
+        'inventory',
+        'user_id'
     ];
 
     // Dates
@@ -48,67 +49,76 @@ class ProductModel extends Model
 
     // Callbacks
     protected $allowCallbacks = true;
-    protected $beforeInsert   = ['setDefaultBrandId'];
+    protected $beforeInsert   = ['setDefaultId'];
     protected $afterInsert    = [];
-    protected $beforeUpdate   = ['setDefaultBrandId'];
+    protected $beforeUpdate   = ['setDefaultId'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
-    protected $afterFind      = ['setInstock'];
+    protected $afterFind      = ['setInstock', 'setRelation'];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function toDatatableResult(array $inputs = null): array
-    {
-        $total = $this->countAllResults();
-        if (isset($inputs['date_from']) || isset($inputs['date_to'])) {
-            if (!empty($inputs['date_from']) || !empty($inputs['date_to'])) {
-                $this->groupStart();
-                $this->where(new RawSql("DATE(" . $inputs['date_range_column'] . ")" . ' >='), $inputs['date_from']);
-                $this->where(new RawSql("DATE(" . $inputs['date_range_column'] . ")" . ' <='), $inputs['date_to']);
-                $this->groupEnd();
-            }
-        }
 
-        if ($inputs['columns']) {
-            $this->groupStart();
-            foreach ($inputs['columns'] as $col) {
-                if (isset($col['searchable']) && $col['searchable'])
-                    $this->orLike($col['name'], $inputs['search']['value'], 'both');
-                else   $this->orLike($col['name'], $inputs['search']['value'], 'both');;
-            }
-            $this->groupEnd();
-        }
-        if (isset($inputs['order'])) {
-            foreach ($inputs['order'] as $order) {
-                $this->orderBy($inputs['columns'][$order['column']]['name'], $order['dir']);
-            }
-        }
-        $data = $this->findAll();
-        $filtered = sizeof($data);
-
-        return  [
-            'draw' => isset($inputs['draw']) ? $inputs['draw'] : 1,
-            'recordsTotal' => $total,
-            'recordsFiltered' => $filtered,
-            'data' => $data,
-        ];
-    }
-
-    protected function setDefaultBrandId(array $data)
+    protected function setDefaultId(array $data)
     {
         if (isset($data['data']['brand_id']) && isNull($data['data']['brand_id']))
             $data['data']['brand_id'] = NULL;
+
+        if (isset($data['data']['tax_id']) && isNull($data['data']['tax_id']))
+            $data['data']['tax_id'] = NULL;
+
         return $data;
     }
 
     protected function setInstock($model)
     {
-        $stockModel = new StockModel();
-        if ($model['singleton']) {
-            $model['data']->inventory = $stockModel->where('product_id', $model['data']->id)->findAll();
-        } else {
-            foreach ($model['data'] as $key => $row) {
-                $model['data'][$key]->inventory = $stockModel->where('product_id', $row->id)->findAll();
+        if (isset($model['data'])) {
+            $stockModel = new StockModel();
+            $builder = $stockModel->builder();
+            if ($model['singleton']) {
+                $model['data']->inventory = $stockModel->where('product_id',  $model['data']->id)->findAll();
+                $instock = $builder->selectSum('instock', 'total')
+                    ->where('product_id',  $model['data']->id)
+                    ->get()
+                    ->getRowObject()
+                    ->total;
+                $model['data']->instock = $instock;
+            } else {
+                foreach ($model['data'] as $key => $row) {
+                    $model['data'][$key]->inventory = $stockModel->where('product_id', $row->id)->findAll();
+                    $instock = $builder->selectSum('instock', 'total')
+                        ->where('product_id',  $row->id)
+                        ->get()
+                        ->getRowObject()
+                        ->total;
+                    $model['data'][$key]->instock = $instock;
+                }
+            }
+            return $model;
+        }
+    }
+    protected function setRelation($model)
+    {
+        if (isset($model['data'])) {
+            $userModel = new UserModel();
+            $brandModel = new BrandModel();
+            $catModel = new CategoryModel();
+            $unitModel = new UnitModel();
+            $taxModel = new TaxModel();
+            if ($model['singleton']) {
+                $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
+                $model['data']->brand = $brandModel->where('id', $model['data']->brand_id)->first();
+                $model['data']->category = $catModel->where('id', $model['data']->category_id)->first();
+                $model['data']->unit = $unitModel->where('id', $model['data']->unit_id)->first();
+                $model['data']->tax = $taxModel->where('id', $model['data']->tax_id)->first();
+            } else {
+                foreach ($model['data'] as $key => $row) {
+                    $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
+                    $model['data'][$key]->brand = $brandModel->where('id', $row->brand_id)->first();
+                    $model['data'][$key]->category = $catModel->where('id', $row->category_id)->first();
+                    $model['data'][$key]->unit = $unitModel->where('id', $row->unit_id)->first();
+                    $model['data'][$key]->tax = $taxModel->where('id', $row->tax_id)->first();
+                }
             }
         }
         return $model;

@@ -71,6 +71,7 @@
                             <th>Cost</th>
                             <th>price</th>
                             <th>Unit</th>
+                            <th>Instock</th>
                             <th>Discontinued</th>
                             <th>Action</th>
                         </tr>

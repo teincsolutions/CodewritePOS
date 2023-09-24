@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use CodeIgniter\Database\RawSql;
 use CodeIgniter\Model;
 
 use function PHPUnit\Framework\isNull;
@@ -23,6 +24,7 @@ class SalesModel extends Model
         'order_status',
         'payment_status',
         'tax_id',
+        'store_id',
         'tax',
         'discount',
         'shipping',
@@ -50,7 +52,7 @@ class SalesModel extends Model
     protected $beforeUpdate   = ['setDefaultId'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
-    protected $afterFind      = [];
+    protected $afterFind      = ['setTotalAmount', 'setRelation'];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
@@ -58,7 +60,55 @@ class SalesModel extends Model
     {
         if (isset($data['data']['customer_id']) && isNull($data['data']['customer_id']))
             $data['data']['customer_id'] = NULL;
-    
+
         return $data;
+    }
+
+    protected function setTotalAmount(array $model)
+    {
+        if (isset($model['data'])) {
+            $itemModel = new SalesItemModel();
+            $builder = $itemModel->builder();
+
+            if ($model['singleton']) {
+                $total = $builder->selectSum('subtotal', 'total')
+                    ->where('sale_id', $model['data']->id)
+                    ->get()
+                    ->getRowObject()
+                    ->total;
+                $model['data']->total_amount = $total;
+                $model['data']->items = $itemModel->where('sale_id', $model['data']->id)->findAll();
+            } else {
+                foreach ($model['data'] as $key => $row) {
+                    $total = $builder->selectSum('subtotal', 'total')
+                        ->where('sale_id', $row->id)
+                        ->get()
+                        ->getRowObject()
+                        ->total;
+                    $model['data'][$key]->total_amount = $total;
+                    $model['data'][$key]->items = $itemModel->where('sale_id', $row->id)->findAll();
+                }
+            }
+        }
+        return $model;
+    }
+
+    protected function setRelation($model)
+    {
+        if (isset($model['data'])) {
+            $userModel = new UserModel();
+            $cusModel = new CustomerModel();
+
+            if ($model['singleton']) {
+                $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
+                $model['data']->customer = $cusModel->where('id', $model['data']->customer_id)->first();
+            } else {
+                foreach ($model['data'] as $key => $row) {
+                    $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
+                    $model['data'][$key]->customer = $cusModel->where('id', $row->customer_id)->first();
+                }
+            }
+        }
+        return $model;
     }
 }

@@ -44,8 +44,8 @@ class ExpenseCategoryController extends BaseController
     {
         $model = new ExpenseCategoryModel();
         $inputs = $this->request->getVar();
-        if(auth()->user())
-        $inputs['user_id'] = auth()->user()->id;
+        if (auth()->user())
+            $inputs['user_id'] = auth()->user()->id;
         $id = $this->request->getPost('id');
         $res = [
             'status' => false,
@@ -53,7 +53,7 @@ class ExpenseCategoryController extends BaseController
             'message' => null,
             'input' => $inputs,
         ];
-        $Category = $model->where('id',$id)->first();
+        $Category = $model->where('id', $id)->first();
 
         if ($Category) {
             if ($model->save($inputs)) {
@@ -96,7 +96,7 @@ class ExpenseCategoryController extends BaseController
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
-     /**
+    /**
      * return json for delete
      * @return Response - http response
      */

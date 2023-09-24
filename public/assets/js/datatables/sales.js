@@ -1,9 +1,9 @@
 let table;
 
 $(function () {
-  table = $("#dt-brands").DataTable({
+  table = $("#dt-sales").DataTable({
     ajax: {
-      url: baseUrl + "/brands/datatable",
+      url: baseUrl + "/sales/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
@@ -11,11 +11,16 @@ $(function () {
         let filterForm = $("#filter_inputs input, #filter_inputs select");
         filterForm.each((i, item) => {
           field = $(item);
-         if (field.prop("tagName") === "SELECT"){
- if (typeof field
+
+          if (field.prop("tagName") === "SELECT") {
+            if (typeof field
                 .children("option:selected").val() !== "undefined" && field.children("option:selected").val() !='')
-              filter[field.attr("name")] = field.children("option:selected").val();
-            }else {filter[field.attr("name")] = field.val();}
+              filter[field.attr("name")] = field
+                .children("option:selected")
+                .val();
+          } else {
+            filter[field.attr("name")] = field.val();
+          }
         });
 
         params.fields = filter;
@@ -59,47 +64,88 @@ $(function () {
           return null;
         },
       },
+      { data: "sales_date", name: "sales.sales_date" },
+      {
+        data: "customer",
+        name: "sales.customer_id",
+        render: function (data, type, row) {
+          if (type === "display")
+            return data
+              ? `<a target="_blank" href="${baseUrl}/customers/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+              : null;
+          return data ? data.id : null;
+        },
+      },
+      { data: "invoice", name: "sales.invoice" },
+      {
+        data: "order_status",
+        name: "sales.order_status",
+        render: function (data, type) {
+          if (type === "display") {
+            const badges = {
+              completed: "bg-lightgreen",
+              pending: "lightred",
+            };
+            return `<span class="badges ${badges[data]}">${data}</span>`;
+          }
+
+          return data;
+        },
+      },
+      {
+        data: "payment_status",
+        name: "sales.payment_status",
+        render: function (data, type) {
+          if (type === "display") {
+            const badges = {
+              paid: "bg-lightgreen",
+              due: "bg-lightred",
+            };
+            return `<span class="badges ${badges[data]}">${data}</span>`;
+          }
+
+          return data;
+        },
+      },
+      {
+        data: "total_amount",
+        render: function (data) {
+          return `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
+      {
+        data: "paid",
+        name: "sales.paid",
+        render: function (data) {
+          return `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
       {
         data: null,
         render: function (data, type, row) {
-          if (type === "display") {
-            let d = ` <div class="productimgname">
-              <a href="javascript:void(0);" class="product-img">
-                  <img src="${baseUrl}/assets/images/noimage.png" alt="product">
-              </a> </div>`;
-
-            return d;
-          }
-          return data.id;
+          due = data.total_amount - data.paid;
+          return due < 0
+            ? `(GHS ${Math.abs(due).toFixed(2)})`
+            : `GHS ${due.toFixed(2)}`;
         },
       },
-      { data: "name", name: "brands.name" },
-      { data: "description", name: "brands.description" },
       {
-        data: "status",
-        name: "brands.status",
+        data: "user",
+        name: "sales.user_id",
+        render: function (data, type, row) {
+          if (type === "display")
+            return data ? `${data.firstname} ${data.lastname}` : null;
+          return data ? data.id : null;
+        },
+      },
+      {
+        data: "id",
+        name: "sales.id",
         render: function (data, type, row) {
           if (type === "display") {
-            let status = ["'closed'", "'opened'"];
             return `<div class="d-flex justify-content-between align-items-center">
-                        <div class="me-3 status-toggle d-flex justify-content-between align-items-center">
-                        <input type="checkbox" ${
-                          ["", "checked"][data == "opened" ? 1 : 0]
-                        } id="user${row.id}" onchange="updateRow(table,{id:${
-              row.id
-            },status:${
-              status[data == "opened" ? 0 : 1]
-            }}, '${baseUrl}/brands')" class="check">
-                        <label for="user${
-                          row.id
-                        }" class="checktoggle">checkbox</label>
-                        </div>
-                        <a class="me-3 text-secondary" href="${baseUrl}/brands/edit/${
-              row.id
-            }"><i class="fa fa-edit fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${
-                          row.id
-                        }, '${baseUrl}/brands')"><i class="fa fa-trash fa-lg"></i></a>
+                        <a class="me-3 text-secondary" href="${baseUrl}/sales/edit/${row.id}"><i class="fa fa-edit fa-lg"></i></a>
+                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${row.id}, '${baseUrl}/sales')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;
@@ -166,5 +212,10 @@ $(function () {
   $(".filter-clear").on("click", function (params) {
     $("#date-from,#date-to").val("");
     table.ajax.reload();
+  });
+
+  $(".select2-customer").select2({
+    placeholder: "Seach a customer",
+    allowClear: true,
   });
 });

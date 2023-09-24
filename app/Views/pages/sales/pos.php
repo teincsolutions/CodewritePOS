@@ -76,7 +76,7 @@
                                 <div class="form-group">
                                     <label>Date</label>
                                     <div class="input-groupicon">
-                                        <input name="sales_date" type="text" class="datetimepicker" value="<?= date('Y-m-d') ?>" required>
+                                        <input name="sales_date" type="text" class="datetimepicker" value="<?= date('d-m-Y', time()) ?>" required>
                                         <div class="addonset">
                                             <i class="fa fa-calendar"></i>
                                         </div>

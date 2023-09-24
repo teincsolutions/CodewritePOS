@@ -6,25 +6,22 @@ use CodeIgniter\Model;
 
 use function PHPUnit\Framework\isNull;
 
-class SalesItemModel extends Model
+class CustomerLedgerModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'sales_items';
+    protected $table            = 'customer_ledgers';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'product_id',
-        'unit_price',
         'sale_id',
-        'store_id',
-        'qty',
-        'tax',
-       'tax_id',
-        'discount',
-        'subtotal'
+        'customer_id',
+        'sales_return_id',
+        'debit',
+        'credit',
+        'user_id',
     ];
 
     // Dates
@@ -53,8 +50,9 @@ class SalesItemModel extends Model
 
     protected function setDefaultId(array $data)
     {
-        if (isset($data['data']['tax_id']) && isNull($data['data']['tax_id']))
-            $data['data']['tax_id'] = NULL;
+        if (isset($data['data']['customer_id']) && isNull($data['data']['customer_id']))
+            $data['data']['customer_id'] = NULL;
+
         return $data;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use CodeIgniter\Database\RawSql;
 use CodeIgniter\Model;
 
 class CustomerModel extends Model
@@ -42,7 +43,43 @@ class CustomerModel extends Model
     protected $beforeUpdate   = [];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
-    protected $afterFind      = [];
+    protected $afterFind      = ['setRelation'];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    protected function setRelation($model)
+    {
+        if (isset($model['data'])) {
+            $userModel = new UserModel();
+            $ledgerModel = new CustomerLedgerModel();
+
+            if ($model['singleton']) {
+                $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
+                $model['data']->ledger = $ledgerModel->where('customer_id', $model['data']->id)->findAll();
+                // balance
+                $total = $ledgerModel->builder()
+                    ->selectSum(new RawSql('(credit-debit)'), 'total')
+                    ->where('customer_id', $model['data']->id)
+                    ->get()
+                    ->getRowObject()
+                    ->total;
+                $model['data']->balance = $total;
+            } else {
+                foreach ($model['data'] as $key => $row) {
+                    $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
+                    $model['data'][$key]->ledger = $ledgerModel->where('customer_id', $row->id)->findAll();
+
+                    // balance
+                    $total = $ledgerModel->builder()
+                        ->selectSum(new RawSql('(credit-debit)'), 'total')
+                        ->where('customer_id', $row->id)
+                        ->get()
+                        ->getRowObject()
+                        ->total;
+                    $model['data'][$key]->balance = $total;
+                }
+            }
+        }
+        return $model;
+    }
 }
