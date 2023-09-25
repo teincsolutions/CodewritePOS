@@ -7,7 +7,7 @@
             <h6>Manage your sales</h6>
         </div>
         <div class="page-btn">
-            <a href="<?= site_url('sales-returns/create') ?>" class="btn btn-added"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus.svg" alt="img" class="me-1">Sales Return</a>
+            <a href="<?= site_url('sales-returns/create') ?>" class="btn btn-added"><i class="fa fa-plus me-1"></i> Sales Return</a>
         </div>
     </div>
     <form class="post-form" action="<?= site_url('sales') ?>" method="post">
@@ -17,6 +17,9 @@
                 <?= csrf_field() ?>
                 <input type="hidden" name="id" value="<?= isset($sales) ? $sales->id : null ?>">
                 <input type="hidden" name="invoice" value="<?= isset($invoice) ? $invoice : null ?>">
+                <input id="sales-type" type="hidden" name="type" value="<?= isset($sales) ? $sales->type : null ?>">
+                <input id="order-status" type="hidden" name="order_status" value="<?= isset($sales) ? $sales->order_status : null ?>">
+                <input id="payment-status" type="hidden" name="payment_status" value="<?= isset($sales) ? $sales->payment_status : null ?>">
                 <input type="hidden" name="_method" value="<?= isset($sales) ? 'put' : 'post' ?>">
 
                 <div class="card">
@@ -60,7 +63,7 @@
                             <div class="col-lg-5 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Store</label>
-                                    <select name="store_id" class="select2-store" required>
+                                    <select name="store_id" class="select2-store">
                                     <option value="" selected></option>
                                         <?php
                                         if (isset($stores))
@@ -131,16 +134,7 @@
                                     <input onkeyup="updateTotals()" type="number" name="shipping" class="form-control" placeholder="Shipping amount">
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Status</label>
-                                    <select name="order_status" class="select">
-                                        <option value="">Choose Status</option>
-                                        <option value="completed" selected>Completed</option>
-                                        <option value="pending">Inprogress</option>
-                                    </select>
-                                </div>
-                            </div>
+                            
                             <div class="row">
                                 <div class="col-lg-6 ">
                                     <div class="total-order w-100 max-widthauto m-auto mb-4">
@@ -219,7 +213,7 @@
                             </ul>
                         </div>
                         <div class="setvalue">
-                            <input onkeyup="updateTotals()" onchange="updateTotals()" type="number" name="paid" step="any" min="0" class="form-control" placeholder="Enter paid amount" required>
+                            <input onkeyup="updateTotals()" onchange="updateTotals()" type="number" name="paid" step="any" min="0" class="form-control" placeholder="Enter paid amount">
                         </div>
                         <div class="setvaluecash">
                             <ul>
@@ -250,13 +244,13 @@
                         <div class="btn-pos">
                             <ul>
                                 <li>
-                                    <a class="btn"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/pause1.svg" alt="img" class="me-1">Hold</a>
+                                    <a href="javascript:void(0);" onclick="hold(this)" action="<?= site_url('sales/hold') ?>"  class="btn"><i class="fa fa-pause me-1"></i> Hold</a>
                                 </li>
                                 <li>
-                                    <a class="btn"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit-6.svg" alt="img" class="me-1">Quotation</a>
+                                    <a  href="javascript:void(0);" onclick="qoute(this)" action="<?= site_url('quotes/save') ?>" class="btn"><i class="fa fa-print me-1"></i> Quotation</a>
                                 </li>
                                 <li>
-                                    <a class="btn" data-bs-toggle="modal" data-bs-target="#recents"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/transcation.svg" alt="img" class="me-1"> Transaction</a>
+                                    <a class="btn" data-bs-toggle="modal" data-bs-target="#recents"><i class="fa fa-list me-1"></i> Transaction</a>
                                 </li>
                             </ul>
                         </div>

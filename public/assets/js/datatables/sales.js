@@ -72,7 +72,7 @@ $(function () {
           if (type === "display")
             return data
               ? `<a target="_blank" href="${baseUrl}/customers/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
-              : null;
+              : 'walk-in-customer';
           return data ? data.id : null;
         },
       },

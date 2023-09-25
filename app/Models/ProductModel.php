@@ -72,10 +72,11 @@ class ProductModel extends Model
 
     protected function setInstock($model)
     {
+       
         if (isset($model['data'])) {
             $stockModel = new StockModel();
             $builder = $stockModel->builder();
-            if ($model['singleton']) {
+            if (isset($model['singleton']) && $model['singleton']) {
                 $model['data']->inventory = $stockModel->where('product_id',  $model['data']->id)->findAll();
                 $instock = $builder->selectSum('instock', 'total')
                     ->where('product_id',  $model['data']->id)
@@ -105,7 +106,7 @@ class ProductModel extends Model
             $catModel = new CategoryModel();
             $unitModel = new UnitModel();
             $taxModel = new TaxModel();
-            if ($model['singleton']) {
+            if (isset($model['singleton']) && $model['singleton']) {
                 $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
                 $model['data']->brand = $brandModel->where('id', $model['data']->brand_id)->first();
                 $model['data']->category = $catModel->where('id', $model['data']->category_id)->first();

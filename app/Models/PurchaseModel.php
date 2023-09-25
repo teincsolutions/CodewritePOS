@@ -67,7 +67,7 @@ class PurchaseModel extends Model
             $itemModel = new PurchaseItemModel();
             $builder = $itemModel->builder();
 
-            if ($model['singleton']) {
+            if (isset($model['singleton']) && $model['singleton']) {
                 $total = $builder->selectSum('subtotal', 'total')
                     ->where('purchase_id', $model['data']->id)
                     ->get()
@@ -96,7 +96,7 @@ class PurchaseModel extends Model
             $userModel = new UserModel();
             $cusModel = new SupplierModel();
 
-            if ($model['singleton']) {
+            if (isset($model['singleton']) && $model['singleton']) {
                 $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
                 $model['data']->supplier = $cusModel->where('id', $model['data']->supplier_id)->first();
             } else {

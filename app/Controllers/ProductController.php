@@ -70,9 +70,9 @@ class ProductController extends BaseController
             'input' => $inputs,
         ];
 
-        $Product = $model->where('id', $id)->first();
+        $product = $model->find($id);
 
-        if ($Product) {
+        if ($product) {
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,

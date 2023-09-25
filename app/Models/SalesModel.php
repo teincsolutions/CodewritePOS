@@ -70,7 +70,7 @@ class SalesModel extends Model
             $itemModel = new SalesItemModel();
             $builder = $itemModel->builder();
 
-            if ($model['singleton']) {
+            if (isset($model['singleton']) && $model['singleton']) {
                 $total = $builder->selectSum('subtotal', 'total')
                     ->where('sale_id', $model['data']->id)
                     ->get()
@@ -99,7 +99,7 @@ class SalesModel extends Model
             $userModel = new UserModel();
             $cusModel = new CustomerModel();
 
-            if ($model['singleton']) {
+            if (isset($model['singleton']) && $model['singleton']) {
                 $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
                 $model['data']->customer = $cusModel->where('id', $model['data']->customer_id)->first();
             } else {

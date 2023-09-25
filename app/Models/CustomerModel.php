@@ -53,7 +53,7 @@ class CustomerModel extends Model
             $userModel = new UserModel();
             $ledgerModel = new CustomerLedgerModel();
 
-            if ($model['singleton']) {
+            if (isset($model['singleton']) && $model['singleton']) {
                 $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
                 $model['data']->ledger = $ledgerModel->where('customer_id', $model['data']->id)->findAll();
                 // balance

@@ -11,15 +11,15 @@
     <title>Codewrite Pos</title>
 
     <link rel="shortcut icon" type="image/x-icon" href="<?= base_url('assets/images/logo.png') ?>">
-    <link rel="stylesheet" href="https://dreamspos.dreamguystech.com/html/template/assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://dreamspos.dreamguystech.com/html/template/assets/css/animate.css">
-    <link rel="stylesheet" href="https://dreamspos.dreamguystech.com/html/template/assets/plugins/select2/css/select2.min.css">
-    <link rel="stylesheet" href="https://dreamspos.dreamguystech.com/html/template/assets/css/bootstrap-datetimepicker.min.css">
-    <link href="https://cdn.datatables.net/v/bs4/jszip-3.10.1/dt-1.13.6/b-2.4.2/b-html5-2.4.2/b-print-2.4.2/sc-2.2.0/sl-1.7.0/datatables.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://dreamspos.dreamguystech.com/html/template/assets/plugins/owlcarousel/owl.carousel.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="https://dreamspos.dreamguystech.com/html/template/assets/css/style.css">
-    <link rel="stylesheet" href="<?=base_url('assets/css/search.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/animate.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/plugins/select2.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/plugins/bootstrap-datetimepicker.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/plugins/datatables.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/plugins/owl.carousel.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/plugins/font-awesome/all.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/search.css') ?>">
     <?= $this->renderSection('link') ?>
 </head>
 

@@ -28,6 +28,35 @@ const searchParams = {
   },
 };
 
+let dueTotal = 0,
+  grandTotal = 0;
+
+  let form = $(".post-form");
+
+form.validate({
+  rules: {
+    store_id: "required",
+    paid: "required",
+  },
+  messages: {
+    store_id: "Please choose a store",
+    paid: "Please enter amount paid",
+  },
+  errorElement: "em",
+  errorPlacement: function (t, e) {
+    t.addClass("invalid-feedback"),
+      "checkbox" === e.prop("type")
+        ? t.insertAfter(e.nex$("label"))
+        : t.insertAfter(e);
+  },
+  highlight: function (e, i, n) {
+    $(e).addClass("is-invalid").removeClass("is-valid");
+  },
+  unhighlight: function (e, i, n) {
+    $(e).addClass("is-valid").removeClass("is-invalid");
+  },
+});
+
 table = $(".tr-items").DataTable({
   dom: "ftpi",
   length: 10,
@@ -64,8 +93,7 @@ function updateTotals() {
       : 0;
   };
 
-  let grandTotal = 0,
-    discountTotal = 0,
+  let discountTotal = 0,
     taxTotal = 0,
     shipping = intVal($("[name='shipping']").val()),
     orderDiscount = intVal($("[name='discount']").val()),
@@ -87,6 +115,161 @@ function updateTotals() {
   $(".discountTotal").html("GHS " + discountTotal.toFixed(2));
   $(".orderTaxes").html("GHS " + taxTotal.toFixed(2));
   $(".dueTotal").html("GHS " + dueTotal.toFixed(2));
+}
+function printInvoice() {
+  return true;
+}
+function checkout() {
+  const type = $("#sales-type"),
+    customer = $(".select2-customer");
+  const orderStatus = $("#order-status"),
+    paymentStatus = $("#payment-status");
+  orderStatus.val("completed");
+
+  if (customer.val() == "") {
+    type.val("walk-in-customer");
+    if (dueTotal > 0) {
+      paymentStatus.val("due");
+      Swal.fire({
+        icon: "error",
+        title: "Due Payment Alert!",
+        text: "Walk in customer cannot owe sales. Add a new customer if not in the list.",
+      });
+      return false;
+    }
+  } else {
+    type.val("customer");
+    if (dueTotal > 0) paymentStatus.val("due");
+    else paymentStatus.val("paid");
+  }
+  return true;
+}
+
+function hold(e) {
+  if (grandTotal <= 0) {
+    Swal.fire({
+      icon: "error",
+      title: "Sale Alert!",
+      text: "You cannot hold an empty sales.",
+    });
+    return;
+  }
+  const orderStatus = $("#order-status"),
+    paymentStatus = $("#payment-status");
+  orderStatus.val("pending");
+  paymentStatus.val("due");
+
+  $.ajax({
+    method: "POST",
+    url: e.getAttribute("action"),
+    data: new FormData(form[0]),
+    enctype: "multipart/form-data",
+    dataType: "json",
+    contentType: false,
+    processData: false,
+    cache: false,
+    success: function (d, r) {
+      if (!d || r === "nocontent") {
+        Swal.fire({
+          icon: "error",
+          text: "Malformed form data sumbitted! Please try agian.",
+        });
+        return;
+      }
+      if (typeof d.status !== "boolean" || typeof d.message !== "string") {
+        Swal.fire({
+          icon: "error",
+          text: "Malformed data response! Please try agian.",
+        });
+        return;
+      }
+
+      if (d.status === true) {
+        if (typeof d.input === "object") {
+          if (printInvoice(d.data)) {
+            window.location.reload();
+          }
+        }
+
+        Swal.fire({
+          icon: "success",
+          text: d.message,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          text: d.message,
+        });
+      }
+    },
+    error: function (r) {
+      Swal.fire({
+        icon: "error",
+        text: "Unable to submit form! Please try agian.",
+      });
+    },
+  });
+}
+
+function qoute(e) {
+  if (grandTotal <= 0) {
+    Swal.fire({
+      icon: "error",
+      title: "Sale Alert!",
+      text: "You cannot make a qoute of an empty sales.",
+    });
+    return;
+  }
+  $.ajax({
+    method: "POST",
+    url: e.getAttribute("action"),
+    data: new FormData(form[0]),
+    enctype: "multipart/form-data",
+    dataType: "json",
+    contentType: false,
+    processData: false,
+    cache: false,
+    success: function (d, r) {
+      if (!d || r === "nocontent") {
+        Swal.fire({
+          icon: "error",
+          text: "Malformed form data sumbitted! Please try agian.",
+        });
+        return;
+      }
+      if (typeof d.status !== "boolean" || typeof d.message !== "string") {
+        Swal.fire({
+          icon: "error",
+          text: "Malformed data response! Please try agian.",
+        });
+        return;
+      }
+
+      if (d.status === true) {
+        if (typeof d.input === "object") {
+          if (printInvoice(d.data)) {
+            window.location.reload();
+          }
+        }
+
+        Swal.fire({
+          icon: "success",
+          text: d.message,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          text: d.message,
+        });
+      }
+    },
+    error: function (r) {
+      Swal.fire({
+        icon: "error",
+        text: "Unable to submit form! Please try agian.",
+      });
+    },
+  });
 }
 
 $(".tr-items").on("click", ".delete-set", function () {
@@ -323,30 +506,10 @@ function autocomplete(inp) {
 
 autocomplete(document.getElementById("search-products"));
 
-let form = $(".post-form");
-
-form.validate({
-  rules: {},
-  messages: {},
-  errorElement: "em",
-  errorPlacement: function (t, e) {
-    t.addClass("invalid-feedback"),
-      "checkbox" === e.prop("type")
-        ? t.insertAfter(e.nex$("label"))
-        : t.insertAfter(e);
-  },
-  highlight: function (e, i, n) {
-    $(e).addClass("is-invalid").removeClass("is-valid");
-  },
-  unhighlight: function (e, i, n) {
-    $(e).addClass("is-valid").removeClass("is-invalid");
-  },
-});
-
 form.on("submit", function (e) {
   e.preventDefault();
 
-  if ($(this).valid() === true) {
+  if ($(this).valid() === true && checkout()) {
     $.ajax({
       method: "POST",
       url: this.getAttribute("action"),
@@ -374,7 +537,7 @@ form.on("submit", function (e) {
 
         if (d.status === true) {
           if (typeof d.input === "object") {
-            if (d.input._method === "post") {
+            if (printInvoice(d.data)) {
               window.location.reload();
             }
           }
@@ -401,7 +564,7 @@ form.on("submit", function (e) {
 });
 
 $(".select2-customer").select2({
-  placeholder: "Seach a customer",
+  placeholder: "Walk-in-customer",
   allowClear: true,
 });
 $(".select2-supplier").select2({
