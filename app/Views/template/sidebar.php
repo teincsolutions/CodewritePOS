@@ -32,8 +32,6 @@
                             <ul>
                                 <li><a class="<?= getActiveUrl("transfers/product", "active"); ?>" href="<?= site_url('transfers/product') ?>">Transfer List</a></li>
                                 <li><a class="<?= getActiveUrl("transfers/product-unit", "active"); ?>" href="<?= site_url('transfers/product-unit') ?>">Unit Transfer List</a></li>
-                                <li><a class="<?= getActiveUrl("transfers/product-import", "active"); ?>" href="<?= site_url('transfers/product-import') ?>">Import Transfer </a></li>
-                                <li><a class="<?= getActiveUrl("transfers/product-unit-import", "active"); ?>" href="<?= site_url('transfers/product-unit-import') ?>">Import Unit Transfer </a></li>
                             </ul>
                         </li>
                     </ul>
@@ -44,7 +42,6 @@
                         <li class="<?= getActiveUrl("purchases", "active"); ?>"><a href="<?= site_url('purchases') ?>"><i data-feather="shopping-bag"></i><span>Purchases</span></a></li>
                         <li class="<?= getActiveUrl("purchases/create", "active"); ?>"><a href="<?= site_url('purchases/create') ?>"><i data-feather="file-minus"></i><span>Purchase Order</span></a></li>
                         <li class="<?= getActiveUrl("purchase-returns/create", "active"); ?>"><a href="<?= site_url('purchase-returns/create') ?>"><i data-feather="refresh-cw"></i><span>Purchase Return</span></a></li>
-                        <li class="<?= getActiveUrl("purchases/import", "active"); ?>"><a href="<?= site_url('purchases/import') ?>"><i data-feather="minimize-2"></i><span>Import Purchases</span></a></li>
                     </ul>
                 </li>
 
@@ -56,7 +53,7 @@
                         <li class="<?= getActiveUrl("categories", "active"); ?>"><a href="<?= site_url('categories') ?>"><i data-feather="codepen"></i><span>Category</span></a></li>
                         <li class="<?= getActiveUrl("brands", "active"); ?>"><a href="<?= site_url('brands') ?>"><i data-feather="tag"></i><span>Brands</span></a></li>
                         <li class="<?= getActiveUrl("units", "active"); ?>"><a href="<?= site_url('units') ?>"><i data-feather="speaker"></i><span>Units</span></a></li>
-                        <li class="<?= getActiveUrl("products/print-barcode", "active"); ?>"><a href="<?= site_url('products/-print-barcode') ?>"><i data-feather="align-justify"></i><span>Print Barcode</span></a></li>
+                        <li hidden class="<?= getActiveUrl("products/print-barcode", "active"); ?>"><a href="<?= site_url('products/-print-barcode') ?>"><i data-feather="align-justify"></i><span>Print Barcode</span></a></li>
                         <li class="<?= getActiveUrl("products/import", "active"); ?>"><a href="<?= site_url('products/import') ?>/importproduct"><i data-feather="minimize-2"></i><span>Import Products</span></a></li>
                     </ul>
                 </li>
@@ -117,7 +114,6 @@
                                 <li class="<?= getActiveUrl("general-settings", "active"); ?>"><a href="<?= site_url('general-settings') ?>">General Settings</a></li>
                                 <li class="<?= getActiveUrl("email-settings", "active"); ?>"><a href="<?= site_url('email-settings') ?>">Email Settings</a></li>
                                 <li class="<?= getActiveUrl("payment-settings", "active"); ?>"><a href="<?= site_url('payment-settings') ?>">Payment Settings</a></li>
-                                <li class="<?= getActiveUrl("currency-settings", "active"); ?>"><a href="<?= site_url('currency-settings') ?>">Currency Settings</a></li>
                                 <li class="<?= getActiveUrl("group-permissions", "active"); ?>"><a href="<?= site_url('group-permissions') ?>">Group Permissions</a></li>
                                 <li class="<?= getActiveUrl("tax-rates", "active"); ?>"><a href="<?= site_url('tax-rates') ?>">Tax Rates</a></li>
                             </ul>

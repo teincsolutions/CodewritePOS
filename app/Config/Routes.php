@@ -7,6 +7,7 @@ use App\Controllers\CustomerController;
 use App\Controllers\CustomerLedgerController;
 use App\Controllers\ExpenseCategoryController;
 use App\Controllers\ExpenseController;
+use App\Controllers\ImportController;
 use App\Controllers\ProductController;
 use App\Controllers\ProductTransferController;
 use App\Controllers\ProductUnitTransferController;
@@ -107,7 +108,7 @@ $routes->get('sales-returns/create', [SalesReturnController::class, 'edit']);
 $routes->get('stores/create', [StoreController::class, 'edit']);
 $routes->get('suppliers/create', [SupplierController::class, 'edit']);
 $routes->get('units/create', [UnitController::class, 'edit']);
-
+$routes->get('products/import', [ImportController::class, 'index']);
 //datatables
 $routes->get('users/datatable', [UserController::class, 'datatable']);
 $routes->get('product-adjustments/datatable', [AdjustmentController::class, 'datatable']);

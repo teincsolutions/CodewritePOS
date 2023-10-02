@@ -8,7 +8,7 @@
         </div>
         <div class="page-btn">
             <a href="https://dreamspos.dreamguystech.com/html/template/addquotation.html" class="btn btn-added">
-                <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus.svg" alt="img" class="me-2"> Add Quotation
+                <i class="fa fa-plus" class="me-1"></i> Add Quotation
             </a>
         </div>
     </div>
@@ -95,7 +95,7 @@
                             <th>Reference</th>
                             <th>Custmer Name</th>
                             <th>Status</th>
-                            <th>Grand Total ($)</th>
+                            <th>Grand Total (GHS)</th>
                             <th>Action</th>
                         </tr>
                     </thead>

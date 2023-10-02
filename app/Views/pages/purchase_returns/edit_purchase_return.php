@@ -72,12 +72,12 @@
                             <tr>
                                 <th>Product Name</th>
                                 <th>QTY</th>
-                                <th>Purchase Price($) </th>
-                                <th>Discount($) </th>
+                                <th>Purchase Price(GHS) </th>
+                                <th>Discount(GHS) </th>
                                 <th>Tax %</th>
-                                <th>Tax Amount($)</th>
-                                <th class="text-end">Unit Cost($)</th>
-                                <th class="text-end">Total Cost ($) </th>
+                                <th>Tax Amount(GHS)</th>
+                                <th class="text-end">Unit Cost(GHS)</th>
+                                <th class="text-end">Total Cost (GHS) </th>
                                 <th></th>
                             </tr>
                         </thead>

@@ -7,7 +7,7 @@
             <h6>Manage your sales</h6>
         </div>
         <div class="page-btn">
-            <a href="https://dreamspos.dreamguystech.com/html/template/add-sales.html" class="btn btn-added"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus.svg" alt="img" class="me-1">Add Sales</a>
+            <a href="https://dreamspos.dreamguystech.com/html/template/add-sales.html" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add Sales</a>
         </div>
     </div>
 

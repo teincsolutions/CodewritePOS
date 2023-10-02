@@ -63,12 +63,12 @@
                         <thead>
                             <tr>
                                 <th>Product Name</th>
-                                <th>Net Unit Price($) </th>
+                                <th>Net Unit Price(GHS) </th>
                                 <th>Stock</th>
                                 <th>QTY </th>
-                                <th>Discount($) </th>
+                                <th>Discount(GHS) </th>
                                 <th>Tax % </th>
-                                <th>Subtotal ($) </th>
+                                <th>Subtotal (GHS) </th>
                                 <th></th>
                             </tr>
                         </thead>

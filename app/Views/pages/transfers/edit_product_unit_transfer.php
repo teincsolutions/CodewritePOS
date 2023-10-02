@@ -62,7 +62,7 @@
                                 <th>Stock </th>
                                 <th>Discount</th>
                                 <th>Tax </th>
-                                <th>Total Cost ($)</th>
+                                <th>Total Cost (GHS)</th>
                                 <th></th>
                             </tr>
                         </thead>
