@@ -17,8 +17,8 @@ class SupplierController extends BaseController
         LoggerInterface $logger
     ) {
         parent::initController($request, $response, $logger);
-        if(!auth()->loggedIn()){
-             return $response->redirect(site_url('login'));
+        if (!auth()->loggedIn()) {
+            return $response->redirect(site_url('login'));
         }
     }
 
@@ -123,5 +123,38 @@ class SupplierController extends BaseController
         $inputs = $this->request->getVar();
         $model = new SupplierModel();
         return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+
+    /**
+     * return json for select2
+     * @return Response- http response
+     */
+    public function select2(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new SupplierModel();
+        return $this->response->setJSON(toSelect2Result($model, ['name', 'phone', 'address'], $inputs, 'concat(name," (",ifnull(address,phone), ")") as text,suppliers.*'));
+    }
+
+     /**
+     * return jwon for delete
+     * @return Response - http response
+     */
+    public function delete($id = null)
+    {
+        $model = new SupplierModel();
+        if ($model->delete($id)) {
+            $res = [
+                'status' => true,
+                'message' => "Supplier deleted successfully!",
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'message' => "Couldn't be deleted!"
+            ];
+        }
+        return $this->response->setJSON($res);
     }
 }

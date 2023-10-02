@@ -102,7 +102,7 @@ class PurchaseController extends BaseController
         ];
         $model = new PurchaseModel();
         $data = array_merge($data, [
-            'purchases' => $model->find($id),
+            'purchase' => $model->find($id),
         ]);
 
         return view('pages/purchases/invoice', $data);
@@ -326,7 +326,7 @@ class PurchaseController extends BaseController
             $inputs,
             'concat(purchases.invoice," (",suppliers.name," - GHS ",total_amount,")") as text,purchases.*',
             [
-                ['table' => 'customers', 'cond' => 'customers.id=sales.customer_id', 'type' => 'inner'],
+                ['table' => 'suppliers', 'cond' => 'suppliers.id=purchases.supplier_id', 'type' => 'inner'],
             ]
         ));
     }

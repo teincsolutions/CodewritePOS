@@ -51,7 +51,7 @@ class SupplierModel extends Model
     {
         if ($model && $model['data']) {
             $userModel = new UserModel();
-            $ledgerModel = new CustomerLedgerModel();
+            $ledgerModel = new SupplierLedgerModel();
 
             if (isset($model['singleton']) && $model['singleton'] && $model['data']) {
                 $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();

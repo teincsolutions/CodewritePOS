@@ -45,7 +45,7 @@ class SupplierLedgerController extends BaseController
     public function save()
     {
         $model = new SupplierLedgerModel();
-        $salesModel = new PurchaseModel();
+        $purchaseModel = new PurchaseModel();
         $inputs = $this->request->getVar();
         
         if(auth()->user())
@@ -61,10 +61,10 @@ class SupplierLedgerController extends BaseController
         $SupplierLedger = $model->where('id',$id)->first();
         if ($SupplierLedger) {
             if ($model->save($inputs)) {
-                $sales = $salesModel->where('id',$inputs['sale_id'])->first();
-                $salesModel->save([
-                    'id'=> $inputs['sale_id'],
-                    'payment_status' => (($sales->total_amount - $sales->paid > 0)?'due':'paid')
+                $purchase = $purchaseModel->where('id',$inputs['purchase_id'])->first();
+                $purchaseModel->save([
+                    'id'=> $inputs['purchase_id'],
+                    'payment_status' => (($purchase->total_amount - $purchase->paid > 0)?'due':'paid')
                 ]);
                 $res = array_merge($res, [
                     'status' => true,
@@ -79,10 +79,10 @@ class SupplierLedgerController extends BaseController
             }
         } else {
             if ($model->save($inputs)) {
-                $sales = $salesModel->where('id',$inputs['sale_id'])->first();
-                $salesModel->save([
-                    'id'=> $inputs['sale_id'],
-                    'payment_status' => (($sales->total_amount - $sales->paid > 0)?'due':'paid')
+                $purchase = $purchaseModel->where('id',$inputs['purchase_id'])->first();
+                $purchaseModel->save([
+                    'id'=> $inputs['purchase_id'],
+                    'payment_status' => (($purchase->total_amount - $purchase->paid > 0)?'due':'paid')
                 ]);
 
                 $res = array_merge($res, [

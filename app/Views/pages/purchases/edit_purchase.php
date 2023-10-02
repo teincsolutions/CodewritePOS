@@ -10,7 +10,7 @@
             <a href="<?= site_url('purchase-returns/create') ?>" class="btn btn-added"><i class="fa fa-plus me-1"></i> Purchase Return</a>
         </div>
     </div>
-    <form class="post-form" action="<?= site_url('purchase') ?>" method="post">
+    <form class="post-form" action="<?= site_url('purchases') ?>" method="post">
 
         <div class="row">
             <div class="col-sm-12 col-lg-8">
@@ -37,7 +37,7 @@
                                     <label>Supplier</label>
                                     <div class="row">
                                         <div class="col-lg-10 col-sm-10 col-10">
-                                            <select name="supplier_id" class="select2-supplier">
+                                            <select name="supplier_id" class="select2-suppliers" required>
                                                 <option value="">walk-in-supplier</option>
                                             </select>
                                         </div>
@@ -121,7 +121,7 @@
                                                         <div class="input-groups">
                                                             <input type="button" value="-" class="button-minus dec button">
                                                             <input type='hidden' name="items[<?= $key ?>][id]" value="<?= $row->id ?>">
-                                                            <input type='hidden' name="items[<?= $key ?>][sale_id]" value="<?= $row->sale_id ?>">
+                                                            <input type='hidden' name="items[<?= $key ?>][purchase_id]" value="<?= $row->purchase_id ?>">
                                                             <input type='hidden' name="items[<?= $key ?>][product_id]" value="<?= $row->product_id ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][unit_cost]" value="<?= $row->unit_cost; ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][tax_id]" value="<?= $row->tax_id ?>">
@@ -216,7 +216,7 @@
                         <ul>
                             <?php if (isset($purchase)) { ?>
                                 <li>
-                                    <a onclick="deleteRecord(<?= $purchase->id ?>,'<?= site_url('purchase') ?>', '<?= site_url('purchase') ?>')" href="javascript:void(0);" class="deletebg confirm-text"><img src="<?= base_url('assets/icons/delete-2.svg') ?>" alt="img"></a>
+                                    <a onclick="deleteRecord(<?= $purchase->id ?>,'<?= site_url('purchases') ?>', '<?= site_url('purchases') ?>')" href="javascript:void(0);" class="deletebg confirm-text"><img src="<?= base_url('assets/icons/delete-2.svg') ?>" alt="img"></a>
                                 </li>
                             <?php } ?>
                         </ul>
@@ -408,7 +408,7 @@
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table id="dt-purchase" class="table">
+                                <table id="dt-purchases" class="table">
                                     <thead>
                                         <tr>
                                             <th>Date</th>
@@ -425,29 +425,27 @@
                                             'completed' => "bg-lightgreen",
                                             'pending' => "bg-lightred",
                                         ];
-                                        if (isset($saleList))
-                                            foreach ($saleList as $key => $row) {
+                                        if (isset($purchaseList))
+                                            foreach ($purchaseList as $key => $row) {
                                         ?>
                                             <tr>
                                                 <td><?= $row->purchase_date; ?></td>
-                                                <td><a target="_blank" href="<?= site_url('purchase/' . $row->id) ?>" class="btn btn-link btn-sm"><?= $row->invoice; ?></a></td>
+                                                <td><a target="_blank" href="<?= site_url('purchases/' . $row->id) ?>" class="btn btn-link btn-sm"><?= $row->invoice; ?></a></td>
                                                 <td>
                                                     <?php if ($row->supplier) : ?>
                                                         <a target="_blank" href="<?= site_url('suppliers/' . $row->supplier_id) ?>" class="btn btn-link btn-sm"><?= $row->supplier->name ?></a>
-                                                    <?php else : ?>
-                                                        walk-in-supplier
                                                     <?php endif ?>
                                                 </td>
                                                 <td><span class="badges <?= $badges[$row->order_status]; ?>"><?= $row->order_status; ?></span></td>
                                                 <td><?= $row->total_amount < 0 ? "(" . number_format(abs($row->total_amount), 2) . ")" : number_format($row->total_amount, 2); ?></td>
                                                 <td>
                                                     <div class="d-flex justify-content-between align-items-center">
-                                                        <a target="_blank" href="<?= site_url('purchase/' . $row->id) ?>" class="btn btn-icon btn-sm"><i class="fa fa-eye fa-lg"></i></a>
+                                                        <a target="_blank" href="<?= site_url('purchases/' . $row->id) ?>" class="btn btn-icon btn-sm"><i class="fa fa-eye fa-lg"></i></a>
                                                         <?php if ($row->order_status === 'completed') : ?>
-                                                            <a class="me-3 text-secondary" href="<?= site_url('returns/purchase/create?invoice=' . $row->invoice) ?>"><i class="fa fa-reply fa-lg"></i></a>
+                                                            <a class="me-3 text-secondary" href="<?= site_url('returns/purchases/create?invoice=' . $row->invoice) ?>"><i class="fa fa-reply fa-lg"></i></a>
                                                         <?php else : ?>
                                                             <a class="me-3 text-secondary" href="<?= site_url('purchase/pos/' . $row->id) ?>"><i class="fa fa-play fa-lg"></i></a>
-                                                            <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('purchase') ?>', '<?= site_url('purchase/pos') ?>')"><i class="fa fa-trash fa-lg"></i></a>
+                                                            <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('purchases') ?>', '<?= site_url('purchase/pos') ?>')"><i class="fa fa-trash fa-lg"></i></a>
                                                         <?php endif; ?>
                                                     </div>
                                                 </td>
@@ -488,7 +486,7 @@
                                         ?>
                                             <tr>
                                                 <td><?= $row->tdate; ?></td>
-                                                <td><a target="_blank" href="<?= site_url('purchase/' . $row->sale_id) ?>" class="btn btn-link btn-sm"><?= $row->sale->invoice; ?></a></td>
+                                                <td><a target="_blank" href="<?= site_url('purchases/' . $row->purchase_id) ?>" class="btn btn-link btn-sm"><?= $row->purchase->invoice; ?></a></td>
                                                 <td>
                                                     <a target="_blank" href="<?= site_url('suppliers/' . $row->supplier_id) ?>" class="btn btn-link btn-sm"><?= $row->supplier->name ?></a>
                                                 </td>
@@ -497,8 +495,8 @@
                                                 <td><?= $row->balance < 0 ? "(" . number_format(abs($row->balance), 2) . ")" : number_format($row->balance, 2); ?></td>
                                                 <td>
                                                     <div class="d-flex justify-content-between align-items-center">
-                                                        <a class="me-3 text-secondary" href="<?= site_url('ledgers/edit/' . $row->id) ?>"><i class="fa fa-edit fa-lg"></i></a>
-                                                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('ledgers') ?>', '<?= site_url('purchase/pos') ?>')"><i class="fa fa-trash fa-lg"></i></a>
+                                                        <a class="me-3 text-secondary" href="<?= site_url('suppliers/ledgers/edit/' . $row->id) ?>"><i class="fa fa-edit fa-lg"></i></a>
+                                                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('suppliers/ledgers') ?>', '<?= site_url('purchase/pos') ?>')"><i class="fa fa-trash fa-lg"></i></a>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -536,19 +534,17 @@
                                         ?>
                                             <tr>
                                                 <td><?= $row->purchase_return_date; ?></td>
-                                                <td><a target="_blank" href="<?= site_url('returns/purchase/' . $row->id) ?>" class="btn btn-link btn-sm"><?= $row->invoice; ?></a></td>
+                                                <td><a target="_blank" href="<?= site_url('returns/purchases/' . $row->id) ?>" class="btn btn-link btn-sm"><?= $row->invoice; ?></a></td>
                                                 <td>
                                                     <?php if ($row->supplier) : ?>
                                                         <a target="_blank" href="<?= site_url('suppliers/' . $row->supplier_id) ?>" class="btn btn-link btn-sm"><?= $row->supplier->name ?></a>
-                                                    <?php else : ?>
-                                                        walk-in-supplier
                                                     <?php endif ?>
                                                 </td>
                                                 <td><span class="badges <?= $badges[$row->order_status]; ?>"><?= $row->order_status; ?></span></td>
                                                 <td><?= $row->total_amount < 0 ? "(" . number_format(abs($row->total_amount), 2) . ")" : number_format($row->total_amount, 2); ?></td>
                                                 <td>
                                                     <div class="d-flex justify-content-between align-items-center">
-                                                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('purchase') ?>', '<?= site_url('returns/purchase') ?>')"><i class="fa fa-trash fa-lg"></i></a>
+                                                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('purchases') ?>', '<?= site_url('returns/purchases') ?>')"><i class="fa fa-trash fa-lg"></i></a>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -565,7 +561,7 @@
     </div>
 </div>
 
-<form action="<?= site_url('ledgers') ?>" class="modal fade" id="add-payment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
+<form action="<?= site_url('suppliers/ledgers') ?>" class="modal fade" id="add-payment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -588,7 +584,7 @@
                     <div class="col-lg-6 col-sm-12 col-12">
                         <div class="form-group">
                             <label>Reference</label>
-                            <select name="sale_id" class="select2-invoices" required>
+                            <select name="purchase_id" class="select2-invoices" required>
                                 <option value=""></option>
                             </select>
                         </div>
@@ -603,7 +599,7 @@
                     <div class="col-lg-6 col-sm-12 col-12">
                         <div class="form-group">
                             <label>Paying Amount</label>
-                            <input type="text" onkeyup="$('#inv-due').val(($('#inv-bal').val()- $(this).val()).toFixed(2))" name="credit" min="0" value="" placeholder="Enter Amount" required>
+                            <input type="text" onkeyup="$('#inv-due').val(($('#inv-bal').val()- $(this).val()).toFixed(2))" name="debit" min="0" value="" placeholder="Enter Amount" required>
                         </div>
                     </div>
                     <div class="col-lg-6 col-sm-12 col-12">
@@ -635,7 +631,7 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/handle-order.js') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/pos.modal.js') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/order.modal.js') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?php if (isset($purchase) && $purchase->supplier) {
     $supplier = $purchase->supplier;

@@ -78,6 +78,11 @@ class CreatePurchasesTable extends Migration
                 'null' => false,
                 'defaut' => 0.00
             ],
+            'payment_type' => [
+                'type' => 'ENUM',
+                'constraint' => ['cash', 'debit','momo'],
+                'default' => 'cash'
+            ],
             'paid' => [
                 'type'       => 'DECIMAL',
                 'constraint' => "32,2",

@@ -59,8 +59,8 @@ class SupplierLedgerModel extends Model
     {
         if ($model && $model['data']) {
             $userModel = new UserModel();
-            $purchaseModel = new SalesModel();
-            $returnModel = new SalesReturnModel();
+            $purchaseModel = new PurchaseModel();
+            $returnModel = new PurchaseReturnModel();
             $supModel = new SupplierModel();
 
             if ($model['singleton']) {

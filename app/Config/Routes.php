@@ -17,6 +17,7 @@ use App\Controllers\SalesController;
 use App\Controllers\SalesReturnController;
 use App\Controllers\StoreController;
 use App\Controllers\SupplierController;
+use App\Controllers\SupplierLedgerController;
 use App\Controllers\UnitController;
 use App\Controllers\UserController;
 use CodeIgniter\Router\RouteCollection;
@@ -127,7 +128,7 @@ $routes->get('stores/datatable', [StoreController::class, 'datatable']);
 $routes->get('suppliers/datatable', [SupplierController::class, 'datatable']);
 $routes->get('units/datatable', [UnitController::class, 'datatable']);
 
-//datatables
+//select2
 $routes->get('users/select2', [UserController::class, 'select2']);
 $routes->get('product-adjustments/select2', [AdjustmentController::class, 'select2']);
 $routes->get('brands/select2', [BrandController::class, 'select2']);
@@ -156,11 +157,10 @@ $routes->post('customers', [CustomerController::class, 'save']);
 $routes->post('expense-categories', [ExpenseCategoryController::class, 'save']);
 $routes->post('expenses', [ExpenseController::class, 'save']);
 $routes->post('products', [ProductController::class, 'save']);
-$routes->post('ledgers', [CustomerLedgerController::class, 'save']);
-
+$routes->post('suppliers/ledgers', [SupplierLedgerController::class, 'save']);
+$routes->post('customers/ledgers', [CustomerLedgerController::class, 'save']);
 $routes->post('transfers/product', [ProductTransferController::class, 'save']);
 $routes->post('transfers/product-unit', [ProductUnitTransferController::class, 'save']);
-
 $routes->post('purchases', [PurchaseController::class, 'save']);
 $routes->post('returns/purchase', [PurchaseReturnController::class, 'save']);
 $routes->post('quotes', [QuoteController::class, 'save']);

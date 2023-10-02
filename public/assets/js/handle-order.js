@@ -121,7 +121,7 @@ function updateTotals() {
     grandTotal - $("input[name='paid']").first().val() - supplierBalance;
 
   $(".grandTotal").html("GHS " + grandTotal.toFixed(2));
-  $("#sales-total").val(grandTotal);
+  $("#purchase-total").val(grandTotal);
   $(".shippingTotal").html("GHS " + shipping.toFixed(2));
   $(".discountTotal").html(
     "GHS " +
@@ -182,7 +182,7 @@ function hold(e) {
     Swal.fire({
       icon: "error",
       title: "Sale Alert!",
-      text: "You cannot hold an empty sales.",
+      text: "You cannot hold an empty purchases.",
     });
     return;
   }
@@ -217,7 +217,7 @@ function hold(e) {
       }
 
       if (d.status === true) {
-        window.location.assign(baseUrl + "/sales/pos");
+        window.location.assign(baseUrl + "/purchases/pos");
         Swal.fire({
           icon: "success",
           text: d.message,
@@ -239,20 +239,11 @@ function hold(e) {
 }
 
 function qoute(e) {
-  const type = $("#sales-type"),
-    supplier = $(".select2-supplier");
-
-  if (supplier.val() == "") {
-    type.val("walk-in-supplier");
-  } else {
-    type.val("supplier");
-  }
-
   if (grandTotal <= 0) {
     Swal.fire({
       icon: "error",
       title: "Sale Alert!",
-      text: "You cannot make a qoute of an empty sales.",
+      text: "You cannot make a qoute of an empty purchases.",
     });
     return;
   }
@@ -592,14 +583,14 @@ form.on("submit", function (e) {
     });
   }
 });
-let select2Customer = $(".select2-supplier")
+let select2Customer = $(".select2-suppliers")
   .select2({
     ajax: {
       url: `${baseUrl}/suppliers/select2`,
       dataType: "json",
     },
     allowClear: true,
-    placeholder: "walk-in-supplier",
+    placeholder: "Choose a supplier",
     templateResult: formatCustomer,
     templateSelection: formatCustomer,
   })
@@ -623,16 +614,11 @@ let select2Customer = $(".select2-supplier")
         ? `(GHS ${Math.abs(supplierBalance).toFixed(2)})`
         : `GHS ${supplierBalance.toFixed(2)}`
     );
-    $(".supplier").html("walk-in-supplier");
+    $(".supplier").html("");
     $("input[name='discount']").val("");
     $("#acc-bal").addClass("d-none");
     updateTotals();
   });
-
-$(".select2-supplier").select2({
-  placeholder: "Seach a supplier",
-  allowClear: true,
-});
 $(".select2-store").select2({
   placeholder: "Seach a store",
 });

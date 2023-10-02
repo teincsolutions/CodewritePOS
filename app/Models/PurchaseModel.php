@@ -52,59 +52,47 @@ class PurchaseModel extends Model
     protected $beforeUpdate   = ['setDefaultId'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
-    protected $afterFind      = ['setTotalAmount', 'setRelation'];
+    protected $afterFind      = ['setRelation'];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
     protected function setDefaultId(array $data)
     {
-        if (isset($data['data']['supplier_id']) && isNull($data['data']['supplier_id']))
+        if (isset($data['data']['supplier_id']) && empty($data['data']['supplier_id']))
             $data['data']['supplier_id'] = NULL;
         return $data;
     }
-
-    protected function setTotalAmount(array $model)
-    {
-        if ($model && $model['data']) {
-            $itemModel = new PurchaseItemModel();
-            $builder = $itemModel->builder();
-
-            if ($model['singleton']) {
-                $total = $builder->selectSum('subtotal', 'total')
-                    ->where('purchase_id', $model['data']->id)
-                    ->get()
-                    ->getRowObject()
-                    ->total;
-                $model['data']->total_amount = $total;
-                $model['data']->items = $itemModel->where('purchase_id', $model['data']->id)->findAll();
-            } else {
-                foreach ($model['data'] as $key => $row) {
-                    $total = $builder->selectSum('subtotal', 'total')
-                        ->where('purchase_id', $row->id)
-                        ->get()
-                        ->getRowObject()
-                        ->total;
-                    $model['data'][$key]->total_amount = $total;
-                    $model['data'][$key]->items = $itemModel->where('purchase_id', $row->id)->findAll();
-                }
-            }
-        }
-        return $model;
-    }
-
     protected function setRelation($model)
     {
         if ($model && $model['data']) {
             $userModel = new UserModel();
-            $cusModel = new SupplierModel();
+            $supModel = new SupplierModel();
+            $storeModel = new StoreModel();
+            $itemModel = new PurchaseItemModel();
+            $ledger = new SupplierLedgerModel();
 
             if ($model['singleton']) {
                 $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
-                $model['data']->supplier = $cusModel->where('id', $model['data']->supplier_id)->first();
+                $model['data']->supplier = $supModel->where('id', $model['data']->supplier_id)->first();
+                $model['data']->items = $itemModel->where('purchase_id', $model['data']->id)->findAll();
+                $model['data']->store = $storeModel->where('id', $model['data']->store_id)->first();
+                $total = $ledger->builder()->selectSum('debit', 'total')
+                    ->where('purchase_id', $model['data']->id)
+                    ->get()
+                    ->getRowObject()->total;
+                $model['data']->paid = $total ?? 0.00;
             } else {
                 foreach ($model['data'] as $key => $row) {
                     $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
-                    $model['data'][$key]->supplier = $cusModel->where('id', $row->supplier_id)->first();
+                    $model['data'][$key]->supplier = $supModel->where('id', $row->supplier_id)->first();
+                    $model['data'][$key]->items = $itemModel->where('purchase_id', $row->id)->findAll();
+                    $total = $ledger->builder()->selectSum('debit', 'total')
+                        ->where('purchase_id', $row->id)
+                        ->get()
+                        ->getRowObject()->total;
+                    $model['data'][$key]->paid = $total ?? 0.00;
+
+                    $model['data'][$key]->store = $storeModel->where('id', $row->store_id)->first();
                 }
             }
         }
@@ -113,11 +101,19 @@ class PurchaseModel extends Model
 
     public function getTotalAmount(): float
     {
-        return (new PurchaseItemModel())->getTotalAmount();
+        $total = $this->builder()->selectSum('total_amount', 'total')->get()->getFirstRow()->total;
+        return $total ? $total : 0.00;
     }
+
     public function getTodayTotalAmount(): float
     {
-        return (new PurchaseItemModel())->getTodayTotalAmount();
+        $total = $this->builder()
+            ->selectSum('total_amount', 'total')
+            ->where('purchase_date', date('Y-m-d', time()))
+            ->get()
+            ->getFirstRow()
+            ->total;
+        return $total ? $total : 0.00;
     }
 
     public function getPaidAmount(): float

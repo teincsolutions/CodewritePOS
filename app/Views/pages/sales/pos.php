@@ -497,8 +497,8 @@
                                                 <td><?= $row->balance < 0 ? "(" . number_format(abs($row->balance), 2) . ")" : number_format($row->balance, 2); ?></td>
                                                 <td>
                                                     <div class="d-flex justify-content-between align-items-center">
-                                                        <a class="me-3 text-secondary" href="<?= site_url('ledgers/edit/' . $row->id) ?>"><i class="fa fa-edit fa-lg"></i></a>
-                                                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('ledgers') ?>', '<?= site_url('sales/pos') ?>')"><i class="fa fa-trash fa-lg"></i></a>
+                                                        <a class="me-3 text-secondary" href="<?= site_url('customers/ledgers/edit/' . $row->id) ?>"><i class="fa fa-edit fa-lg"></i></a>
+                                                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('customers/ledgers') ?>', '<?= site_url('sales/pos') ?>')"><i class="fa fa-trash fa-lg"></i></a>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -565,7 +565,7 @@
     </div>
 </div>
 
-<form action="<?= site_url('ledgers') ?>" class="modal fade" id="add-payment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
+<form action="<?= site_url('customers/ledgers') ?>" class="modal fade" id="add-payment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">

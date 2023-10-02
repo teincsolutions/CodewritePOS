@@ -177,7 +177,7 @@
                                 </li>
                                 <li class="total">
                                     <h4>Grand Total</h4>
-                                    <h5 class="grandTotal"><?= number_format($sales->total_amount + $sales->shipping, 2) ?></h5>
+                                    <h5 class="grandTotal"><?= number_format($sales->total_amount, 2) ?></h5>
                                 </li>
                             </ul>
                         </div>

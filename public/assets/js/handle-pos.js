@@ -660,11 +660,6 @@ let select2Customer = $(".select2-customer")
     $("#acc-bal").addClass("d-none");
     updateTotals();
   });
-
-$(".select2-supplier").select2({
-  placeholder: "Seach a supplier",
-  allowClear: true,
-});
 $(".select2-store").select2({
   placeholder: "Seach a store",
 });
