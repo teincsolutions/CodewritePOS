@@ -57,4 +57,19 @@ class PurchaseItemModel extends Model
             $data['data']['tax_id'] = NULL;
         return $data;
     }
+
+    public function getTotalAmount(): float
+    {
+        $result = $this->selectSum('subtotal', 'total')->first();
+        return $result->total ? $result->total : 0.00;
+    }
+
+    public function getTodayTotalAmount(): float
+    {
+        $result = $this->selectSum('subtotal', 'total')
+            ->join('purchases', 'purchases.id=purchase_items.purchase_id')
+            ->where('purchase_date', date('Y-m-d', time()))
+            ->first();
+        return $result->total ? $result->total : 0.00;
+    }
 }

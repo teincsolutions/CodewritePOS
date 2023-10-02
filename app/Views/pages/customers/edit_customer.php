@@ -32,13 +32,21 @@
                         <input name="phone" type="text" value="<?= isset($customer) ? $customer->phone : null ?>" placeholder="Phone number">
                     </div>
                 </div>
-                <div class="col-lg-9 col-12">
+                <div class="col-lg-6 col-12">
                     <div class="form-group">
                         <label>Address</label>
                         <input type="text" value="<?= isset($customer) ? $customer->address : null ?>" placeholder="Customer address">
                     </div>
                 </div>
-
+                <div class="col-lg-3 col-12">
+                    <div class="form-group">
+                        <label>Discount</label>
+                        <div class="input-group">
+                            <input type="number" name="discount" class="form-control addon-inline" value="<?= isset($customer) ? $customer->discount : null ?>" placeholder="Customer discount">
+                            <span class="input-group-text">%</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-lg-12">
                     <button type="submit" class="btn btn-submit me-2">Save</button>
                     <a href="<?= site_url('customers') ?>" class="btn btn-cancel">Cancel</a>

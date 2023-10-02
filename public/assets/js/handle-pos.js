@@ -29,9 +29,10 @@ const searchParams = {
 };
 
 let dueTotal = 0,
-  grandTotal = 0;
+  grandTotal = 0,
+  customerBalance = $(".customer-balance").data("balance");
 
-  let form = $(".post-form");
+let form = $(".post-form");
 
 form.validate({
   rules: {
@@ -56,19 +57,24 @@ form.validate({
     $(e).addClass("is-valid").removeClass("is-invalid");
   },
 });
+let initCompleted = false;
 
-table = $(".tr-items").DataTable({
+let tableItems = $(".tr-items").DataTable({
   dom: "ftpi",
   length: 10,
   rowCallback: function (row, data, dispNum) {
     $("td:eq(0)", row).html(dispNum + 1);
-    updateTotals();
+    if (initCompleted) updateTotals();
+  },
+  initComplete: function (settings, json) {
+    initCompleted = true;
   },
 });
+if (initCompleted) updateTotals();
 
-function updateRow(row) {
+function updateItemRow(row) {
   let row1 = $(row).parents("tr").first();
-  let data = table.row(row1).data(),
+  let data = tableItems.row(row1).data(),
     qty = parseFloat(row1.find(".quantity-field").val()),
     price = parseFloat(data[3]),
     discount = parseFloat($("td:eq(4)", row1).data("discount")),
@@ -81,40 +87,57 @@ function updateRow(row) {
   $("td:eq(5)", row1).html(((tax / 100) * qty * price).toFixed(2));
   $("td:eq(4)", row1).html((qty * discount).toFixed(2));
   $("td:eq(6)", row1).html(subtotal.toFixed(2));
-  table.draw();
+  tableItems.draw();
 }
 
 function updateTotals() {
-  var intVal = function (i) {
-    return typeof i === "string"
-      ? i.replace(/[\$,]/g, "") * 1
-      : typeof i === "number"
-      ? i
-      : 0;
-  };
-
   let discountTotal = 0,
-    taxTotal = 0,
-    shipping = intVal($("[name='shipping']").val()),
-    orderDiscount = intVal($("[name='discount']").val()),
-    orderTax = intVal($("[name='tax']").val());
-  for (let i = 0; i < table.rows().data().length; i++) {
+    discountAmtTotal = 0;
+  (taxTotal = 0),
+    (taxAmtTotal = 0),
+    (shipping = intVal($("[name='shipping']").val())),
+    (orderDiscount = intVal($("[name='discount']").val())),
+    (orderTax = intVal($("[name='tax']").val()));
+  grandTotal = 0;
+  for (let i = 0; i < tableItems.rows().data().length; i++) {
     const row = $(`tr:eq(${i + 1})`, ".tr-items");
     (discountTotal += intVal($("td:eq(4)", row).html())),
+      (discountAmtTotal +=
+        intVal($("td:eq(4)", row).html()) * intVal($("td:eq(3)", row).html())),
       (taxTotal += intVal($("td:eq(5)", row).html())),
+      (taxAmtTotal +=
+        intVal($("td:eq(5)", row).html()) * intVal($("td:eq(3)", row).html())),
       (grandTotal += intVal($("td:eq(6)", row).html()));
   }
-  discountTotal += orderDiscount;
+  $(".subTotal").html("GHS " + grandTotal.toFixed(2));
+  discountAmtTotal += (orderDiscount / 100) * grandTotal;
   taxTotal += orderTax;
-  grandTotal += shipping + orderDiscount;
-  grandTotal -= orderDiscount;
-  dueTotal = grandTotal - $("input[name='paid']").first().val();
+  discountTotal += orderDiscount;
+  grandTotal += (orderTax / 100) * grandTotal;
+  grandTotal += shipping;
+  grandTotal -= (orderDiscount / 100) * grandTotal;
+  dueTotal =
+    grandTotal - $("input[name='paid']").first().val() - customerBalance;
 
   $(".grandTotal").html("GHS " + grandTotal.toFixed(2));
+  $("#sales-total").val(grandTotal);
   $(".shippingTotal").html("GHS " + shipping.toFixed(2));
-  $(".discountTotal").html("GHS " + discountTotal.toFixed(2));
-  $(".orderTaxes").html("GHS " + taxTotal.toFixed(2));
-  $(".dueTotal").html("GHS " + dueTotal.toFixed(2));
+  $(".discountTotal").html(
+    "GHS " +
+      discountAmtTotal.toFixed(2) +
+      " (" +
+      discountTotal.toFixed(2) +
+      "%)"
+  );
+  $(".orderTaxes").html(
+    "GHS " + taxAmtTotal.toFixed(2) + " (" + taxTotal.toFixed(2) + "%)"
+  );
+  $(".dueTotal").html(
+    "GHS " +
+      (dueTotal < 0
+        ? "(" + Math.abs(dueTotal).toFixed(2) + ")"
+        : dueTotal.toFixed(2))
+  );
 }
 function printInvoice() {
   return true;
@@ -124,12 +147,12 @@ function checkout() {
     customer = $(".select2-customer");
   const orderStatus = $("#order-status"),
     paymentStatus = $("#payment-status");
+  const paidAmt = parseFloat($("input[name='paid']").val());
   orderStatus.val("completed");
 
   if (customer.val() == "") {
     type.val("walk-in-customer");
     if (dueTotal > 0) {
-      paymentStatus.val("due");
       Swal.fire({
         icon: "error",
         title: "Due Payment Alert!",
@@ -137,15 +160,24 @@ function checkout() {
       });
       return false;
     }
+    paymentStatus.val("paid");
   } else {
     type.val("customer");
-    if (dueTotal > 0) paymentStatus.val("due");
+    if (grandTotal - paidAmt > 0) paymentStatus.val("due");
     else paymentStatus.val("paid");
   }
   return true;
 }
 
 function hold(e) {
+  const type = $("#sales-type"),
+    customer = $(".select2-customer");
+
+  if (customer.val() == "") {
+    type.val("walk-in-customer");
+  } else {
+    type.val("customer");
+  }
   if (grandTotal <= 0) {
     Swal.fire({
       icon: "error",
@@ -185,12 +217,7 @@ function hold(e) {
       }
 
       if (d.status === true) {
-        if (typeof d.input === "object") {
-          if (printInvoice(d.data)) {
-            window.location.reload();
-          }
-        }
-
+        window.location.assign(baseUrl + "/sales/pos");
         Swal.fire({
           icon: "success",
           text: d.message,
@@ -212,6 +239,15 @@ function hold(e) {
 }
 
 function qoute(e) {
+  const type = $("#sales-type"),
+    customer = $(".select2-customer");
+
+  if (customer.val() == "") {
+    type.val("walk-in-customer");
+  } else {
+    type.val("customer");
+  }
+
   if (grandTotal <= 0) {
     Swal.fire({
       icon: "error",
@@ -246,10 +282,8 @@ function qoute(e) {
       }
 
       if (d.status === true) {
-        if (typeof d.input === "object") {
-          if (printInvoice(d.data)) {
-            window.location.reload();
-          }
+        if (printInvoice(d.data)) {
+          window.location.reload();
         }
 
         Swal.fire({
@@ -273,28 +307,28 @@ function qoute(e) {
 }
 
 $(".tr-items").on("click", ".delete-set", function () {
-  table.row($(this).parents("tr")).remove().draw();
+  tableItems.row($(this).parents("tr")).remove().draw();
 });
 //Increment Decrement value
 $(".tr-items").on("click", ".inc.button", function () {
   var $this = $(this),
     $input = $this.prev("input"),
     $parent = $input.closest("div"),
-    newValue = parseInt($input.val()) + 1;
+    newValue = parseFloat($input.val()) + 1;
   $parent.find(".inc").addClass("a" + newValue);
   if (newValue > 0) $input.val(newValue);
   newValue += newValue;
-  updateRow(this);
+  updateItemRow(this);
 });
 $(".tr-items").on("click", ".dec.button", function () {
   var $this = $(this),
     $input = $(".quantity-field"),
     $parent = $input.closest("div"),
-    newValue = parseInt($input.val()) - 1;
+    newValue = parseFloat($input.val()) - 1;
   $parent.find(".inc").addClass("a" + newValue);
   if (newValue > 0) $input.val(newValue);
   newValue += newValue;
-  updateRow(this);
+  updateItemRow(this);
 });
 
 function autocomplete(inp) {
@@ -412,13 +446,15 @@ function autocomplete(inp) {
               item?.discount +
               (item.unit_price * (item.tax ? item.tax.rate : 0.0)) / 100
             }">
-                                                <input onblur="updateRow(this)" min="1" type="text" name="items[${i}][qty]" value="1" class="quantity-field" required>
+                                                <input onblur="updateItemRow(this)" min="1" type="text" name="items[${i}][qty]" value="1" class="quantity-field" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>
                                         </td>
                                         <td>${item.unit_price}</td>
-                                        <td data-discount="${item?.discount}">${
+                                        <td data-discount="${
+                                          item?.discount
+                                        }" class="suffix-percent">${
               item?.discount
             }</td>
                                         <td data-tax="${
@@ -435,8 +471,8 @@ function autocomplete(inp) {
                                         ).toFixed(2)}</td>
                                         <td><a   href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
                                     </tr>`;
-            table.row.add($(row)).draw();
-            table.draw();
+            tableItems.row.add($(row)).draw();
+            tableItems.draw();
             closeAllLists();
           });
           a.appendChild(b);
@@ -536,12 +572,15 @@ form.on("submit", function (e) {
         }
 
         if (d.status === true) {
-          if (typeof d.input === "object") {
-            if (printInvoice(d.data)) {
-              window.location.reload();
-            }
+          if (printInvoice(d.data)) {
+            form.trigger("reset");
+            $("input[name='invoice']").val(parseInt(d.data.invoice) + 1);
+            $("#order-id").html(parseInt(d.data.invoice) + 1);
+            tableItems.clear().draw();
+            $(".select2-customer").val(null).trigger("select2:unselect");
+            $("select").trigger("change");
+            updateTotals();
           }
-
           Swal.fire({
             icon: "success",
             text: d.message,
@@ -562,11 +601,43 @@ form.on("submit", function (e) {
     });
   }
 });
+let select2Customer = $(".select2-customer")
+  .select2({
+    ajax: {
+      url: `${baseUrl}/customers/select2`,
+      dataType: "json",
+    },
+    allowClear: true,
+    placeholder: "walk-in-customer",
+    templateResult: formatCustomer,
+    templateSelection: formatCustomer,
+  })
+  .on("select2:select", function (e) {
+    const data = e.params.data;
+    customerBalance = parseFloat(data.balance);
+    $(".customer-balance").html(
+      customerBalance < 0
+        ? `(GHS ${Math.abs(customerBalance).toFixed(2)})`
+        : `GHS ${customerBalance.toFixed(2)}`
+    );
+    $(".customer").html(data.text);
+    $("input[name='discount']").val(data.discount);
+    $("#acc-bal").removeClass("d-none");
+    updateTotals();
+  })
+  .on("select2:unselect", function (e) {
+    customerBalance = 0;
+    $(".customer-balance").html(
+      customerBalance < 0
+        ? `(GHS ${Math.abs(customerBalance).toFixed(2)})`
+        : `GHS ${customerBalance.toFixed(2)}`
+    );
+    $(".customer").html("walk-in-customer");
+    $("input[name='discount']").val("");
+    $("#acc-bal").addClass("d-none");
+    updateTotals();
+  });
 
-$(".select2-customer").select2({
-  placeholder: "Walk-in-customer",
-  allowClear: true,
-});
 $(".select2-supplier").select2({
   placeholder: "Seach a supplier",
   allowClear: true,

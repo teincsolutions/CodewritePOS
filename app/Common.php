@@ -20,7 +20,7 @@ use CodeIgniter\Database\RawSql;
 
 if (!function_exists('toDatatableResult')) {
 
-    function toDatatableResult(Model $model, array $inputs = null, $callback=null): array
+    function toDatatableResult(Model $model, array $inputs = null, $callback = null): array
     {
         $total = $model->countAllResults();
         if (isset($inputs['date_from']) || isset($inputs['date_to'])) {
@@ -33,14 +33,17 @@ if (!function_exists('toDatatableResult')) {
         }
 
         if (isset($inputs['fields'])) {
-            $model->like($inputs['fields']);
+            foreach ($inputs['fields'] as $field => $val) {
+                if (!empty(trim($val)))
+                    $model->like($field, $val);
+            }
         }
 
         if (isset($inputs['columns'])) {
             $model->groupStart();
             foreach ($inputs['columns'] as $col) {
                 if (isset($col['searchable']) && $col['searchable'] && isset($col['name']) && $col['name'])
-                    $model->orLike($col['name'], $inputs['search']['value'], 'both');
+                    $model->orLike($col['name'], trim($inputs['search']['value']), 'both');
                 else if (isset($col['name']) && $col['name'])   $model->orLike($col['name'], $inputs['search']['value'], 'both');;
             }
             $model->groupEnd();
@@ -53,8 +56,8 @@ if (!function_exists('toDatatableResult')) {
 
         $data = $model->findAll();
         $filtered = sizeof($data);
-        if($callback)
-            foreach($data as $key => $item)
+        if ($callback)
+            foreach ($data as $key => $item)
                 $data[$key] = $callback($item);
         return  [
             'draw' => isset($inputs['draw']) ? $inputs['draw'] : 1,
@@ -62,6 +65,42 @@ if (!function_exists('toDatatableResult')) {
             'recordsFiltered' => $filtered,
             'data' => $data,
             'inputs' => $inputs,
+        ];
+    }
+}
+
+if (!function_exists('toSelect2Result')) {
+
+    /**
+     * @param Model $model
+     * @param array $columns Columns to search for request
+     * @param array $inputs Request input data
+     * @param function $callback Callback to modify each result
+     */
+    function toSelect2Result(Model $model, array $columns, array $inputs, $select = "*"): array
+    {
+        $term = isset($inputs['term']) ? $inputs['term'] : '';
+        $take = 10;
+        $page = isset($inputs['page']) ? $inputs['page'] : 1;
+        $skip = ($page - 1) * $take;
+
+        $model->select($select);
+        $model->groupStart();
+        foreach ($columns as $row) $model->orLike($row, $term);
+        $model->groupEnd();
+        $model->limit($take, $skip);
+
+        $data = $model->findAll();
+        $total = $model->countAllResults();
+        
+        return  [
+            'results' => $data,
+            'pagination' => [
+                'more' => ($skip + $take < $total),
+                'page' => intval($page),
+                'totalRows' => $total,
+                'totalPages' => intval($total / $take + ($total % $take > 0 ? 1 : 0))
+            ]
         ];
     }
 }

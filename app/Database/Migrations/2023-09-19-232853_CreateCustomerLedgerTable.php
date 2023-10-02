@@ -13,6 +13,16 @@ class CreateCustomerLedgerTable extends Migration
         $forge = Database::forge();
 
         $fields = [
+            'id' => [
+                'type'           => 'BIGINT',
+                'constraint'     => 18,
+                'unsigned'       => true,
+                'auto_increment' => true,
+            ],
+            'tdate' => [
+                'type'       => 'DATE',
+                'default' => new RawSql('CURRENT_DATE')
+            ],
             'customer_id' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
@@ -29,6 +39,11 @@ class CreateCustomerLedgerTable extends Migration
                 'constraint'     => 11,
                 'unsigned'       => true,
                 'null' => true,
+            ],
+            'payment_type' => [
+                'type' => 'ENUM',
+                'constraint' => ['cash', 'debit','momo'],
+                'default' => 'cash'
             ],
             'debit' => [
                 'type'           => 'DECIMAL',
@@ -61,6 +76,7 @@ class CreateCustomerLedgerTable extends Migration
         ];
 
         $forge->addField($fields);
+        $forge->addPrimaryKey('id');
         $forge->addForeignKey('customer_id', 'customers', 'id', 'CASCADE', 'CASCADE', 'fk_customer_ledger_customer_id');
         $forge->addForeignKey('sale_id', 'sales', 'id', 'CASCADE', 'CASCADE', 'fk_customer_ledger_sale_id');
         $forge->addForeignKey('sales_return_id', 'sales_returns', 'id', 'CASCADE', 'CASCADE', 'fk_customer_ledger_sales_return_id');

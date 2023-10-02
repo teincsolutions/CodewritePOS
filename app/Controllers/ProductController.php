@@ -10,11 +10,25 @@ use App\Models\TaxModel;
 use App\Models\UnitModel;
 use App\Models\UserModel;
 use CodeIgniter\Database\RawSql;
+use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
+use CodeIgniter\HTTP\ResponseInterface;
+use Psr\Log\LoggerInterface;
 use SebastianBergmann\CodeCoverage\Report\Xml\Unit;
 
 class ProductController extends BaseController
 {
+    public function initController(
+        RequestInterface $request,
+        ResponseInterface $response,
+        LoggerInterface $logger
+    ) {
+        parent::initController($request, $response, $logger);
+        if (!auth()->loggedIn()) {
+            return $response->redirect(site_url('login'));
+        }
+    }
+
     /**
      * return view for list
      * @return Response - http response
@@ -55,13 +69,13 @@ class ProductController extends BaseController
         }
         return view('pages/products/edit_product', $data);
     }
-    public function save()
+    public function save() 
     {
         $model = new ProductModel();
         $inputs = $this->request->getVar();
         if (auth()->user())
             $inputs['user_id'] = auth()->user()->id;
-  
+
         $id = $this->request->getPost('id');
         $res = [
             'status' => false,
@@ -70,7 +84,7 @@ class ProductController extends BaseController
             'input' => $inputs,
         ];
 
-        $product = $model->find($id);
+        $product = $model->where('id', $id)->first();
 
         if ($product) {
             if ($model->save($inputs)) {

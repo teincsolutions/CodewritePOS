@@ -7,17 +7,33 @@ use App\Models\CustomerLedgerModel;
 use App\Models\CustomerModel;
 use App\Models\SalesItemModel;
 use App\Models\SalesModel;
+use App\Models\SalesReturnModel;
 use App\Models\StockModel;
 use App\Models\StoreModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\Database\RawSql;
+use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
+use CodeIgniter\HTTP\ResponseInterface;
 use Config\Database;
+use PhpParser\Node\Expr\AssignOp\Mod;
+use Psr\Log\LoggerInterface;
 
 use function PHPUnit\Framework\isNull;
 
 class SalesController extends BaseController
 {
+    public function initController(
+        RequestInterface $request,
+        ResponseInterface $response,
+        LoggerInterface $logger
+    ) {
+        parent::initController($request, $response, $logger);
+        if (!auth()->loggedIn()) {
+            return $response->redirect(site_url('login'));
+        }
+    }
+
     /**
      * return view for list
      * @return Response - http response
@@ -43,18 +59,35 @@ class SalesController extends BaseController
         $lastItem = $model->orderBy('id', 'desc')->first();
         $lastId = $lastItem ? $lastItem->id : 1;
         $storeModel = new StoreModel();
+        $ledgerModel = new CustomerLedgerModel();
         $cusModel = new CustomerModel();
+        $returnModel = new SalesReturnModel();
+
+        $saleWhere = ['sales_date' => date('Y-m-d', time()), 'user_id' => (auth()->user()->id ?? 0)];
+        $returnWhere = ['return_date' => date('Y-m-d', time()), 'user_id' => (auth()->user()->id ?? 0)];
+        $holdWhere = ['order_status' => 'pending', 'user_id' => (auth()->user()->id ?? 0)];
+        $ledgerWhere = ['tdate' => date('Y-m-d', time()), 'user_id' => (auth()->user()->id ?? 0)];
+
         $data = [
             'title' => 'Point of Sales',
             'invoice' => substr(time() + $lastId, 0, 10),
             'stores' => $storeModel->findAll(),
             'customers' => $cusModel->findAll(),
+            'saleList' => $model->where($saleWhere)->findAll(),
+            'returnList' => $returnModel->where($returnWhere)->findAll(),
+            'ledgerList' => $ledgerModel->where($ledgerWhere)->findAll(),
+            'salesOnHold' =>  $model->where($holdWhere)->findAll(),
         ];
 
         if ($id) {
+            $sales = $model->where(['id' => $id, 'order_status' => 'pending'])->first();
             $data = array_merge($data, [
                 'sale' => $model->where('id', $id)->first(),
-                'title' => 'POS',
+                'title' => 'Ponit of Sales - Resume',
+                'sales' => $sales,
+            ]);
+            if (!$sales)  $data = array_merge($data, [
+                'error' => "This sales doesn't exist or may not be hold!",
             ]);
         }
         return view('pages/sales/pos', $data);
@@ -71,10 +104,10 @@ class SalesController extends BaseController
         ];
         $model = new SalesModel();
         $data = array_merge($data, [
-            'sale' => $model->find($id),
+            'sales' => $model->find($id),
         ]);
 
-        return view('pages/sales/show_sale', $data);
+        return view('pages/sales/invoice', $data);
     }
 
     /**
@@ -102,13 +135,21 @@ class SalesController extends BaseController
 
         $inputs = $this->request->getVar();
         if (auth()->user())
-            $inputs['user_id'] = auth()->user()->id;
+            $inputs['user_id'] = (auth()->user()->id ?? 0);
 
         unset($inputs['items']);
 
         $inputs['sales_date'] = date('Y-m-d', strtotime($inputs['sales_date']));
 
         $items = $this->request->getVar('items');
+        if (!$items) return $this->response->setJSON(
+            [
+                'status' => false,
+                'data' => null,
+                'message' => "No product selected!",
+                'input' => $inputs,
+            ]
+        );
         $id = $this->request->getPost('id');
 
         $res = [
@@ -126,8 +167,9 @@ class SalesController extends BaseController
         try {
             $this->db->transException(true)->transStart();
             $saved = $model->save($inputs, true);
-            $id = $model->getInsertID();
+
             if ($saved && !$sales) {
+                $id = $model->getInsertID();
                 $salesItems = [];
                 $builder = $stockModel->builder();
 
@@ -142,7 +184,7 @@ class SalesController extends BaseController
                             'product_id' => $items[$k]['product_id'],
                             'store_id' => $items[$k]['store_id']
                         ]);
-                        $builder->set('instock', '(instock - ' . $items[$k]['qty'].')', false);
+                        $builder->set('instock', '(instock - ' . $items[$k]['qty'] . ')', false);
                         $builder->update();
                     } else {
                         $builder->insert([
@@ -156,13 +198,14 @@ class SalesController extends BaseController
                 $sales = $model->find($id);
                 if ($inputs['customer_id'])
                     $ledger->save([
+                        'tdate' => $inputs['sales_date'],
                         'customer_id' => $inputs['customer_id'],
                         'sale_id' => $sales->id,
-                        'debit' => $sales->total_amount,
-                        'credit' => $sales->paid,
+                        'payment_type' => $inputs['payment_type'],
+                        'debit' => $inputs['total_amount'],
+                        'credit' => $inputs['paid'],
                         'user_id' => isset($inputs['user_id']) ? $inputs['user_id'] : null,
                     ]);
-            } else if ($saved) {
             }
             $this->db->transComplete();
         } catch (DatabaseException $e) {
@@ -181,6 +224,106 @@ class SalesController extends BaseController
         }
         return $this->response->setJSON($res);
     }
+
+    /**
+     * return json for hold
+     * @return Response - http response
+     */
+    public function hold()
+    {
+        $model = new SalesModel();
+        $salesItemModel = new SalesItemModel();
+
+        $inputs = $this->request->getVar();
+        if (auth()->user())
+            $inputs['user_id'] = (auth()->user()->id ?? 0);
+
+        unset($inputs['items']);
+
+        $inputs['sales_date'] = date('Y-m-d', strtotime($inputs['sales_date']));
+
+        $items = $this->request->getVar('items');
+        if (!$items) return $this->response->setJSON(
+            [
+                'status' => false,
+                'data' => null,
+                'message' => "No product selected!",
+                'input' => $inputs,
+            ]
+        );
+        $id = $this->request->getPost('id');
+
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => "Sales couldn't be save!",
+            'input' => $inputs,
+        ];
+        $sales = $model->where('id', $id)->first();
+        $this->db = Database::connect();
+
+        if ($sales) $res = array_merge($res, ['message' => "Sales on hold!"]);
+        else $res = array_merge($res, ['message' => "Sales is placed on hold!"]);
+
+        try {
+            $this->db->transException(true)->transStart();
+            if (empty($inputs['store_id'])) unset($inputs['store_id']);
+            $saved = $model->save($inputs);
+            if ($saved && !$sales) {
+                $id = $model->getInsertID();
+                $salesItems = [];
+
+                foreach ($items as $k => $row) {
+                    $items[$k]['sale_id'] = $id;
+                    if (empty($items[$k]['tax_id'])) $items[$k]['tax_id'] = null;
+                    if (empty($items[$k]['store_id']) && isset($inputs['store_id'])) $items[$k]['store_id'] = $inputs['store_id'];
+                    if (empty($items[$k]['store_id'])) unset($items[$k]['store_id']);
+                    array_push($salesItems, $items[$k]);
+                }
+                $salesItemModel->insertBatch($salesItems);
+            } else if ($saved) {
+                $salesItems = [];
+
+                foreach ($items as $k => $row) {
+                    if (empty($items[$k]['tax_id'])) $items[$k]['tax_id'] = null;
+                    if (empty($items[$k]['store_id']) && isset($inputs['store_id'])) $items[$k]['store_id'] = $inputs['store_id'];
+                    if (empty($items[$k]['store_id'])) unset($items[$k]['store_id']);
+                    array_push($salesItems, $items[$k]);
+                }
+                $salesItemModel->updateBatch($salesItems, 'id');
+            }
+
+            $sales = $model->find($id);
+            $this->db->transComplete();
+        } catch (DatabaseException $e) {
+            $res = array_merge($res, [
+                'message' => $e->getMessage(),
+            ]);
+            return $this->response->setJSON($res);
+        }
+        if ($this->db->transStatus()) {
+            $res = array_merge($res, [
+                'status' => true,
+                'data' => $model->find($id),
+            ]);
+        } else {
+            $res = array_merge($res, ['status' => false]);
+        }
+        return $this->response->setJSON($res);
+    }
+
+    /**
+     * return json for select2
+     * @return Response- http response
+     */
+    public function select2(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new SalesModel();
+        $model->join("customers", 'customers.id=sales.customer_id');
+        return $this->response->setJSON(toSelect2Result($model, ['sales.invoice', 'customers.name'], $inputs, 'concat(sales.invoice," (",customers.name," - GHS ",total_amount,")") as text,sales.*'));
+    }
+
 
     /**
      * return json for delete

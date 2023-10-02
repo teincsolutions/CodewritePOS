@@ -3,14 +3,31 @@ Author       : Dreamguys
 Template Name: POS - Bootstrap Admin Template
 */
 
+
+window.baseUrl = "http://localhost:8080";
+
+window.formatCustomer = function (data) {
+  if (!data.id) return data.text;
+  var $state = $(
+    data.status === "closed" ? `<del>${data.text}</del>` : `<span>${data.text}</span>`
+  );
+  return $state;
+};
+
+window.intVal = function (i) {
+  return typeof i === "string"
+    ? i.replace(/[\$,]/g, "") * 1
+    : typeof i === "number"
+    ? i
+    : 0;
+};
+
 $(document).ready(function () {
   // Variables declarations
   var $wrapper = $(".main-wrapper");
   var $slimScrolls = $(".slimscroll");
   var $pageWrapper = $(".page-wrapper");
   feather.replace();
-
-  window.baseUrl = 'http://localhost:8080';
 
   // Page Content Height Resize
   $(window).resize(function () {
@@ -90,26 +107,6 @@ $(document).ready(function () {
       },
     });
   }
-  // Datatable
-  if ($(".datanew").length > 0) {
-    $(".datanew").DataTable({
-      bFilter: true,
-      sDom: "fBtlpi",
-      pagingType: "numbers",
-      ordering: true,
-      language: {
-        search: " ",
-        sLengthMenu: "_MENU_",
-        searchPlaceholder: "Search...",
-        info: "_START_ - _END_ of _TOTAL_ items",
-      },
-      initComplete: (settings, json) => {
-        $(".dataTables_filter").appendTo("#tableSearch");
-        $(".dataTables_filter").appendTo(".search-input");
-      },
-    });
-  }
-
   // image file upload image
   function readURL(input) {
     if (input.files && input.files[0]) {
@@ -382,26 +379,6 @@ $(document).ready(function () {
     $(this).toggleClass("active");
   });
 
-  //Increment Decrement value
-  $(".inc.button").click(function () {
-    var $this = $(this),
-      $input = $this.prev("input"),
-      $parent = $input.closest("div"),
-      newValue = parseInt($input.val()) + 1;
-    $parent.find(".inc").addClass("a" + newValue);
-    $input.val(newValue);
-    newValue += newValue;
-  });
-  $(".dec.button").click(function () {
-    var $this = $(this),
-      $input = $this.next("input"),
-      $parent = $input.closest("div"),
-      newValue = parseInt($input.val()) - 1;
-    console.log($parent);
-    $parent.find(".inc").addClass("a" + newValue);
-    $input.val(newValue);
-    newValue += newValue;
-  });
 
   if ($(".custom-file-container").length > 0) {
     //First upload
@@ -421,10 +398,10 @@ $(document).ready(function () {
         duration: 2000,
         easing: "linear",
         step: function () {
-          $this.text(Math.floor(this.countNum));
+          $this.text(parseFloat(this.countNum).toFixed(2));
         },
         complete: function () {
-          $this.text(this.countNum);
+          $this.text(this.countNum.toFixed(2));
         },
       }
     );
@@ -656,7 +633,6 @@ $(document).ready(function () {
   $("ul.tabs li").click(function () {
     var $this = $(this);
     var $theTab = $(this).attr("id");
-    console.log($theTab);
     if ($this.hasClass("active")) {
       // do nothing
     } else {

@@ -76,6 +76,17 @@ $(function () {
       { data: "name", name: "brands.name" },
       { data: "description", name: "brands.description" },
       {
+        data: "user",
+        name: "brands.user_id",
+        render: function (data, type, row) {
+          if (type === "display")
+            return data
+              ? `<a target="_blank" href="${baseUrl}/users/${data.id}" class="btn btn-link btn-sm">${data.firstname} ${data.lastname}</a>`
+              : null;
+          return data ? data.id : null;
+        },
+      },
+      {
         data: "status",
         name: "brands.status",
         render: function (data, type, row) {

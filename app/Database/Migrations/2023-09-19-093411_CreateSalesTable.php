@@ -83,6 +83,17 @@ class CreateSalesTable extends Migration
                 'null' => false,
                 'defaut' => 0.00
             ],
+            'payment_type' => [
+                'type' => 'ENUM',
+                'constraint' => ['cash', 'debit','momo'],
+                'default' => 'cash'
+            ],
+            'total_amount' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'defaut' => 0.00
+            ],
             'paid' => [
                 'type'       => 'DECIMAL',
                 'constraint' => "32,2",

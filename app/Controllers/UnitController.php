@@ -4,10 +4,24 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\UnitModel;
+use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
+use CodeIgniter\HTTP\ResponseInterface;
+use Psr\Log\LoggerInterface;
 
 class UnitController extends BaseController
 {
+    public function initController(
+        RequestInterface $request,
+        ResponseInterface $response,
+        LoggerInterface $logger
+    ) {
+        parent::initController($request, $response, $logger);
+        if(!auth()->loggedIn()){
+             return $response->redirect(site_url('login'));
+        }
+    }
+
     /**
      * return view for list
      * @return Response - http response

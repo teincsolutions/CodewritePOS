@@ -20,6 +20,7 @@ class CustomerModel extends Model
         'email',
         'status',
         'address',
+        'discount',
         'user_id',
     ];
 
@@ -49,13 +50,12 @@ class CustomerModel extends Model
 
     protected function setRelation($model)
     {
-        if (isset($model['data'])) {
+        if ($model && $model['data']) {
             $userModel = new UserModel();
             $ledgerModel = new CustomerLedgerModel();
 
-            if (isset($model['singleton']) && $model['singleton']) {
+            if (isset($model['singleton']) && $model['singleton'] && $model['data']) {
                 $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
-                $model['data']->ledger = $ledgerModel->where('customer_id', $model['data']->id)->findAll();
                 // balance
                 $total = $ledgerModel->builder()
                     ->selectSum(new RawSql('(credit-debit)'), 'total')
@@ -63,12 +63,10 @@ class CustomerModel extends Model
                     ->get()
                     ->getRowObject()
                     ->total;
-                $model['data']->balance = $total;
+                $model['data']->balance = $total ? $total : 0.00;
             } else {
                 foreach ($model['data'] as $key => $row) {
                     $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
-                    $model['data'][$key]->ledger = $ledgerModel->where('customer_id', $row->id)->findAll();
-
                     // balance
                     $total = $ledgerModel->builder()
                         ->selectSum(new RawSql('(credit-debit)'), 'total')
@@ -76,7 +74,7 @@ class CustomerModel extends Model
                         ->get()
                         ->getRowObject()
                         ->total;
-                    $model['data'][$key]->balance = $total;
+                    $model['data'][$key]->balance = $total ? $total : 0.00;
                 }
             }
         }

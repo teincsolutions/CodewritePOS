@@ -9,13 +9,26 @@ use App\Models\StockModel;
 use App\Models\StoreModel;
 use App\Models\SupplierModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
+use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
+use CodeIgniter\HTTP\ResponseInterface;
 use Config\Database;
+use Psr\Log\LoggerInterface;
 
 use function PHPUnit\Framework\isNull;
 
 class PurchaseController extends BaseController
 {
+    public function initController(
+        RequestInterface $request,
+        ResponseInterface $response,
+        LoggerInterface $logger
+    ) {
+        parent::initController($request, $response, $logger);
+        if(!auth()->loggedIn()){
+             return $response->redirect(site_url('login'));
+        }
+    }
     /**
      * return view for list
      * @return Response - http response

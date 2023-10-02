@@ -29,19 +29,19 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Product Barcode</label>
-                        <input type="text" name="barcode" value="<?= isset($product) ? $product->barcode : null ?>" placeholder="Barcode" required>
+                        <input type="text" name="barcode" value="<?= isset($product) ? $product->barcode : null ?>" placeholder="Barcode">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Unit Cost</label>
-                        <input type="text" name="unit_cost" value="<?= isset($product) ? $product->unit_cost : null ?>" required>
+                        <input type="text" name="unit_cost" value="<?= isset($product) ? $product->unit_cost : null ?>" placeholder="Unit Cost">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Selling Price</label>
-                        <input type="text" name="unit_price" value="<?= isset($product) ? $product->unit_price : null ?>" required>
+                        <input type="text" name="unit_price" value="<?= isset($product) ? $product->unit_price : null ?>" placeholder="Unit Price" required>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
@@ -138,7 +138,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Product Discount</label>
-                        <input type="number" name="discount" step="any" class="form-control" value="<?= isset($product) ? $product->discount : "0.00" ?>" placeholder="Discount amount">
+                        <input type="number" name="discount" step="any" class="form-control" value="<?= isset($product) ? $product->discount : "0.00" ?>" placeholder="Discount percentage (e.g. 1 = 1%)">
                     </div>
                 </div>
                 <div class="col-lg-12">
@@ -147,7 +147,7 @@
                         <div class="image-upload">
                             <input type="file">
                             <div class="image-uploads">
-                                <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/upload.svg" alt="img">
+                                <img src="<?=base_url('assets/icons/upload.svg') ?>" alt="img">
                                 <h4>Drag and drop a file to upload</h4>
                             </div>
                         </div>

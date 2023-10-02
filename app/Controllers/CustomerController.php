@@ -70,6 +70,17 @@ class CustomerController extends BaseController
     }
 
     /**
+     * return json for select2
+     * @return Response- http response
+     */
+    public function select2(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new CustomerModel();
+        return $this->response->setJSON(toSelect2Result($model, ['name', 'phone', 'address'], $inputs, 'concat(name," (",ifnull(address,phone), ")") as text,customers.*'));
+    }
+
+    /**
      * return json for save
      * @return Response - http response
      */
@@ -86,7 +97,7 @@ class CustomerController extends BaseController
             'message' => null,
             'input' => $inputs,
         ];
-        $customer = $model->where('id',$id)->first();
+        $customer = $model->where('id', $id)->first();
 
         if ($customer) {
             if ($model->save($inputs)) {

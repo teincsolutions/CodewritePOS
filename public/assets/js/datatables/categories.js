@@ -65,7 +65,17 @@ $(function () {
       },
       { data: "name", name: "categories.name" },
       { data: "description", name: "categories.description" },
-      { data: "user_id", name: "categories.user_id" },
+      {
+        data: "user",
+        name: "categories.user_id",
+        render: function (data, type, row) {
+          if (type === "display")
+            return data
+              ? `<a target="_blank" href="${baseUrl}/users/${data.id}" class="btn btn-link btn-sm">${data.firstname} ${data.lastname}</a>`
+              : null;
+          return data ? data.id : null;
+        },
+      },
       {
         data: "status",
         name: "categories.status",

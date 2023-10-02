@@ -1,25 +1,21 @@
 let table;
 
 $(function () {
-  table = $("#supplierstable").DataTable({
+  table = $("#dt-suppliers").DataTable({
     ajax: {
       url: baseUrl + "/suppliers/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $("#filter_inputs input, #filter_inputs select");
+        let filterForm = $("#filter_inputs input, #filter_inputs select:selected");
         filterForm.each((i, item) => {
           field = $(item);
-          if (field.prop("tagName") === "SELECT") {
-            if (typeof field
+         if (field.prop("tagName") === "SELECT"){
+ if (typeof field
                 .children("option:selected").val() !== "undefined" && field.children("option:selected").val() !='')
-              filter[field.attr("name")] = field
-                .children("option:selected")
-                .val();
-          } else {
-            filter[field.attr("name")] = field.val();
-          }
+              filter[field.attr("name")] = field.children("option:selected").val();
+            }else {filter[field.attr("name")] = field.val();}
         });
 
         params.fields = filter;
@@ -64,9 +60,28 @@ $(function () {
         },
       },
       { data: "name", name: "suppliers.name" },
-      { data: "email", name: "suppliers.email" },
       { data: "phone", name: "suppliers.phone" },
+      { data: "email", name: "suppliers.email" },
       { data: "address", name: "suppliers.address" },
+      {
+        data: "balance",
+        render: function (data, type, row) {
+          return data < 0
+            ? `(GHS ${Math.abs(data).toFixed(2)})`
+            : `GHS ${data}`;
+        },
+      },
+      {
+        data: "user",
+        name: "suppliers.user_id",
+        render: function (data, type, row) {
+          if (type === "display")
+            return data
+              ? `<a target="_blank" href="${baseUrl}/users/${data.id}" class="btn btn-link btn-sm">${data.firstname} ${data.lastname}</a>`
+              : null;
+          return data ? data.id : null;
+        },
+      },
       {
         data: "status",
         name: "suppliers.status",

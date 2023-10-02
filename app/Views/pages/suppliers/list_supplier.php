@@ -7,7 +7,7 @@
             <h6>Manage your Suppliers</h6>
         </div>
         <div class="page-btn">
-            <a href="<?=site_url('suppliers/create') ?>" class="btn btn-added"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus.svg" alt="img">Add Supplier</a>
+            <a href="<?=site_url('suppliers/create') ?>" class="btn btn-added"><i class="fa fa-plus fa-lg me-1"></i>Add Supplier</a>
         </div>
     </div> 
 
@@ -17,12 +17,12 @@
                 <div class="search-set">
                     <div class="search-path">
                         <a class="btn btn-filter" id="filter_search">
-                            <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/filter.svg" alt="img">
-                            <span><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/closes.svg" alt="img"></span>
+                            <img src="<?= base_url('assets/icons/filter.svg') ?>" alt="img">
+                            <span><img src="<?= base_url('assets/icons/closes.svg') ?>" alt="img"></span>
                         </a>
                     </div>
                     <div class="search-input">
-                        <a class="btn btn-searchset"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/search-white.svg" alt="img"></a>
+                        <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
                     </div>
                 </div>
                 <div class="wordset">
@@ -50,7 +50,7 @@
                         </div>
                         <div class="col-lg-1 col-sm-6 col-12  ms-auto">
                             <div class="form-group">
-                                <a class="btn btn-filters filter ms-auto"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/search-whites.svg" alt="img"></a>
+                                <a class="btn btn-filters filter ms-auto"><img src="<?=base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
                             </div>
                         </div>
                     </div>
@@ -58,15 +58,16 @@
             </div>
 
             <div class="table-responsive">
-                <table id="supplierstable" class="table">
+                <table id="dt-suppliers" class="table">
                     <thead>
                         <tr>
-                            <th>     
-                            </th>
+                            <th></th>
                             <th>Supplier Name</th>
                             <th>Phone</th>
-                            <th>email</th>
+                            <th>Email</th>
                             <th>Address</th>
+                            <th>Status</th>
+                            <th>Added By</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -101,25 +102,7 @@
                                 <th>Paid By </th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr class="bor-b1">
-                                <td>2022-03-07 </td>
-                                <td>INV/SL0101</td>
-                                <td>$ 1500.00 </td>
-                                <td>Cash</td>
-                                <td>
-                                    <a class="me-2" href="javascript:void(0);">
-                                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/printer.svg" alt="img">
-                                    </a>
-                                    <a class="me-2" href="javascript:void(0);" data-bs-target="#editpayment" data-bs-toggle="modal" data-bs-dismiss="modal">
-                                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                    </a>
-                                    <a class="me-2 confirm-text" href="javascript:void(0);">
-                                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
+                      
                     </table>
                 </div>
             </div>
@@ -141,7 +124,7 @@
                             <div class="input-group">
                                 <input type="text" value="2022-03-07" class="datetimepicker">
                                 <a class="scanner-set input-group-text">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/datepicker.svg" alt="img">
+                                    <i class="fa fa-calendar fa-lg"></i>
                                 </a>
                             </div>
                         </div>
@@ -168,9 +151,9 @@
                         <div class="form-group">
                             <label>Payment type</label>
                             <select class="select">
-                                <option>Cash</option>
-                                <option>Online</option>
-                                <option>Inprogress</option>
+                                <option value="cash">Cash</option>
+                                <option value="momo">MoMo</option>
+                                <option value="credit">Credit Card</option>
                             </select>
                         </div>
                     </div>
@@ -204,7 +187,7 @@
                             <div class="input-group">
                                 <input type="text" value="2022-03-07" class="datetimepicker">
                                 <a class="scanner-set input-group-text">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/datepicker.svg" alt="img">
+                                    <i class="fa fa-calendar fa-lg"></i>
                                 </a>
                             </div>
                         </div>

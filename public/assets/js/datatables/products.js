@@ -11,11 +11,17 @@ $(function () {
         let filterForm = $("#filter_inputs input, #filter_inputs select");
         filterForm.each((i, item) => {
           field = $(item);
-         if (field.prop("tagName") === "SELECT"){
- if (typeof field
-                .children("option:selected").val() !== "undefined" && field.children("option:selected").val() !='')
-              filter[field.attr("name")] = field.children("option:selected").val();
-            }else {filter[field.attr("name")] = field.val();}
+          if (field.prop("tagName") === "SELECT") {
+            if (
+              typeof field.children("option:selected").val() !== "undefined" &&
+              field.children("option:selected").val() != ""
+            )
+              filter[field.attr("name")] = field
+                .children("option:selected")
+                .val();
+          } else {
+            filter[field.attr("name")] = field.val();
+          }
         });
 
         params.fields = filter;
@@ -118,12 +124,24 @@ $(function () {
         },
       },
       {
+        data: "user",
+        name: "products.user_id",
+        render: function (data, type, row) {
+          if (type === "display")
+            return data
+              ? `<a target="_blank" href="${baseUrl}/users/${data.id}" class="btn btn-link btn-sm">${data.firstname} ${data.lastname}</a>`
+              : null;
+          return data ? data.id : null;
+        },
+      },
+      {
         data: "id",
         name: "products.id",
         render: function (data, type, row) {
           if (type === "display") {
             return `<div class="d-flex justify-content-between align-items-center">
-                        <a class="me-3 text-secondary" href="${baseUrl}/products/edit/${row.id}"><i class="fa fa-edit fa-lg"></i></a>
+                        <a class="me-3" href="${baseUrl}/products/${row.id}"><i class="fa fa-eye fa-lg"></i></a>
+                        <a class="me-3" href="${baseUrl}/products/edit/${row.id}"><i class="fa fa-edit fa-lg"></i></a>
                         <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${row.id}, '${baseUrl}/products')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }

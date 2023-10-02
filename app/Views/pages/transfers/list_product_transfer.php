@@ -17,13 +17,13 @@
                 <div class="search-set">
                     <div class="search-path">
                         <a class="btn btn-filter" id="filter_search">
-                            <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/filter.svg" alt="img">
-                            <span><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/closes.svg" alt="img"></span>
+                            <img src="<?= base_url('assets/icons/filter.svg') ?>" alt="img">
+                            <span><img src="<?= base_url('assets/icons/closes.svg') ?>" alt="img"></span>
                         </a>
                     </div>
                     <div class="search-input">
                         <a class="btn btn-searchset">
-                            <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/search-white.svg" alt="img">
+                            <img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img">
                         </a>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
                         </div>
                         <div class="col-lg-1 col-sm-6 col-12 ms-auto">
                             <div class="form-group">
-                                <a class="btn btn-filters ms-auto"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/search-whites.svg" alt="img"></a>
+                                <a class="btn btn-filters ms-auto"><img src="<?=base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
                             </div>
                         </div>
                     </div>

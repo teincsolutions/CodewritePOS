@@ -48,7 +48,7 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right">
                 <a href="javascript:void(0);" class="dropdown-item active">
-                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/flags/us.png" alt height="16"> English
+                    <img src="<?= site_url('assets/images/flags/us.png') ?>" alt height="16"> English
                 </a>
             </div>
         </li>
@@ -60,7 +60,7 @@
         </li>
         <li class="nav-item dropdown nav-item-box">
             <a href="javascript:void(0);" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
-                <i data-feather="bell"></i><span class="badge rounded-pill">2</span>
+                <i data-feather="bell"></i><span class="badge rounded-pill">0</span>
             </a>
             <div class="dropdown-menu notifications">
                 <div class="topnav-dropdown-header">
@@ -93,46 +93,51 @@
         </li>
 
         <li class="nav-item nav-item-box">
-            <a href="<?=site_url('settings/general-settings') ?>"><i data-feather="settings"></i></a>
+            <a href="<?= site_url('settings/general-settings') ?>"><i data-feather="settings"></i></a>
         </li>
         <li class="nav-item dropdown has-arrow main-drop">
             <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
-                <span class="user-info">
-                    <span class="user-letter">
-                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/profiles/avator1.jpg" alt class="img-fluid">
+                <?php if (auth()->user()) { ?>
+                    <span class="user-info">
+                        <span class="user-letter">
+                            <img src="<?= auth()->user()->photo_uri ? base_url('photos/users/' . auth()->user()->photo_uri) : base_url('assets/icons/user.png') ?>" alt class="img-fluid">
+                        </span>
+                        <span class="user-detail">
+                            <span class="user-name"><?= auth()->user()->firstname ?> <?= auth()->user()->lastname ?></span>
+                            <span class="user-role"><?= auth()->user()->getGroups()[0] ?></span>
+                        </span>
                     </span>
-                    <span class="user-detail">
-                        <span class="user-name">John Smilga</span>
-                        <span class="user-role">Super Admin</span>
-                    </span>
-                </span>
+                <?php } ?>
             </a>
             <div class="dropdown-menu menu-drop-user">
-                <div class="profilename">
-                    <div class="profileset">
-                        <span class="user-img"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/profiles/avator1.jpg" alt>
-                            <span class="status online"></span></span>
-                        <div class="profilesets">
-                            <h6>John Smilga</h6>
-                            <h5>Super Admin</h5>
+                <?php if (auth()->user()) { ?>
+                    <div class="profilename">
+                        <div class="profileset">
+                            <span class="user-img">
+                                <img src="<?= auth()->user()->photo_uri ? base_url('photos/users/' . auth()->user()->photo_uri) : base_url('assets/icons/user.png') ?>" alt="User Photo">
+                                <span class="status online"></span></span>
+                            <div class="profilesets">
+                                <h6><?= auth()->user()->firstname ?> <?= auth()->user()->lastname ?></h6>
+                                <h5><?= auth()->user()->getGroups()[0] ?></h5>
+                            </div>
                         </div>
+                        <hr class="m-0">
+                        <a class="dropdown-item" href="<?= site_url('account/profile') ?>"> <i class="me-2" data-feather="user"></i> My Profile</a>
+                        <a class="dropdown-item" href="<?= site_url('account/settings') ?>"><i class="me-2" data-feather="settings"></i>Settings</a>
+                        <hr class="m-0">
+                        <a class="dropdown-item logout pb-0" href="<?= site_url('logout') ?>"><i class="fa fa-logout me-2" alt="img"></i> Logout</a>
                     </div>
-                    <hr class="m-0">
-                    <a class="dropdown-item" href="<?=site_url('account/profile') ?>"> <i class="me-2" data-feather="user"></i> My Profile</a>
-                    <a class="dropdown-item" href="<?=site_url('account/settings') ?>"><i class="me-2" data-feather="settings"></i>Settings</a>
-                    <hr class="m-0">
-                    <a class="dropdown-item logout pb-0" href="<?=site_url('logout') ?>"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/log-out.svg" class="me-2" alt="img">Logout</a>
-                </div>
+                <?php } ?>
             </div>
         </li>
     </ul>
-    
+
     <div class="dropdown mobile-user-menu">
         <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
         <div class="dropdown-menu dropdown-menu-right">
-            <a class="dropdown-item" href="<?=site_url('account/profile') ?>">My Profile</a>
-            <a class="dropdown-item" href="<?=site_url('account/settings') ?>">Settings</a>
-            <a class="dropdown-item" href="<?=site_url('logout') ?>">Logout</a>
+            <a class="dropdown-item" href="<?= site_url('account/profile') ?>">My Profile</a>
+            <a class="dropdown-item" href="<?= site_url('account/settings') ?>">Settings</a>
+            <a class="dropdown-item" href="<?= site_url('logout') ?>">Logout</a>
         </div>
     </div>
 

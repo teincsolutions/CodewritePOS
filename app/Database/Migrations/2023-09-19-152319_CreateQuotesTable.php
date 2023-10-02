@@ -67,6 +67,12 @@ class CreateQuotesTable extends Migration
                 'null' => false,
                 'defaut' => 0.00
             ],
+            'total_amount' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'defaut' => 0.00
+            ],
             'user_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,

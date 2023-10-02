@@ -3,11 +3,27 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\ExpenseCategoryModel;
 use App\Models\ExpenseModel;
+use App\Models\StoreModel;
+use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
+use CodeIgniter\HTTP\ResponseInterface;
+use Psr\Log\LoggerInterface;
 
 class ExpenseController extends BaseController
 {
+    public function initController(
+        RequestInterface $request,
+        ResponseInterface $response,
+        LoggerInterface $logger
+    ) {
+        parent::initController($request, $response, $logger);
+        if (!auth()->loggedIn()) {
+            return $response->redirect(site_url('login'));
+        }
+    }
+
     /**
      * return view for list
      * @return Response - http response
@@ -26,8 +42,12 @@ class ExpenseController extends BaseController
      */
     public function edit($id = null)
     {
+        $eCatModel = new ExpenseCategoryModel();
+        $storeModel = new StoreModel();
         $data = [
-            'title' => 'Create Expense'
+            'title' => 'Create Expense',
+            'categories' => $eCatModel->where('status', 'opened')->findAll(),
+            'stores' => $storeModel->findAll(),
         ];
 
         if ($id) {
@@ -45,7 +65,7 @@ class ExpenseController extends BaseController
         $inputs = $this->request->getVar();
         if (auth()->user())
             $inputs['user_id'] = auth()->user()->id;
-            
+
         $id = $this->request->getPost('id');
         $res = [
             'status' => false,

@@ -72,6 +72,12 @@ class CreatePurchasesTable extends Migration
                 'null' => false,
                 'defaut' => 0.00
             ],
+            'total_amount' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'defaut' => 0.00
+            ],
             'paid' => [
                 'type'       => 'DECIMAL',
                 'constraint' => "32,2",

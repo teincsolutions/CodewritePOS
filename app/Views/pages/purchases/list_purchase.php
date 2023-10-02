@@ -17,12 +17,12 @@
                 <div class="search-set">
                     <div class="search-path">
                         <a class="btn btn-filter" id="filter_search">
-                            <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/filter.svg" alt="img">
-                            <span><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/closes.svg" alt="img"></span>
+                            <img src="<?= base_url('assets/icons/filter.svg') ?>" alt="img">
+                            <span><img src="<?= base_url('assets/icons/closes.svg') ?>" alt="img"></span>
                         </a>
                     </div>
                     <div class="search-input">
-                        <a class="btn btn-searchset"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/search-white.svg" alt="img"></a>
+                        <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
                     </div>
                 </div>
                 <div class="wordset">
@@ -219,7 +219,7 @@
                             <div class="input-groupicon">
                                 <input type="text" value="2022-03-07" class="datetimepicker">
                                 <div class="addonset">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/datepicker.svg" alt="img">
+                                    <i class="fa fa-calendar fa-lg"></i>
                                 </div>
                             </div>
                         </div>

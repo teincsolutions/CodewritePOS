@@ -16,6 +16,7 @@ class CustomerLedgerModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
+        'tdate',
         'sale_id',
         'customer_id',
         'sales_return_id',
@@ -44,15 +45,40 @@ class CustomerLedgerModel extends Model
     protected $beforeUpdate   = ['setDefaultId'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
-    protected $afterFind      = [];
+    protected $afterFind      = ['setRelation'];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
     protected function setDefaultId(array $data)
     {
-        if (isset($data['data']['customer_id']) && isNull($data['data']['customer_id']))
+        if (isset($data['data']['customer_id']) && empty($data['data']['customer_id']))
             $data['data']['customer_id'] = NULL;
 
         return $data;
+    }
+
+    protected function setRelation($model)
+    {
+        if ($model && $model['data']) {
+            $userModel = new UserModel();
+            $saleModel = new SalesModel();
+            $returnModel = new SalesReturnModel();
+            $cusModel = new CustomerModel();
+
+            if ($model['singleton']) {
+                $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
+                $model['data']->sale = $saleModel->where('id', $model['data']->sale_id)->first();
+                $model['data']->sales_return = $returnModel->where('id', $model['data']->sales_return_id)->first();
+                $model['data']->customer = $cusModel->where('id', $model['data']->customer_id)->first();
+            } else {
+                foreach ($model['data'] as $key => $row) {
+                    $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
+                    $model['data'][$key]->sale = $saleModel->where('id', $row->sale_id)->first();
+                    $model['data'][$key]->sales_return = $returnModel->where('id', $row->sales_return_id)->first();
+                    $model['data'][$key]->customer = $cusModel->where('id', $row->customer_id)->first();
+                }
+            }
+        }
+        return $model;
     }
 }

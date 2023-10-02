@@ -61,10 +61,13 @@ class ProductModel extends Model
 
     protected function setDefaultId(array $data)
     {
-        if (isset($data['data']['brand_id']) && isNull($data['data']['brand_id']))
+        if (isset($data['data']['brand_id']) && empty($data['data']['brand_id']))
             $data['data']['brand_id'] = NULL;
 
-        if (isset($data['data']['tax_id']) && isNull($data['data']['tax_id']))
+        if (isset($data['data']['barcode']) && empty($data['data']['barcode']))
+            $data['data']['barcode'] = NULL;
+
+        if (isset($data['data']['tax_id']) && empty($data['data']['tax_id']))
             $data['data']['tax_id'] = NULL;
 
         return $data;
@@ -72,18 +75,19 @@ class ProductModel extends Model
 
     protected function setInstock($model)
     {
-       
-        if (isset($model['data'])) {
+        if (isset($model['data']) && $model['data']) {
             $stockModel = new StockModel();
             $builder = $stockModel->builder();
-            if (isset($model['singleton']) && $model['singleton']) {
-                $model['data']->inventory = $stockModel->where('product_id',  $model['data']->id)->findAll();
-                $instock = $builder->selectSum('instock', 'total')
-                    ->where('product_id',  $model['data']->id)
-                    ->get()
-                    ->getRowObject()
-                    ->total;
-                $model['data']->instock = $instock;
+            if ($model['singleton']) {
+                if (isset($model['data']->id)) {
+                    $model['data']->inventory = $stockModel->where('product_id',  $model['data']->id)->findAll();
+                    $instock = $builder->selectSum('instock', 'total')
+                        ->where('product_id',  $model['data']->id)
+                        ->get()
+                        ->getRowObject()
+                        ->total;
+                    $model['data']->instock = $instock ?? 0.00;
+                }
             } else {
                 foreach ($model['data'] as $key => $row) {
                     $model['data'][$key]->inventory = $stockModel->where('product_id', $row->id)->findAll();
@@ -92,21 +96,21 @@ class ProductModel extends Model
                         ->get()
                         ->getRowObject()
                         ->total;
-                    $model['data'][$key]->instock = $instock;
+                    $model['data'][$key]->instock = $instock ?? 0.00;
                 }
             }
-            return $model;
         }
+        return $model;
     }
     protected function setRelation($model)
     {
-        if (isset($model['data'])) {
+        if ($model && $model['data']) {
             $userModel = new UserModel();
             $brandModel = new BrandModel();
             $catModel = new CategoryModel();
             $unitModel = new UnitModel();
             $taxModel = new TaxModel();
-            if (isset($model['singleton']) && $model['singleton']) {
+            if ($model['singleton']) {
                 $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
                 $model['data']->brand = $brandModel->where('id', $model['data']->brand_id)->first();
                 $model['data']->category = $catModel->where('id', $model['data']->category_id)->first();

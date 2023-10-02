@@ -5,10 +5,24 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\StoreModel;
 use App\Models\UserModel;
+use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
+use CodeIgniter\HTTP\ResponseInterface;
+use Psr\Log\LoggerInterface;
 
 class StoreController extends BaseController
 {
+    public function initController(
+        RequestInterface $request,
+        ResponseInterface $response,
+        LoggerInterface $logger
+    ) {
+        parent::initController($request, $response, $logger);
+        if(!auth()->loggedIn()){
+             return $response->redirect(site_url('login'));
+        }
+    }
+
     /**
      * return view for list
      * @return Response - http response
@@ -111,10 +125,6 @@ class StoreController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new StoreModel();
-        return $this->response->setJSON(toDatatableResult($model,$inputs,function($item){
-            $model = new UserModel();
-            $item->user = $model->where('id',$item->user_id)->first();
-            return $item;
-        }));
+        return $this->response->setJSON(toDatatableResult($model,$inputs));
     }
 }

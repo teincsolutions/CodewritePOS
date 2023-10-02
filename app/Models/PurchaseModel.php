@@ -26,6 +26,8 @@ class PurchaseModel extends Model
         'tax',
         'discount',
         'shipping',
+        'payment_type',
+        'total_amount',
         'paid',
         'user_id'
     ];
@@ -63,11 +65,11 @@ class PurchaseModel extends Model
 
     protected function setTotalAmount(array $model)
     {
-        if (isset($model['data'])) {
+        if ($model && $model['data']) {
             $itemModel = new PurchaseItemModel();
             $builder = $itemModel->builder();
 
-            if (isset($model['singleton']) && $model['singleton']) {
+            if ($model['singleton']) {
                 $total = $builder->selectSum('subtotal', 'total')
                     ->where('purchase_id', $model['data']->id)
                     ->get()
@@ -92,11 +94,11 @@ class PurchaseModel extends Model
 
     protected function setRelation($model)
     {
-        if (isset($model['data'])) {
+        if ($model && $model['data']) {
             $userModel = new UserModel();
             $cusModel = new SupplierModel();
 
-            if (isset($model['singleton']) && $model['singleton']) {
+            if ($model['singleton']) {
                 $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
                 $model['data']->supplier = $cusModel->where('id', $model['data']->supplier_id)->first();
             } else {
@@ -107,5 +109,26 @@ class PurchaseModel extends Model
             }
         }
         return $model;
+    }
+
+    public function getTotalAmount(): float
+    {
+        return (new PurchaseItemModel())->getTotalAmount();
+    }
+    public function getTodayTotalAmount(): float
+    {
+        return (new PurchaseItemModel())->getTodayTotalAmount();
+    }
+
+    public function getPaidAmount(): float
+    {
+        $total = $this->builder()->selectSum('paid', 'total')->get()->getFirstRow()->total;
+        return $total ? $total : 0.00;
+    }
+
+    public function getDueAmount(): float
+    {
+        return (new PurchaseItemModel())->getTotalAmount()
+            - $this->getPaidAmount();
     }
 }

@@ -53,7 +53,7 @@
                     <ul>
                         <li class="<?= getActiveUrl("products", "active"); ?>"><a href="<?= site_url('products') ?>"><i data-feather="box"></i><span>Products</span></a></li>
                         <li class="<?= getActiveUrl("products/create", "active"); ?>"><a href="<?= site_url('products/create') ?>"><i data-feather="plus-square"></i><span>Create Product</span></a></li>
-                        <li class="<?= getActiveUrl("cateogries", "active"); ?>"><a href="<?= site_url('categories') ?>"><i data-feather="codepen"></i><span>Category</span></a></li>
+                        <li class="<?= getActiveUrl("categories", "active"); ?>"><a href="<?= site_url('categories') ?>"><i data-feather="codepen"></i><span>Category</span></a></li>
                         <li class="<?= getActiveUrl("brands", "active"); ?>"><a href="<?= site_url('brands') ?>"><i data-feather="tag"></i><span>Brands</span></a></li>
                         <li class="<?= getActiveUrl("units", "active"); ?>"><a href="<?= site_url('units') ?>"><i data-feather="speaker"></i><span>Units</span></a></li>
                         <li class="<?= getActiveUrl("products/print-barcode", "active"); ?>"><a href="<?= site_url('products/-print-barcode') ?>"><i data-feather="align-justify"></i><span>Print Barcode</span></a></li>

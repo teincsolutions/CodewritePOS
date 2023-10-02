@@ -45,7 +45,11 @@ class CreateCustomersTable extends Migration
                 'type' => 'TEXT',
                 'null' => true,
             ],
-            
+            'discount' => [
+                'type' => 'DECIMAL',
+                'constraint' => "8,2",
+                'default' => 0
+            ],
             'status' => [
                 'type'       => 'ENUM',
                 'constraint' => ['opened', 'closed'],

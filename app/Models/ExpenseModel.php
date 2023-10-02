@@ -17,6 +17,8 @@ class ExpenseModel extends Model
         'expense_date',
         'store_id',
         'expense_category_id',
+        'description',
+        'user_id',
         'amount',
     ];
 
@@ -40,7 +42,29 @@ class ExpenseModel extends Model
     protected $beforeUpdate   = [];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
-    protected $afterFind      = [];
+    protected $afterFind      = ['setRelation'];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    protected function setRelation($model)
+    {
+        if ($model && $model['data']) {
+            $userModel = new UserModel();
+            $catModel = new ExpenseCategoryModel();
+            $storeModel = new StoreModel();
+            
+            if ($model['singleton']) {
+                $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
+                $model['data']->category = $catModel->where('id', $model['data']->expense_category_id)->first();
+                $model['data']->store = $storeModel->where('id', $model['data']->store_id)->first();
+            } else {
+                foreach ($model['data'] as $key => $row) {
+                    $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
+                    $model['data'][$key]->category = $catModel->where('id', $row->expense_category_id)->first();
+                    $model['data'][$key]->store = $storeModel->where('id', $row->store_id)->first();
+                }
+            }
+        }
+        return $model;
+    }
 }

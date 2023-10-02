@@ -39,6 +39,10 @@ class CreateExpensesTable extends Migration
                 'constraint' => "32,2",
                 'null' => false,
             ],
+            'description' => [
+                'type' => 'TEXT',
+                'null' => true,
+            ],
             'user_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,

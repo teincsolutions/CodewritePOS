@@ -39,7 +39,7 @@
                 <div class="form-login">
                     <label>Email</label>
                     <div class="form-addons">
-                        <input type="email" class="form-control" name="email" inputmode="email" autocomplete="email" placeholder="<?= lang('Auth.email') ?>" value="<?= old('email') ?>" required />
+                        <input type="text" class="form-control" name="username" inputmode="text" autocomplete="email" placeholder="<?= lang('Auth.username') ?>" value="<?= old('username') ?>" required />
                     </div>
                 </div>
                 <div class="form-login">
@@ -51,7 +51,7 @@
                 </div>
                 <div class="form-login">
                     <div class="alreadyuser">
-                        <h4><a href="" class="hover-a">Forgot Password?</a></h4>
+                        <h4><a href="<?=site_url('forgot-password') ?>" class="hover-a">Forgot Password?</a></h4>
                     </div>
                 </div>
                 <div class="form-login">

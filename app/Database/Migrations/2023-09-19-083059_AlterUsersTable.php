@@ -34,14 +34,25 @@ class AlterUsersTable extends Migration
             'address' => [
                 'type'      => 'TEXT',
                 'null' => true,
-            ]
+            ],
+            'photo_uri' => [
+                'type'      => 'TEXT',
+                'null' => true,
+            ],
+            'user_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
+                'null' => true,
+            ],
         ];
         $forge->addColumn('users', $fields);
+        $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_user_user_id');
     }
 
     public function down()
     {
         $forge = Database::forge();
-        $forge->dropColumn('users', ['email', 'phone', 'firstname', 'lastname', 'address']);
+        $forge->dropColumn('users', ['email', 'phone', 'firstname', 'lastname', 'address', 'user_id']);
     }
 }

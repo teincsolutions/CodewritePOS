@@ -14,8 +14,12 @@ class UserModel extends ShieldUserModel
 
         $this->allowedFields = [
             ...$this->allowedFields,
-
-            // 'first_name',
+            'firstname',
+            'lastname',
+             'photo_uri',
+             'phone',
+             'address',
+             'employee_id'
         ];
     }
 }

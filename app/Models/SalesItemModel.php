@@ -4,8 +4,6 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-use function PHPUnit\Framework\isNull;
-
 class SalesItemModel extends Model
 {
     protected $DBGroup          = 'default';
@@ -22,7 +20,7 @@ class SalesItemModel extends Model
         'store_id',
         'qty',
         'tax',
-       'tax_id',
+        'tax_id',
         'discount',
         'subtotal'
     ];
@@ -47,14 +45,50 @@ class SalesItemModel extends Model
     protected $beforeUpdate   = ['setDefaultId'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
-    protected $afterFind      = [];
+    protected $afterFind      = ['setRelation'];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
     protected function setDefaultId(array $data)
     {
-        if (isset($data['data']['tax_id']) && isNull($data['data']['tax_id']))
+        if (isset($data['data']['tax_id']) && empty($data['data']['tax_id']))
             $data['data']['tax_id'] = NULL;
         return $data;
+    }
+
+    protected function setRelation($model)
+    {
+        if ($model && $model['data']) {
+            $prodModel = new ProductModel();
+            $storeModel = new StoreModel();
+
+            if ($model['singleton']) {
+                if (isset($model['data']->product_id))
+                    $model['data']->product = $prodModel->where('id', $model['data']->product_id)->first();
+                if (isset($model['data']->store_id))
+                    $model['data']->store = $storeModel->where('id', $model['data']->store_id)->first();
+            } else {
+                foreach ($model['data'] as $key => $row) {
+                    $model['data'][$key]->product = $prodModel->where('id', $row->product_id)->first();
+                    $model['data'][$key]->store = $storeModel->where('id', $row->store_id)->first();
+                }
+            }
+        }
+        return $model;
+    }
+
+    public function getTotalAmount(): float
+    {
+        $result = $this->selectSum('subtotal', 'total')->first();
+        return $result->total ? $result->total : 0.00;
+    }
+
+    public function getTodayTotalAmount(): float
+    {
+        $result = $this->selectSum('subtotal', 'total')
+            ->join('sales', 'sales.id=sales_items.sale_id')
+            ->where('sales_date', date('Y-m-d', time()))
+            ->first();
+        return $result->total ? $result->total : 0.00;
     }
 }

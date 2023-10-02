@@ -1,178 +1,134 @@
-<?= $this->extend('template/default') ?>
+<?= $this->extend('template/pos_receipt') ?>
 <?= $this->section('content') ?>
-<div class="content">
-    <div class="page-header">
-        <div class="page-title">
-            <h4>Print Barcode</h4>
-            <h6>Print product barcodes</h6>
+<div id="invoice-POS">
+    <center id="top">
+        <div class="info">
+            <h1 class="text-uppercase"><?= $title ?? "Sales Receipt" ?></h1>
+        </div>
+        <div class="logo" style="background: url(<?= base_url('assets/images/logo.png') ?>) no-repeat;"></div>
+        <div class="info">
+            <h2 class="text-uppercase">Codewrite Technology Ltd</h2>
+        </div><!--End Info-->
+        <p>Address</p>
+    </center><!--End InvoiceTop-->
+    <div class="d-flex flex-row justify-content-between gap-1">
+        <div class="info">
+            <address>
+                <strong>Customer</strong> : street city, state 0000</br>
+                <strong>Address</strong> : JohnDoe@gmail.com</br>
+                <strong>Phone</strong> : 555-555-5555</br>
+            </address>
+        </div>
+        <div class="info">
+            <address>
+                <strong>Time</strong> : 01/10/23 15:34 </br>
+                <strong>Reference</strong> : INV1691213202</br>
+                <strong>Sale Person</strong> : Sales Manger</br>
+            </address>
         </div>
     </div>
+    <div id="bot">
+        <div id="table">
+            <table>
+                <tr class="tabletitle">
+                    <td class="item">
+                        <h2>Item</h2>
+                    </td>
+                    <td class="Hours">
+                        <h2>Price</h2>
+                    </td>
+                    <td class="Hours">
+                        <h2>Qty</h2>
+                    </td>
+                    <td class="Rate">
+                        <h2>Sub Total</h2>
+                    </td>
+                </tr>
 
-    <div class="card">
-        <div class="card-body">
-            <div class="requiredfield">
-                <h4>The field labels marked with * are required input fields.</h4>
-            </div>
-            <div class="form-group">
-                <label>Product Name</label>
-                <div class="input-groupicon">
-                    <input type="text" placeholder="Please type product code and select...">
-                    <div class="addonset">
-                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/scanners.svg" alt="img">
-                    </div>
-                </div>
-            </div>
-            <div class="table-responsive table-height">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>SKU</th>
-                            <th>Qty</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Macbook pro</td>
-                            <td>PT001</td>
-                            <td>100.00</td>
-                            <td class="text-end">
-                                <a class="delete-set"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img"></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Apple Earpods </td>
-                            <td>PT002</td>
-                            <td>1000.00</td>
-                            <td class="text-end">
-                                <a class="delete-set"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img"></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Macbook Pro</td>
-                            <td>PT003</td>
-                            <td>5000.00</td>
-                            <td class="text-end">
-                                <a class="delete-set"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img"></a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="row">
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Paper Size</label>
-                        <select class="select">
-                            <option>36mm (1.4 inch)</option>
-                            <option>12mm (1 inch)</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <a href="javascript:void(0);" class="btn btn-submit me-2">Submit</a>
-                    <a href="javascript:void(0);" class="btn btn-cancel">Cancel</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<?= $this->endSection() ?>
+                <tr class="service">
+                    <td class="tableitem">
+                        <p class="itemtext">Communication</p>
+                    </td>
+                    <td class="tableitem">
+                        <p class="itemtext">5.00</p>
+                    </td>
+                    <td class="tableitem">
+                        <p class="itemtext">5</p>
+                    </td>
+                    <td class="tableitem">
+                        <p class="itemtext">$375.00</p>
+                    </td>
+                </tr>
 
-<?= $this->section('modal') ?>
-<div class="modal fade" id="scanner" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Barcode</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="modal-barcode">
-                    <ul>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-print"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/printer.svg" alt="img">Print</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
+                <tr class="service">
+                    <td class="tableitem">
+                        <p class="itemtext">Asset Gathering</p>
+                    </td>
+                    <td class="tableitem">
+                        <p class="itemtext">5.00</p>
+                    </td>
+                    <td class="tableitem">
+                        <p class="itemtext">3</p>
+                    </td>
+                    <td class="tableitem">
+                        <p class="itemtext">$225.00</p>
+                    </td>
+                </tr>
+
+                <tr class="service">
+                    <td class="tableitem">
+                        <p class="itemtext">Design Development</p>
+                    </td>
+                    <td class="tableitem">
+                        <p class="itemtext">5.00</p>
+                    </td>
+                    <td class="tableitem">
+                        <p class="itemtext">5</p>
+                    </td>
+                    <td class="tableitem">
+                        <p class="itemtext">$375.00</p>
+                    </td>
+                </tr>
+                <tr class="tabletitle">
+                    <td></td>
+                    <td></td>
+                    <td class="Rate">
+                        <h2>Tax</h2>
+                    </td>
+                    <td class="payment">
+                        <h2>$419.25</h2>
+                    </td>
+                </tr>
+                <tr class="tabletitle">
+                    <td></td>
+                    <td></td>
+                    <td class="Rate">
+                        <h2>Discount</h2>
+                    </td>
+                    <td class="payment">
+                        <h2>$419.25</h2>
+                    </td>
+                </tr>
+
+                <tr class="tabletitle">
+                    <td></td>
+                    <td></td>
+                    <td class="Rate">
+                        <h2>Total</h2>
+                    </td>
+                    <td class="payment">
+                        <h2>$3,644.25</h2>
+                    </td>
+                </tr>
+
+            </table>
+        </div><!--End Table-->
+
+        <div id="legalcopy">
+            <p class="legal"><strong>Thank you for your business!</strong>
+            </p>
         </div>
-    </div>
-</div>
+
+    </div><!--End InvoiceBot-->
+</div><!--End Invoice-->
 <?= $this->endSection() ?>

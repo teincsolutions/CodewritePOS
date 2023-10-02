@@ -8,7 +8,7 @@
         </div>
         <div class="page-btn">
             <a href="<?=site_url("expense-categories/create");?>" class="btn btn-added">
-                <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus.svg" class="me-1" alt="img">Add Category
+               <i class="fa fa-plus fa-lg me-1"></i>Add Category
             </a>
         </div>
     </div>
@@ -19,12 +19,12 @@
                 <div class="search-set">
                     <div class="search-path">
                         <a class="btn btn-filter" id="filter_search">
-                            <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/filter.svg" alt="img">
-                            <span><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/closes.svg" alt="img"></span>
+                            <img src="<?= base_url('assets/icons/filter.svg') ?>" alt="img">
+                            <span><img src="<?= base_url('assets/icons/closes.svg') ?>" alt="img"></span>
                         </a>
                     </div>
                     <div class="search-input">
-                        <a class="btn btn-searchset"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/search-white.svg" alt="img"></a>
+                        <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
                     </div>
                 </div>
                 <div class="wordset">
@@ -48,7 +48,7 @@
                         
                         <div class="col-lg-1 col-sm-6 col-12  ms-auto">
                             <div class="form-group">
-                                <button type="button" class="btn btn-filters filter ms-auto"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/search-whites.svg" alt="img"></button>
+                                <button type="button" class="btn btn-filters filter ms-auto"><img src="<?=base_url('assets/icons/search-white.svg') ?>" alt="img"></button>
                             </div>
                         </div>
                     </div>
@@ -63,6 +63,7 @@
                             </th>
                             <th>Label</th>
                             <th>Description</th>
+                            <th>Created By</th>
                             <th>Action</th>
                         </tr>
                     </thead>

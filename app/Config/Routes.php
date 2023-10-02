@@ -4,6 +4,7 @@ use App\Controllers\AdjustmentController;
 use App\Controllers\BrandController;
 use App\Controllers\CategoryController;
 use App\Controllers\CustomerController;
+use App\Controllers\CustomerLedgerController;
 use App\Controllers\ExpenseCategoryController;
 use App\Controllers\ExpenseController;
 use App\Controllers\ProductController;
@@ -17,15 +18,20 @@ use App\Controllers\SalesReturnController;
 use App\Controllers\StoreController;
 use App\Controllers\SupplierController;
 use App\Controllers\UnitController;
+use App\Controllers\UserController;
 use CodeIgniter\Router\RouteCollection;
+use CodeIgniter\Shield\Controllers\LoginController;
+use CodeIgniter\Shield\Entities\User;
 
 /**
  * @var RouteCollection $routes
  */
 $routes->get('/', 'DashboardController::index');
+$routes->get('/groups', 'DashboardController::addGroup');
 $routes->get('products/search', 'ProductController::search');
 
 //indexs
+$routes->get('users', [UserController::class, 'index']);
 $routes->get('product-adjustments', [AdjustmentController::class, 'index']);
 $routes->get('brands', [BrandController::class, 'index']);
 $routes->get('categories', [CategoryController::class, 'index']);
@@ -47,6 +53,7 @@ $routes->get('suppliers', [SupplierController::class, 'index']);
 $routes->get('units', [UnitController::class, 'index']);
 
 //shows
+$routes->get('users/(:num)', [UserController::class, 'show/$1']);
 $routes->get('product-adjustments/(:num)', [AdjustmentController::class, 'show/$1']);
 $routes->get('customers/(:num)', [CustomerController::class, 'show/$1']);
 $routes->get('products/(:num)', [ProductController::class, 'show/$1']);
@@ -61,6 +68,7 @@ $routes->get('stores/(:num)', [StoreController::class, 'show/$1']);
 $routes->get('suppliers/(:num)', [SupplierController::class, 'show/$1']);
 
 //edit
+$routes->get('users/edit/(:num)', [UserController::class, 'edit/$1']);
 $routes->get('product-adjustments/edit/(:num)', [AdjustmentController::class, 'edit/$1']);
 $routes->get('brands/edit/(:num)', [BrandController::class, 'edit/$1']);
 $routes->get('categories/edit/(:num)', [CategoryController::class, 'edit/$1']);
@@ -73,13 +81,14 @@ $routes->get('product-unit-transfers/edit/(:num)', [ProductUnitTransferControlle
 $routes->get('purchases/edit/(:num)', [PurchaseController::class, 'edit/$1']);
 $routes->get('purchase-returns/edit/(:num)', [PurchaseReturnController::class, 'edit/$1']);
 $routes->get('quotes/edit/(:num)', [QuoteController::class, 'edit/$1']);
-$routes->get('sales/pos/(:num)', [SalesController::class, 'edit/$1']);
+$routes->get('sales/pos/(:num)', [SalesController::class, 'pos/$1']);
 $routes->get('sales-returns/edit/(:num)', [SalesReturnController::class, 'edit/$1']);
 $routes->get('stores/edit/(:num)', [StoreController::class, 'edit/$1']);
 $routes->get('suppliers/edit/(:num)', [SupplierController::class, 'edit/$1']);
 $routes->get('units/edit/(:num)', [UnitController::class, 'edit/$1']);
 
 //create
+$routes->get('users/create', [UserController::class, 'edit']);
 $routes->get('product-adjustments/create', [AdjustmentController::class, 'edit']);
 $routes->get('brands/create', [BrandController::class, 'edit']);
 $routes->get('categories/create', [CategoryController::class, 'edit']);
@@ -99,6 +108,7 @@ $routes->get('suppliers/create', [SupplierController::class, 'edit']);
 $routes->get('units/create', [UnitController::class, 'edit']);
 
 //datatables
+$routes->get('users/datatable', [UserController::class, 'datatable']);
 $routes->get('product-adjustments/datatable', [AdjustmentController::class, 'datatable']);
 $routes->get('brands/datatable', [BrandController::class, 'datatable']);
 $routes->get('categories/datatable', [CategoryController::class, 'datatable']);
@@ -117,7 +127,28 @@ $routes->get('stores/datatable', [StoreController::class, 'datatable']);
 $routes->get('suppliers/datatable', [SupplierController::class, 'datatable']);
 $routes->get('units/datatable', [UnitController::class, 'datatable']);
 
+//datatables
+$routes->get('users/select2', [UserController::class, 'select2']);
+$routes->get('product-adjustments/select2', [AdjustmentController::class, 'select2']);
+$routes->get('brands/select2', [BrandController::class, 'select2']);
+$routes->get('categories/select2', [CategoryController::class, 'select2']);
+$routes->get('customers/select2', [CustomerController::class, 'select2']);
+$routes->get('expense-categories/select2', [ExpenseCategoryController::class, 'select2']);
+$routes->get('expenses/select2', [ExpenseController::class, 'select2']);
+$routes->get('products/select2', [ProductController::class, 'select2']);
+$routes->get('product-transfers/select2', [ProductTransferController::class, 'select2']);
+$routes->get('product-unit-transfers/select2', [ProductUnitTransferController::class, 'select2']);
+$routes->get('purchases/select2', [PurchaseController::class, 'select2']);
+$routes->get('purchase-returns/select2', [PurchaseReturnController::class, 'select2']);
+$routes->get('quotes/select2', [QuoteController::class, 'select2']);
+$routes->get('sales/select2', [SalesController::class, 'select2']);
+$routes->get('sales-returns/select2', [SalesReturnController::class, 'select2']);
+$routes->get('stores/select2', [StoreController::class, 'select2']);
+$routes->get('suppliers/select2', [SupplierController::class, 'select2']);
+$routes->get('units/select2', [UnitController::class, 'select2']);
+
 // post requests
+$routes->post('users', [UserController::class, 'save']);
 $routes->post('product-adjustments', [AdjustmentController::class, 'save']);
 $routes->post('brands', [BrandController::class, 'save']);
 $routes->post('categories', [CategoryController::class, 'save']);
@@ -125,6 +156,7 @@ $routes->post('customers', [CustomerController::class, 'save']);
 $routes->post('expense-categories', [ExpenseCategoryController::class, 'save']);
 $routes->post('expenses', [ExpenseController::class, 'save']);
 $routes->post('products', [ProductController::class, 'save']);
+$routes->post('ledgers', [CustomerLedgerController::class, 'save']);
 
 $routes->post('transfers/product', [ProductTransferController::class, 'save']);
 $routes->post('transfers/product-unit', [ProductUnitTransferController::class, 'save']);
@@ -133,12 +165,14 @@ $routes->post('purchases', [PurchaseController::class, 'save']);
 $routes->post('returns/purchase', [PurchaseReturnController::class, 'save']);
 $routes->post('quotes', [QuoteController::class, 'save']);
 $routes->post('sales', [SalesController::class, 'save']);
+$routes->post('sales/hold', [SalesController::class, 'hold']);
 $routes->post('returns/sales', [SalesReturnController::class, 'save']);
 $routes->post('stores', [StoreController::class, 'save']);
 $routes->post('suppliers', [SupplierController::class, 'save']);
 $routes->post('units', [UnitController::class, 'save']);
 
 //Put Request
+$routes->put('users', [UserController::class, 'save']);
 $routes->put('expense-categories', [ExpenseCategoryController::class, 'save']);
 $routes->put('expenses', [ExpenseController::class, 'save']);
 $routes->put('categories', [CategoryController::class, 'save']);

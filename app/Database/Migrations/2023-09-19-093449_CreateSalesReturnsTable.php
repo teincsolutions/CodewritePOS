@@ -56,6 +56,27 @@ class CreateSalesReturnsTable extends Migration
                 'null' => false,
                 'defaut' => 0.00
             ],
+            'order_status' => [
+                'type' => 'ENUM',
+                'constraint' => ['pending', 'completed'],
+                'default' => 'pending'
+            ],
+            'payment_status' => [
+                'type' => 'ENUM',
+                'constraint' => ['due', 'paid'],
+                'default' => 'due'
+            ],
+            'total_amount' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'defaut' => 0.00
+            ],
+            'payment_type' => [
+                'type' => 'ENUM',
+                'constraint' => ['cash', 'debit','momo'],
+                'default' => 'cash'
+            ],
             'paid' => [
                 'type'       => 'DECIMAL',
                 'constraint' => "32,2",

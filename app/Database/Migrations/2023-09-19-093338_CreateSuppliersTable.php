@@ -45,6 +45,16 @@ class CreateSuppliersTable extends Migration
                 'type' => 'TEXT',
                 'null' => true,
             ],
+            'discount' => [
+                'type' => 'DECIMAL',
+                'constraint' => "8,2",
+                'default' => 0
+            ],
+            'status' => [
+                'type'       => 'ENUM',
+                'constraint' => ['opened', 'closed'],
+                'default'    => 'opened',
+            ],
             'user_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,

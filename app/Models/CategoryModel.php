@@ -40,7 +40,23 @@ class CategoryModel extends Model
     protected $beforeUpdate   = [];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
-    protected $afterFind      = [];
+    protected $afterFind      = ['setRelation'];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    protected function setRelation($model)
+    {
+        if ($model && $model['data']) {
+            $userModel = new UserModel();
+            
+            if ($model['singleton']) {
+                $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
+            } else {
+                foreach ($model['data'] as $key => $row) {
+                    $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
+                }
+            }
+        }
+        return $model;
+    }
 }

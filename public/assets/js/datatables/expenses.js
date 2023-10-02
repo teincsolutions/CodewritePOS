@@ -12,8 +12,10 @@ $(function () {
         filterForm.each((i, item) => {
           field = $(item);
           if (field.prop("tagName") === "SELECT") {
-            if (typeof field
-                .children("option:selected").val() !== "undefined" && field.children("option:selected").val() !='')
+            if (
+              typeof field.children("option:selected").val() !== "undefined" &&
+              field.children("option:selected").val() != ""
+            )
               filter[field.attr("name")] = field
                 .children("option:selected")
                 .val();
@@ -64,9 +66,43 @@ $(function () {
         },
       },
       { data: "expense_date", name: "expenses.expense_date" },
-      { data: "store_id", name: "expenses.store_id" },
-      { data: "expense_category_id", name: "expenses.expense_category_id" },
+      {
+        data: "store",
+        name: "expenses.store_id",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return data
+              ? `<a target="_blank" href="${baseUrl}/stores/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+              : "";
+          }
+          return data ? data.id : null;
+        },
+      },
+      {
+        data: "category",
+        name: "expenses.expense_category_id",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return data
+              ? `<a target="_blank" href="${baseUrl}/expense-categories/${data.id}" class="btn btn-link btn-sm">${data.label}</a>`
+              : "";
+          }
+          return data ? data.id : null;
+        },
+      },
       { data: "amount", name: "expenses.amount" },
+      { data: "description", name: "expenses.description" },
+      {
+        data: "user",
+        name: "expenses.user_id",
+        render: function (data, type, row) {
+          if (type === "display")
+            return data
+              ? `<a target="_blank" href="${baseUrl}/users/${data.id}" class="btn btn-link btn-sm">${data.firstname} ${data.lastname}</a>`
+              : null;
+          return data ? data.id : null;
+        },
+      },
       {
         data: "id",
         name: "expenses.id",

@@ -76,8 +76,10 @@ $(function () {
         name: "customers.user_id",
         render: function (data, type, row) {
           if (type === "display")
-            return data ? `${data.firstname} ${data.lastname}` : null;
-            return data ? data.id : null;
+            return data
+              ? `<a target="_blank" href="${baseUrl}/users/${data.id}" class="btn btn-link btn-sm">${data.firstname} ${data.lastname}</a>`
+              : null;
+          return data ? data.id : null;
         },
       },
       {
