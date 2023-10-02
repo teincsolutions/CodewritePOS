@@ -8,23 +8,30 @@
         <div class="logo" style="background: url(<?= base_url('assets/images/logo.png') ?>) no-repeat;"></div>
         <div class="info">
             <h2 class="text-uppercase">Codewrite Technology Ltd</h2>
+            <p  class="text-uppercase"><?=$sales->store->name; ?> at <?=$sales->store->location; ?></p>
         </div><!--End Info-->
-        <p>Address</p>
-    </center><!--End InvoiceTop-->
+    </center>
     <div class="d-flex flex-row justify-content-between gap-1">
         <div class="info">
-            <address>
-                <strong>Customer</strong> : street city, state 0000</br>
-                <strong>Address</strong> : JohnDoe@gmail.com</br>
-                <strong>Phone</strong> : 555-555-5555</br>
-            </address>
+            <?php if ($sales->customer) : ?>
+                <p class="sec">
+                    <strong>Customer : </strong><span><?= $sales->customer->name; ?></span></br>
+                    <strong>Address : </strong><span><?= $sales->customer->address; ?></span></br>
+                    <strong>Phone Number : </strong><span><?= $sales->customer->phone; ?></span>
+                </p>
+            <?php else : ?>
+                <p class="sec">
+                    <strong>Customer : </strong><span>walk-in-customer</span>
+                </p>
+            <?php endif ?>
         </div>
         <div class="info">
-            <address>
-                <strong>Time</strong> : 01/10/23 15:34 </br>
-                <strong>Reference</strong> : INV1691213202</br>
-                <strong>Sale Person</strong> : Sales Manger</br>
-            </address>
+            <p class="sec">
+                <strong>Time : </strong><span><?= date('d/m/y', strtotime($sales->created_at)); ?></span></br>
+                <strong>Reference : </strong><span>INV<?= $sales->invoice; ?></span></br>
+                <strong>Sales Person : </strong><span><?= $sales->user->firstname; ?> <?= $sales->user->lastname; ?></span><br>
+                <strong>Contact Store : </strong><span><?= $sales->store->phone??'0246092155'; ?></span>
+            </p>
         </div>
     </div>
     <div id="bot">
@@ -44,69 +51,34 @@
                         <h2>Sub Total</h2>
                     </td>
                 </tr>
+                <?php
+                $total_discount = 0;
+                foreach ($sales->items as $k => $row) : ?>
+                    <?php $total_discount += $row->discount; ?>
+                    <tr class="service">
+                        <td class="tableitem">
+                            <p class="itemtext"><?= $row->product->name; ?></p>
+                        </td>
+                        <td class="tableitem">
+                            <p class="itemtext"><?= number_format($row->unit_price, 2); ?></p>
+                        </td>
+                        <td class="tableitem">
+                            <p class="itemtext"><?= $row->qty; ?> <?= $row->product->unit->label; ?></p>
+                        </td>
+                        <td class="tableitem">
+                            <p class="itemtext"><?= number_format($row->subtotal, 2); ?></p>
+                        </td>
+                    </tr>
+                <?php endforeach ?>
 
-                <tr class="service">
-                    <td class="tableitem">
-                        <p class="itemtext">Communication</p>
-                    </td>
-                    <td class="tableitem">
-                        <p class="itemtext">5.00</p>
-                    </td>
-                    <td class="tableitem">
-                        <p class="itemtext">5</p>
-                    </td>
-                    <td class="tableitem">
-                        <p class="itemtext">$375.00</p>
-                    </td>
-                </tr>
-
-                <tr class="service">
-                    <td class="tableitem">
-                        <p class="itemtext">Asset Gathering</p>
-                    </td>
-                    <td class="tableitem">
-                        <p class="itemtext">5.00</p>
-                    </td>
-                    <td class="tableitem">
-                        <p class="itemtext">3</p>
-                    </td>
-                    <td class="tableitem">
-                        <p class="itemtext">$225.00</p>
-                    </td>
-                </tr>
-
-                <tr class="service">
-                    <td class="tableitem">
-                        <p class="itemtext">Design Development</p>
-                    </td>
-                    <td class="tableitem">
-                        <p class="itemtext">5.00</p>
-                    </td>
-                    <td class="tableitem">
-                        <p class="itemtext">5</p>
-                    </td>
-                    <td class="tableitem">
-                        <p class="itemtext">$375.00</p>
-                    </td>
-                </tr>
                 <tr class="tabletitle">
                     <td></td>
                     <td></td>
                     <td class="Rate">
-                        <h2>Tax</h2>
+                        <h3>Total Discount</h3>
                     </td>
                     <td class="payment">
-                        <h2>$419.25</h2>
-                    </td>
-                </tr>
-                <tr class="tabletitle">
-                    <td></td>
-                    <td></td>
-                    <td class="Rate">
-                        <h2>Discount</h2>
-                    </td>
-                    <td class="payment">
-                        <h2>$419.25</h2>
+                        <h3>GHS <?= number_format($total_discount, 2) ?></h3>
                     </td>
                 </tr>
 
@@ -117,7 +89,28 @@
                         <h2>Total</h2>
                     </td>
                     <td class="payment">
-                        <h2>$3,644.25</h2>
+                        <h2>GHS <?= number_format($sales->total_amount, 2) ?></h2>
+                    </td>
+                </tr>
+
+                <tr class="tabletitle">
+                    <td></td>
+                    <td></td>
+                    <td class="Rate">
+                        <h3>Paid</h3>
+                    </td>
+                    <td class="payment">
+                        <h3>GHS <?= number_format($sales->paid, 2) ?></h3>
+                    </td>
+                </tr>
+                <tr class="tabletitle">
+                    <td></td>
+                    <td></td>
+                    <td class="Rate">
+                        <h2>Due</h2>
+                    </td>
+                    <td class="payment">
+                        <h2>GHS <?= number_format($sales->total_amount - $sales->paid, 2) ?></h2>
                     </td>
                 </tr>
 
@@ -125,8 +118,7 @@
         </div><!--End Table-->
 
         <div id="legalcopy">
-            <p class="legal"><strong>Thank you for your business!</strong>
-            </p>
+            <p class="legal"><strong>Thank you for your business!</strong></p>
         </div>
 
     </div><!--End InvoiceBot-->

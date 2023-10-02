@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class SupplierLedgerModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'supplierledgers';
+    protected $table            = 'supplier_ledgers';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';

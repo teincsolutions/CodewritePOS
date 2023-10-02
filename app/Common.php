@@ -77,22 +77,28 @@ if (!function_exists('toSelect2Result')) {
      * @param array $inputs Request input data
      * @param function $callback Callback to modify each result
      */
-    function toSelect2Result(Model $model, array $columns, array $inputs, $select = "*"): array
+    function toSelect2Result(Model $model, array $columns, array $inputs, $select = "*", $joins = null): array
     {
         $term = isset($inputs['term']) ? $inputs['term'] : '';
         $take = 10;
         $page = isset($inputs['page']) ? $inputs['page'] : 1;
         $skip = ($page - 1) * $take;
+        if ($joins)
+            foreach ($joins as $key => $join)
+                $model->join($join['table'], $join['cond'], $join['type'], null);
+
+        $total = sizeof($model->findAll());
 
         $model->select($select);
         $model->groupStart();
         foreach ($columns as $row) $model->orLike($row, $term);
         $model->groupEnd();
         $model->limit($take, $skip);
-
+        if ($joins)
+            foreach ($joins as $key => $join)
+                $model->join($join['table'], $join['cond'], $join['type'], null);
         $data = $model->findAll();
-        $total = $model->countAllResults();
-        
+
         return  [
             'results' => $data,
             'pagination' => [
@@ -106,7 +112,7 @@ if (!function_exists('toSelect2Result')) {
 }
 
 if (!function_exists('getActiveUrl')) {
-    function getActiveUrl(string $match, $return = 'active'): mixed
+    function getActiveUrl(string $match, $return = 'active'): string
     {
         return url_is($match) ? $return : null;
     }

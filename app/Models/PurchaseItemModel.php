@@ -17,7 +17,7 @@ class PurchaseItemModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'product_id',
-        'unit_price',
+        'unit_cost',
         'purchase_id',
         'store_id',
         'qty',

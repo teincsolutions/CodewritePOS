@@ -130,7 +130,7 @@ class SalesModel extends Model
 
     public function getDueAmount(): float
     {
-        return (new SalesItemModel())->getTotalAmount()
+        return $this->getTotalAmount()
             - $this->getPaidAmount();
     }
 }

@@ -128,7 +128,7 @@ class PurchaseModel extends Model
 
     public function getDueAmount(): float
     {
-        return (new PurchaseItemModel())->getTotalAmount()
+        return $this->getTotalAmount()
             - $this->getPaidAmount();
     }
 }

@@ -51,15 +51,15 @@
                                     </font><br>
                                     <font style="vertical-align: inherit;">
                                         <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
-                                            <a href="<?= $sales->customer->email ?>" class="__cf_email__"><?= $sales->customer->email ?></a>
+                                            <a href="<?= $sales->customer ? $sales->customer->email : null ?>" class="__cf_email__"><?= $sales->customer ? $sales->customer->email : null ?></a>
                                         </font>
                                     </font><br>
                                     <font style="vertical-align: inherit;">
                                         <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
-                                            <?= $sales->customer->phone ?></font>
+                                            <?= $sales->customer ? $sales->customer->phone : null ?></font>
                                     </font><br>
                                     <font style="vertical-align: inherit;">
-                                        <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;"><?= $sales->customer->address ?></font>
+                                        <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;"><?= $sales->customer ? $sales->customer->address : null ?></font>
                                     </font>
                                 </div>
                             </td>
@@ -159,11 +159,11 @@
                             <ul>
                                 <li>
                                     <h4>Order Tax</h4>
-                                    <h5 class="orderTaxes"><?=$sales->tax; ?>%</h5>
+                                    <h5 class="orderTaxes"><?= $sales->tax; ?>%</h5>
                                 </li>
                                 <li>
                                     <h4>Discount </h4>
-                                    <h5 class="discountTotal"> <?=$sales->discount; ?></h5>
+                                    <h5 class="discountTotal"> <?= $sales->discount; ?></h5>
                                 </li>
                             </ul>
                         </div>
@@ -173,11 +173,11 @@
                             <ul>
                                 <li>
                                     <h4>Shipping</h4>
-                                    <h5 class="shippingTotal"><?=number_format($sales->shipping,2); ?></h5>
+                                    <h5 class="shippingTotal"><?= number_format($sales->shipping, 2); ?></h5>
                                 </li>
                                 <li class="total">
                                     <h4>Grand Total</h4>
-                                    <h5 class="grandTotal"><?=number_format($sales->total_amount+$sales->shipping,2) ?></h5>
+                                    <h5 class="grandTotal"><?= number_format($sales->total_amount + $sales->shipping, 2) ?></h5>
                                 </li>
                             </ul>
                         </div>

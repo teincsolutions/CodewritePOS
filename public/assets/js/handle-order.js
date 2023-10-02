@@ -31,7 +31,7 @@ const searchParams = {
 let prodIndex = 0;
 (dueTotal = 0),
   (grandTotal = 0),
-  (customerBalance = $(".customer-balance").data("balance"));
+  (supplierBalance = $(".supplier-balance").data("balance"));
 
 let form = $(".post-form");
 
@@ -118,7 +118,7 @@ function updateTotals() {
   grandTotal += shipping;
   grandTotal -= (orderDiscount / 100) * grandTotal;
   dueTotal =
-    grandTotal - $("input[name='paid']").first().val() - customerBalance;
+    grandTotal - $("input[name='paid']").first().val() - supplierBalance;
 
   $(".grandTotal").html("GHS " + grandTotal.toFixed(2));
   $("#sales-total").val(grandTotal);
@@ -168,41 +168,16 @@ function printInvoice(result) {
   return true;
 }
 function checkout() {
-  const type = $("#sales-type"),
-    customer = $(".select2-customer");
   const orderStatus = $("#order-status"),
     paymentStatus = $("#payment-status");
   const paidAmt = parseFloat($("input[name='paid']").val());
   orderStatus.val("completed");
-
-  if (customer.val() == "") {
-    type.val("walk-in-customer");
-    if (dueTotal > 0) {
-      Swal.fire({
-        icon: "error",
-        title: "Due Payment Alert!",
-        text: "Walk in customer cannot owe sales. Add a new customer if not in the list.",
-      });
-      return false;
-    }
-    paymentStatus.val("paid");
-  } else {
-    type.val("customer");
-    if (grandTotal - paidAmt > 0) paymentStatus.val("due");
-    else paymentStatus.val("paid");
-  }
+  if (grandTotal - paidAmt > 0) paymentStatus.val("due");
+  else paymentStatus.val("paid");
   return true;
 }
 
 function hold(e) {
-  const type = $("#sales-type"),
-    customer = $(".select2-customer");
-
-  if (customer.val() == "") {
-    type.val("walk-in-customer");
-  } else {
-    type.val("customer");
-  }
   if (grandTotal <= 0) {
     Swal.fire({
       icon: "error",
@@ -265,12 +240,12 @@ function hold(e) {
 
 function qoute(e) {
   const type = $("#sales-type"),
-    customer = $(".select2-customer");
+    supplier = $(".select2-supplier");
 
-  if (customer.val() == "") {
-    type.val("walk-in-customer");
+  if (supplier.val() == "") {
+    type.val("walk-in-supplier");
   } else {
-    type.val("customer");
+    type.val("supplier");
   }
 
   if (grandTotal <= 0) {
@@ -417,17 +392,10 @@ function autocomplete(inp) {
 
           b.innerHTML =
             item.discontinued == 1
-              ? `<span class="d-flex justify-content-between"><del><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></del>GHS ${item.unit_price}</span>`
-              : `<span class="d-flex justify-content-between"><span><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></span>GHS ${item.unit_price}</span>`;
+              ? `<span class="d-flex justify-content-between"><del><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></del>GHS ${item.unit_cost}</span>`
+              : `<span class="d-flex justify-content-between"><span><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></span>GHS ${item.unit_cost}</span>`;
 
           b.addEventListener("click", function (e) {
-            if (instock <= item.min_qty) {
-              Swal.fire({
-                icon: "warning",
-                title: "Short Stock Alert!",
-                text: "You have (" + instock + ") stock left for " + item.name,
-              });
-            }
             let store = "";
             if ($(".select2-store").val() != "") {
               store = "(" + $(".select2-store option:selected").text() + ")";
@@ -452,8 +420,8 @@ function autocomplete(inp) {
                                                 <input type='hidden' name="items[${prodIndex}][product_id]" value="${
               item.id
             }">
-                                                <input type="hidden" name="items[${prodIndex}][unit_price]" value="${
-              item.unit_price
+                                                <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
+              item.unit_cost
             }">
                                                 <input type="hidden" name="items[${prodIndex}][tax_id]" value="${
               item.tax_id ? item.tax_id : ""
@@ -462,22 +430,22 @@ function autocomplete(inp) {
               ".select2-store"
             ).val()}">
                                                 <input type="hidden" name="items[${prodIndex}][tax]" class="rtax" value="${
-              (item.unit_price * (item.tax ? item.tax.rate : 0)) / 100
+              (item.unit_cost * (item.tax ? item.tax.rate : 0)) / 100
             }">
                                                 <input type="hidden" name="items[${prodIndex}][discount]" class="rdiscount" value="${
               item?.discount
             }">
                                                 <input type="hidden" name="items[${prodIndex}][subtotal]" class="rsubtotal" value="${
-              item.unit_price -
+              item.unit_cost -
               item?.discount +
-              (item.unit_price * (item.tax ? item.tax.rate : 0.0)) / 100
+              (item.unit_cost * (item.tax ? item.tax.rate : 0.0)) / 100
             }">
                                                 <input onblur="updateItemRow(this)" min="1" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>
                                         </td>
-                                        <td>${item.unit_price}</td>
+                                        <td>${item.unit_cost}</td>
                                         <td data-discount="${
                                           item?.discount
                                         }" class="suffix-percent">${
@@ -486,12 +454,12 @@ function autocomplete(inp) {
                                         <td data-tax="${
                                           item.tax ? item.tax.rate : 0
                                         }">${parseFloat(
-              (item.unit_price * (item.tax ? item.tax.rate : 0)) / 100
+              (item.unit_cost * (item.tax ? item.tax.rate : 0)) / 100
             ).toFixed(2)}</td>
                                         <td>${(
-                                          item.unit_price -
+                                          item.unit_cost -
                                           item?.discount +
-                                          (item.unit_price *
+                                          (item.unit_cost *
                                             (item.tax ? item.tax.rate : 0.0)) /
                                             100
                                         ).toFixed(2)}</td>
@@ -604,7 +572,7 @@ form.on("submit", function (e) {
             $("input[name='invoice']").val(parseInt(d.data.invoice) + 1);
             $("#order-id").html(parseInt(d.data.invoice) + 1);
             tableItems.clear().draw();
-            $(".select2-customer").val(null).trigger("select2:unselect");
+            $(".select2-supplier").val(null).trigger("select2:unselect");
             $("select").trigger("change");
             updateTotals();
           }
@@ -624,38 +592,38 @@ form.on("submit", function (e) {
     });
   }
 });
-let select2Customer = $(".select2-customer")
+let select2Customer = $(".select2-supplier")
   .select2({
     ajax: {
-      url: `${baseUrl}/customers/select2`,
+      url: `${baseUrl}/suppliers/select2`,
       dataType: "json",
     },
     allowClear: true,
-    placeholder: "walk-in-customer",
+    placeholder: "walk-in-supplier",
     templateResult: formatCustomer,
     templateSelection: formatCustomer,
   })
   .on("select2:select", function (e) {
     const data = e.params.data;
-    customerBalance = parseFloat(data.balance);
-    $(".customer-balance").html(
-      customerBalance < 0
-        ? `(GHS ${Math.abs(customerBalance).toFixed(2)})`
-        : `GHS ${customerBalance.toFixed(2)}`
+    supplierBalance = parseFloat(data.balance);
+    $(".supplier-balance").html(
+      supplierBalance < 0
+        ? `(GHS ${Math.abs(supplierBalance).toFixed(2)})`
+        : `GHS ${supplierBalance.toFixed(2)}`
     );
-    $(".customer").html(data.text);
+    $(".supplier").html(data.text);
     $("input[name='discount']").val(data.discount);
     $("#acc-bal").removeClass("d-none");
     updateTotals();
   })
   .on("select2:unselect", function (e) {
-    customerBalance = 0;
-    $(".customer-balance").html(
-      customerBalance < 0
-        ? `(GHS ${Math.abs(customerBalance).toFixed(2)})`
-        : `GHS ${customerBalance.toFixed(2)}`
+    supplierBalance = 0;
+    $(".supplier-balance").html(
+      supplierBalance < 0
+        ? `(GHS ${Math.abs(supplierBalance).toFixed(2)})`
+        : `GHS ${supplierBalance.toFixed(2)}`
     );
-    $(".customer").html("walk-in-customer");
+    $(".supplier").html("walk-in-supplier");
     $("input[name='discount']").val("");
     $("#acc-bal").addClass("d-none");
     updateTotals();

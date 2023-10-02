@@ -172,20 +172,20 @@ class SalesController extends BaseController
                 $id = $model->getInsertID();
                 $salesItems = [];
                 $builder = $stockModel->builder();
-
                 foreach ($items as $k => $row) {
                     $items[$k]['sale_id'] = $id;
                     if (isNull($items[$k]['tax_id'])) $items[$k]['tax_id'] = null;
                     if (isNull($items[$k]['store_id'])) $items[$k]['store_id'] = $inputs['store_id'];
 
                     array_push($salesItems, $items[$k]);
-                    if ($builder->get()->getRowObject()) {
-                        $builder->where([
-                            'product_id' => $items[$k]['product_id'],
-                            'store_id' => $items[$k]['store_id']
-                        ]);
-                        $builder->set('instock', '(instock - ' . $items[$k]['qty'] . ')', false);
-                        $builder->update();
+                    $stockWhere = [
+                        'product_id' => $items[$k]['product_id'],
+                        'store_id' => $items[$k]['store_id']
+                    ];
+
+                    if ($builder->where($stockWhere)->get()->getRowObject()) {
+                        $builder->set('instock', '(instock - ' . $items[$k]['qty'] . ')', false)
+                            ->update(null, $stockWhere);
                     } else {
                         $builder->insert([
                             'product_id' => $items[$k]['product_id'],
@@ -215,9 +215,11 @@ class SalesController extends BaseController
             return $this->response->setJSON($res);
         }
         if ($this->db->transStatus()) {
+            $sales = $model->find($id);
             $res = array_merge($res, [
                 'status' => true,
-                'data' => $model->find($id),
+                'data' => $sales,
+                'receipt' => view('pages/sales/pos_receipt', ['sales' => $sales])
             ]);
         } else {
             $res = array_merge($res, ['status' => false]);
@@ -320,8 +322,15 @@ class SalesController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new SalesModel();
-        $model->join("customers", 'customers.id=sales.customer_id');
-        return $this->response->setJSON(toSelect2Result($model, ['sales.invoice', 'customers.name'], $inputs, 'concat(sales.invoice," (",customers.name," - GHS ",total_amount,")") as text,sales.*'));
+        return $this->response->setJSON(toSelect2Result(
+            $model,
+            ['sales.invoice', 'customers.name'],
+            $inputs,
+            'concat(sales.invoice," (",customers.name," - GHS ",total_amount,")") as text,sales.*',
+            [
+                ['table' => 'customers', 'cond' => 'customers.id=sales.customer_id', 'type' => 'inner'],
+            ]
+        ));
     }
 
 
