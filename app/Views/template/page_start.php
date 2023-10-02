@@ -8,6 +8,7 @@
     <meta name="keywords" content="admin, estimates, business, corporate, creative, management, minimal, modern">
     <meta name="author" content="Codewrite Technology Ltd - CODEWRITE POS">
     <meta name="robots" content="noindex, nofollow">
+    <meta name="base-url" content="<?=site_url() ?>">
     <title>Codewrite Pos</title>
 
     <link rel="shortcut icon" type="image/x-icon" href="<?= base_url('assets/images/logo.png') ?>">

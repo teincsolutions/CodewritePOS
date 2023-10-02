@@ -71,7 +71,7 @@ $(function () {
         render: function (data, type, row) {
           if (type === "display")
             return data
-              ? `<a target="_blank" href="${baseUrl}/users/${data.id}" class="btn btn-link btn-sm">${data.firstname} ${data.lastname}</a>`
+              ? `<a target="_blank" href="${baseUrl}users/${data.id}" class="btn btn-link btn-sm">${data.firstname} ${data.lastname}</a>`
               : null;
           return data ? data.id : null;
         },
@@ -90,17 +90,17 @@ $(function () {
               row.id
             },status:${
               status[data == "opened" ? 0 : 1]
-            }}, '${baseUrl}/expense-categories')" class="check">
+            }}, '${baseUrl}expense-categories')" class="check">
                         <label for="user${
                           row.id
                         }" class="checktoggle">checkbox</label>
                         </div>
-                        <a class="me-3 text-secondary" href="${baseUrl}/expense-categories/edit/${
+                        <a class="me-3 text-secondary" href="${baseUrl}expense-categories/edit/${
               row.id
             }"><i class="fa fa-edit fa-lg"></i></a>
                         <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${
                           row.id
-                        }, '${baseUrl}/expense-categories')"><i class="fa fa-trash fa-lg"></i></a>
+                        }, '${baseUrl}expense-categories')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;

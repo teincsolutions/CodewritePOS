@@ -76,17 +76,17 @@ $(function () {
               row.id
             },status:${
               status[data == "opened" ? 0 : 1]
-            }}, '${baseUrl}/stores')" class="check">
+            }}, '${baseUrl}stores')" class="check">
                         <label for="user${
                           row.id
                         }" class="checktoggle">checkbox</label>
                         </div>
-                        <a class="me-3 text-secondary" href="${baseUrl}/stores/edit/${
+                        <a class="me-3 text-secondary" href="${baseUrl}stores/edit/${
               row.id
             }"><i class="fa fa-edit fa-lg"></i></a>
                         <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${
                           row.id
-                        }, '${baseUrl}/stores')"><i class="fa fa-trash fa-lg"></i></a>
+                        }, '${baseUrl}stores')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;

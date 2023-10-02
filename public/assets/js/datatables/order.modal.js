@@ -266,7 +266,7 @@ $(function () {
   let select2Invoices = $(".select2-invoices")
     .select2({
       ajax: {
-        url: `${baseUrl}/purchases/select2`,
+        url: `${baseUrl}purchases/select2`,
         dataType: "json",
       },
       allowClear: true,

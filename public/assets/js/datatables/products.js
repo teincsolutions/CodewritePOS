@@ -75,7 +75,7 @@ $(function () {
         render: function (data, type, row) {
           if (type === "display") {
             return data
-              ? `<a target="_blank" href="${baseUrl}/brands/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+              ? `<a target="_blank" href="${baseUrl}brands/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
               : "";
           }
           return data ? data.id : null;
@@ -87,7 +87,7 @@ $(function () {
         render: function (data, type, row) {
           if (type === "display") {
             return data
-              ? `<a target="_blank" href="${baseUrl}/categories/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+              ? `<a target="_blank" href="${baseUrl}categories/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
               : "";
           }
           return data ? data.id : null;
@@ -118,7 +118,7 @@ $(function () {
               row.id
             },discontinued:${
               data == 0 ? 1 : 0
-            }},'${baseUrl}/products')" class="checkmarks"></span></label>`;
+            }},'${baseUrl}products')" class="checkmarks"></span></label>`;
           }
           return data;
         },
@@ -129,7 +129,7 @@ $(function () {
         render: function (data, type, row) {
           if (type === "display")
             return data
-              ? `<a target="_blank" href="${baseUrl}/users/${data.id}" class="btn btn-link btn-sm">${data.firstname} ${data.lastname}</a>`
+              ? `<a target="_blank" href="${baseUrl}users/${data.id}" class="btn btn-link btn-sm">${data.firstname} ${data.lastname}</a>`
               : null;
           return data ? data.id : null;
         },
@@ -140,9 +140,9 @@ $(function () {
         render: function (data, type, row) {
           if (type === "display") {
             return `<div class="d-flex justify-content-between align-items-center">
-                        <a class="me-3" href="${baseUrl}/products/${row.id}"><i class="fa fa-eye fa-lg"></i></a>
-                        <a class="me-3" href="${baseUrl}/products/edit/${row.id}"><i class="fa fa-edit fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${row.id}, '${baseUrl}/products')"><i class="fa fa-trash fa-lg"></i></a>
+                        <a class="me-3" href="${baseUrl}products/${row.id}"><i class="fa fa-eye fa-lg"></i></a>
+                        <a class="me-3" href="${baseUrl}products/edit/${row.id}"><i class="fa fa-edit fa-lg"></i></a>
+                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${row.id}, '${baseUrl}products')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;

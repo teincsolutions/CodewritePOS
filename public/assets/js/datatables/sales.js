@@ -73,7 +73,7 @@ $(function () {
         render: function (data, type, row) {
           if (type === "display")
             return data
-              ? `<a target="_blank" href="${baseUrl}/customers/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+              ? `<a target="_blank" href="${baseUrl}customers/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
               : "walk-in-customer";
           return data ? data.id : null;
         },
@@ -151,10 +151,10 @@ $(function () {
                             ? `<a class="me-3" data-bs-toggle="modal" data-bs-target="#add-payment" href="javascript:void(0)"><i class="fa fa-money-bill fa-lg"></i></a>`
                             : ''
                         }
-                        <a target="_blank" href="${baseUrl}/sales/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
+                        <a target="_blank" href="${baseUrl}sales/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
                         <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${
                           row.id
-                        }, '${baseUrl}/sales')"><i class="fa fa-trash fa-lg"></i></a>
+                        }, '${baseUrl}sales')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;
@@ -225,7 +225,7 @@ $(function () {
 
   $(".select2-customer").select2({
     ajax: {
-      url: `${baseUrl}/customers/select2`,
+      url: `${baseUrl}customers/select2`,
       dataType: "json",
     },
     allowClear: true,
@@ -309,7 +309,7 @@ $(function () {
   let select2Invoices = $(".select2-invoices")
     .select2({
       ajax: {
-        url: `${baseUrl}/sales/select2`,
+        url: `${baseUrl}sales/select2`,
         dataType: "json",
       },
       allowClear: true,

@@ -375,7 +375,7 @@ function autocomplete(inp) {
     this.parentNode.appendChild(a);
     searchParams.search.value = val;
 
-    $.get(`${baseUrl}/products/search`, searchParams, (d, s) => {
+    $.get(`${baseUrl}products/search`, searchParams, (d, s) => {
       if (s !== "success") {
         // if fail
         b = document.createElement("DIV");
@@ -439,10 +439,10 @@ function autocomplete(inp) {
                                         <td class="productimgname">
                                         ${
                                           item.image_uri
-                                            ? `<a class="product-img"><img src="${baseUrl}/${item.image_uri}" alt="product"></a>`
+                                            ? `<a class="product-img"><img src="${baseUrl}${item.image_uri}" alt="product"></a>`
                                             : '<a class="p-3"></a>'
                                         }
-                                            <a target="_blank" href="${baseUrl}/products/${
+                                            <a target="_blank" href="${baseUrl}products/${
               item.id
             }">${item.name}${store}</a></td>
                                         <td>
@@ -627,7 +627,7 @@ form.on("submit", function (e) {
 let select2Customer = $(".select2-customer")
   .select2({
     ajax: {
-      url: `${baseUrl}/customers/select2`,
+      url: `${baseUrl}customers/select2`,
       dataType: "json",
     },
     allowClear: true,

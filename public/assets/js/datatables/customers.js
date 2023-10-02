@@ -77,7 +77,7 @@ $(function () {
         render: function (data, type, row) {
           if (type === "display")
             return data
-              ? `<a target="_blank" href="${baseUrl}/users/${data.id}" class="btn btn-link btn-sm">${data.firstname} ${data.lastname}</a>`
+              ? `<a target="_blank" href="${baseUrl}users/${data.id}" class="btn btn-link btn-sm">${data.firstname} ${data.lastname}</a>`
               : null;
           return data ? data.id : null;
         },
@@ -96,17 +96,17 @@ $(function () {
               row.id
             },status:${
               status[data == "opened" ? 0 : 1]
-            }}, '${baseUrl}/customers')" class="check">
+            }}, '${baseUrl}customers')" class="check">
                         <label for="user${
                           row.id
                         }" class="checktoggle">checkbox</label>
                         </div>
-                        <a class="me-3 text-secondary" href="${baseUrl}/customers/edit/${
+                        <a class="me-3 text-secondary" href="${baseUrl}customers/edit/${
               row.id
             }"><i class="fa fa-edit fa-lg"></i></a>
                         <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${
                           row.id
-                        }, '${baseUrl}/customers')"><i class="fa fa-trash fa-lg"></i></a>
+                        }, '${baseUrl}customers')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;

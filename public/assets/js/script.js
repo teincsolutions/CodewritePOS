@@ -3,13 +3,16 @@ Author       : Dreamguys
 Template Name: POS - Bootstrap Admin Template
 */
 
-
-window.baseUrl = "http://localhost:8080";
+window.baseUrl = document
+  .getElementsByName("base-url")[0]
+  .getAttribute("content");
 
 window.formatCustomer = function (data) {
   if (!data.id) return data.text;
   var $state = $(
-    data.status === "closed" ? `<del>${data.text}</del>` : `<span>${data.text}</span>`
+    data.status === "closed"
+      ? `<del>${data.text}</del>`
+      : `<span>${data.text}</span>`
   );
   return $state;
 };
@@ -378,7 +381,6 @@ $(document).ready(function () {
   $(document).on("click", ".productset", function () {
     $(this).toggleClass("active");
   });
-
 
   if ($(".custom-file-container").length > 0) {
     //First upload
