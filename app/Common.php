@@ -20,7 +20,7 @@ use CodeIgniter\Database\RawSql;
 
 if (!function_exists('toDatatableResult')) {
 
-    function toDatatableResult(Model $model, array $inputs = null, $callback = null): array
+    function toDatatableResult(Model $model, array $inputs = null, $callback = null)
     {
         $total = $model->countAllResults();
         if (isset($inputs['date_from']) || isset($inputs['date_to'])) {
@@ -112,7 +112,7 @@ if (!function_exists('toSelect2Result')) {
 }
 
 if (!function_exists('getActiveUrl')) {
-    function getActiveUrl(string $match, $return = 'active'): string
+    function getActiveUrl(string $match, $return = 'active')
     {
         return url_is($match) ? $return : null;
     }
