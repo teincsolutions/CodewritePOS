@@ -144,8 +144,15 @@ $(function () {
         render: function (data, type, row) {
           if (type === "display") {
             return `<div class="d-flex justify-content-between align-items-center">
-                        <a class="me-3 text-secondary" href="${baseUrl}purchases/edit/${row.id}"><i class="fa fa-edit fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${row.id}, '${baseUrl}purchases')"><i class="fa fa-trash fa-lg"></i></a>
+                        ${
+                          row.payment_status === "due"
+                            ? `<a class="me-3" data-bs-toggle="modal" data-bs-target="#add-payment" href="javascript:void(0)"><i class="fa fa-money-bill fa-lg"></i></a>`
+                            : ''
+                        }
+                        <a target="_blank" href="${baseUrl}purchases/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
+                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${
+                          row.id
+                        }, '${baseUrl}purchases')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;

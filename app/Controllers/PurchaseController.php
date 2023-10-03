@@ -44,7 +44,7 @@ class PurchaseController extends BaseController
             'suppliers' => $supModel->findAll(),
         ];
 
-        return view('pages/purchases/list_purchases', $data);
+        return view('pages/purchases/list_purchase', $data);
     }
 
     /**
