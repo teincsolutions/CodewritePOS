@@ -149,7 +149,7 @@ $(function () {
                         ${
                           row.payment_status === "due"
                             ? `<a class="me-3" data-bs-toggle="modal" data-bs-target="#add-payment" href="javascript:void(0)"><i class="fa fa-money-bill fa-lg"></i></a>`
-                            : ''
+                            : ""
                         }
                         <a target="_blank" href="${baseUrl}sales/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
                         <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${
@@ -311,6 +311,11 @@ $(function () {
       ajax: {
         url: `${baseUrl}sales/select2`,
         dataType: "json",
+        data: function (params) {
+          params.filter.payment_status = "due";
+
+          return params;
+        },
       },
       allowClear: true,
       minimumInputLength: 3,

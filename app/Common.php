@@ -83,6 +83,11 @@ if (!function_exists('toSelect2Result')) {
         $take = 10;
         $page = isset($inputs['page']) ? $inputs['page'] : 1;
         $skip = ($page - 1) * $take;
+
+        if (isset($inputs['filter']) && is_array($inputs['filter']))
+            foreach ($inputs['filter'] as $field => $val)
+                $model->like($field,$val);
+
         if ($joins)
             foreach ($joins as $key => $join)
                 $model->join($join['table'], $join['cond'], $join['type'], null);

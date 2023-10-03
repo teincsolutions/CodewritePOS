@@ -17,7 +17,6 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Config\Database;
 use Psr\Log\LoggerInterface;
 
-use function PHPUnit\Framework\is_null;
 
 class PurchaseController extends BaseController
 {

@@ -19,7 +19,6 @@ use Config\Database;
 use PhpParser\Node\Expr\AssignOp\Mod;
 use Psr\Log\LoggerInterface;
 
-use function PHPUnit\Framework\is_null;
 
 class SalesController extends BaseController
 {

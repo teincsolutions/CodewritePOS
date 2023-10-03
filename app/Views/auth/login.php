@@ -3,7 +3,6 @@
 <div class="account-content">
     <div class="login-wrapper">
         <div class="login-content">
-
             <div class="login-userset">
                 <div class="login-logo logo-normal">
                     <img src="<?= base_url('assets/images/pos-logo.png') ?>" alt="img">
