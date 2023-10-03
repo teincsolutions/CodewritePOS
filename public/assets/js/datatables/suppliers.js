@@ -101,6 +101,7 @@ $(function () {
                           row.id
                         }" class="checktoggle">checkbox</label>
                         </div>
+                        <a href="${baseUrl}suppliers/${row.id}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
                         <a class="me-3 text-secondary" href="${baseUrl}suppliers/edit/${
               row.id
             }"><i class="fa fa-edit fa-lg"></i></a>
