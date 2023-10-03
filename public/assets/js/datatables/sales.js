@@ -312,7 +312,9 @@ $(function () {
         url: `${baseUrl}sales/select2`,
         dataType: "json",
         data: function (params) {
-          params.filter.payment_status = "due";
+          params.filter = {
+            payment_status: "due",
+          };
 
           return params;
         },

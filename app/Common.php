@@ -86,7 +86,7 @@ if (!function_exists('toSelect2Result')) {
 
         if (isset($inputs['filter']) && is_array($inputs['filter']))
             foreach ($inputs['filter'] as $field => $val)
-                $model->like($field,$val);
+                $model->where($field, $val);
 
         if ($joins)
             foreach ($joins as $key => $join)
@@ -99,6 +99,11 @@ if (!function_exists('toSelect2Result')) {
         foreach ($columns as $row) $model->orLike($row, $term);
         $model->groupEnd();
         $model->limit($take, $skip);
+
+        if (isset($inputs['filter']) && is_array($inputs['filter']))
+            foreach ($inputs['filter'] as $field => $val)
+                $model->where($field, $val);
+
         if ($joins)
             foreach ($joins as $key => $join)
                 $model->join($join['table'], $join['cond'], $join['type'], null);
@@ -110,8 +115,9 @@ if (!function_exists('toSelect2Result')) {
                 'more' => ($skip + $take < $total),
                 'page' => intval($page),
                 'totalRows' => $total,
-                'totalPages' => intval($total / $take + ($total % $take > 0 ? 1 : 0))
-            ]
+                'totalPages' => intval($total / $take + ($total % $take > 0 ? 1 : 0)),
+            ],
+            'inputs' => $inputs,
         ];
     }
 }
