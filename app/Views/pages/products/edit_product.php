@@ -6,6 +6,9 @@
             <h4><?= isset($title) ? $title : 'Edit Product'; ?></h4>
             <h6>Create new product</h6>
         </div>
+        <div class="page-btn">
+            <a href="<?= site_url('products') ?>" class="btn btn-added"><i  class="fa fa-arrow-left me-2"></i>List Product</a>
+        </div>
     </div>
 
     <form action="<?= site_url('products') ?>" class="card post-form" method="post">

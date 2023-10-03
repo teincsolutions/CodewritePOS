@@ -6,6 +6,9 @@
             <h4>Add/Update Unit</h4>
             <h6>Create new Unit</h6>
         </div>
+        <div class="page-btn">
+            <a href="<?= site_url('units') ?>" class="btn btn-added"><i  class="fa fa-arrow-left me-2"></i>List Unit</a>
+        </div>
     </div>
 
     <form action="<?=site_url('units') ?>" class="post-form" method="post">

@@ -174,8 +174,8 @@ class SalesController extends BaseController
                 $builder = $stockModel->builder();
                 foreach ($items as $k => $row) {
                     $items[$k]['sale_id'] = $id;
-                    if (isNull($items[$k]['tax_id'])) $items[$k]['tax_id'] = null;
-                    if (isNull($items[$k]['store_id'])) $items[$k]['store_id'] = $inputs['store_id'];
+                    if (empty($items[$k]['tax_id'])) $items[$k]['tax_id'] = null;
+                    if (is_null($items[$k]['store_id']) || empty($items[$k]['tax_id'])) $items[$k]['store_id'] = $inputs['store_id'];
 
                     array_push($salesItems, $items[$k]);
                     $stockWhere = [
