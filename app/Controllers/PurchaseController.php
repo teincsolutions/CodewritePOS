@@ -17,7 +17,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Config\Database;
 use Psr\Log\LoggerInterface;
 
-use function PHPUnit\Framework\isNull;
+use function PHPUnit\Framework\is_null;
 
 class PurchaseController extends BaseController
 {
@@ -172,8 +172,8 @@ class PurchaseController extends BaseController
                 $builder = $stockModel->builder();
                 foreach ($items as $k => $row) {
                     $items[$k]['purchase_id'] = $id;
-                    if (isNull($items[$k]['tax_id'])) $items[$k]['tax_id'] = null;
-                    if (isNull($items[$k]['store_id'])) $items[$k]['store_id'] = $inputs['store_id'];
+                    if (empty($items[$k]['tax_id'])) $items[$k]['tax_id'] = null;
+                    if (is_null($items[$k]['store_id']) || empty($items[$k]['store_id'])) $items[$k]['store_id'] = $inputs['store_id'];
 
                     array_push($purchasesItems, $items[$k]);
                     $stockWhere = [

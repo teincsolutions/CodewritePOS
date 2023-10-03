@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-use function PHPUnit\Framework\isNull;
+use function PHPUnit\Framework\is_null;
 
 class PurchaseItemModel extends Model
 {

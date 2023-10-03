@@ -19,7 +19,7 @@ use Config\Database;
 use PhpParser\Node\Expr\AssignOp\Mod;
 use Psr\Log\LoggerInterface;
 
-use function PHPUnit\Framework\isNull;
+use function PHPUnit\Framework\is_null;
 
 class SalesController extends BaseController
 {
@@ -175,7 +175,7 @@ class SalesController extends BaseController
                 foreach ($items as $k => $row) {
                     $items[$k]['sale_id'] = $id;
                     if (empty($items[$k]['tax_id'])) $items[$k]['tax_id'] = null;
-                    if (is_null($items[$k]['store_id']) || empty($items[$k]['tax_id'])) $items[$k]['store_id'] = $inputs['store_id'];
+                    if (is_null($items[$k]['store_id']) || empty($items[$k]['store_id'])) $items[$k]['store_id'] = $inputs['store_id'];
 
                     array_push($salesItems, $items[$k]);
                     $stockWhere = [

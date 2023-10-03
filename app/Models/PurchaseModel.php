@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-use function PHPUnit\Framework\isNull;
+use function PHPUnit\Framework\is_null;
 
 class PurchaseModel extends Model
 {
@@ -112,7 +112,7 @@ class PurchaseModel extends Model
             ->where('purchase_date', date('Y-m-d', time()))
             ->get()
             ->getFirstRow()
-            ->total;
+            ->total; 
         return $total ? $total : 0.00;
     }
 

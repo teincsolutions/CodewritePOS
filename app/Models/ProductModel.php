@@ -5,7 +5,7 @@ namespace App\Models;
 use CodeIgniter\Database\RawSql;
 use CodeIgniter\Model;
 
-use function PHPUnit\Framework\isNull;
+use function PHPUnit\Framework\is_null;
 
 class ProductModel extends Model
 {
