@@ -1,4 +1,4 @@
-<?= $this->extend('template/blank') ?>
+<?= $this->extend('template/default') ?>
 <?= $this->section('content') ?>
 <div class="content">
     <div class="page-header">

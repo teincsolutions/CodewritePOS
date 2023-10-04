@@ -202,7 +202,7 @@ class SalesController extends BaseController
                         'sale_id' => $sales->id,
                         'payment_type' => $inputs['payment_type'],
                         'debit' => $inputs['total_amount'],
-                        'credit' => $inputs['paid'],
+                        'credit' => ($inputs['payment_status'] === 'paid' ? $inputs['total_amount'] : $inputs['paid']),
                         'user_id' => isset($inputs['user_id']) ? $inputs['user_id'] : null,
                     ]);
             }
