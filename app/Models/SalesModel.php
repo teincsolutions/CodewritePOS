@@ -78,7 +78,7 @@ class SalesModel extends Model
                 $model['data']->customer = $cusModel->where('id', $model['data']->customer_id)->first();
                 $model['data']->items = $itemModel->where('sale_id', $model['data']->id)->findAll();
                 $model['data']->store = $storeModel->where('id', $model['data']->store_id)->first();
-                $model['data']->change = ($model['data']->paid > $model['data']->total_amount) ? $model['data']->total_amount - $model['data']->paid : 0.00;
+                $model['data']->change = ($model['data']->paid > $model['data']->total_amount) ? abs($model['data']->total_amount - $model['data']->paid) : 0.00;
                 if ($model['data']->type === 'customer') {
                     $total = $ledger->builder()->selectSum('credit', 'total')
                         ->where('sale_id', $model['data']->id)
@@ -91,7 +91,7 @@ class SalesModel extends Model
                     $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
                     $model['data'][$key]->customer = $cusModel->where('id', $row->customer_id)->first();
                     $model['data'][$key]->items = $itemModel->where('sale_id', $row->id)->findAll();
-                    $model['data'][$key]->change = ($model['data'][$key]->paid >  $model['data'][$key]->total_amount) ?  $model['data'][$key]->total_amount -  $model['data'][$key]->paid : 0.00;
+                    $model['data'][$key]->change = ($model['data'][$key]->paid >  $model['data'][$key]->total_amount) ?  abs($model['data'][$key]->total_amount -  $model['data'][$key]->paid) : 0.00;
                     if ($model['data'][$key]->type === 'customer') {
                         $total = $ledger->builder()->selectSum('credit', 'total')
                             ->where('sale_id', $row->id)

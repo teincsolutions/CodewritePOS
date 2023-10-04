@@ -103,16 +103,18 @@
                         <h3>GHS <?= number_format($sales->paid, 2) ?></h3>
                     </td>
                 </tr>
-                <tr class="tabletitle">
-                    <td></td>
-                    <td></td>
-                    <td class="Rate">
-                        <h2>Due</h2>
-                    </td>
-                    <td class="payment">
-                        <h2>GHS <?= number_format($sales->total_amount - $sales->paid, 2) ?></h2>
-                    </td>
-                </tr>
+                <?php if ($sales->type === 'customer') : ?>
+                    <tr class="tabletitle">
+                        <td></td>
+                        <td></td>
+                        <td class="Rate">
+                            <h2>Due</h2>
+                        </td>
+                        <td class="payment">
+                            <h2>GHS <?= number_format($purchases->total_amount - $purchases->paid, 2) ?></h2>
+                        </td>
+                    </tr>
+                <?php endif ?>
                 <tr class="tabletitle">
                     <td></td>
                     <td></td>
