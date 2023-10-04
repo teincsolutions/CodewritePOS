@@ -79,10 +79,7 @@
 
 </div>
 <?= $this->endSection() ?>
-<?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/customers.js') ?>"></script>
-<?= $this->endSection() ?>
+
 <?= $this->section('modal') ?>
 <div class="modal fade" id="showpayment" tabindex="-1" aria-labelledby="showpayment" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -254,4 +251,9 @@
         </div>
     </div>
 </div>
+<?= $this->endSection() ?>
+
+<?= $this->section('script') ?>
+<script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/customers.js?v=1') ?>"></script>
 <?= $this->endSection() ?>
