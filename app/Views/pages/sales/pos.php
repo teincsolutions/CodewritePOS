@@ -470,7 +470,7 @@
                                             <th>Date</th>
                                             <th>Invoice No.</th>
                                             <th>Customer</th>
-                                            <th>Due/Change</th>
+                                            <th>Due</th>
                                             <th>Paid</th>
                                             <th>Balance</th>
                                             <th class="text-end">Action</th>

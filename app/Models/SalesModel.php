@@ -78,6 +78,7 @@ class SalesModel extends Model
                 $model['data']->customer = $cusModel->where('id', $model['data']->customer_id)->first();
                 $model['data']->items = $itemModel->where('sale_id', $model['data']->id)->findAll();
                 $model['data']->store = $storeModel->where('id', $model['data']->store_id)->first();
+                $model['data']->change = ($model['data']->paid > $model['data']->total_amount) ? $model['data']->total_amount - $model['data']->paid : 0.00;
                 if ($model['data']->type === 'customer') {
                     $total = $ledger->builder()->selectSum('credit', 'total')
                         ->where('sale_id', $model['data']->id)
@@ -90,6 +91,7 @@ class SalesModel extends Model
                     $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
                     $model['data'][$key]->customer = $cusModel->where('id', $row->customer_id)->first();
                     $model['data'][$key]->items = $itemModel->where('sale_id', $row->id)->findAll();
+                    $model['data'][$key]->change = ($model['data'][$key]->paid >  $model['data'][$key]->total_amount) ?  $model['data'][$key]->total_amount -  $model['data'][$key]->paid : 0.00;
                     if ($model['data'][$key]->type === 'customer') {
                         $total = $ledger->builder()->selectSum('credit', 'total')
                             ->where('sale_id', $row->id)
@@ -128,20 +130,18 @@ class SalesModel extends Model
 
     public function getPaidAmount(): float
     {
-        $total = 0;
         // total paid by customers
-        $total += (new CustomerLedgerModel())->selectSum('credit', 'total')->get()->getFirstRow()->total;
+        $total = (new CustomerLedgerModel())->selectSum('credit', 'total')->get()->getFirstRow()->total;
         // total paid by walk-in-customers
-        $total += $this->builder()->selectSum('paid', 'total')->where('type', 'walk-in-customer')->get()->getFirstRow()->total;
+        $total = ($total ?? 0) + $this->builder()->selectSum('paid', 'total')->where('type', 'walk-in-customer')->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
 
     public function getDueAmount(): float
     {
-        $total = 0;
-        $total += $this->builder()
+        $total = $this->builder()
             ->selectSum(new RawSql('(total_amount - paid)'), 'total')->where('payment_status', 'due')
             ->get()->getFirstRow()->total;
-            return $total ? $total : 0.00;
+        return $total ? $total : 0.00;
     }
 }

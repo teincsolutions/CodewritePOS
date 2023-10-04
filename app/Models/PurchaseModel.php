@@ -80,12 +80,14 @@ class PurchaseModel extends Model
                     ->where('purchase_id', $model['data']->id)
                     ->get()
                     ->getRowObject()->total;
+                $model['data']->change = ($model['data']->paid > $model['data']->total_amount) ? $model['data']->total_amount - $model['data']->paid : 0.00;
                 $model['data']->paid = $total ?? 0.00;
             } else {
                 foreach ($model['data'] as $key => $row) {
                     $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
                     $model['data'][$key]->supplier = $supModel->where('id', $row->supplier_id)->first();
                     $model['data'][$key]->items = $itemModel->where('purchase_id', $row->id)->findAll();
+                    $model['data'][$key]->change = ($model['data'][$key]->paid >  $model['data'][$key]->total_amount) ?  $model['data'][$key]->total_amount -  $model['data'][$key]->paid : 0.00;
                     $total = $ledger->builder()->selectSum('debit', 'total')
                         ->where('purchase_id', $row->id)
                         ->get()
@@ -127,6 +129,6 @@ class PurchaseModel extends Model
         $total = $this->builder()
             ->selectSum(new RawSql('(total_amount - paid)'), 'total')->where('payment_status', 'due')
             ->get()->getFirstRow()->total;
-            return $total ? $total : 0.00;
+        return $total ? $total : 0.00;
     }
 }

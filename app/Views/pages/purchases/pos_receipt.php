@@ -8,7 +8,7 @@
         <div class="logo" style="background: url(<?= base_url('assets/images/logo.png') ?>) no-repeat;"></div>
         <div class="info">
             <h2 class="text-uppercase">Codewrite Technology Ltd</h2>
-            <p  class="text-uppercase"><?=$purchases->store->name; ?> at <?=$purchases->store->location; ?></p>
+            <p class="text-uppercase"><?= $purchases->store->name; ?> at <?= $purchases->store->location; ?></p>
         </div><!--End Info-->
     </center>
     <div class="d-flex flex-row justify-content-between gap-1">
@@ -30,7 +30,7 @@
                 <strong>Time : </strong><span><?= date('d/m/y', strtotime($purchases->created_at)); ?></span></br>
                 <strong>Reference : </strong><span>INV<?= $purchases->invoice; ?></span></br>
                 <strong>Sales Person : </strong><span><?= $purchases->user->firstname; ?> <?= $purchases->user->lastname; ?></span><br>
-                <strong>Contact Store : </strong><span><?= $purchases->store->phone??'0246092155'; ?></span>
+                <strong>Contact Store : </strong><span><?= $purchases->store->phone ?? '0246092155'; ?></span>
             </p>
         </div>
     </div>
@@ -111,6 +111,16 @@
                     </td>
                     <td class="payment">
                         <h2>GHS <?= number_format($purchases->total_amount - $purchases->paid, 2) ?></h2>
+                    </td>
+                </tr>
+                <tr class="tabletitle">
+                    <td></td>
+                    <td></td>
+                    <td class="Rate">
+                        <h3>Change</h3>
+                    </td>
+                    <td class="payment">
+                        <h3>GHS <?= number_format($sales->change, 2) ?></h3>
                     </td>
                 </tr>
 
