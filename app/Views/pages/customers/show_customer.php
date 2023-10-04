@@ -6,6 +6,9 @@
             <h4>Customer Details</h4>
             <h6>Full details of a customer</h6>
         </div>
+        <div class="page-btn">
+            <a href="<?= site_url('customers') ?>" class="btn btn-added"><i class="fa fa-arrow-left me-2"></i>List Customers</a>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -22,15 +25,76 @@
                     <div class="tab-content">
                         <div class="tab-pane show active" id="customer-tab">
                             <div class="row mt-5">
-                                <div class="col-md-12">
-                                    Tab content 1
+                                <div class="col-md-6">
+                                    <h3>Personal Information</h3>
+                                    <div class="productdetails">
+                                        <ul class="customer-bar">
+                                            <li>
+                                                <h4>Customer Name</h4>
+                                                <h6><?= $customer->name ?></h6>
+                                            </li>
+                                            <li>
+                                                <h4>Address</h4>
+                                                <h6><?= $customer->address ?></h6>
+                                            </li>
+                                            <li>
+                                                <h4>Email</h4>
+                                                <h6><?= $customer->email ?></h6>
+                                            </li>
+                                            <li>
+                                                <h4>Phone Number</h4>
+                                                <h6><?= $customer->phone ?></h6>
+                                            </li>
+                                            <li>
+                                                <h4>Note</h4>
+                                                <h6><?= $customer->note ?></h6>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h3>Account Information</h3>
+                                    <div class="productdetails">
+                                        <ul class="customer-bar">
+                                            <li>
+                                                <h4>Customer Type</h4>
+                                                <h6 class="text-uppercase"><?= $customer->type; ?></h6>
+                                            </li>
+                                            <li>
+                                                <h4>Account Balance</h4>
+                                                <h6>GHS <?= $customer->balance < 0 ? "(" . number_format(abs($customer->balance), 2) . ")" : number_format($customer->balance, 2) ?></h6>
+                                            </li>
+                                            <li>
+                                                <h4>Status</h4>
+                                                <h6 class="text-capitalize <?= ['text-danger', 'text-success'][$customer->status === 'opened' ? 1 : 0] ?>"><?= $customer->status ?></h6>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="tab-pane" id="ledger-tab">
                             <div class="row mt-5">
+                                <div class="col-md-12 mb-3 d-flex justify-content-end">
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#add-payment" class="btn btn-primary btn-sm"><i class="fa fa-plus me-2"></i>Add Payment</button>
+                                </div>
                                 <div class="col-md-12">
-                                    Tab content 2
+                                    <div class="table-responsive">
+                                        <table id="dt-ledger" class="table" style="width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Date</th>
+                                                    <th>Reference</th>
+                                                    <th>Debit</th>
+                                                    <th>Credit</th>
+                                                    <th>A/c Balance</th>
+                                                    <th>Added By</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -56,7 +120,7 @@
                                     <div class="card" id="filter_inputs">
                                         <div class="card-body pb-0">
                                             <div class="row">
-                                                <input type="hidden" name="customer_id" value="<?=$customer->id; ?>">
+                                                <input type="hidden" name="customer_id" value="<?= $customer->id; ?>">
                                                 <div class="col-lg-2 col-sm-6 col-12">
                                                     <div class="form-group">
                                                         <input type="text" name="invoice" placeholder="Enter Reference No" value="">
@@ -111,51 +175,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('modal') ?>
-<div class="modal fade" id="showpayment" tabindex="-1" aria-labelledby="showpayment" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Show Payments</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Reference</th>
-                                <th>Amount </th>
-                                <th>Paid By </th>
-                                <th>Paid By </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="bor-b1">
-                                <td>2022-03-07 </td>
-                                <td>INV/SL0101</td>
-                                <td>$ 0.00 </td>
-                                <td>Cash</td>
-                                <td>
-                                    <a class="me-2" href="javascript:void(0);">
-                                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/printer.svg" alt="img">
-                                    </a>
-                                    <a class="me-2" href="javascript:void(0);" data-bs-target="#editpayment" data-bs-toggle="modal" data-bs-dismiss="modal">
-                                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
-                                    </a>
-                                    <a class="me-2 confirm-text" href="javascript:void(0);">
-                                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <form action="<?= site_url('ledgers') ?>" class="modal fade" id="add-payment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -226,5 +245,5 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/customer-bills.js') ?>"></script>
+<script src="<?= base_url('assets/js/customer-details.js') ?>"></script>
 <?= $this->endSection() ?>

@@ -115,6 +115,7 @@ $routes->get('product-adjustments/datatable', [AdjustmentController::class, 'dat
 $routes->get('brands/datatable', [BrandController::class, 'datatable']);
 $routes->get('categories/datatable', [CategoryController::class, 'datatable']);
 $routes->get('customers/datatable', [CustomerController::class, 'datatable']);
+$routes->get('customers/ledger/datatable', [CustomerLedgerController::class, 'datatable']);
 $routes->get('expense-categories/datatable', [ExpenseCategoryController::class, 'datatable']);
 $routes->get('expenses/datatable', [ExpenseController::class, 'datatable']);
 $routes->get('products/datatable', [ProductController::class, 'datatable']);

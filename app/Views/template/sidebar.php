@@ -61,14 +61,24 @@
                     <h6 class="submenu-hdr">Finance & Accounts</h6>
                     <ul>
                         <li class="submenu">
-                            <a class="<?= getActiveUrl("expenses", true) ? "active subdrop"
-                                            : getActiveUrl("expense-categories", "active subdrop") ?>" href="javascript:void(0);">
+                            <a class="<?= getActiveUrl("expenses", true) || getActiveUrl("expenses/*", true) ? "active subdrop"
+                                            : (getActiveUrl("expense-categories", true) || getActiveUrl("expense-categories/*", true) ? "active subdrop" : '') ?>" href="javascript:void(0);">
                                 <i data-feather="file-text"></i>
-                                <span>Expense</span><span class="menu-arrow"></span>
+                                <span>Manage Expense</span><span class="menu-arrow"></span>
                             </a>
                             <ul>
                                 <li><a class="<?= getActiveUrl("expenses", "active"); ?>" href="<?= site_url('expenses') ?>">Expenses</a></li>
                                 <li><a class="<?= getActiveUrl("expense-categories", "active"); ?>" href="<?= site_url('expense-categories') ?>">Expense Category</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a class="subdrop <?= getActiveUrl("closing/*") ?>" href="javascript:void(0);">
+                                <i data-feather="file-text"></i>
+                                <span>Closing</span><span class="menu-arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a class="<?= getActiveUrl("closing/user"); ?>" href="<?= site_url('closing/user') ?>">My Closing</a></li>
+                                <li><a class="<?= getActiveUrl("closing/store"); ?>" href="<?= site_url("closing/store") ?>">Store Closing</a></li>
                             </ul>
                         </li>
                     </ul>

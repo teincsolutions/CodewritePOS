@@ -38,7 +38,7 @@
                                     <div class="row">
                                         <div class="col-lg-10 col-sm-10 col-10">
                                             <select name="supplier_id" class="select2-suppliers" required>
-                                                <option value="">walk-in-supplier</option>
+                                                <option value=""></option>
                                             </select>
                                         </div>
                                         <div class="col-lg-2 col-sm-2 col-2 ps-0">
@@ -228,7 +228,7 @@
                             <ul>
                                 <li>
                                     <h5>Supplier </h5>
-                                    <h6 class="supplier"><?= isset($purchase) ? ($purchase->supplier ? $purchase->supplier->name : 'walk-in-supplier') : 'walk-in-supplier' ?></h6>
+                                    <h6 class="supplier"><?= isset($purchase) ? ($purchase->supplier ? $purchase->supplier->name : '') : '' ?></h6>
                                 </li>
                                 <li id="acc-bal" class="<?= isset($purchase) ? ($purchase->supplier ? $purchase->supplier->name : 'd-none') : 'd-none' ?>">
                                     <h5>A/c Balance</h5>
@@ -303,9 +303,6 @@
                             <ul>
                                 <li>
                                     <a href="javascript:void(0);" onclick="hold(this)" action="<?= site_url('purchase/hold') ?>" class="btn"><i class="fa fa-pause me-1"></i> Hold</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" onclick="qoute(this)" action="<?= site_url('quotes/save') ?>" class="btn"><i class="fa fa-print me-1"></i> Quotation</a>
                                 </li>
                                 <li>
                                     <a class="btn" data-bs-toggle="modal" data-bs-target="#recents"><i class="fa fa-list me-1"></i> Transaction</a>
