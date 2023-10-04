@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use CodeIgniter\Database\RawSql;
 use CodeIgniter\Model;
 
 
@@ -111,7 +112,7 @@ class PurchaseModel extends Model
             ->where('purchase_date', date('Y-m-d', time()))
             ->get()
             ->getFirstRow()
-            ->total; 
+            ->total;
         return $total ? $total : 0.00;
     }
 
@@ -123,7 +124,9 @@ class PurchaseModel extends Model
 
     public function getDueAmount(): float
     {
-        return $this->getTotalAmount()
-            - $this->getPaidAmount();
+        $total = $this->builder()
+            ->selectSum(new RawSql('(total_amount - paid)'), 'total')->where('payment_status', 'due')
+            ->get()->getFirstRow()->total;
+        return $total;
     }
 }
