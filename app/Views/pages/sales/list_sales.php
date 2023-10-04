@@ -7,7 +7,7 @@
             <h6>Manage your sales</h6>
         </div>
         <div class="page-btn">
-            <a href="https://dreamspos.dreamguystech.com/html/template/add-sales.html" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add Sales</a>
+            <a href="<?=site_url('sales/pos') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add Sales</a>
         </div>
     </div>
 
