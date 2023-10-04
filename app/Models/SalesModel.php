@@ -112,8 +112,9 @@ class SalesModel extends Model
 
     public function getTodayTotalAmount(): float
     {
+        $total = 0;
         // total paid by customers
-        $total = (new CustomerLedgerModel())->selectSum('debit', 'total')
+        $total += (new CustomerLedgerModel())->selectSum('debit', 'total')
             ->where('tdate', date('Y-m-d', time()))
             ->get()->getFirstRow()->total;
 
@@ -127,8 +128,9 @@ class SalesModel extends Model
 
     public function getPaidAmount(): float
     {
+        $total = 0;
         // total paid by customers
-        $total = (new CustomerLedgerModel())->selectSum('credit', 'total')->get()->getFirstRow()->total;
+        $total += (new CustomerLedgerModel())->selectSum('credit', 'total')->get()->getFirstRow()->total;
         // total paid by walk-in-customers
         $total += $this->builder()->selectSum('paid', 'total')->where('type', 'walk-in-customer')->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
@@ -136,7 +138,8 @@ class SalesModel extends Model
 
     public function getDueAmount(): float
     {
-        $total = $this->builder()
+        $total = 0;
+        $total += $this->builder()
             ->selectSum(new RawSql('(total_amount - paid)'), 'total')->where('payment_status', 'due')
             ->get()->getFirstRow()->total;
             return $total ? $total : 0.00;
