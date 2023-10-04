@@ -18,8 +18,8 @@ class CustomerLedgerController extends BaseController
         LoggerInterface $logger
     ) {
         parent::initController($request, $response, $logger);
-        if(!auth()->loggedIn()){
-             return $response->redirect(site_url('login'));
+        if (!auth()->loggedIn()) {
+            return $response->redirect(site_url('login'));
         }
     }
 
@@ -47,9 +47,9 @@ class CustomerLedgerController extends BaseController
         $model = new CustomerLedgerModel();
         $salesModel = new SalesModel();
         $inputs = $this->request->getVar();
-        
-        if(auth()->user())
-        $inputs['user_id'] = auth()->user()->id;
+
+        if (auth()->user())
+            $inputs['user_id'] = auth()->user()->id;
 
         $id = $this->request->getPost('id');
         $res = [
@@ -58,13 +58,13 @@ class CustomerLedgerController extends BaseController
             'message' => null,
             'input' => $inputs,
         ];
-        $CustomerLedger = $model->where('id',$id)->first();
+        $CustomerLedger = $model->where('id', $id)->first();
         if ($CustomerLedger) {
             if ($model->save($inputs)) {
-                $sales = $salesModel->where('id',$inputs['sale_id'])->first();
+                $sales = $salesModel->where('id', $inputs['sale_id'])->first();
                 $salesModel->save([
-                    'id'=> $inputs['sale_id'],
-                    'payment_status' => (($sales->total_amount - $sales->paid > 0)?'due':'paid')
+                    'id' => $inputs['sale_id'],
+                    'payment_status' => (($sales->total_amount - $sales->paid > 0) ? 'due' : 'paid')
                 ]);
                 $res = array_merge($res, [
                     'status' => true,
@@ -79,10 +79,10 @@ class CustomerLedgerController extends BaseController
             }
         } else {
             if ($model->save($inputs)) {
-                $sales = $salesModel->where('id',$inputs['sale_id'])->first();
+                $sales = $salesModel->where('id', $inputs['sale_id'])->first();
                 $salesModel->save([
-                    'id'=> $inputs['sale_id'],
-                    'payment_status' => (($sales->total_amount - $sales->paid > 0)?'due':'paid')
+                    'id' => $inputs['sale_id'],
+                    'payment_status' => (($sales->total_amount - $sales->paid > 0) ? 'due' : 'paid')
                 ]);
 
                 $res = array_merge($res, [
@@ -116,7 +116,7 @@ class CustomerLedgerController extends BaseController
         return view('pages/ledgers/show_ledger', $data);
     }
 
-     /**
+    /**
      * return json for datatables
      * @return Response - http response
      */
@@ -124,6 +124,27 @@ class CustomerLedgerController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new CustomerLedgerModel();
-        return $this->response->setJSON(toDatatableResult($model,$inputs));
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+    /**
+     * return jwon for delete
+     * @return Response - http response
+     */
+    public function delete($id = null)
+    {
+        $model = new CustomerLedgerModel();
+        if ($model->delete($id)) {
+            $res = [
+                'status' => true,
+                'message' => "Record deleted successfully!",
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'message' => "Couldn't be deleted!"
+            ];
+        }
+        return $this->response->setJSON($res);
     }
 }

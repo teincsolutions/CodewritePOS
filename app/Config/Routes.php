@@ -197,7 +197,7 @@ $routes->delete('product-adjustments/(:num)', [AdjustmentController::class, 'del
 $routes->delete('brands/(:num)', [BrandController::class, 'delete']);
 $routes->delete('categories/(:num)', [CategoryController::class, 'delete']);
 $routes->delete('customers/(:num)', [CustomerController::class, 'delete']);
-$routes->get('customers/ledger/(:num)', [CustomerLedgerController::class, 'delete']);
+$routes->delete('customers/ledger/(:num)', [CustomerLedgerController::class, 'delete']);
 $routes->delete('expense-categories/(:num)', [ExpenseCategoryController::class, 'delete']);
 $routes->delete('expenses/(:num)', [ExpenseController::class, 'delete']);
 $routes->delete('products/(:num)', [ProductController::class, 'delete']);
