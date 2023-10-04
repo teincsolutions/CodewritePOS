@@ -68,7 +68,7 @@ $(function () {
         render: function (data, type, row) {
           return data < 0
             ? `(GHS ${Math.abs(data).toFixed(2)})`
-            : `GHS ${data}`;
+            : `GHS ${parseFloat(data).toFixed(2)}`;
         },
       },
       {
