@@ -144,7 +144,7 @@ $(function () {
                             : ""
                         }
                         <a target="_blank" href="${baseUrl}sales/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${
+                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table1, ${
                           row.id
                         }, '${baseUrl}sales')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
@@ -329,7 +329,7 @@ $(function () {
             return `<div class="d-flex justify-content-between align-items-center">
             <a  href="javascript:void(0);" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
             <a  href="javascript:void(0);" onclick="editRow(this)"><i class="fa fa-edit fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${row.id}, '${baseUrl}customers/ledger')"><i class="fa fa-trash fa-lg"></i></a>
+                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table2, ${row.id}, '${baseUrl}customers/ledger')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;
