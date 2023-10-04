@@ -27,7 +27,7 @@
         </div>
         <div class="info">
             <p class="sec">
-                <strong>Time : </strong><span><?= date('d/m/y', strtotime($sales->created_at)); ?></span></br>
+                <strong>Time : </strong><span><?= date('d/m/y  h:i a', strtotime($sales->created_at)); ?></span></br>
                 <strong>Reference : </strong><span>INV<?= $sales->invoice; ?></span></br>
                 <strong>Sales Person : </strong><span><?= $sales->user->firstname; ?> <?= $sales->user->lastname; ?></span><br>
                 <strong>Contact Store : </strong><span><?= $sales->store->phone ?? '0246092155'; ?></span>
