@@ -548,7 +548,7 @@
                                                 <td><?= $row->total_amount < 0 ? "(" . number_format(abs($row->total_amount), 2) . ")" : number_format($row->total_amount, 2); ?></td>
                                                 <td>
                                                     <div class="d-flex justify-content-between align-items-center">
-                                                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('sales') ?>', '<?= site_url('returns/sales') ?>')"><i class="fa fa-trash fa-lg"></i></a>
+                                                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('sales') ?>', '<?= site_url('sales/returns') ?>')"><i class="fa fa-trash fa-lg"></i></a>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -615,7 +615,7 @@
                     <div class="col-lg-6 col-sm-12 col-12">
                         <div class="form-group">
                             <label>Payment type</label>
-                            <select class="select" required>
+                            <select name="payment_type" class="select" required>
                                 <option value="cash">Cash</option>
                                 <option value="momo">MoMo</option>
                                 <option value="credit">Credit Card</option>

@@ -18,8 +18,8 @@ class SupplierLedgerController extends BaseController
         LoggerInterface $logger
     ) {
         parent::initController($request, $response, $logger);
-        if(!auth()->loggedIn()){
-             return $response->redirect(site_url('login'));
+        if (!auth()->loggedIn()) {
+            return $response->redirect(site_url('login'));
         }
     }
 
@@ -45,26 +45,27 @@ class SupplierLedgerController extends BaseController
     public function save()
     {
         $model = new SupplierLedgerModel();
-        $purchaseModel = new PurchaseModel();
+        $purchasesModel = new PurchaseModel();
         $inputs = $this->request->getVar();
-        
-        if(auth()->user())
-        $inputs['user_id'] = auth()->user()->id;
+
+        if (auth()->user())
+            $inputs['user_id'] = auth()->user()->id;
 
         $id = $this->request->getPost('id');
+        $inputs['tdate'] = date('Y-m-d', strtotime($inputs['tdate']));
         $res = [
             'status' => false,
             'data' => null,
             'message' => null,
             'input' => $inputs,
         ];
-        $SupplierLedger = $model->where('id',$id)->first();
+        $SupplierLedger = $model->where('id', $id)->first();
         if ($SupplierLedger) {
             if ($model->save($inputs)) {
-                $purchase = $purchaseModel->where('id',$inputs['purchase_id'])->first();
-                $purchaseModel->save([
-                    'id'=> $inputs['purchase_id'],
-                    'payment_status' => (($purchase->total_amount - $purchase->paid > 0)?'due':'paid')
+                $purchases = $purchasesModel->where('id',$SupplierLedger->purchase_id)->first();
+                $purchasesModel->save([
+                    'id' => $SupplierLedger->purchase_id,
+                    'payment_status' => (($purchases->total_amount - $purchases->paid > 0) ? 'due' : 'paid')
                 ]);
                 $res = array_merge($res, [
                     'status' => true,
@@ -79,10 +80,10 @@ class SupplierLedgerController extends BaseController
             }
         } else {
             if ($model->save($inputs)) {
-                $purchase = $purchaseModel->where('id',$inputs['purchase_id'])->first();
-                $purchaseModel->save([
-                    'id'=> $inputs['purchase_id'],
-                    'payment_status' => (($purchase->total_amount - $purchase->paid > 0)?'due':'paid')
+                $purchases = $purchasesModel->where('id', $inputs['purchase_id'])->first();
+                $purchasesModel->save([
+                    'id' => $inputs['purchase_id'],
+                    'payment_status' => (($purchases->total_amount - $purchases->paid > 0) ? 'due' : 'paid')
                 ]);
 
                 $res = array_merge($res, [
@@ -116,7 +117,7 @@ class SupplierLedgerController extends BaseController
         return view('pages/ledgers/show_ledger', $data);
     }
 
-     /**
+    /**
      * return json for datatables
      * @return Response - http response
      */
@@ -124,6 +125,27 @@ class SupplierLedgerController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new SupplierLedgerModel();
-        return $this->response->setJSON(toDatatableResult($model,$inputs));
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+    /**
+     * return jwon for delete
+     * @return Response - http response
+     */
+    public function delete($id = null)
+    {
+        $model = new SupplierLedgerModel();
+        if ($model->delete($id)) {
+            $res = [
+                'status' => true,
+                'message' => "Record deleted successfully!",
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'message' => "Couldn't be deleted!"
+            ];
+        }
+        return $this->response->setJSON($res);
     }
 }

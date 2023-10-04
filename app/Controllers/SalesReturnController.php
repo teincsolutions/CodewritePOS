@@ -17,8 +17,8 @@ class SalesReturnController extends BaseController
         LoggerInterface $logger
     ) {
         parent::initController($request, $response, $logger);
-        if(!auth()->loggedIn()){
-             return $response->redirect(site_url('login'));
+        if (!auth()->loggedIn()) {
+            return $response->redirect(site_url('login'));
         }
     }
 
@@ -79,6 +79,8 @@ class SalesReturnController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new SalesReturnModel();
-        return $this->response->setJSON(toDatatableResult($model,$inputs));
+        return $this->response->setJSON(toDatatableResult($model, $inputs, [
+            ['table' => 'sales', 'cond' => 'sales.id=sales_returns.sale_id']
+        ]));
     }
 }

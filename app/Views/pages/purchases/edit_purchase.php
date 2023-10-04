@@ -608,7 +608,7 @@
                     <div class="col-lg-6 col-sm-12 col-12">
                         <div class="form-group">
                             <label>Payment type</label>
-                            <select class="select" required>
+                            <select name="payment_type" class="select" required>
                                 <option value="cash">Cash</option>
                                 <option value="momo">MoMo</option>
                                 <option value="credit">Credit Card</option>

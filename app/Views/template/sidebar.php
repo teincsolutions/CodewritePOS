@@ -22,7 +22,7 @@
                                 <span>Return</span><span class="menu-arrow"></span>
                             </a>
                             <ul>
-                                <li><a href="<?= site_url('returns/sales') ?>" class="<?= getActiveUrl("returns/sales", "active"); ?>">Sales Return</a></li>
+                                <li><a href="<?= site_url('sales/returns') ?>" class="<?= getActiveUrl("returns/sales", "active"); ?>">Sales Return</a></li>
                                 <li><a href="<?= site_url('returns/purchase') ?>" class="<?= getActiveUrl('returns/purchase', "active"); ?>">Purchase Return</a></li>
                             </ul>
                         </li>

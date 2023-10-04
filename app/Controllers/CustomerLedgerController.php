@@ -52,6 +52,7 @@ class CustomerLedgerController extends BaseController
             $inputs['user_id'] = auth()->user()->id;
 
         $id = $this->request->getPost('id');
+        $inputs['tdate'] = date('Y-m-d', strtotime($inputs['tdate']));
         $res = [
             'status' => false,
             'data' => null,
@@ -61,9 +62,9 @@ class CustomerLedgerController extends BaseController
         $CustomerLedger = $model->where('id', $id)->first();
         if ($CustomerLedger) {
             if ($model->save($inputs)) {
-                $sales = $salesModel->where('id', $inputs['sale_id'])->first();
+                $sales = $salesModel->where('id',$CustomerLedger->sale_id)->first();
                 $salesModel->save([
-                    'id' => $inputs['sale_id'],
+                    'id' => $CustomerLedger->sale_id,
                     'payment_status' => (($sales->total_amount - $sales->paid > 0) ? 'due' : 'paid')
                 ]);
                 $res = array_merge($res, [

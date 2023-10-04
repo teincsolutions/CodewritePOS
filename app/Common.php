@@ -20,8 +20,12 @@ use CodeIgniter\Database\RawSql;
 
 if (!function_exists('toDatatableResult')) {
 
-    function toDatatableResult(Model $model, array $inputs = null, $callback = null)
+    function toDatatableResult(Model $model, array $inputs = null, $joins = null, $callback = null)
     {
+        if ($joins)
+            foreach ($joins as $key => $join)
+                $model->join($join['table'], $join['cond'], $join['type'] ?? '', null);
+
         $total = $model->countAllResults();
         if (isset($inputs['date_from']) || isset($inputs['date_to'])) {
             if (!empty($inputs['date_from']) || !empty($inputs['date_to'])) {
@@ -31,6 +35,10 @@ if (!function_exists('toDatatableResult')) {
                 $model->groupEnd();
             }
         }
+
+        if ($joins)
+            foreach ($joins as $key => $join)
+                $model->join($join['table'], $join['cond'], $join['type'] ?? '', null);
 
         if (isset($inputs['fields'])) {
             foreach ($inputs['fields'] as $field => $val) {
@@ -90,7 +98,7 @@ if (!function_exists('toSelect2Result')) {
 
         if ($joins)
             foreach ($joins as $key => $join)
-                $model->join($join['table'], $join['cond'], $join['type'], null);
+                $model->join($join['table'], $join['cond'], $join['type'] ?? '', null);
 
         $total = sizeof($model->findAll());
 
@@ -106,7 +114,7 @@ if (!function_exists('toSelect2Result')) {
 
         if ($joins)
             foreach ($joins as $key => $join)
-                $model->join($join['table'], $join['cond'], $join['type'], null);
+                $model->join($join['table'], $join['cond'], $join['type'] ?? '', null);
         $data = $model->findAll();
 
         return  [
