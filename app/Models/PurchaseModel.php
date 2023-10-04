@@ -127,6 +127,6 @@ class PurchaseModel extends Model
         $total = $this->builder()
             ->selectSum(new RawSql('(total_amount - paid)'), 'total')->where('payment_status', 'due')
             ->get()->getFirstRow()->total;
-        return $total;
+            return $total ? $total : 0.00;
     }
 }
