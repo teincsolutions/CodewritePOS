@@ -112,18 +112,25 @@ class SalesModel extends Model
 
     public function getTodayTotalAmount(): float
     {
-        $total = $this->builder()
-            ->selectSum('total_amount', 'total')
+        // total paid by customers
+        $total = (new CustomerLedgerModel())->selectSum('debit', 'total')
+            ->where('tdate', date('Y-m-d', time()))
+            ->get()->getFirstRow()->total;
+
+        // total paid by walk-in-customers
+        $total += $this->builder()->selectSum('total_amount', 'total')
+            ->where('type', 'walk-in-customer')
             ->where('sales_date', date('Y-m-d', time()))
-            ->get()
-            ->getFirstRow()
-            ->total;
+            ->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
 
     public function getPaidAmount(): float
     {
-        $total = $this->builder()->selectSum('paid', 'total')->get()->getFirstRow()->total;
+        // total paid by customers
+        $total = (new CustomerLedgerModel())->selectSum('credit', 'total')->get()->getFirstRow()->total;
+        // total paid by walk-in-customers
+        $total += $this->builder()->selectSum('paid', 'total')->where('type', 'walk-in-customer')->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
 
