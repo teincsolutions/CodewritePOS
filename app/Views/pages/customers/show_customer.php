@@ -157,7 +157,7 @@
                                                     <th>Payment</th>
                                                     <th>Total</th>
                                                     <th>Paid</th>
-                                                    <th>Due</th>
+                                                    <th>Due/Change</th>
                                                     <th>Biller</th>
                                                     <th class="text-center">Action</th>
                                                 </tr>
