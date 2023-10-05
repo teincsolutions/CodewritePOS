@@ -186,7 +186,7 @@ $(function () {
           : 0;
       };
     },
-    order: [[1, "desc"]],
+    order: [[2, "desc"]],
     columnDefs: [
       {
         orderable: false,
@@ -308,6 +308,7 @@ $(function () {
             : `GHS ${data.toFixed(2)}`;
         },
       },
+      { data: "payment_type", name: "supplier_ledgers.payment_type" },
       {
         data: "user",
         name: "supplier_ledgers.user_id",

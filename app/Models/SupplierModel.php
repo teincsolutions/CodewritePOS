@@ -21,6 +21,7 @@ class SupplierModel extends Model
         'status',
         'address',
         'note',
+        'user_id'
     ];
 
     // Dates

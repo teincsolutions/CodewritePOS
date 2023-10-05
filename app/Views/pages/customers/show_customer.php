@@ -91,6 +91,7 @@
                                                     <th>Debit</th>
                                                     <th>Credit</th>
                                                     <th>A/c Balance</th>
+                                                    <th>Type</th>
                                                     <th>Added By</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -370,5 +371,5 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js?v=1') ?>"></script>
-<script src="<?= base_url('assets/js/customer-details.js?v=3') ?>"></script>
+<script src="<?= base_url('assets/js/customer-details.js?v=4') ?>"></script>
 <?= $this->endSection() ?>

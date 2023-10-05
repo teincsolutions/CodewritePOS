@@ -66,7 +66,7 @@
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Address</th>
-                            <th>Status</th>
+                            <th>A/c Balance</th>
                             <th>Added By</th>
                             <th>Action</th>
                         </tr>

@@ -111,7 +111,7 @@
                             <h2>Due</h2>
                         </td>
                         <td class="payment">
-                            <h2>GHS <?= number_format($purchases->total_amount - $purchases->paid, 2) ?></h2>
+                            <h2>GHS <?= number_format($sales->total_amount - $sales->paid, 2) ?></h2>
                         </td>
                     </tr>
                 <?php endif ?>

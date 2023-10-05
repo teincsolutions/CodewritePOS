@@ -58,7 +58,7 @@ class CustomerModel extends Model
                 $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
                 // balance
                 $total = $ledgerModel->builder()
-                    ->selectSum(new RawSql('(credit-debit)'), 'total')
+                    ->selectSum(new RawSql('(credit - debit)'), 'total')
                     ->where('customer_id', $model['data']->id)
                     ->get()
                     ->getRowObject()
@@ -69,7 +69,7 @@ class CustomerModel extends Model
                     $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
                     // balance
                     $total = $ledgerModel->builder()
-                        ->selectSum(new RawSql('(credit-debit)'), 'total')
+                        ->selectSum(new RawSql('(credit - debit)'), 'total')
                         ->where('customer_id', $row->id)
                         ->get()
                         ->getRowObject()

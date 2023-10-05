@@ -22,6 +22,7 @@ class CustomerLedgerModel extends Model
         'debit',
         'credit',
         'user_id',
+        'payment_type'
     ];
 
     // Dates
@@ -71,12 +72,13 @@ class CustomerLedgerModel extends Model
                 $model['data']->customer = $cusModel->where('id', $model['data']->customer_id)->first();
             } else {
                 $bal = 0;
-                foreach ($model['data'] as $key => $row) {
+
+                foreach (array_reverse($model['data'], true) as $key => $row) {
                     $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
                     $model['data'][$key]->sale = $saleModel->where('id', $row->sale_id)->first();
                     $model['data'][$key]->sales_return = $returnModel->where('id', $row->sales_return_id)->first();
                     $model['data'][$key]->customer = $cusModel->where('id', $row->customer_id)->first();
-                    $bal -=  $model['data'][$key]->debit - $model['data'][$key]->credit;
+                    $bal +=  $model['data'][$key]->credit - $model['data'][$key]->debit;
                     $model['data'][$key]->balance = $bal;
                 }
             }
