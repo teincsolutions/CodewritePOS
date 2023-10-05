@@ -293,13 +293,13 @@ $(function () {
         },
       },
       {
-        data: "debit",
+        data: "credit",
         render: function (data) {
           return `GHS ${parseFloat(data).toFixed(2)}`;
         },
       },
       {
-        data: "credit",
+        data: "debit",
         render: function (data) {
           return `GHS ${parseFloat(data).toFixed(2)}`;
         },

@@ -83,8 +83,8 @@
                                                     <th></th>
                                                     <th>Date</th>
                                                     <th>Reference</th>
-                                                    <th>Debit</th>
                                                     <th>Credit</th>
+                                                    <th>Debit</th>
                                                     <th>A/c Balance</th>
                                                     <th>Added By</th>
                                                     <th>Action</th>
@@ -278,7 +278,7 @@
                     <div class="col-lg-6 col-sm-12 col-12">
                         <div class="form-group">
                             <label>Paying Amount</label>
-                            <input type="text" onkeyup="$('#inv-due').val(($('#inv-bal').val()- $(this).val()).toFixed(2))" name="credit" min="0" value="" placeholder="Enter Amount" required>
+                            <input type="text" onkeyup="$('#inv-due').val(($('#inv-bal').val()- $(this).val()).toFixed(2))" name="debit" min="0" value="" placeholder="Enter Amount" required>
                         </div>
                     </div>
                     <div class="col-lg-6 col-sm-12 col-12">
@@ -339,7 +339,7 @@
                     <div class="col-lg-6 col-sm-12 col-12">
                         <div class="form-group">
                             <label>Paying Amount</label>
-                            <input type="text" name="credit" min="0" value="" placeholder="Enter Amount" required>
+                            <input type="text" name="debit" min="0" value="" placeholder="Enter Amount" required>
                         </div>
                     </div>
                     <div class="col-lg-6 col-sm-12 col-12">
@@ -365,5 +365,5 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/supplier-details.js?v=1') ?>"></script>
+<script src="<?= base_url('assets/js/supplier-details.js?v=2') ?>"></script>
 <?= $this->endSection() ?>
