@@ -76,7 +76,7 @@ class CustomerLedgerModel extends Model
                     $model['data'][$key]->sale = $saleModel->where('id', $row->sale_id)->first();
                     $model['data'][$key]->sales_return = $returnModel->where('id', $row->sales_return_id)->first();
                     $model['data'][$key]->customer = $cusModel->where('id', $row->customer_id)->first();
-                    $bal +=  $model['data'][$key]->debit - $model['data'][$key]->credit;
+                    $bal -=  $model['data'][$key]->debit - $model['data'][$key]->credit;
                     $model['data'][$key]->balance = $bal;
                 }
             }
