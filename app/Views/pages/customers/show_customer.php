@@ -85,6 +85,7 @@
                                             <thead>
                                                 <tr>
                                                     <th></th>
+                                                    <th>#Code</th>
                                                     <th>Date</th>
                                                     <th>Reference</th>
                                                     <th>Debit</th>
@@ -368,6 +369,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/customer-details.js?v=1') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/actions.js?v=1') ?>"></script>
+<script src="<?= base_url('assets/js/customer-details.js?v=2') ?>"></script>
 <?= $this->endSection() ?>

@@ -81,6 +81,7 @@
                                             <thead>
                                                 <tr>
                                                     <th></th>
+                                                    <th>#Code</th>
                                                     <th>Date</th>
                                                     <th>Reference</th>
                                                     <th>Credit</th>
@@ -364,6 +365,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/supplier-details.js?v=2') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/actions.js?v=1') ?>"></script>
+<script src="<?= base_url('assets/js/supplier-details.js?v=3') ?>"></script>
 <?= $this->endSection() ?>

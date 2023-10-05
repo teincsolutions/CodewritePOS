@@ -281,6 +281,7 @@ $(function () {
           return null;
         },
       },
+      { data: "id", name: "customer_ledgers.id" },
       { data: "tdate", name: "customer_ledgers.tdate" },
       {
         data: null,
