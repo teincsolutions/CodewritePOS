@@ -45,7 +45,7 @@ class SupplierLedgerModel extends Model
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
     protected $afterFind      = ['setRelation'];
-    protected $beforeDelete   = [];
+    protected $beforeDelete   = ['updateFields'];
     protected $afterDelete    = [];
 
     protected function setDefaultId(array $data)
@@ -54,6 +54,25 @@ class SupplierLedgerModel extends Model
             $data['data']['supplier_id'] = NULL;
 
         return $data;
+    }
+
+    protected function updateFields(array $model)
+    {
+        $ledgerModel = new SupplierLedgerModel();
+        $purchaseModel = new PurchaseModel();
+
+        foreach ($model['id'] as $key => $data) {
+            $id = $data;
+            $ledger = $ledgerModel->where('id', $id)->first();
+            if ($ledger){
+                $purchaseModel->save([
+                    'id' => $ledger->purchase_id,
+                    'payment_status' => 'due'
+                ]);
+            }
+        }
+
+        return $model;
     }
 
     protected function setRelation($model)
