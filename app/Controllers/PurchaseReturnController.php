@@ -191,7 +191,7 @@ class PurchaseReturnController extends BaseController
         $inputs = $this->request->getVar();
         $model = new PurchaseReturnModel();
         return $this->response->setJSON(toDatatableResult($model, $inputs, [
-            ['table' => 'purchase', 'cond' => 'purchase.id=purchase_returns.sale_id']
+            ['table' => 'purchases', 'cond' => 'purchases.id=purchase_returns.purchase_id']
         ]));
     }
 }
