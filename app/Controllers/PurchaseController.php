@@ -199,6 +199,7 @@ class PurchaseController extends BaseController
                         'supplier_id' => $inputs['supplier_id'],
                         'purchase_id' => $purchases->id,
                         'payment_type' => $inputs['payment_type'],
+                        'ledger_type' => 'purchases',
                         'credit' => $inputs['total_amount'],
                         'debit' => ($inputs['payment_status'] === 'paid' ? $inputs['total_amount'] : $inputs['paid']),
                         'user_id' => isset($inputs['user_id']) ? $inputs['user_id'] : null,

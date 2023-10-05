@@ -4,7 +4,10 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\CustomerLedgerModel;
+use App\Models\CustomerModel;
 use App\Models\SalesModel;
+use App\Models\SupplierModel;
+use CodeIgniter\Database\RawSql;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -62,7 +65,7 @@ class CustomerLedgerController extends BaseController
         $CustomerLedger = $model->where('id', $id)->first();
         if ($CustomerLedger) {
             if ($model->save($inputs)) {
-                $sales = $salesModel->where('id',$CustomerLedger->sale_id)->first();
+                $sales = $salesModel->where('id', $CustomerLedger->sale_id)->first();
                 $salesModel->save([
                     'id' => $CustomerLedger->sale_id,
                     'payment_status' => (($sales->total_amount - $sales->paid > 0) ? 'due' : 'paid')
@@ -125,6 +128,19 @@ class CustomerLedgerController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new CustomerLedgerModel();
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+    /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function debtors_datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new CustomerModel();
+        $model->where('(SELECT SUM((customer_ledgers.credit - customer_ledgers.debit)) from customer_ledgers where customer_ledgers.customer_id=customers.id) < ', 0, false);
+
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 

@@ -38,13 +38,12 @@ $routes->get('product-adjustments', [AdjustmentController::class, 'index']);
 $routes->get('brands', [BrandController::class, 'index']);
 $routes->get('categories', [CategoryController::class, 'index']);
 $routes->get('customers', [CustomerController::class, 'index']);
+$routes->get('account-debts/customers', [CustomerLedgerController::class, 'customer_debts']);
 $routes->get('expense-categories', [ExpenseCategoryController::class, 'index']);
 $routes->get('expenses', [ExpenseController::class, 'index']);
 $routes->get('products', [ProductController::class, 'index']);
-
 $routes->get('transfers/product', [ProductTransferController::class, 'index']);
 $routes->get('transfers/product-unit', [ProductUnitTransferController::class, 'index']);
-
 $routes->get('purchases', [PurchaseController::class, 'index']);
 $routes->get('returns/purchase', [PurchaseReturnController::class, 'index']);
 $routes->get('quotes', [QuoteController::class, 'index']);
@@ -52,6 +51,7 @@ $routes->get('sales', [SalesController::class, 'index']);
 $routes->get('sales/returns', [SalesReturnController::class, 'index']);
 $routes->get('stores', [StoreController::class, 'index']);
 $routes->get('suppliers', [SupplierController::class, 'index']);
+$routes->get('account-debts/suppliers', [SupplierLedgerController::class, 'supplier_debts']);
 $routes->get('units', [UnitController::class, 'index']);
 
 //shows
@@ -116,6 +116,7 @@ $routes->get('brands/datatable', [BrandController::class, 'datatable']);
 $routes->get('categories/datatable', [CategoryController::class, 'datatable']);
 $routes->get('customers/datatable', [CustomerController::class, 'datatable']);
 $routes->get('customers/ledger/datatable', [CustomerLedgerController::class, 'datatable']);
+$routes->get('customers/debtors/datatable', [CustomerLedgerController::class, 'debtors_datatable']);
 $routes->get('expense-categories/datatable', [ExpenseCategoryController::class, 'datatable']);
 $routes->get('expenses/datatable', [ExpenseController::class, 'datatable']);
 $routes->get('products/datatable', [ProductController::class, 'datatable']);
@@ -129,6 +130,7 @@ $routes->get('sales/returns/datatable', [SalesReturnController::class, 'datatabl
 $routes->get('stores/datatable', [StoreController::class, 'datatable']);
 $routes->get('suppliers/datatable', [SupplierController::class, 'datatable']);
 $routes->get('suppliers/ledger/datatable', [SupplierLedgerController::class, 'datatable']);
+$routes->get('suppliers/creditors/datatable', [SupplierLedgerController::class, 'creditors_datatable']);
 $routes->get('units/datatable', [UnitController::class, 'datatable']);
 
 //select2

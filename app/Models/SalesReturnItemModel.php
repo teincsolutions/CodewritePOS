@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class SalesReturnItemModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'sales_return_items';
+    protected $table            = 'sales_returns_items';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';

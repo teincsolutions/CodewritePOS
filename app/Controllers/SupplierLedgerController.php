@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\PurchaseModel;
 use App\Models\SupplierLedgerModel;
+use App\Models\SupplierModel;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -21,6 +22,18 @@ class SupplierLedgerController extends BaseController
         if (!auth()->loggedIn()) {
             return $response->redirect(site_url('login'));
         }
+    }
+    
+   /**
+     * return view for list
+     * @return Response - http response
+     */
+    public function supplier_debts()
+    {
+        $data = [
+            'title' => 'Supplier Creditors',
+        ];
+        return view('pages/account_debts/suppliers', $data);
     }
 
     /**
@@ -125,6 +138,18 @@ class SupplierLedgerController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new SupplierLedgerModel();
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+    /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function creditors_datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new SupplierModel();
+        $model->where('(SELECT SUM((supplier_ledgers.debit - supplier_ledgers.credit)) from supplier_ledgers where supplier_ledgers.supplier_id=suppliers.id) < ', 0, false);
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 

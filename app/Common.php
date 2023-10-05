@@ -14,6 +14,7 @@
  * @see: https://codeigniter.com/user_guide/extending/common.html
  */
 
+use CodeIgniter\Database\MySQLi\Builder;
 use CodeIgniter\Model;
 use CodeIgniter\Database\RawSql;
 
@@ -26,7 +27,7 @@ if (!function_exists('toDatatableResult')) {
             foreach ($joins as $key => $join)
                 $model->join($join['table'], $join['cond'], $join['type'] ?? '', null);
 
-        $total = $model->countAllResults();
+        $total = $model->countAllResults(false);
         if (isset($inputs['date_from']) || isset($inputs['date_to'])) {
             if (!empty($inputs['date_from']) || !empty($inputs['date_to'])) {
                 $model->groupStart();
@@ -35,10 +36,6 @@ if (!function_exists('toDatatableResult')) {
                 $model->groupEnd();
             }
         }
-
-        if ($joins)
-            foreach ($joins as $key => $join)
-                $model->join($join['table'], $join['cond'], $join['type'] ?? '', null);
 
         if (isset($inputs['fields'])) {
             foreach ($inputs['fields'] as $field => $val) {
@@ -63,6 +60,66 @@ if (!function_exists('toDatatableResult')) {
         }
 
         $data = $model->findAll();
+        $filtered = sizeof($data);
+        if ($callback)
+            foreach ($data as $key => $item)
+                $data[$key] = $callback($item);
+        return  [
+            'draw' => isset($inputs['draw']) ? $inputs['draw'] : 1,
+            'recordsTotal' => $total,
+            'recordsFiltered' => $filtered,
+            'data' => $data,
+            'inputs' => $inputs,
+        ];
+    }
+}
+
+if (!function_exists('toDatatableResult2')) {
+
+    function toDatatableResult2(Builder $builder, array $inputs = null, $joins = null, $callback = null)
+    {
+        if ($joins)
+            foreach ($joins as $key => $join)
+                $builder->join($join['table'], $join['cond'], $join['type'] ?? '', null);
+
+        $total = $builder->countAll(false);
+        if (isset($inputs['date_from']) || isset($inputs['date_to'])) {
+            if (!empty($inputs['date_from']) || !empty($inputs['date_to'])) {
+                $builder->groupStart();
+                $builder->where(new RawSql("DATE(" . $inputs['date_range_column'] . ")" . ' >='), $inputs['date_from']);
+                $builder->where(new RawSql("DATE(" . $inputs['date_range_column'] . ")" . ' <='), $inputs['date_to']);
+                $builder->groupEnd();
+            }
+        }
+
+        if ($joins)
+            foreach ($joins as $key => $join)
+                $builder->join($join['table'], $join['cond'], $join['type'] ?? '', null);
+
+        if (isset($inputs['fields'])) {
+            foreach ($inputs['fields'] as $field => $val) {
+                if (!empty(trim($val)))
+                    $builder->like($field, $val);
+            }
+        }
+
+        if (isset($inputs['columns'])) {
+            $builder->groupStart();
+            foreach ($inputs['columns'] as $col) {
+                if (isset($col['searchable']) && $col['searchable'] && isset($col['name']) && $col['name'])
+                    $builder->orLike($col['name'], trim($inputs['search']['value']), 'both');
+                else if (isset($col['name']) && $col['name'])   $builder->orLike($col['name'], $inputs['search']['value'], 'both');;
+            }
+            $builder->groupEnd();
+        }
+        if (isset($inputs['order'])) {
+            foreach ($inputs['order'] as $order) {
+                $builder->orderBy($inputs['columns'][$order['column']]['name'], $order['dir']);
+            }
+        }
+
+        $data = $builder->get()->getResult();
+
         $filtered = sizeof($data);
         if ($callback)
             foreach ($data as $key => $item)

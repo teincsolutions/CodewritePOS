@@ -34,11 +34,10 @@ class CreateSupplierLedgerTable extends Migration
                 'unsigned'       => true,
                 'null' => true,
             ],
-            'purchase_return_id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'null' => true,
+            'ledger_type' => [
+                'type' => 'ENUM',
+                'constraint' => ['purchases', 'returns'],
+                'default' => 'purchases'
             ],
             'debit' => [
                 'type'           => 'DECIMAL',

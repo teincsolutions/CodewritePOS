@@ -97,6 +97,7 @@ class SalesModel extends Model
                             ->where('sale_id', $row->id)
                             ->get()
                             ->getRowObject()->total;
+
                         $model['data'][$key]->paid = $total ?? 0.00;
                     }
                     $model['data'][$key]->store = $storeModel->where('id', $row->store_id)->first();

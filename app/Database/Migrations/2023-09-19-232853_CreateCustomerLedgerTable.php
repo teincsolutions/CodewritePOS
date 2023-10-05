@@ -34,16 +34,15 @@ class CreateCustomerLedgerTable extends Migration
                 'unsigned'       => true,
                 'null' => true,
             ],
-            'sales_return_id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'null' => true,
-            ],
             'payment_type' => [
                 'type' => 'ENUM',
                 'constraint' => ['cash', 'debit','momo'],
                 'default' => 'cash'
+            ],
+            'ledger_type' => [
+                'type' => 'ENUM',
+                'constraint' => ['sales', 'returns'],
+                'default' => 'sales'
             ],
             'debit' => [
                 'type'           => 'DECIMAL',

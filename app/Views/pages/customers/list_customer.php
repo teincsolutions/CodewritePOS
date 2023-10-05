@@ -81,50 +81,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('modal') ?>
-<div class="modal fade" id="showpayment" tabindex="-1" aria-labelledby="showpayment" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Show Payments</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Reference</th>
-                                <th>Amount </th>
-                                <th>Paid By </th>
-                                <th>Paid By </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="bor-b1">
-                                <td>2022-03-07 </td>
-                                <td>INV/SL0101</td>
-                                <td>$ 1500.00 </td>
-                                <td>Cash</td>
-                                <td>
-                                    <a class="me-2" href="javascript:void(0);">
-                                        
-                                    </a>
-                                    <a class="me-2" href="javascript:void(0);" data-bs-target="#editpayment" data-bs-toggle="modal" data-bs-dismiss="modal">
-                                        
-                                    </a>
-                                    <a class="me-2 confirm-text" href="javascript:void(0);">
-                                        
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> 
 <div class="modal fade" id="createpayment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

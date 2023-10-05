@@ -262,7 +262,7 @@
                                     <h6 class="grandTotal">GHS 0.00</h6>
                                 </li>
                                 <li class="text-danger">
-                                    <h5>Due </h5>
+                                    <h5>Due/Change </h5>
                                     <h6 class="dueTotal">GHS 0.00</h6>
                                 </li>
                             </ul>
