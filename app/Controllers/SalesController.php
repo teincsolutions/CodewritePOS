@@ -71,7 +71,6 @@ class SalesController extends BaseController
             'title' => 'Point of Sales',
             'invoice' => substr(time() + $lastId, 0, 10),
             'stores' => $storeModel->findAll(),
-            'customers' => $cusModel->findAll(),
             'saleList' => $model->where($saleWhere)->findAll(),
             'returnList' => $returnModel->where($returnWhere)->findAll(),
             'ledgerList' => $ledgerModel->where($ledgerWhere)->findAll(),

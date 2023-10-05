@@ -13,7 +13,7 @@
                 <h2>Sale Detail : INV<?= $sales->invoice; ?></h2>
                 <ul>
                     <li>
-                        <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/printer.svg" alt="img"></a>
+                        <a href="javascript:void(0);"></a>
                     </li>
                 </ul>
             </div>

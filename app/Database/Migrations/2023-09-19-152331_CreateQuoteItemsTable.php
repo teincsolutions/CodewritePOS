@@ -80,12 +80,12 @@ class CreateQuoteItemsTable extends Migration
         $forge->addForeignKey('tax_id', 'taxes', 'id', 'RESTRICT', 'RESTRICT', 'fk_quote_items_tax_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
-        $forge->createTable('quotes_items', true, $attributes);
+        $forge->createTable('quote_items', true, $attributes);
     }
 
     public function down()
     {
         $forge = Database::forge();
-        $forge->dropTable('quotes_items', true);
+        $forge->dropTable('quote_items', true);
     }
 }

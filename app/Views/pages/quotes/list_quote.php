@@ -36,7 +36,7 @@
                             <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/excel.svg" alt="img"></a>
                         </li>
                         <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/printer.svg" alt="img"></a>
+                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"></a>
                         </li>
                     </ul>
                 </div>
@@ -119,10 +119,10 @@
                             <td>550</td>
                             <td>
                                 <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editquotation.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
+                                    
                                 </a>
                                 <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
+                                    
                                 </a>
                             </td>
                         </tr>
@@ -145,10 +145,10 @@
                             <td>410</td>
                             <td>
                                 <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editquotation.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
+                                    
                                 </a>
                                 <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
+                                    
                                 </a>
                             </td>
                         </tr>
@@ -171,10 +171,10 @@
                             <td>210</td>
                             <td>
                                 <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editquotation.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
+                                    
                                 </a>
                                 <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
+                                    
                                 </a>
                             </td>
                         </tr>
@@ -197,10 +197,10 @@
                             <td>500</td>
                             <td>
                                 <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editquotation.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
+                                    
                                 </a>
                                 <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
+                                    
                                 </a>
                             </td>
                         </tr>
@@ -223,10 +223,10 @@
                             <td>1050</td>
                             <td>
                                 <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editquotation.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
+                                    
                                 </a>
                                 <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
+                                    
                                 </a>
                             </td>
                         </tr>
@@ -249,10 +249,10 @@
                             <td>2530</td>
                             <td>
                                 <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editquotation.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
+                                    
                                 </a>
                                 <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
+                                    
                                 </a>
                             </td>
                         </tr>
@@ -275,10 +275,10 @@
                             <td>550</td>
                             <td>
                                 <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editquotation.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
+                                    
                                 </a>
                                 <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
+                                    
                                 </a>
                             </td>
                         </tr>
@@ -301,10 +301,10 @@
                             <td>550</td>
                             <td>
                                 <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editquotation.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
+                                    
                                 </a>
                                 <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
+                                    
                                 </a>
                             </td>
                         </tr>
@@ -327,10 +327,10 @@
                             <td>210</td>
                             <td>
                                 <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editquotation.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
+                                    
                                 </a>
                                 <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
+                                    
                                 </a>
                             </td>
                         </tr>
@@ -353,10 +353,10 @@
                             <td>2530</td>
                             <td>
                                 <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editquotation.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
+                                    
                                 </a>
                                 <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
+                                    
                                 </a>
                             </td>
                         </tr>
@@ -379,10 +379,10 @@
                             <td>550</td>
                             <td>
                                 <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editquotation.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
+                                    
                                 </a>
                                 <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
+                                    
                                 </a>
                             </td>
                         </tr>
@@ -405,10 +405,10 @@
                             <td>550</td>
                             <td>
                                 <a class="me-3" href="https://dreamspos.dreamguystech.com/html/template/editquotation.html">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
+                                    
                                 </a>
                                 <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
+                                    
                                 </a>
                             </td>
                         </tr>

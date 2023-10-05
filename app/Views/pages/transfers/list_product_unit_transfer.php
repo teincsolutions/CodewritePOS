@@ -36,7 +36,7 @@
                             <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/excel.svg" alt="img"></a>
                         </li>
                         <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/printer.svg" alt="img"></a>
+                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"></a>
                         </li>
                     </ul>
                 </div>

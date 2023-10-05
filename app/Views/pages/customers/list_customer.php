@@ -108,13 +108,13 @@
                                 <td>Cash</td>
                                 <td>
                                     <a class="me-2" href="javascript:void(0);">
-                                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/printer.svg" alt="img">
+                                        
                                     </a>
                                     <a class="me-2" href="javascript:void(0);" data-bs-target="#editpayment" data-bs-toggle="modal" data-bs-dismiss="modal">
-                                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img">
+                                        
                                     </a>
                                     <a class="me-2 confirm-text" href="javascript:void(0);">
-                                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img">
+                                        
                                     </a>
                                 </td>
                             </tr>

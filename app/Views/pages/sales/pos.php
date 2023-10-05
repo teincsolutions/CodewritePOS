@@ -439,7 +439,7 @@
                                                     <?php endif ?>
                                                 </td>
                                                 <td><span class="badges <?= $badges[$row->order_status]; ?>"><?= $row->order_status; ?></span></td>
-                                                <td><?= $row->total_amount < 0 ? "(" . number_format(abs($row->total_amount), 2) . ")" : number_format($row->total_amount, 2); ?></td>
+                                                <td>GHS <?= $row->total_amount < 0 ? "(" . number_format(abs($row->total_amount), 2) . ")" : number_format($row->total_amount, 2); ?></td>
                                                 <td>
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <a target="_blank" href="<?= site_url('sales/' . $row->id) ?>" class="btn btn-icon btn-sm"><i class="fa fa-eye fa-lg"></i></a>
@@ -545,7 +545,7 @@
                                                     <?php endif ?>
                                                 </td>
                                                 <td><span class="badges <?= $badges[$row->order_status]; ?>"><?= $row->order_status; ?></span></td>
-                                                <td><?= $row->total_amount < 0 ? "(" . number_format(abs($row->total_amount), 2) . ")" : number_format($row->total_amount, 2); ?></td>
+                                                <td>GHS <?= $row->total_amount < 0 ? "(" . number_format(abs($row->total_amount), 2) . ")" : number_format($row->total_amount, 2); ?></td>
                                                 <td>
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('sales') ?>', '<?= site_url('sales/returns') ?>')"><i class="fa fa-trash fa-lg"></i></a>

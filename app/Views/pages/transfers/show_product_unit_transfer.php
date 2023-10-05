@@ -13,7 +13,7 @@
                 <h2>Product  Unit Transfer Detail : SL0101</h2>
                 <ul>
                     <li>
-                        <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/edit.svg" alt="img"></a>
+                        <a href="javascript:void(0);"></a>
                     </li>
                     <li>
                         <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/pdf.svg" alt="img"></a>
@@ -22,7 +22,7 @@
                         <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/excel.svg" alt="img"></a>
                     </li>
                     <li>
-                        <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/printer.svg" alt="img"></a>
+                        <a href="javascript:void(0);"></a>
                     </li>
                 </ul>
             </div>

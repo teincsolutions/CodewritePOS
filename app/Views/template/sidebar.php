@@ -55,6 +55,16 @@
                         <li class="<?= getActiveUrl("units", "active"); ?>"><a href="<?= site_url('units') ?>"><i data-feather="speaker"></i><span>Units</span></a></li>
                         <li hidden class="<?= getActiveUrl("products/print-barcode", "active"); ?>"><a href="<?= site_url('products/-print-barcode') ?>"><i data-feather="align-justify"></i><span>Print Barcode</span></a></li>
                         <li class="<?= getActiveUrl("products/import", "active"); ?>"><a href="<?= site_url('products/import') ?>/importproduct"><i data-feather="minimize-2"></i><span>Import Products</span></a></li>
+                        <li class="submenu">
+                            <a class="<?= getActiveUrl("adjustments/*","subdrop active") ?>" href="javascript:void(0);">
+                                <i data-feather="align-justify"></i>
+                                <span>Adjustments</span><span class="menu-arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a class="<?= getActiveUrl("adjustments/create"); ?>" href="<?= site_url('adjustments/create') ?>">Create Adjustment</a></li>
+                                <li><a class="<?= getActiveUrl("adjustments"); ?>" href="<?= site_url("adjustments") ?>">List Adjustment</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
                 <li class="submenu-open">
@@ -71,9 +81,20 @@
                                 <li><a class="<?= getActiveUrl("expense-categories", "active"); ?>" href="<?= site_url('expense-categories') ?>">Expense Category</a></li>
                             </ul>
                         </li>
+
                         <li class="submenu">
-                            <a class="subdrop <?= getActiveUrl("closing/*") ?>" href="javascript:void(0);">
-                                <i data-feather="file-text"></i>
+                            <a class="<?= getActiveUrl("account-debts/*","subdrop active") ?>" href="javascript:void(0);">
+                                <i data-feather="book"></i>
+                                <span>Account Debts</span><span class="menu-arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a class="<?= getActiveUrl("account-debts/customers"); ?>" href="<?= site_url('account-debts/customers') ?>">Customers Debt</a></li>
+                                <li><a class="<?= getActiveUrl("account-debts/suppliers"); ?>" href="<?= site_url("account-debts/suppliers") ?>">Suppliers Debt</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a class="<?= getActiveUrl("closing/*","subdrop active") ?>" href="javascript:void(0);">
+                                <i data-feather="airplay"></i>
                                 <span>Closing</span><span class="menu-arrow"></span>
                             </a>
                             <ul>

@@ -38,7 +38,7 @@
                             <td>PT001</td>
                             <td>100.00</td>
                             <td class="text-end">
-                                <a class="delete-set"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img"></a>
+                                <a class="delete-set"></a>
                             </td>
                         </tr>
                         <tr>
@@ -46,7 +46,7 @@
                             <td>PT002</td>
                             <td>1000.00</td>
                             <td class="text-end">
-                                <a class="delete-set"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img"></a>
+                                <a class="delete-set"></a>
                             </td>
                         </tr>
                         <tr>
@@ -54,7 +54,7 @@
                             <td>PT003</td>
                             <td>5000.00</td>
                             <td class="text-end">
-                                <a class="delete-set"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="img"></a>
+                                <a class="delete-set"></a>
                             </td>
                         </tr>
                     </tbody>
@@ -169,7 +169,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-print"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/printer.svg" alt="img">Print</button>
+                <button type="button" class="btn btn-print">Print</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             </div>
         </div>
