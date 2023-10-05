@@ -666,6 +666,9 @@ $(function () {
             form3.trigger("reset");
             $("select").val("").trigger("change.select2");
             form3.modal("hide");
+            table1.ajax.reload();
+            table2.ajax.reload();
+            table3.ajax.reload();
             Swal.fire({
               icon: "success",
               text: d.message,
@@ -740,6 +743,7 @@ $(function () {
             form4.modal("hide");
             table2.ajax.reload();
             table1.ajax.reload();
+            table3.ajax.reload();
             Swal.fire({
               icon: "success",
               text: d.message,
