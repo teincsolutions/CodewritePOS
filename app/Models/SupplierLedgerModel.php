@@ -70,7 +70,7 @@ class SupplierLedgerModel extends Model
                 $model['data']->supplier = $supModel->where('id', $model['data']->supplier_id)->first();
             } else {
                 $bal = 0;
-                foreach (array_reverse($model['data']) as $key => $row) {
+                foreach ($model['data'] as $key => $row) {
                     $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
                     $model['data'][$key]->purchase = $purchaseModel->where('id', $row->purchase_id)->first();
                     $model['data'][$key]->purchase_return = $returnModel->where('id', $row->purchase_return_id)->first();
