@@ -26,6 +26,18 @@ class CustomerLedgerController extends BaseController
         }
     }
 
+     /**
+     * return view for list
+     * @return Response - http response
+     */
+    public function customer_debts()
+    {
+        $data = [
+            'title' => 'Customer Debts',
+        ];
+        return view('pages/account_debts/customers', $data);
+    }
+
     /**
      * return view for edit
      * @return Response - http response
