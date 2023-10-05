@@ -71,7 +71,7 @@ class CustomerLedgerModel extends Model
                 $model['data']->customer = $cusModel->where('id', $model['data']->customer_id)->first();
             } else {
                 $bal = 0;
-                foreach ($model['data'] as $key => $row) {
+                foreach (array_reverse($model['data']) as $key => $row) {
                     $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
                     $model['data'][$key]->sale = $saleModel->where('id', $row->sale_id)->first();
                     $model['data'][$key]->sales_return = $returnModel->where('id', $row->sales_return_id)->first();
