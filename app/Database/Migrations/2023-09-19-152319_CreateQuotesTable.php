@@ -42,7 +42,7 @@ class CreateQuotesTable extends Migration
             'type' =>[
                 'type' => 'ENUM',
                 'constraint' => ['walk-in-customer','customer'],
-                'default' => 'walk-in'
+                'default' => 'walk-in-customer'
             ],
             'tax_id' => [
                 'type'       => 'INT',
