@@ -34,11 +34,6 @@ class CreateSupplierLedgerTable extends Migration
                 'unsigned'       => true,
                 'null' => true,
             ],
-            'ledger_type' => [
-                'type' => 'ENUM',
-                'constraint' => ['purchases', 'returns'],
-                'default' => 'purchases'
-            ],
             'debit' => [
                 'type'           => 'DECIMAL',
                 'constraint'     => "32,2",
@@ -48,6 +43,16 @@ class CreateSupplierLedgerTable extends Migration
                 'type'       => 'DECIMAL',
                 'constraint' => "32,2",
                 'unsigned'     => true,
+            ],
+            'payment_type' => [
+                'type' => 'ENUM',
+                'constraint' => ['cash', 'debit','momo'],
+                'default' => 'cash'
+            ],
+            'ledger_type' => [
+                'type' => 'ENUM',
+                'constraint' => ['purchases', 'returns'],
+                'default' => 'purchases'
             ],
             'user_id' => [
                 'type'       => 'INT',

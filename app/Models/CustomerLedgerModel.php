@@ -18,11 +18,11 @@ class CustomerLedgerModel extends Model
         'tdate',
         'sale_id',
         'customer_id',
-        'sales_return_id',
         'debit',
         'credit',
         'user_id',
-        'payment_type'
+        'payment_type',
+        'ledger_type'
     ];
 
     // Dates
