@@ -42,7 +42,7 @@ class CreateSalesTable extends Migration
             'type' => [
                 'type' => 'ENUM',
                 'constraint' => ['walk-in-customer', 'customer'],
-                'default' => 'walk-in'
+                'default' => 'walk-in-customer'
             ],
             'order_status' => [
                 'type' => 'ENUM',
