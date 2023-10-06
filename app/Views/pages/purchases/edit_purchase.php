@@ -75,7 +75,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-12 col-sm-6 col-12">
+                            <div class="col-lg-12 col-sm-6 col-12 mb-3">
                                 <div class="form-group">
                                     <div class="form-outline autocomplete">
                                         <label class="form-label" for="form1">Search</label>
