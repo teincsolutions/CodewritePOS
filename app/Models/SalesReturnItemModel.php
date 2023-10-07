@@ -86,8 +86,8 @@ class SalesReturnItemModel extends Model
     public function getTodayTotalAmount(): float
     {
         $result = $this->selectSum('subtotal', 'total')
-            ->join('sales_return', 'sales_return.id=sales_return_items.sales_return_id')
-            ->where('sales_return_date', date('Y-m-d', time()))
+            ->join('sales_returns', 'sales_returns.id=sales_returns_items.sales_return_id')
+            ->where('return_date', date('Y-m-d', time()))
             ->first();
         return $result->total ? $result->total : 0.00;
     }

@@ -17,6 +17,7 @@ class SupplierLedgerModel extends Model
         'tdate',
         'purchase_id',
         'supplier_id',
+        'purchase_return_id',
         'debit',
         'credit',
         'user_id',

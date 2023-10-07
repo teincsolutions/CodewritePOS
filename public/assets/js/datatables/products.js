@@ -139,7 +139,7 @@ $(function () {
         name: "products.id",
         render: function (data, type, row) {
           if (type === "display") {
-            return `<div class="d-flex justify-content-between align-items-center">
+            return `<div class="d-flex align-items-center">
                         <a class="me-3" href="${baseUrl}products/${row.id}"><i class="fa fa-eye fa-lg"></i></a>
                         <a class="me-3" href="${baseUrl}products/edit/${row.id}"><i class="fa fa-edit fa-lg"></i></a>
                         <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${row.id}, '${baseUrl}products')"><i class="fa fa-trash fa-lg"></i></a>

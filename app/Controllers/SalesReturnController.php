@@ -45,8 +45,9 @@ class SalesReturnController extends BaseController
      * return view for edit
      * @return Response - http response
      */
-    public function edit($id = null)
+    public function edit()
     {
+        $invoice = $this->request->getVar('invoice');
         $model = new SalesReturnModel();
         $saleModel = new SalesModel();
         $lastItem = $model->orderBy('id', 'desc')->first();
@@ -54,16 +55,19 @@ class SalesReturnController extends BaseController
         $storeModel = new StoreModel();
 
         $data = [
-            'title' => 'Point of Sales',
-            'invoice' => substr(time() + $lastId, 0, 10),
+            'title' => 'Create Sales Return',
+            'invoice' => substr((time() + 1000000000) + $lastId, 0, 10),
             'stores' => $storeModel->findAll(),
         ];
-        if ($id) {
-            $model = new SalesReturnModel();
-            $data = array_merge($data, [
-                'sales_return' => $model->find($id),
-                'title' => 'Edit Sales Return',
-            ]);
+        $whereInvoice = [
+            'invoice' => $invoice,
+            'order_status' => 'completed'
+        ];
+        $sales = $saleModel->where($whereInvoice)->first();
+        if ($invoice && $sales) {
+            $data = array_merge($data, ['sales' => $sales]);
+        } else if($invoice) {
+            $data = array_merge($data, ['error' => "This invoice doesn't exist or not completed!",]);
         }
         return view('pages/sales_returns/edit_sales_return', $data);
     }
@@ -92,17 +96,15 @@ class SalesReturnController extends BaseController
     public function save()
     {
         $model = new SalesReturnModel();
-        $salesItemModel = new SalesReturnItemModel();
+        $returnItemModel = new SalesReturnItemModel();
         $stockModel = new StockModel();
         $ledger = new CustomerLedgerModel();
 
         $inputs = $this->request->getVar();
         if (auth()->user())
             $inputs['user_id'] = (auth()->user()->id ?? 0);
-
         unset($inputs['items']);
-
-        $inputs['sales_date'] = date('Y-m-d', strtotime($inputs['sales_date']));
+        $inputs['return_date'] = date('Y-m-d', strtotime($inputs['return_date']));
 
         $items = $this->request->getVar('items');
         if (!$items) return $this->response->setJSON(
@@ -121,26 +123,23 @@ class SalesReturnController extends BaseController
             'message' => "Sales couldn't be save!",
             'input' => $inputs,
         ];
-        $sales = $model->where('id', $id)->first();
         $this->db = Database::connect();
 
-        if ($sales) $res = array_merge($res, ['message' => "Sales updated successfully!"]);
-        else $res = array_merge($res, ['message' => "Sales created successfully!"]);
+        $res = array_merge($res, ['message' => "Sales Returns created successfully!"]);
 
         try {
             $this->db->transException(true)->transStart();
             $saved = $model->save($inputs, true);
-
-            if ($saved && !$sales) {
+            if ($saved) {
                 $id = $model->getInsertID();
-                $salesItems = [];
+                $returnItems = [];
                 $builder = $stockModel->builder();
                 foreach ($items as $k => $row) {
-                    $items[$k]['sale_id'] = $id;
+                    $items[$k]['sales_return_id'] = $id;
                     if (empty($items[$k]['tax_id'])) $items[$k]['tax_id'] = null;
                     if (is_null($items[$k]['store_id']) || empty($items[$k]['store_id'])) $items[$k]['store_id'] = $inputs['store_id'];
 
-                    array_push($salesItems, $items[$k]);
+                    array_push($returnItems, $items[$k]);
                     $stockWhere = [
                         'product_id' => $items[$k]['product_id'],
                         'store_id' => $items[$k]['store_id']
@@ -157,18 +156,22 @@ class SalesReturnController extends BaseController
                         ]);
                     }
                 }
-                $salesItemModel->insertBatch($salesItems);
-                $sales = $model->find($id);
-                if ($inputs['customer_id'])
+                $returnItemModel->insertBatch($returnItems);
+                if ($inputs['customer_id']){
                     $ledger->save([
-                        'tdate' => $inputs['sales_date'],
+                        'tdate' => $inputs['return_date'],
                         'customer_id' => $inputs['customer_id'],
-                        'sale_id' => $sales->id,
-                        'payment_type' => $inputs['payment_type'],
+                        'sale_id' => $inputs['sale_id'],
+                        'sales_return_id' => $id,
+                        'payment_type' => 'cash',
                         'ledger_type' => 'returns',
                         'credit' => $inputs['total_amount'],
+                        'debit' => $inputs['paid'],
                         'user_id' => isset($inputs['user_id']) ? $inputs['user_id'] : null,
                     ]);
+                    $saleModel = new SalesModel();
+                    $saleModel->updatePaymentStatus($inputs['sale_id']);
+                }
             }
             $this->db->transComplete();
         } catch (DatabaseException $e) {
@@ -178,11 +181,11 @@ class SalesReturnController extends BaseController
             return $this->response->setJSON($res);
         }
         if ($this->db->transStatus()) {
-            $sales = $model->find($id);
+            $returns = $model->find($id);
             $res = array_merge($res, [
                 'status' => true,
-                'data' => $sales,
-                'receipt' => view('pages/sales/pos_receipt', ['sales' => $sales])
+                'data' => $returns,
+                'receipt' => view('pages/sales_returns/pos_receipt', ['returns' => $returns])
             ]);
         } else {
             $res = array_merge($res, ['status' => false]);
@@ -198,8 +201,29 @@ class SalesReturnController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new SalesReturnModel();
-        return $this->response->setJSON(toDatatableResult($model, $inputs, [
-            ['table' => 'sales', 'cond' => 'sales.id=sales_returns.sale_id']
-        ]));
+        $model->select('sales_returns.*');
+        $model->join('sales', 'sales.id=sales_returns.sale_id');
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+    /**
+     * return json for delete
+     * @return Response - http response
+     */
+    public function delete($id = null)
+    {
+        $model = new SalesReturnModel();
+        if ($model->delete($id)) {
+            $res = [
+                'status' => true,
+                'message' => "Sales Return deleted successfully!",
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'message' => "Couldn't be deleted!"
+            ];
+        }
+        return $this->response->setJSON($res);
     }
 }

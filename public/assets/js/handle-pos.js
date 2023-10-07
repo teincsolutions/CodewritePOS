@@ -103,33 +103,25 @@ function updateTotals() {
   for (let i = 0; i < tableItems.rows().data().length; i++) {
     const row = $(`tr:eq(${i + 1})`, ".tr-items");
     (discountTotal += intVal($("td:eq(4)", row).html())),
-      (discountAmtTotal +=
-        intVal($("td:eq(4)", row).html()) * intVal($("td:eq(3)", row).html())),
       (taxTotal += intVal($("td:eq(5)", row).html())),
       (taxAmtTotal +=
         intVal($("td:eq(5)", row).html()) * intVal($("td:eq(3)", row).html())),
       (grandTotal += intVal($("td:eq(6)", row).html()));
   }
   $(".subTotal").html("GHS " + grandTotal.toFixed(2));
-  discountAmtTotal += (orderDiscount / 100) * grandTotal;
+  discountAmtTotal = (orderDiscount / 100) * grandTotal;
   taxTotal += orderTax;
-  discountTotal += orderDiscount;
+  discountTotal += discountAmtTotal;
   grandTotal += (orderTax / 100) * grandTotal;
   grandTotal += shipping;
-  grandTotal -= (orderDiscount / 100) * grandTotal;
+  grandTotal -= discountAmtTotal;
   dueTotal =
     grandTotal - $("input[name='paid']").first().val() - customerBalance;
 
   $(".grandTotal").html("GHS " + grandTotal.toFixed(2));
   $("#sales-total").val(grandTotal);
   $(".shippingTotal").html("GHS " + shipping.toFixed(2));
-  $(".discountTotal").html(
-    "GHS " +
-      discountAmtTotal.toFixed(2) +
-      " (" +
-      discountTotal.toFixed(2) +
-      "%)"
-  );
+  $(".discountTotal").html("GHS " + discountAmtTotal.toFixed(2));
   $(".orderTaxes").html(
     "GHS " + taxAmtTotal.toFixed(2) + " (" + taxTotal.toFixed(2) + "%)"
   );
@@ -375,7 +367,12 @@ function autocomplete(inp) {
     this.parentNode.appendChild(a);
     searchParams.search.value = val;
 
+    b = document.createElement("DIV");
+    b.innerHTML = "<i>Searching...</i>";
+    a.appendChild(b);
+
     $.get(`${baseUrl}products/search`, searchParams, (d, s) => {
+      a.innerHTML = "";
       if (s !== "success") {
         // if fail
         b = document.createElement("DIV");

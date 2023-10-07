@@ -17,6 +17,7 @@ class CustomerLedgerModel extends Model
     protected $allowedFields    = [
         'tdate',
         'sale_id',
+        'sales_return_id',
         'customer_id',
         'debit',
         'credit',
@@ -46,7 +47,7 @@ class CustomerLedgerModel extends Model
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
     protected $afterFind      = ['setRelation'];
-    protected $beforeDelete   = ['updateFields'];
+    protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
     protected function setDefaultId(array $data)
@@ -57,24 +58,6 @@ class CustomerLedgerModel extends Model
         return $data;
     }
 
-    protected function updateFields(array $model)
-    {
-        $ledgerModel = new CustomerLedgerModel();
-        $saleModel = new SalesModel();
-
-        foreach ($model['id'] as $key => $data) {
-            $id = $data;
-            $ledger = $ledgerModel->where('id', $id)->first();
-            if ($ledger){
-                $saleModel->save([
-                    'id' => $ledger->sale_id,
-                    'payment_status' => 'due'
-                ]);
-            }
-        }
-
-        return $model;
-    }
     protected function setRelation($model)
     {
         if ($model && $model['data']) {

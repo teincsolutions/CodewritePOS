@@ -88,6 +88,7 @@ class ProductModel extends Model
                     $model['data']->instock = $instock ?? 0.00;
                 }
             } else {
+                $storeModel = new StoreModel();
                 foreach ($model['data'] as $key => $row) {
                     $model['data'][$key]->inventory = $stockModel->where('product_id', $row->id)->findAll();
                     $instock = $builder->selectSum('instock', 'total')
@@ -96,6 +97,9 @@ class ProductModel extends Model
                         ->getRowObject()
                         ->total;
                     $model['data'][$key]->instock = $instock ?? 0.00;
+
+                    if (isset($model['data'][$key]->store_id))
+                        $model['data'][$key]->store = $storeModel->find($model['data'][$key]->store_id);
                 }
             }
         }

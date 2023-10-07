@@ -118,12 +118,6 @@
                                 Price
                             </td>
                             <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
-                                Discount
-                            </td>
-                            <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
-                                TAX
-                            </td>
-                            <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
                                 Subtotal
                             </td>
                         </tr>
@@ -143,9 +137,7 @@
                                 </td>
                                 <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->qty ?></td>
                                 <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->unit_cost ?></td>
-                                <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->discount ?></td>
-                                <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= number_format(($row->unit_cost * $row->qty * $row->tax) / 100, 2) ?></td>
-                                <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= number_format($row->unit_cost * $row->qty - $row->discount + (($row->unit_cost * $row->qty * $row->tax) / 100), 2) ?></td>
+                                <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= number_format($row->subtotal, 2) ?></td>
                             </tr>
                         <?php endforeach ?>
                     </tbody>
@@ -176,7 +168,7 @@
                                 </li>
                                 <li class="total">
                                     <h4>Grand Total</h4>
-                                    <h5 class="grandTotal"><?= number_format($purchase->total_amount, 2) ?></h5>
+                                    <h5 class="grandTotal">GHS <?= number_format($purchase->total_amount, 2) ?></h5>
                                 </li>
                             </ul>
                         </div>
@@ -184,6 +176,7 @@
                 </div>
                 <div class="col-lg-12">
                     <a href="javascript:void(0);" class="btn btn-submit me-2">Print Invoice</a>
+                    <a href="<?= site_url('purchases/returns/create?invoice=' . $purchase->invoice) ?>" class="btn btn-submit me-2">Return</a>
                 </div>
             </div>
         </div>

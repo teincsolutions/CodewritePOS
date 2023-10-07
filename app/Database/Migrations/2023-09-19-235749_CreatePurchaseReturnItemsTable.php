@@ -35,7 +35,7 @@ class CreatePurchaseReturnItemsTable extends Migration
                 'unsigned'  => true,
                 'null' => true,
             ],
-            'unit_price' => [
+            'unit_cost' => [
                 'type'       => 'DECIMAL',
                 'constraint' => "32,2",
                 'null' => false,

@@ -59,13 +59,16 @@ class SalesController extends BaseController
         $lastId = $lastItem ? $lastItem->id : 1;
         $storeModel = new StoreModel();
         $ledgerModel = new CustomerLedgerModel();
-        $cusModel = new CustomerModel();
         $returnModel = new SalesReturnModel();
 
         $saleWhere = ['sales_date' => date('Y-m-d', time()), 'user_id' => (auth()->user()->id ?? 0)];
         $returnWhere = ['return_date' => date('Y-m-d', time()), 'user_id' => (auth()->user()->id ?? 0)];
         $holdWhere = ['order_status' => 'pending', 'user_id' => (auth()->user()->id ?? 0)];
-        $ledgerWhere = ['tdate' => date('Y-m-d', time()), 'user_id' => (auth()->user()->id ?? 0)];
+        $ledgerWhere = [
+            'tdate' => date('Y-m-d', time()),
+            'user_id' => (auth()->user()->id ?? 0),
+            'ledger_type' => 'sales'
+        ];
 
         $data = [
             'title' => 'Point of Sales',
@@ -194,16 +197,19 @@ class SalesController extends BaseController
                 }
                 $salesItemModel->insertBatch($salesItems);
                 $sales = $model->find($id);
-                if ($inputs['customer_id'])
+                if ($inputs['customer_id']) {
                     $ledger->save([
                         'tdate' => $inputs['sales_date'],
                         'customer_id' => $inputs['customer_id'],
                         'sale_id' => $sales->id,
+                        'ledger_type' => 'sales',
                         'payment_type' => $inputs['payment_type'],
                         'debit' => $inputs['total_amount'],
                         'credit' => ($inputs['payment_status'] === 'paid' ? $inputs['total_amount'] : $inputs['paid']),
                         'user_id' => isset($inputs['user_id']) ? $inputs['user_id'] : null,
                     ]);
+                    $model->updatePaymentStatus($id);
+                }
             }
             $this->db->transComplete();
         } catch (DatabaseException $e) {
@@ -324,13 +330,12 @@ class SalesController extends BaseController
             $model,
             ['sales.invoice', 'customers.name'],
             $inputs,
-            'concat(sales.invoice," (",customers.name," - GHS ",total_amount,")") as text,sales.*',
+            'concat(sales.invoice," (",ifnull(customers.name,"walk-in-customer")," - GHS ",total_amount,")") as text,sales.*',
             [
-                ['table' => 'customers', 'cond' => 'customers.id=sales.customer_id', 'type' => 'inner'],
+                ['table' => 'customers', 'cond' => 'customers.id=sales.customer_id', 'type' => 'left'],
             ]
         ));
     }
-
 
     /**
      * return json for delete

@@ -1,178 +1,114 @@
-<?= $this->extend('template/default') ?>
+<?= $this->extend('template/pos_receipt') ?>
 <?= $this->section('content') ?>
-<div class="content">
-    <div class="page-header">
-        <div class="page-title">
-            <h4>Print Barcode</h4>
-            <h6>Print product barcodes</h6>
+<div id="invoice-POS">
+    <center id="top">
+        <div class="info">
+            <h1 class="text-uppercase"><?= $title ?? "Purchase Return Receipt" ?></h1>
+        </div>
+        <div class="logo" style="background: url(<?= base_url('assets/images/logo.png') ?>) no-repeat;"></div>
+        <div class="info">
+            <h2 class="text-uppercase">Codewrite Technology Ltd</h2>
+            <p class="text-uppercase"><?= $returns->purchase->store->name; ?> at <?= $returns->purchase->store->location; ?></p>
+        </div><!--End Info-->
+    </center>
+    <div class="d-flex flex-row justify-content-between gap-1">
+        <div class="info">
+            <?php if ($returns->purchase->supplier) : ?>
+                <p class="sec">
+                    <strong>Customer : </strong><span><?= $returns->purchase->supplier->name; ?></span></br>
+                    <strong>Address : </strong><span><?= $returns->purchase->supplier->address; ?></span></br>
+                    <strong>Phone Number : </strong><span><?= $returns->purchase->supplier->phone; ?></span>
+                </p>
+            <?php else : ?>
+                <p class="sec">
+                    <strong>Customer : </strong><span>walk-in-supplier</span>
+                </p>
+            <?php endif ?>
+        </div>
+        <div class="info">
+            <p class="sec">
+                <strong>Time : </strong><span><?= date('d/m/y  h:i a', strtotime($returns->created_at)); ?></span></br>
+                <strong>Reference : </strong><span>INV<?= $returns->invoice; ?></span></br>
+                <strong>Manger : </strong><span><?= $returns->user->firstname; ?> <?= $returns->user->lastname; ?></span><br>
+                <strong>Contact Store : </strong><span><?= $returns->purchase->store->phone ?? '0246092155'; ?></span>
+            </p>
         </div>
     </div>
+    <div id="bot">
+        <div id="table">
+            <table>
+                <tr class="tabletitle">
+                    <td class="item">
+                        <h2>Item</h2>
+                    </td>
+                    <td class="Hours">
+                        <h2>Cost</h2>
+                    </td>
+                    <td class="Hours">
+                        <h2>Qty</h2>
+                    </td>
+                    <td class="Rate">
+                        <h2>Sub Total</h2>
+                    </td>
+                </tr>
+                <?php
+                $total_discount = 0;
+                foreach ($returns->items as $k => $row) : ?>
+                    <?php $total_discount += $row->discount; ?>
+                    <tr class="service">
+                        <td class="tableitem">
+                            <p class="itemtext"><?= $row->product->name; ?></p>
+                        </td>
+                        <td class="tableitem">
+                            <p class="itemtext"><?= number_format($row->unit_cost, 2); ?></p>
+                        </td>
+                        <td class="tableitem">
+                            <p class="itemtext"><?= $row->qty; ?> <?= $row->product->unit->label; ?></p>
+                        </td>
+                        <td class="tableitem">
+                            <p class="itemtext"><?= number_format($row->subtotal, 2); ?></p>
+                        </td>
+                    </tr>
+                <?php endforeach ?>
 
-    <div class="card">
-        <div class="card-body">
-            <div class="requiredfield">
-                <h4>The field labels marked with * are required input fields.</h4>
-            </div>
-            <div class="form-group">
-                <label>Product Name</label>
-                <div class="input-groupicon">
-                    <input type="text" placeholder="Please type product code and select...">
-                    <div class="addonset">
-                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/scanners.svg" alt="img">
-                    </div>
-                </div>
-            </div>
-            <div class="table-responsive table-height">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>SKU</th>
-                            <th>Qty</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Macbook pro</td>
-                            <td>PT001</td>
-                            <td>100.00</td>
-                            <td class="text-end">
-                                <a class="delete-set"></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Apple Earpods </td>
-                            <td>PT002</td>
-                            <td>1000.00</td>
-                            <td class="text-end">
-                                <a class="delete-set"></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Macbook Pro</td>
-                            <td>PT003</td>
-                            <td>5000.00</td>
-                            <td class="text-end">
-                                <a class="delete-set"></a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="row">
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Paper Size</label>
-                        <select class="select">
-                            <option>36mm (1.4 inch)</option>
-                            <option>12mm (1 inch)</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <a href="javascript:void(0);" class="btn btn-submit me-2">Submit</a>
-                    <a href="javascript:void(0);" class="btn btn-cancel">Cancel</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<?= $this->endSection() ?>
+                <tr class="tabletitle">
+                    <td></td>
+                    <td></td>
+                    <td class="Rate">
+                        <h3>Total Discount</h3>
+                    </td>
+                    <td class="payment">
+                        <h3>GHS <?= number_format($row->discount + $total_discount, 2) ?></h3>
+                    </td>
+                </tr>
 
-<?= $this->section('modal') ?>
-<div class="modal fade" id="scanner" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Barcode</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="modal-barcode">
-                    <ul>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="img"></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-print">Print</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
+                <tr class="tabletitle">
+                    <td></td>
+                    <td></td>
+                    <td class="Rate">
+                        <h2>Total</h2>
+                    </td>
+                    <td class="payment">
+                        <h2>GHS <?= number_format($returns->total_amount, 2) ?></h2>
+                    </td>
+                </tr>
+                <tr class="tabletitle">
+                    <td></td>
+                    <td></td>
+                    <td class="Rate">
+                        <h3>Change</h3>
+                    </td>
+                    <td class="payment">
+                        <h3>GHS <?= number_format($returns->paid, 2) ?></h3>
+                    </td>
+                </tr>
+            </table>
+        </div><!--End Table-->
+
+        <div id="legalcopy">
+            <p class="legal"><strong>Thank you for your business!</strong></p>
         </div>
-    </div>
-</div>
+
+    </div><!--End InvoiceBot-->
+</div><!--End Invoice-->
 <?= $this->endSection() ?>

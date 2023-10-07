@@ -94,53 +94,9 @@
 </div>
 <?= $this->endSection() ?>
 
-<?= $this->section('modal') ?>
-<div class="modal fade" id="showpayment" tabindex="-1" aria-labelledby="showpayment" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Show Payments</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Reference</th>
-                                <th>Amount </th>
-                                <th>Paid By </th>
-                                <th>Paid By </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="bor-b1">
-                                <td>2022-03-07 </td>
-                                <td>INV/SL0101</td>
-                                <td>$ 0.00 </td>
-                                <td>Cash</td>
-                                <td>
-                                    <a class="me-2" href="javascript:void(0);">
-                                        
-                                    </a>
-                                    <a class="me-2" href="javascript:void(0);" data-bs-target="#editpayment" data-bs-toggle="modal" data-bs-dismiss="modal">
-                                        
-                                    </a>
-                                    <a class="me-2 confirm-text" href="javascript:void(0);">
-                                        
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="modal fade" id="createpayment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
+<?= $this->section('modal') ?>
+<form action="<?= site_url('suppliers/ledgers') ?>" class="modal fade" id="add-payment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -151,73 +107,9 @@
                 <div class="row">
                     <div class="col-lg-6 col-sm-12 col-12">
                         <div class="form-group">
-                            <label>Supplier</label>
+                            <label>Payment Date</label>
                             <div class="input-groupicon">
-                                <input type="text" value="2022-03-07" class="datetimepicker">
-                                <div class="addonset">
-                                    <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/calendars.svg" alt="img">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label>Reference</label>
-                            <input type="text" value="INV/SL0101">
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label>Received Amount</label>
-                            <input type="text" value="0.00">
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label>Paying Amount</label>
-                            <input type="text" value="0.00">
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label>Payment type</label>
-                            <select class="select">
-                                <option>Cash</option>
-                                <option>Online</option>
-                                <option>Inprogress</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="form-group mb-0">
-                            <label>Note</label>
-                            <textarea class="form-control"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-submit">Submit</button>
-                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="editpayment" tabindex="-1" aria-labelledby="editpayment" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Edit Payment</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label>Supplier</label>
-                            <div class="input-groupicon">
-                                <input type="text" value="2022-03-07" class="datetimepicker">
+                                <input type="text" name="tdate" value="<?= date('d-m-Y', time()) ?>" class="datetimepicker" required>
                                 <div class="addonset">
                                     <i class="fa fa-calendar fa-lg"></i>
                                 </div>
@@ -227,46 +119,49 @@
                     <div class="col-lg-6 col-sm-12 col-12">
                         <div class="form-group">
                             <label>Reference</label>
-                            <input type="text" value="INV/SL0101">
+                            <select name="purchase_id" class="select2-invoices" required>
+                                <option value=""></option>
+                            </select>
                         </div>
                     </div>
+                    <input type="hidden" name="customer_id">
                     <div class="col-lg-6 col-sm-12 col-12">
                         <div class="form-group">
-                            <label>Received Amount</label>
-                            <input type="text" value="0.00">
+                            <label>Invoice Balance</label>
+                            <input id="inv-bal" type="text" name="invoice_balance" value="0.00" placeholder="Enter Amount" disabled>
                         </div>
                     </div>
                     <div class="col-lg-6 col-sm-12 col-12">
                         <div class="form-group">
                             <label>Paying Amount</label>
-                            <input type="text" value="0.00">
+                            <input type="text" onkeyup="$('#inv-due').val(($('#inv-bal').val()- $(this).val()).toFixed(2))" name="debit" min="0" value="" placeholder="Enter Amount" required>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Amount Due</label>
+                            <input id="inv-due" type="text" value="0.00" placeholder="Enter Amount" disabled>
                         </div>
                     </div>
                     <div class="col-lg-6 col-sm-12 col-12">
                         <div class="form-group">
                             <label>Payment type</label>
-                            <select class="select">
-                                <option>Cash</option>
-                                <option>Online</option>
-                                <option>Inprogress</option>
+                            <select class="select" required>
+                                <option value="cash">Cash</option>
+                                <option value="momo">MoMo</option>
+                                <option value="credit">Credit Card</option>
                             </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="form-group mb-0">
-                            <label>Note</label>
-                            <textarea class="form-control"></textarea>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-submit">Submit</button>
+                <button type="submit" class="btn btn-submit">Submit</button>
                 <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
-</div>
+</form>
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>

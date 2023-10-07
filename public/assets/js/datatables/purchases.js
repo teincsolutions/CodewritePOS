@@ -13,8 +13,10 @@ $(function () {
           field = $(item);
 
           if (field.prop("tagName") === "SELECT") {
-            if (typeof field
-                .children("option:selected").val() !== "undefined" && field.children("option:selected").val() !='')
+            if (
+              typeof field.children("option:selected").val() !== "undefined" &&
+              field.children("option:selected").val() != ""
+            )
               filter[field.attr("name")] = field
                 .children("option:selected")
                 .val();
@@ -143,16 +145,23 @@ $(function () {
         name: "purchases.id",
         render: function (data, type, row) {
           if (type === "display") {
-            return `<div class="d-flex justify-content-between align-items-center">
-                        ${
-                          row.payment_status === "due"
-                            ? `<a class="me-3" data-bs-toggle="modal" data-bs-target="#add-payment" href="javascript:void(0)"><i class="fa fa-money-bill fa-lg"></i></a>`
-                            : ''
-                        }
-                        <a target="_blank" href="${baseUrl}purchases/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${
-                          row.id
-                        }, '${baseUrl}purchases')"><i class="fa fa-trash fa-lg"></i></a>
+            return `<div class="d-flex align-items-center">
+            ${
+              row.payment_status === "due"
+                ? `  <a  href="javascript:void(0);" class="me-3" onclick="editRow('#add-payment',{purchase_id:${data},invoice_balance:${(
+                    row.total_amount - row.paid
+                  ).toFixed(2)},debit:${(row.total_amount - row.paid).toFixed(
+                    2
+                  )}},{text:'${row.invoice} (${row.supplier.name} - GHS ${
+                    row.total_amount
+                  })',id:${
+                    row.id
+                  },name:'purchase_id'})"><i class="fa fa-money-bill fa-lg"></i></a>`
+                : ""
+            }
+                        <a href="${baseUrl}purchases/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
+                        <a href="${baseUrl}purchases/returns/create?invoice=${row.invoice}" class="me-3"><i class="fa fa-reply fa-lg"></i></a>
+                        <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}purchases')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;
@@ -221,8 +230,115 @@ $(function () {
     table.ajax.reload();
   });
 
-  $(".select2-supplier").select2({
-    placeholder: "Seach a supplier",
+  $(".select2-customer").select2({
+    ajax: {
+      url: `${baseUrl}customers/select2`,
+      dataType: "json",
+    },
     allowClear: true,
+    placeholder: "Seach a customer",
   });
+
+  let form3 = $("#add-payment");
+
+  form3.validate({
+    rules: {},
+    messages: {},
+    errorElement: "em",
+    errorPlacement: function (t, e) {
+      t.addClass("invalid-feedback"),
+        "checkbox" === e.prop("type")
+          ? t.insertAfter(e.nex$("label"))
+          : t.insertAfter(e);
+    },
+    highlight: function (e, i, n) {
+      $(e).addClass("is-invalid").removeClass("is-valid");
+    },
+    unhighlight: function (e, i, n) {
+      $(e).addClass("is-valid").removeClass("is-invalid");
+    },
+  });
+
+  form3.on("submit", function (e) {
+    e.preventDefault();
+
+    if ($(this).valid() === true) {
+      $.ajax({
+        method: "POST",
+        url: this.getAttribute("action"),
+        data: new FormData(this),
+        enctype: "multipart/form-data",
+        dataType: "json",
+        contentType: false,
+        processData: false,
+        cache: false,
+        success: function (d, r) {
+          if (!d || r === "nocontent") {
+            Swal.fire({
+              icon: "error",
+              text: "Malformed form data sumbitted! Please try agian.",
+            });
+            return;
+          }
+          if (typeof d.status !== "boolean" || typeof d.message !== "string") {
+            Swal.fire({
+              icon: "error",
+              text: "Malformed data response! Please try agian.",
+            });
+            return;
+          }
+
+          if (d.status === true) {
+            form3.trigger("reset");
+            form3.modal("hide");
+            table.ajax.reload();
+            Swal.fire({
+              icon: "success",
+              text: d.message,
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              text: d.message,
+            });
+          }
+        },
+        error: function (r) {
+          Swal.fire({
+            icon: "error",
+            text: "Unable to submit form! Please try agian.",
+          });
+        },
+      });
+    }
+  });
+
+  let select2Invoices = $(".select2-invoices")
+    .select2({
+      ajax: {
+        url: `${baseUrl}purchases/select2`,
+        dataType: "json",
+        data: function (params) {
+          params.filter = {
+            payment_status: "due",
+          };
+
+          return params;
+        },
+      },
+      allowClear: true,
+      minimumInputLength: 3,
+      placeholder: "Enter invoice/receipt reference",
+      dropdownParent: $("#add-payment"),
+    })
+    .on("select2:select", function (e) {
+      const data = e.params.data;
+      $("#inv-bal").val((data.total_amount - data.paid).toFixed(2));
+      $("#inv-due").val((data.total_amount - data.paid).toFixed(2));
+      $("input[name='supplier_id']").val(data.customer_id);
+    })
+    .on("select2:unselect", function (e) {
+      $("#inv-bal").val((0).toFixed(2));
+      $("#inv-due").val((0).toFixed(2));
+    });
 });

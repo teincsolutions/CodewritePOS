@@ -137,11 +137,9 @@ $(function () {
         name: "sales.id",
         render: function (data, type, row) {
           if (type === "display") {
-            return `<div class="d-flex justify-content-between align-items-center">
+            return `<div class="d-flex align-items-center">
                         <a target="_blank" href="${baseUrl}sales/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table1, ${
-                          row.id
-                        }, '${baseUrl}sales',table2,table3)"><i class="fa fa-trash fa-lg"></i></a>
+                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table1, ${row.id}, '${baseUrl}sales',table2,table3)"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;
@@ -288,6 +286,7 @@ $(function () {
           return null;
         },
       },
+      { data: "ledger_type", name: "customer_ledgers.ledger_type" },
       {
         data: "debit",
         render: function (data) {
@@ -323,15 +322,15 @@ $(function () {
         name: "customer_ledgers.id",
         render: function (data, type, row) {
           if (type === "display") {
-            return `<div class="d-flex justify-content-between align-items-center">
-            <a  href="javascript:void(0);" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
-            <a  href="javascript:void(0);" onclick="editRow('#edit-payment',{id:${
-              row.id
-            },tdate:'${moment(row.tdate).format("DD-MM-YYYY")}',sale_id:${
-              row.sale_id
-            },payment_type:'${row.payment_type}',credit:${row.credit}},{text:'${
-              row.sale.invoice
-            } (${row.customer.name} - GHS ${row.sale.total_amount})',id:${
+            return `<div class="d-flex align-items-center">
+            <a  href="javascript:void(0);" class="me-3" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
+            <a  href="javascript:void(0);" class="me-3" onclick="editRow('#edit-payment',{id:${data},tdate:'${moment(
+              row.tdate
+            ).format("DD-MM-YYYY")}',sale_id:${row.sale_id},payment_type:'${
+              row.payment_type
+            }',credit:${row.credit}},{text:'${row.sale.invoice} (${
+              row.customer.name
+            } - GHS ${row.sale.total_amount})',id:${
               row.sale.id
             },name:'sale_id'})"><i class="fa fa-edit fa-lg"></i></a>
                         <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table2, ${
@@ -406,7 +405,7 @@ $(function () {
   // table3
   table3 = $("#dt-returns").DataTable({
     ajax: {
-      url: baseUrl + "/sales/returns/datatable",
+      url: baseUrl + "sales/returns/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
@@ -530,16 +529,14 @@ $(function () {
         name: "sales_returns.id",
         render: function (data, type, row) {
           if (type === "display") {
-            return `<div class="d-flex justify-content-between align-items-center">
+            return `<div class="d-flex align-items-center">
                           ${
                             row.payment_status === "due"
                               ? `<a class="me-3" data-bs-toggle="modal" data-bs-target="#add-payment" href="javascript:void(0)"><i class="fa fa-money-bill fa-lg"></i></a>`
                               : ""
                           }
-                          <a target="_blank" href="${baseUrl}sales/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                          <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table3, ${
-                            row.id
-                          }, '${baseUrl}sales/returns')"><i class="fa fa-trash fa-lg"></i></a>
+                          <a target="_blank" href="${baseUrl}sales/returns/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
+                          <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table3, ${data}, '${baseUrl}sales/returns',table2,table1)"><i class="fa fa-trash fa-lg"></i></a>
                       </div>`;
           }
           return data;
@@ -588,7 +585,7 @@ $(function () {
           : 0;
       };
     },
-    order: [[1, "desc"]],
+    order: [[2, "desc"]],
     columnDefs: [
       {
         orderable: false,

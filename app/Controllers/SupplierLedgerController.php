@@ -23,8 +23,8 @@ class SupplierLedgerController extends BaseController
             return $response->redirect(site_url('login'));
         }
     }
-    
-   /**
+
+    /**
      * return view for list
      * @return Response - http response
      */
@@ -75,11 +75,7 @@ class SupplierLedgerController extends BaseController
         $SupplierLedger = $model->where('id', $id)->first();
         if ($SupplierLedger) {
             if ($model->save($inputs)) {
-                $purchases = $purchasesModel->where('id',$SupplierLedger->purchase_id)->first();
-                $purchasesModel->save([
-                    'id' => $SupplierLedger->purchase_id,
-                    'payment_status' => (($purchases->total_amount - $purchases->paid > 0) ? 'due' : 'paid')
-                ]);
+                $purchasesModel->updatePaymentStatus($inputs['purchase_id']);
                 $res = array_merge($res, [
                     'status' => true,
                     'message' => "Payment updated successfully!",
@@ -92,13 +88,11 @@ class SupplierLedgerController extends BaseController
                 ]);
             }
         } else {
-            if ($model->save($inputs)) {
-                $purchases = $purchasesModel->where('id', $inputs['purchase_id'])->first();
-                $purchasesModel->save([
-                    'id' => $inputs['purchase_id'],
-                    'payment_status' => (($purchases->total_amount - $purchases->paid > 0) ? 'due' : 'paid')
-                ]);
+            $purchases = $purchasesModel->where('id', $inputs['purchase_id'])->first();
+            $inputs['supplier_id'] = $purchases->supplier_id;
 
+            if ($model->save($inputs)) {
+                $purchasesModel->updatePaymentStatus($inputs['purchase_id']);
                 $res = array_merge($res, [
                     'status' => true,
                     'message' => "Payment added successfully!",

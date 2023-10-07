@@ -89,8 +89,8 @@ $(function () {
         name: "users.active",
         render: function (data, type, row) {
           if (type === "display") {
-            return `<div class="d-flex justify-content-between align-items-center">
-                        <div class="me-3 status-toggle d-flex justify-content-between align-items-center">
+            return `<div class="d-flex align-items-center">
+                        <div class="me-3 status-toggle d-flex align-items-center">
                         <input type="checkbox" ${
                           ["", "checked"][data === true ? 1 : 0]
                         } id="user${row.id}" onchange="updateRow(table,{id:${

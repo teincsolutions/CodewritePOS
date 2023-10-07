@@ -34,6 +34,12 @@ class CreateSupplierLedgerTable extends Migration
                 'unsigned'       => true,
                 'null' => true,
             ],
+            'purchase_return_id' => [
+                'type'           => 'INT',
+                'constraint'     => 11,
+                'unsigned'       => true,
+                'null' => true,
+            ],
             'debit' => [
                 'type'           => 'DECIMAL',
                 'constraint'     => "32,2",

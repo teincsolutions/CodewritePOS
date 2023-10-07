@@ -69,7 +69,7 @@ class ProductController extends BaseController
         }
         return view('pages/products/edit_product', $data);
     }
-    public function save() 
+    public function save()
     {
         $model = new ProductModel();
         $inputs = $this->request->getVar();
@@ -154,6 +154,42 @@ class ProductController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new ProductModel();
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+    /**
+     * return json for search
+     * @return Response - http response
+     */
+    public function purchase_search(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new ProductModel();
+        $model->join('purchase_items', 'purchase_items.product_id=products.id');
+        $model->join('purchase_returns', 'purchase_returns.purchase_id=purchase_items.purchase_id', 'left');
+        $model->join('purchase_returns_items', 'purchase_returns_items.purchase_return_id=purchase_returns.id AND purchase_returns_items.product_id=products.id', 'left');
+        $model->select('products.id,products.name,products.barcode,products.sku,products.category_id,products.brand_id,products.unit_id,products.unit_price,products.discontinued,products.unit_qty,products.user_id,products.expiration,products.image_uri,products.min_qty,purchase_items.tax_id,purchase_items.unit_cost, (SUM(purchase_items.qty)-SUM(ifnull(purchase_returns_items.qty,0))) as qty, purchase_items.tax, purchase_items.discount,  (SUM(purchase_items.qty)-SUM(ifnull(purchase_returns_items.qty,0))) as max_qty,purchase_items.subtotal, purchase_items.store_id, purchase_items.id as purchase_item_id');
+        $model->where('purchase_items.purchase_id', $this->request->getGet('purchase_id'));
+        $model->groupBy('purchase_items.product_id');
+
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+     /**
+     * return json for search
+     * @return Response - http response
+     */
+    public function sale_search(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new ProductModel();
+        $model->join('sales_items', 'sales_items.product_id=products.id');
+        $model->join('sales_returns', 'sales_returns.sale_id=sales_items.sale_id', 'left');
+        $model->join('sales_returns_items', 'sales_returns_items.sales_return_id=sales_returns.id AND sales_returns_items.product_id=products.id', 'left');
+        $model->select('products.id,products.name,products.barcode,products.sku,products.category_id,products.brand_id,products.unit_id,products.unit_cost,products.discontinued,products.unit_qty,products.user_id,products.expiration,products.image_uri,products.min_qty,sales_items.tax_id,sales_items.unit_price, (SUM(sales_items.qty)-SUM(ifnull(sales_returns_items.qty,0))) as qty, sales_items.tax, sales_items.discount,  (SUM(sales_items.qty)-SUM(ifnull(sales_returns_items.qty,0))) as max_qty,sales_items.subtotal, sales_items.store_id, sales_items.id as sale_item_id');
+        $model->where('sales_items.sale_id', $this->request->getGet('sale_id'));
+        $model->groupBy('sales_items.product_id');
+
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 }

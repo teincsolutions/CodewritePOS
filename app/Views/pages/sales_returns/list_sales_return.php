@@ -26,17 +26,6 @@
                     </div>
                 </div>
                 <div class="wordset">
-                    <ul>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/pdf.svg" alt="img"></a>
-                        </li>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/excel.svg" alt="img"></a>
-                        </li>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"></a>
-                        </li>
-                    </ul>
                 </div>
             </div>
 
@@ -45,41 +34,44 @@
                     <div class="row">
                         <div class="col-lg-2 col-sm-6 col-12">
                             <div class="form-group">
-                                <input type="text" class="datetimepicker cal-icon" placeholder="Choose Date">
+                                <select name="type" class="select">
+                                    <option value="">Select type</option>
+                                    <option value="walk-in-customer">walk-in-customer</option>
+                                    <option value="customer">regular customer</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
-                                <input type="text" placeholder="Enter Reference">
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-sm-6 col-12">
-                            <div class="form-group">
-                                <select class="select">
-                                    <option>Choose Customer</option>
-                                    <option>Customer</option>
+                                <select name="customer_id" class="select2-customer">
+                                    <option value=""></option>
+                                    <?php
+                                    if (isset($customers))
+                                        foreach ($customers as $row) { ?>
+                                        <option value="<?= $row->id ?>">
+                                            <?= $row->name; ?><?= $row->address ? "($row->address)" : "($row->phone)"; ?>
+                                        </option>
+                                    <?php } ?>
                                 </select>
                             </div>
                         </div>
                         <div class="col-lg-2 col-sm-6 col-12">
                             <div class="form-group">
-                                <select class="select">
-                                    <option>Choose Status</option>
-                                    <option>Inprogress</option>
-                                </select>
+                                <input type="text" name="invoice" placeholder="Enter Reference No" value="">
                             </div>
                         </div>
                         <div class="col-lg-2 col-sm-6 col-12">
                             <div class="form-group">
-                                <select class="select">
-                                    <option>Choose Payment Status</option>
-                                    <option>Payment Status</option>
+                                <select name="payment_status" class="select">
+                                    <option value="">Select a status</option>
+                                    <option value="due">Due</option>
+                                    <option value="paid">Paid</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
-                                <a class="btn btn-filters ms-auto"><img src="<?=base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                <a class="btn btn-filters ms-auto filter"><i class="fa fa-search"></i></a>
                             </div>
                         </div>
                     </div>
@@ -87,30 +79,32 @@
             </div>
 
             <div class="table-responsive">
-                <table class="table datanew">
+                <table id="dt-returns" class="table">
                     <thead>
                         <tr>
                             <th>
-                                <label class="checkboxs">
-                                    <input type="checkbox" id="select-all">
-                                    <span class="checkmarks"></span>
-                                </label>
                             </th>
-                            <th>Product Name</th>
                             <th>Date</th>
-                            <th>Customer</th>
+                            <th>Customer Name</th>
+                            <th>Reference</th>
                             <th>Status</th>
-                            <th>Grand Total (GHS)</th>
-                            <th>Paid (GHS)</th>
-                            <th>Due (GHS)</th>
-                            <th>Payment Status</th>
-                            <th>Action</th>
+                            <th>Payment</th>
+                            <th>Total</th>
+                            <th>Paid</th>
+                            <th>Due</th>
+                            <th>Biller</th>
+                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
-                  
                 </table>
             </div>
         </div>
     </div>
 </div>
+<?= $this->endSection() ?>
+
+
+<?= $this->section('script') ?>
+<script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/sales-returns.js') ?>"></script>
 <?= $this->endSection() ?>

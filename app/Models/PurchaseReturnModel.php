@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use CodeIgniter\Database\RawSql;
 use CodeIgniter\Model;
 
 class PurchaseReturnModel extends Model
@@ -51,7 +52,7 @@ class PurchaseReturnModel extends Model
     protected $beforeUpdate   = ['setDefaultId'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
-    protected $afterFind      = ['setTotalAmount', 'setRelation'];
+    protected $afterFind      = ['setRelation'];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
@@ -61,49 +62,22 @@ class PurchaseReturnModel extends Model
             $data['data']['purchase_id'] = NULL;
         return $data;
     }
-
-    protected function setTotalAmount(array $model)
-    {
-        if ($model && $model['data']) {
-            $itemModel = new PurchaseReturnItemModel();
-            $builder = $itemModel->builder();
-
-            if ($model['singleton']) {
-                $total = $builder->selectSum('subtotal', 'total')
-                    ->where('purchase_return_id', $model['data']->id)
-                    ->get()
-                    ->getRowObject()
-                    ->total;
-                $model['data']->total_amount = $total;
-                $model['data']->items = $itemModel->where('purchase_return_id', $model['data']->id)->findAll();
-            } else {
-                foreach ($model['data'] as $key => $row) {
-                    $total = $builder->selectSum('subtotal', 'total')
-                        ->where('purchase_return_id', $row->id)
-                        ->get()
-                        ->getRowObject()
-                        ->total;
-                    $model['data'][$key]->total_amount = $total;
-                    $model['data'][$key]->items = $itemModel->where('purchase_return_id', $row->id)->findAll();
-                }
-            }
-        }
-        return $model;
-    }
-
     protected function setRelation($model)
     {
         if ($model && $model['data']) {
             $userModel = new UserModel();
             $purchaseModel = new PurchaseModel();
+            $itemModel = new PurchaseReturnItemModel();
 
             if ($model['singleton']) {
                 $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
                 $model['data']->purchase = $purchaseModel->where('id', $model['data']->purchase_id)->first();
+                $model['data']->items = $itemModel->where('purchase_return_id', $model['data']->id)->findAll();
             } else {
                 foreach ($model['data'] as $key => $row) {
                     $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
                     $model['data'][$key]->purchase = $purchaseModel->where('id', $row->purchase_id)->first();
+                    $model['data'][$key]->items = $itemModel->where('purchase_return_id', $row->id)->findAll();
                 }
             }
         }
@@ -122,13 +96,16 @@ class PurchaseReturnModel extends Model
 
     public function getPaidAmount(): float
     {
-        $total = $this->builder()->selectSum('paid', 'total')->get()->getFirstRow()->total;
+        // total paid by customers
+        $total = (new SupplierLedgerModel())->selectSum('debit', 'total')->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
 
     public function getDueAmount(): float
     {
-        return (new PurchaseReturnItemModel())->getTotalAmount()
-            - $this->getPaidAmount();
+        $total = $this->builder()
+            ->selectSum(new RawSql('(total_amount - paid)'), 'total')->where('payment_status', 'due')
+            ->get()->getFirstRow()->total;
+        return $total ? $total : 0.00;
     }
 }

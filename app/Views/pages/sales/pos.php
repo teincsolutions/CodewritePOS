@@ -25,7 +25,11 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <?php if (isset($error)) : ?>
+                            <?php
+
+                            use App\Models\CustomerLedgerModel;
+
+                            if (isset($error)) : ?>
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert"><?= $error ?>
                                     <a href="<?= site_url('sales/pos') ?>" type="button" class="btn-close" aria-label="Close"></a>
                                 </div>
@@ -126,18 +130,18 @@
                                                             <input type="hidden" name="items[<?= $key ?>][unit_price]" value="<?= $row->unit_price; ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][tax_id]" value="<?= $row->tax_id ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][store_id]" value="<?= $row->store_id; ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][tax]" class="rtax" value="<?= ($row->unit_price * $row->qty * $row->tax) / 100 ?>">
+                                                            <input type="hidden" name="items[<?= $key ?>][tax]" class="rtax" value="<?= $row->tax ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][discount]" class="rdiscount" value="<?= $row->discount ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][subtotal]" class="rsubtotal" value="<?= $row->unit_price * $row->qty - $row->discount + ($row->unit_price * $row->qty * $row->tax) / 100 ?>">
+                                                            <input type="hidden" name="items[<?= $key ?>][subtotal]" class="rsubtotal" value="<?= $row->subtotal ?>">
                                                             <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" value="<?= $row->qty ?>" class="quantity-field" required>
                                                             <input type="button" value="+" class="button-plus inc button">
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td><?= $row->unit_price ?></td>
-                                                <td data-discount="<?= $row->discount ?>"><?= $row->discount ?></td>
-                                                <td data-tax="<?= $row->tax ?>"><?= number_format(($row->unit_price * $row->qty * $row->tax) / 100, 2) ?></td>
-                                                <td><?= number_format($row->unit_price * $row->qty - $row->discount + (($row->unit_price * $row->qty * $row->tax) / 100), 2) ?></td>
+                                                <td data-discount="<?= $row->discount ?>"><?= number_format($row->discount, 2) ?></td>
+                                                <td data-tax="<?= $row->tax ?>" class="suffix-percent"><?= number_format($row->tax, 2) ?></td>
+                                                <td><?= number_format($row->subtotal, 2) ?></td>
                                                 <td><a href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
 
                                             </tr>
@@ -484,7 +488,7 @@
                                         ];
                                         if (isset($ledgerList))
                                             foreach ($ledgerList as $key => $row) {
-                                                $row->balance = $row->debit - $row->credit;
+                                                $row->balance = $row->customer->balance;
                                         ?>
                                             <tr>
                                                 <td><?= $row->tdate; ?></td>
@@ -535,11 +539,11 @@
                                             foreach ($returnList as $key => $row) {
                                         ?>
                                             <tr>
-                                                <td><?= $row->sales_return_date; ?></td>
+                                                <td><?= $row->return_date; ?></td>
                                                 <td><a target="_blank" href="<?= site_url('returns/sales/' . $row->id) ?>" class="btn btn-link btn-sm"><?= $row->invoice; ?></a></td>
                                                 <td>
-                                                    <?php if ($row->customer) : ?>
-                                                        <a target="_blank" href="<?= site_url('customers/' . $row->customer_id) ?>" class="btn btn-link btn-sm"><?= $row->customer->name ?></a>
+                                                    <?php if ($row->sale->customer) : ?>
+                                                        <a target="_blank" href="<?= site_url('customers/' . $row->sale->customer_id) ?>" class="btn btn-link btn-sm"><?= $row->sale->customer->name ?></a>
                                                     <?php else : ?>
                                                         walk-in-customer
                                                     <?php endif ?>

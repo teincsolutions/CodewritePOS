@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use CodeIgniter\Database\RawSql;
 use CodeIgniter\Model;
 
 class SalesReturnModel extends Model
@@ -51,7 +52,7 @@ class SalesReturnModel extends Model
     protected $beforeUpdate   = ['setDefaultId'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
-    protected $afterFind      = ['setTotalAmount', 'setRelation'];
+    protected $afterFind      = ['setRelation'];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
@@ -62,48 +63,22 @@ class SalesReturnModel extends Model
         return $data;
     }
 
-    protected function setTotalAmount(array $model)
-    {
-        if ($model && $model['data']) {
-            $itemModel = new SalesReturnItemModel();
-            $builder = $itemModel->builder();
-
-            if ($model['singleton']) {
-                $total = $builder->selectSum('subtotal', 'total')
-                    ->where('sales_return_id', $model['data']->id)
-                    ->get()
-                    ->getRowObject()
-                    ->total;
-                $model['data']->total_amount = $total;
-                $model['data']->items = $itemModel->where('sales_return_id', $model['data']->id)->findAll();
-            } else {
-                foreach ($model['data'] as $key => $row) {
-                    $total = $builder->selectSum('subtotal', 'total')
-                        ->where('sales_return_id', $row->id)
-                        ->get()
-                        ->getRowObject()
-                        ->total;
-                    $model['data'][$key]->total_amount = $total;
-                    $model['data'][$key]->items = $itemModel->where('sales_return_id', $row->id)->findAll();
-                }
-            }
-        }
-        return $model;
-    }
-
     protected function setRelation($model)
     {
         if ($model && $model['data']) {
             $userModel = new UserModel();
             $saleModel = new SalesModel();
+            $itemModel = new SalesReturnItemModel();
 
             if ($model['singleton']) {
                 $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
                 $model['data']->sale = $saleModel->where('id', $model['data']->sale_id)->first();
+                $model['data']->items = $itemModel->where('sales_return_id', $model['data']->id)->findAll();
             } else {
                 foreach ($model['data'] as $key => $row) {
                     $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
                     $model['data'][$key]->sale = $saleModel->where('id', $row->sale_id)->first();
+                    $model['data'][$key]->items = $itemModel->where('sales_return_id', $row->id)->findAll();
                 }
             }
         }
@@ -122,13 +97,18 @@ class SalesReturnModel extends Model
 
     public function getPaidAmount(): float
     {
-        $total = $this->builder()->selectSum('paid', 'total')->get()->getFirstRow()->total;
+        // total paid by customers
+        $total = (new CustomerLedgerModel())->selectSum('credit', 'total')->get()->getFirstRow()->total;
+        // total paid by walk-in-customers
+        $total = ($total ?? 0) + $this->builder()->selectSum('paid', 'total')->where('type', 'walk-in-customer')->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
 
     public function getDueAmount(): float
     {
-        return (new SalesReturnItemModel())->getTotalAmount()
-            - $this->getPaidAmount();
+        $total = $this->builder()
+            ->selectSum(new RawSql('(total_amount - paid)'), 'total')->where('payment_status', 'due')
+            ->get()->getFirstRow()->total;
+        return $total ? $total : 0.00;
     }
 }

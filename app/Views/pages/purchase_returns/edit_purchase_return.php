@@ -3,189 +3,223 @@
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h4>Purchase Edit</h4>
-            <h6>Edit/Update Purchase</h6>
+            <h4>Create Purchase Return</h4>
+            <h6>Add/Update Purchase Return</h6>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Supplier Name</label>
-                        <div class="row">
-                            <div class="col-lg-10 col-sm-10 col-10">
-                                <select class="select">
-                                    <option>Apex Computers</option>
-                                    <option>Computers</option>
-                                </select>
-                            </div>
-                            <div class="col-lg-2 col-sm-2 col-2 ps-0">
-                                <div class="add-icon">
-                                    <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus1.svg" alt="img"></a>
+    <form class="post-form" action="<?= site_url('purchases/returns') ?>" method="post">
+        <?= csrf_field() ?>
+        <input id="order-status" type="hidden" name="order_status" value="completed">
+        <input id="payment-status" type="hidden" name="payment_status" value="paid">
+        <input type="hidden" name="payment_type" value="cash">
+        <input id="purchases-total" type="hidden" name="total_amount" value="<?= isset($purchase) ? $purchase->total_amount : 0.00 ?>">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <?php if (isset($error)) : ?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"><?= $error ?>
+                            <a href="<?= site_url('purchases/pos') ?>" type="button" class="btn-close" aria-label="Close"></a>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <div class="row">
+
+                    <div class="col-lg-4 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Reference</label>
+                            <select name="purchase_id" class="select2-invoices" required>
+                                <option value=""></option>
+                                <?php if (isset($purchase)) : ?>
+                                    <option value="<?= $purchase->id ?>" selected><?= $purchase->invoice ?> (<?= isset($purchase->supplier) ? $purchase->supplier->name : 'walk-in-supplier' ?> - GHS <?= $purchase->total_amount; ?>)</option>
+                                <?php endif ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Supplier</label>
+                            <select name="supplier_id" class="select2-supplier">
+                                <option value="">walk-in-supplier</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Date</label>
+                            <div class="input-groupicon">
+                                <input name="return_date" type="text" class="datetimepicker" value="<?= date('d-m-Y', time()) ?>" required>
+                                <div class="addonset">
+                                    <i class="fa fa-calendar"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Purchase Date </label>
-                        <div class="input-groupicon">
-                            <input type="text" placeholder="DD-MM-YYYY" class="datetimepicker">
-                            <div class="addonset">
-                                <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/calendars.svg" alt="img">
+                    <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Transac. ID</label>
+                            <input type="text" name="invoice" class="form-control" value="<?= $invoice ?>" readonly>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12 col-sm-6 col-12">
+                        <div class="form-group">
+                            <div class="form-outline autocomplete">
+                                <label class="form-label" for="form1">Search</label>
+                                <input autocomplete="off" id="search-products" type="search" class="form-control" placeholder="Enter product name, barcode, sku..." />
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Product Name</label>
-                        <select class="select">
-                            <option>Macbook pro </option>
-                        </select>
+                <div class="row">
+                    <div class="table-responsive mb-3">
+                        <table class="table tr-items">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Product Name</th>
+                                    <th>QTY</th>
+                                    <th>Cost</th>
+                                    <th>Subtotal</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                if (isset($purchase)) :
+                                    $ids = array_map(function ($item) {
+                                        return $item->id;
+                                    }, $purchase->items);
+
+                                    foreach ($purchase->items as $key => $row) :
+                                        if ($row->qty <= 0) continue;
+                                ?>
+                                        <tr>
+                                            <td>
+                                            </td>
+                                            <td class="productimgname">
+                                                <?= $row->product->image_uri
+                                                    ? '<a class="product-img"><img src="' . base_url($row->product->image_uri) . '" alt="product"></a>'
+                                                    : '<a class="p-3"></a>' ?>
+                                                <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
+                                                    <?= $row->product->name ?>
+                                                    (<?= $row->store->name; ?><?= $row->store->location ? "(" . $row->store->location . ")" : null; ?>)</a>
+                                            </td>
+                                            <td>
+                                                <div class="increment-decrement">
+                                                    <div class="input-groups">
+                                                        <input type="button" value="-" class="button-minus dec button">
+                                                        <input type='hidden' name="items[<?= $key ?>][product_id]" value="<?= $row->product_id ?>">
+                                                        <input type="hidden" name="items[<?= $key ?>][unit_cost]" value="<?= $row->unit_cost; ?>">
+                                                        <input type="hidden" name="items[<?= $key ?>][tax_id]" value="<?= $row->tax_id ?>">
+                                                        <input type="hidden" name="items[<?= $key ?>][store_id]" value="<?= $row->store_id; ?>">
+                                                        <input type="hidden" name="items[<?= $key ?>][subtotal]" class="rsubtotal" value="<?= $row->subtotal ?>">
+                                                        <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" max="<?= $row->qty ?>" value="<?= $row->qty ?>" class="quantity-field" required>
+                                                        <input type="button" value="+" class="button-plus inc button">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><?= $row->unit_cost ?></td>
+                                            <td><?= $row->subtotal ?></td>
+                                            <td><a href="javascript:void(0);" class="delete-set" data-item-id="<?= $row->id ?>"><i class="fa text-danger fa-trash"></i></a></td>
+
+                                        </tr>
+                                <?php endforeach;
+                                endif ?>
+                            </tbody>
+                        </table>
+
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Reference No.</label>
-                        <input type="text" value="010203">
-                    </div>
-                </div>
-                <div class="col-lg-12 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Product</label>
-                        <div class="input-groupicon">
-                            <input type="text" placeholder="Scan/Search Product by code and select...">
-                            <div class="addonset">
-                                <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/scanners.svg" alt="img">
+                <div class="row">
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Order Tax</label>
+                            <div class="input-group">
+                                <input type="text" name="tax" value="<?= isset($purchase) ? $purchase->tax : null ?>" class="form-control" placeholder="Purchase taxes" readonly>
+                                <span class="input-group-text">%</span>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Product Name</th>
-                                <th>QTY</th>
-                                <th>Purchase Price(GHS) </th>
-                                <th>Discount(GHS) </th>
-                                <th>Tax %</th>
-                                <th>Tax Amount(GHS)</th>
-                                <th class="text-end">Unit Cost(GHS)</th>
-                                <th class="text-end">Total Cost (GHS) </th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="productimgname">
-                                    <a class="product-img">
-                                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/product/product7.jpg" alt="product">
-                                    </a>
-                                    <a href="javascript:void(0);">Apple Earpods</a>
-                                </td>
-                                <td>10.00</td>
-                                <td>2000.00</td>
-                                <td>500.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                                <td class="text-end">2000.00</td>
-                                <td class="text-end">2000.00</td>
-                                <td>
-                                    <a class="delete-set"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="svg"></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="productimgname">
-                                    <a class="product-img">
-                                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/product/product6.jpg" alt="product">
-                                    </a>
-                                    <a href="javascript:void(0);">Macbook Pro</a>
-                                </td>
-                                <td>15.00</td>
-                                <td>6000.00</td>
-                                <td>100.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                                <td class="text-end">1000.00</td>
-                                <td class="text-end">1000.00</td>
-                                <td>
-                                    <a class="delete-set"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="svg"></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12 float-md-right">
-                    <div class="total-order">
-                        <ul>
-                            <li>
-                                <h4>Order Tax</h4>
-                                <h5>$ 0.00 (0.00%)</h5>
-                            </li>
-                            <li>
-                                <h4>Discount</h4>
-                                <h5>$ 0.00</h5>
-                            </li>
-                            <li>
-                                <h4>Shipping</h4>
-                                <h5>$ 0.00</h5>
-                            </li>
-                            <li class="total">
-                                <h4>Grand Total</h4>
-                                <h5>$ 2000.00</h5>
-                            </li>
-                        </ul>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Supplier Discount</label>
+                            <div class="input-group">
+                                <input onkeyup="updateTotals()" type="number" name="discount" value="<?= isset($purchase) ? $purchase->discount : null ?>" class="form-control addon-inline" placeholder="Purchase discount" readonly>
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Shipping</label>
+                            <input onkeyup="updateTotals()" type="number" name="shipping" value="<?= isset($purchase) ? $purchase->shipping : null ?>" class="form-control" placeholder="Shipping amount">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Order Tax</label>
-                        <input type="text" value="20">
+                <div class="row">
+                    <div class="col-lg-12 float-md-right">
+                        <div class="total-order">
+                            <ul>
+                                <li>
+                                    <h4>SubTotal </h4>
+                                    <h5 class="subTotal">GHS 0.00</h5>
+                                </li>
+                                <li>
+                                    <h4>Total Shipping </h4>
+                                    <h5 class="shippingTotal">GHS 0.00</h5>
+                                </li>
+                                <li>
+                                    <h4>Total Tax</h4>
+                                    <h5 class="orderTaxes">GHS 0.0</h5>
+                                </li>
+                                <li>
+                                    <h4>Total Discount</h4>
+                                    <h5 class="discountTotal">GHS 0.00</h5>
+                                </li>
+                                <li class="total-value">
+                                    <h4>Grand Total </h4>
+                                    <h5 class="grandTotal">GHS 0.00</h5>
+                                </li>
+                                <li class="total-value">
+                                    <h4>Change/Due</h4>
+                                    <h5 class="dueTotal">GHS 0.00</h5>
+                                    <input type="hidden" name="paid" id="paid">
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Discount</label>
-                        <input type="text" value="10">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-submit me-2">Submit Return</button>
                     </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Shipping</label>
-                        <input type="text" value="10">
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Status</label>
-                        <select class="select">
-                            <option>Delivered</option>
-                            <option>Completed</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea class="form-control">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text</textarea>
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <a href="javascript:void(0);" class="btn btn-submit me-2">Submit</a>
-                    <a href="https://dreamspos.dreamguystech.com/html/template/purchaselist.html" class="btn btn-cancel">Cancel</a>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
+<?= $this->endSection() ?>
+<?= $this->section('script') ?>
+<script src="<?= base_url('assets/js/handle-purchase-return.js') ?>"></script>
+<?php if (isset($purchase) && $purchase->supplier) {
+    $supplier = $purchase->supplier;
+    $supplier->text = $supplier->name . " (" . ($supplier->address ? $supplier->address : $supplier->phone) . ")";
+?>
+    <script>
+        $(() => {
+            let supplierData = <?= json_encode($supplier) ?>;
+            var option = new Option(supplierData.text, supplierData.id, true, true);
+            select2Supplier.append(option).trigger('change');
+            select2Supplier.trigger({
+                type: 'select2:select',
+                params: {
+                    data: supplierData
+                }
+            });
+        });
+        purchaseItemIds = <?= json_encode($ids) ?>;
+    </script>
+<?php } else if (isset($purchase)) { ?>
+    <script>
+        purchaseItemIds = <?= json_encode($ids) ?>;
+    </script>
+<?php } ?>
 <?= $this->endSection() ?>

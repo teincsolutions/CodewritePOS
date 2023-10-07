@@ -137,7 +137,7 @@ $(function () {
         name: "purchases.id",
         render: function (data, type, row) {
           if (type === "display") {
-            return `<div class="d-flex justify-content-between align-items-center">
+            return `<div class="d-flex align-items-center">
                         <a target="_blank" href="${baseUrl}purchases/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
                         <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table1, ${
                           row.id
@@ -288,6 +288,7 @@ $(function () {
           return null;
         },
       },
+      { data: "ledger_type", name: "supplier_ledgers.ledger_type" },
       {
         data: "credit",
         render: function (data) {
@@ -323,9 +324,9 @@ $(function () {
         name: "supplier_ledgers.id",
         render: function (data, type, row) {
           if (type === "display") {
-            return `<div class="d-flex justify-content-between align-items-center">
-            <a  href="javascript:void(0);" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
-            <a  href="javascript:void(0);" onclick="editRow('#edit-payment',{id:${
+            return `<div class="d-flex align-items-center">
+            <a  href="javascript:void(0);" class="me-3" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
+            <a  href="javascript:void(0);" class="me-3" onclick="editRow('#edit-payment',{id:${
               row.id
             },tdate:'${moment(row.tdate).format("DD-MM-YYYY")}',purchase_id:${
               row.purchase_id
@@ -336,7 +337,7 @@ $(function () {
             },name:'purchase_id'})"><i class="fa fa-edit fa-lg"></i></a>
                         <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table2, ${
                           row.id
-                        }, '${baseUrl}suppliers/ledger')"><i class="fa fa-trash fa-lg"></i></a>
+                        }, '${baseUrl}suppliers/ledger', table1,table3)"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;
@@ -530,16 +531,16 @@ $(function () {
         name: "purchase_returns.id",
         render: function (data, type, row) {
           if (type === "display") {
-            return `<div class="d-flex justify-content-between align-items-center">
+            return `<div class="d-flex align-items-center">
                           ${
                             row.payment_status === "due"
                               ? `<a class="me-3" data-bs-toggle="modal" data-bs-target="#add-payment" href="javascript:void(0)"><i class="fa fa-money-bill fa-lg"></i></a>`
                               : ""
                           }
-                          <a target="_blank" href="${baseUrl}purchases/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
+                          <a target="_blank" href="${baseUrl}purchases/returns/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
                           <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table3, ${
                             row.id
-                          }, '${baseUrl}purchases/returns')"><i class="fa fa-trash fa-lg"></i></a>
+                          }, '${baseUrl}purchases/returns', table2,table1)"><i class="fa fa-trash fa-lg"></i></a>
                       </div>`;
           }
           return data;
@@ -588,7 +589,7 @@ $(function () {
           : 0;
       };
     },
-    order: [[1, "desc"]],
+    order: [[2, "desc"]],
     columnDefs: [
       {
         orderable: false,

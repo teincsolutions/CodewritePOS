@@ -7,7 +7,7 @@
             <h6>Manage your sales</h6>
         </div>
         <div class="page-btn">
-            <a href="<?=site_url('sales/pos') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add Sales</a>
+            <a href="<?= site_url('sales/pos') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add Sales</a>
         </div>
     </div>
 
@@ -104,52 +104,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('modal') ?>
-<div class="modal fade" id="showpayment" tabindex="-1" aria-labelledby="showpayment" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Show Payments</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Reference</th>
-                                <th>Amount </th>
-                                <th>Paid By </th>
-                                <th>Paid By </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="bor-b1">
-                                <td>2022-03-07 </td>
-                                <td>INV/SL0101</td>
-                                <td>$ 0.00 </td>
-                                <td>Cash</td>
-                                <td>
-                                    <a class="me-2" href="javascript:void(0);">
-                                        
-                                    </a>
-                                    <a class="me-2" href="javascript:void(0);" data-bs-target="#editpayment" data-bs-toggle="modal" data-bs-dismiss="modal">
-                                        
-                                    </a>
-                                    <a class="me-2 confirm-text" href="javascript:void(0);">
-                                        
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<form action="<?= site_url('ledgers') ?>" class="modal fade" id="add-payment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
+<form action="<?= site_url('customers/ledgers') ?>" class="modal fade" id="add-payment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -181,7 +136,7 @@
                     <div class="col-lg-6 col-sm-12 col-12">
                         <div class="form-group">
                             <label>Invoice Balance</label>
-                            <input id="inv-bal" type="text" value="0.00" placeholder="Enter Amount" disabled>
+                            <input id="inv-bal" type="text" name="invoice_balance" value="0.00" placeholder="Enter Amount" disabled>
                         </div>
                     </div>
                     <div class="col-lg-6 col-sm-12 col-12">

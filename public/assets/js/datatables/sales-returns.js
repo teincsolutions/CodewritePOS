@@ -1,9 +1,9 @@
 let table;
 
 $(function () {
-  table = $("#dt-sales").DataTable({
+  table = $("#dt-returns").DataTable({
     ajax: {
-      url: baseUrl + "/sales/datatable",
+      url: baseUrl + "/sales/returns/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
@@ -66,22 +66,22 @@ $(function () {
           return null;
         },
       },
-      { data: "sales_date", name: "sales.sales_date" },
+      { data: "return_date", name: "sales_returns.return_date" },
       {
-        data: "customer",
+        data: "sale",
         name: "sales.customer_id",
         render: function (data, type, row) {
           if (type === "display")
-            return data
-              ? `<a target="_blank" href="${baseUrl}customers/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+            return data.customer
+              ? `<a target="_blank" href="${baseUrl}customers/${data.customer.id}" class="btn btn-link btn-sm">${data.customer.name}</a>`
               : "walk-in-customer";
-          return data ? data.id : null;
+          return data.customer ? data.customer.id : null;
         },
       },
-      { data: "invoice", name: "sales.invoice" },
+      { data: "invoice", name: "sales_returns.invoice" },
       {
         data: "order_status",
-        name: "sales.order_status",
+        name: "sales_returns.order_status",
         render: function (data, type) {
           if (type === "display") {
             const badges = {
@@ -96,7 +96,7 @@ $(function () {
       },
       {
         data: "payment_status",
-        name: "sales.payment_status",
+        name: "sales_returns.payment_status",
         render: function (data, type) {
           if (type === "display") {
             const badges = {
@@ -117,7 +117,7 @@ $(function () {
       },
       {
         data: "paid",
-        name: "sales.paid",
+        name: "sales_returns.paid",
         render: function (data) {
           return `GHS ${parseFloat(data).toFixed(2)}`;
         },
@@ -133,7 +133,7 @@ $(function () {
       },
       {
         data: "user",
-        name: "sales.user_id",
+        name: "sales_returns.user_id",
         render: function (data, type, row) {
           if (type === "display")
             return data ? `${data.firstname} ${data.lastname}` : null;
@@ -142,26 +142,12 @@ $(function () {
       },
       {
         data: "id",
-        name: "sales.id",
+        name: "sales_returns.id",
         render: function (data, type, row) {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
-                        ${
-                          row.payment_status === "due"
-                            ? `  <a  href="javascript:void(0);" class="me-3" onclick="editRow('#add-payment',{sale_id:${data},invoice_balance:${(
-                                row.total_amount - row.paid
-                              ).toFixed(2)},credit:${(
-                                row.total_amount - row.paid
-                              ).toFixed(2)}},{text:'${row.invoice} (${
-                                row.customer.name
-                              } - GHS ${row.total_amount})',id:${
-                                row.id
-                              },name:'sale_id'})"><i class="fa fa-money-bill fa-lg"></i></a>`
-                            : ""
-                        }
-                        <a target="_blank" href="${baseUrl}sales/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                        <a href="${baseUrl}sales/returns/create?invoice=${row.invoice}" class="me-3"><i class="fa fa-reply fa-lg"></i></a>
-                        <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}sales')"><i class="fa fa-trash fa-lg"></i></a>
+                        <a target="_blank" href="${baseUrl}sales/returns/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
+                        <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}sales/returns')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;
@@ -290,8 +276,8 @@ $(function () {
 
           if (d.status === true) {
             form3.trigger("reset");
+            $("select").val("").trigger("change.select2");
             form3.modal("hide");
-            table.ajax.reload();
             Swal.fire({
               icon: "success",
               text: d.message,

@@ -78,16 +78,10 @@ function updateItemRow(row) {
   let data = tableItems.row(row1).data(),
     qty = parseFloat(row1.find(".quantity-field").val()),
     price = parseFloat(data[3]),
-    discount = parseFloat($("td:eq(4)", row1).data("discount")),
-    tax = parseFloat($("td:eq(5)", row1).data("tax")),
-    subtotal = qty * price + (tax / 100) * price * qty - qty * discount;
+    subtotal = qty * price;
 
-  $(".rtax", row1).val((tax / 100) * qty * price);
   $(".rsubtotal", row1).val(subtotal);
-  $(".rdiscount", row1).val(qty * discount);
-  $("td:eq(5)", row1).html(((tax / 100) * qty * price).toFixed(2));
-  $("td:eq(4)", row1).html((qty * discount).toFixed(2));
-  $("td:eq(6)", row1).html(subtotal.toFixed(2));
+  $("td:eq(4)", row1).html(subtotal.toFixed(2));
   tableItems.draw();
 }
 
@@ -102,34 +96,22 @@ function updateTotals() {
   grandTotal = 0;
   for (let i = 0; i < tableItems.rows().data().length; i++) {
     const row = $(`tr:eq(${i + 1})`, ".tr-items");
-    (discountTotal += intVal($("td:eq(4)", row).html())),
-      (discountAmtTotal +=
-        intVal($("td:eq(4)", row).html()) * intVal($("td:eq(3)", row).html())),
-      (taxTotal += intVal($("td:eq(5)", row).html())),
-      (taxAmtTotal +=
-        intVal($("td:eq(5)", row).html()) * intVal($("td:eq(3)", row).html())),
-      (grandTotal += intVal($("td:eq(6)", row).html()));
+    grandTotal += intVal($("td:eq(4)", row).html());
   }
   $(".subTotal").html("GHS " + grandTotal.toFixed(2));
-  discountAmtTotal += (orderDiscount / 100) * grandTotal;
+  discountAmtTotal = (orderDiscount / 100) * grandTotal;
   taxTotal += orderTax;
   discountTotal += orderDiscount;
   grandTotal += (orderTax / 100) * grandTotal;
   grandTotal += shipping;
-  grandTotal -= (orderDiscount / 100) * grandTotal;
+  grandTotal -= discountAmtTotal;
   dueTotal =
     grandTotal - $("input[name='paid']").first().val() - supplierBalance;
 
   $(".grandTotal").html("GHS " + grandTotal.toFixed(2));
   $("#purchase-total").val(grandTotal);
   $(".shippingTotal").html("GHS " + shipping.toFixed(2));
-  $(".discountTotal").html(
-    "GHS " +
-      discountAmtTotal.toFixed(2) +
-      " (" +
-      discountTotal.toFixed(2) +
-      "%)"
-  );
+  $(".discountTotal").html("GHS " + discountAmtTotal.toFixed(2));
   $(".orderTaxes").html(
     "GHS " + taxAmtTotal.toFixed(2) + " (" + taxTotal.toFixed(2) + "%)"
   );
@@ -414,45 +396,22 @@ function autocomplete(inp) {
                                                 <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
               item.unit_cost
             }">
-                                                <input type="hidden" name="items[${prodIndex}][tax_id]" value="${
-              item.tax_id ? item.tax_id : ""
-            }">
                                                 <input type="hidden" name="items[${prodIndex}][store_id]" value="${$(
               ".select2-store"
             ).val()}">
-                                                <input type="hidden" name="items[${prodIndex}][tax]" class="rtax" value="${
-              (item.unit_cost * (item.tax ? item.tax.rate : 0)) / 100
-            }">
-                                                <input type="hidden" name="items[${prodIndex}][discount]" class="rdiscount" value="${
-              item?.discount
-            }">
-                                                <input type="hidden" name="items[${prodIndex}][subtotal]" class="rsubtotal" value="${
-              item.unit_cost -
-              item?.discount +
-              (item.unit_cost * (item.tax ? item.tax.rate : 0.0)) / 100
+                                <input type="hidden" name="items[${prodIndex}][subtotal]" class="rsubtotal" value="${
+              item.unit_cost
             }">
                                                 <input onblur="updateItemRow(this)" min="1" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>
                                         </td>
-                                        <td>${item.unit_cost}</td>
-                                        <td data-discount="${
-                                          item?.discount
-                                        }" class="suffix-percent">${
-              item?.discount
-            }</td>
-                                        <td data-tax="${
-                                          item.tax ? item.tax.rate : 0
-                                        }">${parseFloat(
-              (item.unit_cost * (item.tax ? item.tax.rate : 0)) / 100
-            ).toFixed(2)}</td>
-                                        <td>${(
-                                          item.unit_cost -
-                                          item?.discount +
-                                          (item.unit_cost *
-                                            (item.tax ? item.tax.rate : 0.0)) /
-                                            100
+                                        <td>${parseFloat(
+                                          item.unit_cost
+                                        ).toFixed(2)}</td>
+                                        <td>${parseFloat(
+                                          item.unit_cost
                                         ).toFixed(2)}</td>
                                         <td><a   href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
                                     </tr>`;

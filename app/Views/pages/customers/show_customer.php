@@ -88,10 +88,11 @@
                                                     <th>#Code</th>
                                                     <th>Date</th>
                                                     <th>Reference</th>
+                                                    <th>Type</th>
                                                     <th>Debit</th>
                                                     <th>Credit</th>
                                                     <th>A/c Balance</th>
-                                                    <th>Type</th>
+                                                    <th>Method</th>
                                                     <th>Added By</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -370,6 +371,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/datatables/actions.js?v=1') ?>"></script>
-<script src="<?= base_url('assets/js/customer-details.js?v=4') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/actions.js?v=2') ?>"></script>
+<script src="<?= base_url('assets/js/customer-details.js?v=5') ?>"></script>
 <?= $this->endSection() ?>

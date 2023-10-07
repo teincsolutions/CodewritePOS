@@ -185,6 +185,7 @@
                 </div>
                 <div class="col-lg-12">
                     <a href="javascript:void(0);" class="btn btn-submit me-2">Print Invoice</a>
+                    <a href="<?= site_url('sales/returns/create?invoice=' . $sales->invoice) ?>" class="btn btn-submit me-2">Return</a>
                 </div>
             </div>
         </div>

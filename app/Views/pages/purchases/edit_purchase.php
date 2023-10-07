@@ -7,7 +7,7 @@
             <h6>Manage your purchase</h6>
         </div>
         <div class="page-btn">
-            <a href="<?= site_url('purchase-returns/create') ?>" class="btn btn-added"><i class="fa fa-plus me-1"></i> Purchase Return</a>
+            <a href="<?= site_url('purchases/returns/create') ?>" class="btn btn-added"><i class="fa fa-plus me-1"></i> Purchase Return</a>
         </div>
     </div>
     <form class="post-form" action="<?= site_url('purchases') ?>" method="post">
@@ -93,8 +93,6 @@
                                             <th>Product Name</th>
                                             <th>QTY</th>
                                             <th>Cost</th>
-                                            <th>Discount</th>
-                                            <th>Tax</th>
                                             <th>Subtotal</th>
                                             <th></th>
                                         </tr>
@@ -124,10 +122,7 @@
                                                             <input type='hidden' name="items[<?= $key ?>][purchase_id]" value="<?= $row->purchase_id ?>">
                                                             <input type='hidden' name="items[<?= $key ?>][product_id]" value="<?= $row->product_id ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][unit_cost]" value="<?= $row->unit_cost; ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][tax_id]" value="<?= $row->tax_id ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][store_id]" value="<?= $row->store_id; ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][tax]" class="rtax" value="<?= ($row->unit_cost * $row->qty * $row->tax) / 100 ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][discount]" class="rdiscount" value="<?= $row->discount ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][subtotal]" class="rsubtotal" value="<?= $row->unit_cost * $row->qty - $row->discount + ($row->unit_cost * $row->qty * $row->tax) / 100 ?>">
                                                             <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" value="<?= $row->qty ?>" class="quantity-field" required>
                                                             <input type="button" value="+" class="button-plus inc button">
@@ -135,9 +130,7 @@
                                                     </div>
                                                 </td>
                                                 <td><?= $row->unit_cost ?></td>
-                                                <td data-discount="<?= $row->discount ?>"><?= $row->discount ?></td>
-                                                <td data-tax="<?= $row->tax ?>"><?= number_format(($row->unit_cost * $row->qty * $row->tax) / 100, 2) ?></td>
-                                                <td><?= number_format($row->unit_cost * $row->qty - $row->discount + (($row->unit_cost * $row->qty * $row->tax) / 100), 2) ?></td>
+                                                <td><?= number_format($row->unit_cost * $row->qty, 2) ?></td>
                                                 <td><a href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
 
                                             </tr>
@@ -530,11 +523,11 @@
                                             foreach ($returnList as $key => $row) {
                                         ?>
                                             <tr>
-                                                <td><?= $row->purchase_return_date; ?></td>
+                                                <td><?= $row->return_date; ?></td>
                                                 <td><a target="_blank" href="<?= site_url('returns/purchases/' . $row->id) ?>" class="btn btn-link btn-sm"><?= $row->invoice; ?></a></td>
                                                 <td>
-                                                    <?php if ($row->supplier) : ?>
-                                                        <a target="_blank" href="<?= site_url('suppliers/' . $row->supplier_id) ?>" class="btn btn-link btn-sm"><?= $row->supplier->name ?></a>
+                                                    <?php if ($row->purchase->supplier) : ?>
+                                                        <a target="_blank" href="<?= site_url('suppliers/' . $row->purchase->supplier_id) ?>" class="btn btn-link btn-sm"><?= $row->purchase->supplier->name ?></a>
                                                     <?php endif ?>
                                                 </td>
                                                 <td><span class="badges <?= $badges[$row->order_status]; ?>"><?= $row->order_status; ?></span></td>

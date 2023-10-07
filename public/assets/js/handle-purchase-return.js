@@ -29,8 +29,8 @@ const searchParams = {
 };
 
 let prodIndex = 0,
-  saleItemIds = [];
-(dueTotal = 0), (grandTotal = 0), (customerBalance = 0);
+  purchaseItemIds = [];
+(dueTotal = 0), (grandTotal = 0), (supplierBalance = 0);
 
 let form = $(".post-form");
 
@@ -77,16 +77,9 @@ function updateItemRow(row) {
   let data = tableItems.row(row1).data(),
     qty = parseFloat(row1.find(".quantity-field").val()),
     price = parseFloat(data[3]),
-    discount = parseFloat($("td:eq(4)", row1).data("discount")),
-    tax = parseFloat($("td:eq(5)", row1).data("tax")),
-    subtotal = qty * price + (tax / 100) * price * qty - qty * discount;
-
-  $(".rtax", row1).val((tax / 100) * qty * price);
+    subtotal = qty * price;
   $(".rsubtotal", row1).val(subtotal);
-  $(".rdiscount", row1).val(qty * discount);
-  $("td:eq(5)", row1).html(((tax / 100) * qty * price).toFixed(2));
-  $("td:eq(4)", row1).html((qty * discount).toFixed(2));
-  $("td:eq(6)", row1).html(subtotal.toFixed(2));
+  $("td:eq(4)", row1).html(subtotal.toFixed(2));
   tableItems.draw();
 }
 
@@ -101,23 +94,19 @@ function updateTotals() {
   grandTotal = 0;
   for (let i = 0; i < tableItems.rows().data().length; i++) {
     const row = $(`tr:eq(${i + 1})`, ".tr-items");
-    (discountTotal += intVal($("td:eq(4)", row).html())),
-      (taxTotal += intVal($("td:eq(5)", row).html())),
-      (taxAmtTotal +=
-        intVal($("td:eq(5)", row).html()) * intVal($("td:eq(3)", row).html())),
-      (grandTotal += intVal($("td:eq(6)", row).html()));
+      (grandTotal += intVal($("td:eq(4)", row).html()));
   }
   $(".subTotal").html("GHS " + grandTotal.toFixed(2));
   discountAmtTotal = (orderDiscount / 100) * grandTotal;
   taxTotal += orderTax;
   discountTotal += discountAmtTotal;
-  grandTotal += (orderTax / 100) * grandTotal;
+  grandTotal += discountAmtTotal;
   grandTotal += shipping;
   grandTotal -= discountAmtTotal;
-  dueTotal = grandTotal + customerBalance;
+  dueTotal = grandTotal - supplierBalance;
 
   $(".grandTotal").html("GHS " + grandTotal.toFixed(2));
-  $("#sales-total").val(grandTotal);
+  $("#purchases-total").val(grandTotal);
   $(".shippingTotal").html("GHS " + shipping.toFixed(2));
   $(".discountTotal").html("GHS " + discountTotal.toFixed(2));
   $(".orderTaxes").html(
@@ -145,7 +134,7 @@ function printInvoice(result) {
     if (result2.isConfirmed) {
       const newWin = window.open(
         "",
-        "POS Receipt - INV" + result.data.invoice,
+        "Purchase Return Receipt - INV" + result.data.invoice,
         "left=0,top=0,toolbar=0,scrollbars=0,status=0"
       );
       newWin.document.write(result.receipt);
@@ -161,20 +150,12 @@ function printInvoice(result) {
   return true;
 }
 function checkout() {
-  const type = $("#sales-type"),
-    customer = $(".select2-customer");
-
-  if (customer.val() == "") {
-    type.val("walk-in-customer");
-  } else {
-    type.val("customer");
-  }
   return true;
 }
 
 $(".tr-items").on("click", ".delete-set", function () {
   let id = $(this).data("item-id");
-  saleItemIds = saleItemIds.filter((item) => item != id);
+  purchaseItemIds = purchaseItemIds.filter((item) => item != id);
   tableItems.row($(this).parents("tr")).remove().draw();
   updateTotals();
 });
@@ -222,7 +203,9 @@ function autocomplete(inp) {
     a.appendChild(b);
 
     $.get(
-      `${baseUrl}products/sales/search?sale_id=${$(".select2-invoices").val()}`,
+      `${baseUrl}products/purchases/search?purchase_id=${$(
+        ".select2-invoices"
+      ).val()}`,
       searchParams,
       (d, s) => {
         a.innerHTML = "";
@@ -242,7 +225,7 @@ function autocomplete(inp) {
           return;
         } else {
           d.data.forEach((item, i) => {
-            if (saleItemIds.includes(item.sale_item_id)) return;
+            if (purchaseItemIds.includes(item.purchase_item_id)) return;
 
             b = document.createElement("DIV");
             info = [];
@@ -262,8 +245,8 @@ function autocomplete(inp) {
 
             b.innerHTML =
               item.discontinued == 1
-                ? `<span class="d-flex justify-content-between" style="z-index:1000"><del><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></del>GHS ${item.unit_price}</span>`
-                : `<span class="d-flex justify-content-between" style="z-index:1000"><span><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></span>GHS ${item.unit_price}</span>`;
+                ? `<span class="d-flex justify-content-between" style="z-index:1000"><del><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></del>GHS ${item.unit_cost}</span>`
+                : `<span class="d-flex justify-content-between" style="z-index:1000"><span><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></span>GHS ${item.unit_cost}</span>`;
 
             b.addEventListener("click", function (e) {
               let store = ` (${item.store.name}(${
@@ -290,25 +273,15 @@ function autocomplete(inp) {
                                                 <input type='hidden' name="items[${prodIndex}][product_id]" value="${
                 item.id
               }">
-                                                <input type="hidden" name="items[${prodIndex}][unit_price]" value="${
-                item.unit_price
+                                                <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
+                item.unit_cost
               }">
-                                                <input type="hidden" name="items[${prodIndex}][tax_id]" value="${
-                item.tax_id ? item.tax_id : ""
-              }">
+                      
                                                 <input type="hidden" name="items[${prodIndex}][store_id]" value="${
                 item.store_id
               }">
-                                                <input type="hidden" name="items[${prodIndex}][tax]" class="rtax" value="${
-                (item.unit_price * (item.tax ? item.tax.rate : 0)) / 100
-              }">
-                                                <input type="hidden" name="items[${prodIndex}][discount]" class="rdiscount" value="${
-                item?.discount
-              }">
                                                 <input type="hidden" name="items[${prodIndex}][subtotal]" class="rsubtotal" value="${
-                item.unit_price -
-                item?.discount +
-                (item.unit_price * (item.tax ? item.tax.rate : 0.0)) / 100
+                item.unit_cost
               }">
                                                 <input onblur="updateItemRow(this)" min="1" max="${
                                                   item.max_qty
@@ -317,29 +290,15 @@ function autocomplete(inp) {
                                             </div>
                                         </div>
                                         </td>
-                                        <td>${item.unit_price}</td>
-                                        <td data-discount="${
-                                          item?.discount
-                                        }" class="suffix-percent">${
-                item?.discount
-              }</td>
-                                        <td data-tax="${
-                                          item.tax ? item.tax.rate : 0
-                                        }">${parseFloat(
-                (item.unit_price * (item.tax ? item.tax.rate : 0)) / 100
-              ).toFixed(2)}</td>
-                                        <td>${(
-                                          item.unit_price -
-                                          item?.discount +
-                                          (item.unit_price *
-                                            (item.tax ? item.tax.rate : 0.0)) /
-                                            100
+                                        <td>${item.unit_cost}</td>
+                                        <td>${parseFloat(
+                                          item.unit_cost
                                         ).toFixed(2)}</td>
                                         <td><a   href="javascript:void(0);" class="delete-set" data-item-id="${
-                                          item.sale_item_id
+                                          item.purchase_item_id
                                         }"><i class="fa text-danger fa-trash"></i></a></td>
                                     </tr>`;
-              saleItemIds.push(item.sale_item_id);
+              purchaseItemIds.push(item.purchase_item_id);
               tableItems.row.add($(row)).draw();
               tableItems.draw();
               prodIndex++;
@@ -448,7 +407,7 @@ form.on("submit", function (e) {
             $("input[name='invoice']").val(parseInt(d.data.invoice) + 1);
             $("#order-id").html(parseInt(d.data.invoice) + 1);
             tableItems.clear().draw();
-            $(".select2-customer").val(null).trigger("select2:unselect");
+            $(".select2-supplier").val(null).trigger("select2:unselect");
             $("select").trigger("change");
             updateTotals();
           }
@@ -468,37 +427,37 @@ form.on("submit", function (e) {
     });
   }
 });
-let select2Customer = $(".select2-customer")
+let select2Supplier = $(".select2-supplier")
   .select2({
     ajax: {
-      url: `${baseUrl}customers/select2`,
+      url: `${baseUrl}suppliers/select2`,
       dataType: "json",
     },
-    placeholder: "walk-in-customer",
+    placeholder: "walk-in-supplier",
     templateResult: formatCustomer,
     templateSelection: formatCustomer,
   })
   .on("select2:select", function (e) {
     const data = e.params.data;
-    customerBalance = parseFloat(data.balance);
-    $(".customer-balance").html(
-      customerBalance < 0
-        ? `(GHS ${Math.abs(customerBalance).toFixed(2)})`
-        : `GHS ${customerBalance.toFixed(2)}`
+    supplierBalance = parseFloat(data.balance);
+    $(".supplier-balance").html(
+      supplierBalance < 0
+        ? `(GHS ${Math.abs(supplierBalance).toFixed(2)})`
+        : `GHS ${supplierBalance.toFixed(2)}`
     );
-    $(".customer").html(data.text);
+    $(".supplier").html(data.text);
     $("input[name='discount']").val(data.discount);
     $("#acc-bal").removeClass("d-none");
     updateTotals();
   })
   .on("select2:unselect", function (e) {
-    customerBalance = 0;
-    $(".customer-balance").html(
-      customerBalance < 0
-        ? `(GHS ${Math.abs(customerBalance).toFixed(2)})`
-        : `GHS ${customerBalance.toFixed(2)}`
+    supplierBalance = 0;
+    $(".supplier-balance").html(
+      supplierBalance < 0
+        ? `(GHS ${Math.abs(supplierBalance).toFixed(2)})`
+        : `GHS ${supplierBalance.toFixed(2)}`
     );
-    $(".customer").html("walk-in-customer");
+    $(".supplier").html("walk-in-supplier");
     $("input[name='discount']").val("");
     $("#acc-bal").addClass("d-none");
     updateTotals();
@@ -511,7 +470,7 @@ $(".select2-store").select2({
 let select2Invoices = $(".select2-invoices")
   .select2({
     ajax: {
-      url: `${baseUrl}sales/select2`,
+      url: `${baseUrl}purchases/select2`,
       dataType: "json",
     },
     allowClear: true,
@@ -520,8 +479,10 @@ let select2Invoices = $(".select2-invoices")
   })
   .on("select2:select", function (e) {
     const data = e.params.data;
-    location.assign(`${baseUrl}sales/returns/create?invoice=${data.invoice}`);
+    location.assign(
+      `${baseUrl}purchases/returns/create?invoice=${data.invoice}`
+    );
   })
   .on("select2:unselect", function (e) {
-    location.assign(`${baseUrl}sales/returns/create`);
+    location.assign(`${baseUrl}purchases/returns/create`);
   });

@@ -108,7 +108,7 @@ $(function () {
         name: "expenses.id",
         render: function (data, type, row) {
           if (type === "display") {
-            return `<div class="d-flex justify-content-between align-items-center">
+            return `<div class="d-flex align-items-center">
                        
                         <a class="me-3 text-secondary" href="${baseUrl}expenses/edit/${row.id}"><i class="fa fa-edit fa-lg"></i></a>
                         <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${row.id}, '${baseUrl}expenses')"><i class="fa fa-trash fa-lg"></i></a>

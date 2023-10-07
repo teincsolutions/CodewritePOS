@@ -9,12 +9,9 @@
     </div>
     <form class="post-form" action="<?= site_url('sales/returns') ?>" method="post">
         <?= csrf_field() ?>
-        <input type="hidden" name="id" value="<?= isset($sales) ? $sales->id : null ?>">
-        <input type="hidden" name="invoice" value="<?= isset($sales) ? $sales->invoice : $invoice ?>">
-        <input id="order-status" type="hidden" name="order_status" value="<?= isset($sales) ? $sales->order_status : null ?>">
-        <input id="payment-status" type="hidden" name="payment_status" value="<?= isset($sales) ? $sales->payment_status : null ?>">
+        <input id="order-status" type="hidden" name="order_status" value="completed">
+        <input id="payment-status" type="hidden" name="payment_status" value="paid">
         <input id="sales-total" type="hidden" name="total_amount" value="<?= isset($sales) ? $sales->total_amount : 0.00 ?>">
-
         <div class="card">
             <div class="card-body">
                 <div class="row">
@@ -25,28 +22,27 @@
                     <?php endif; ?>
                 </div>
                 <div class="row">
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Customer</label>
-                            <div class="row">
-                                <div class="col-lg-10 col-sm-10 col-10">
-                                    <select name="customer_id" class="select2-customer">
-                                        <option value="">walk-in-customer</option>
-                                    </select>
-                                </div>
-                                <div class="col-lg-2 col-sm-2 col-2 ps-0">
-                                    <div class="add-icon">
-                                        <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#add-customer" class="btn btn-icon"><i class="fa fa-plus"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                     <div class="col-lg-4 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Reference</label>
                             <select name="sale_id" class="select2-invoices" required>
                                 <option value=""></option>
+                                <?php if (isset($sales)) : ?>
+                                    <option value="<?= $sales->id ?>" selected><?= $sales->invoice ?> (<?= isset($sales->customer) ? $sales->customer->name : 'walk-in-customer' ?> - GHS <?= $sales->total_amount; ?>)</option>
+                                <?php endif ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Customer</label>
+                            <select name="customer_id" class="select">
+                                <?php if (isset($sales) && $sales->customer_id) : ?>
+                                    <option value="<?= $sales->customer_id ?>" selected><?= $sales->customer->name ?></option>
+                                <?php else : ?>
+                                    <option value="" selected>walk-in-customer</option>
+                                <?php endif ?>
                             </select>
                         </div>
                     </div>
@@ -54,13 +50,20 @@
                         <div class="form-group">
                             <label>Date</label>
                             <div class="input-groupicon">
-                                <input name="sales_date" type="text" class="datetimepicker" value="<?= date('d-m-Y', time()) ?>" required>
+                                <input name="return_date" type="text" class="datetimepicker" value="<?= date('d-m-Y', time()) ?>" required>
                                 <div class="addonset">
                                     <i class="fa fa-calendar"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Transac. ID</label>
+                            <input type="text" name="invoice" class="form-control" value="<?= $invoice ?>" readonly>
+                        </div>
+                    </div>
+
                     <div class="col-lg-12 col-sm-6 col-12">
                         <div class="form-group">
                             <div class="form-outline autocomplete">
@@ -87,47 +90,50 @@
                             </thead>
                             <tbody>
                                 <?php
-                                if (isset($sales))
-                                    foreach ($sales->items as $key => $row) : ?>
-                                    <tr>
-                                        <td>
-                                        </td>
-                                        <td class="productimgname">
-                                            <?= $row->product->image_uri
-                                                ? '<a class="product-img"><img src="' . base_url($row->product->image_uri) . '" alt="product"></a>'
-                                                : '<a class="p-3"></a>' ?>
-                                            <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
-                                                <?= $row->product->name ?>
-                                                <?php if ($row->store) { ?>
-                                                    <?= $row->store->name; ?><?= $row->store->location ? "(" . $row->store->location . ")" : null; ?></a>
-                                        <?php } ?>
-                                        </td>
-                                        <td>
-                                            <div class="increment-decrement">
-                                                <div class="input-groups">
-                                                    <input type="button" value="-" class="button-minus dec button">
-                                                    <input type='hidden' name="items[<?= $key ?>][id]" value="<?= $row->id ?>">
-                                                    <input type='hidden' name="items[<?= $key ?>][sale_id]" value="<?= $row->sale_id ?>">
-                                                    <input type='hidden' name="items[<?= $key ?>][product_id]" value="<?= $row->product_id ?>">
-                                                    <input type="hidden" name="items[<?= $key ?>][unit_price]" value="<?= $row->unit_price; ?>">
-                                                    <input type="hidden" name="items[<?= $key ?>][tax_id]" value="<?= $row->tax_id ?>">
-                                                    <input type="hidden" name="items[<?= $key ?>][store_id]" value="<?= $row->store_id; ?>">
-                                                    <input type="hidden" name="items[<?= $key ?>][tax]" class="rtax" value="<?= ($row->unit_price * $row->qty * $row->tax) / 100 ?>">
-                                                    <input type="hidden" name="items[<?= $key ?>][discount]" class="rdiscount" value="<?= $row->discount ?>">
-                                                    <input type="hidden" name="items[<?= $key ?>][subtotal]" class="rsubtotal" value="<?= $row->unit_price * $row->qty - $row->discount + ($row->unit_price * $row->qty * $row->tax) / 100 ?>">
-                                                    <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" value="<?= $row->qty ?>" class="quantity-field" required>
-                                                    <input type="button" value="+" class="button-plus inc button">
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td><?= $row->unit_price ?></td>
-                                        <td data-discount="<?= $row->discount ?>"><?= $row->discount ?></td>
-                                        <td data-tax="<?= $row->tax ?>"><?= number_format(($row->unit_price * $row->qty * $row->tax) / 100, 2) ?></td>
-                                        <td><?= number_format($row->unit_price * $row->qty - $row->discount + (($row->unit_price * $row->qty * $row->tax) / 100), 2) ?></td>
-                                        <td><a href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
+                                if (isset($sales)) :
+                                    $ids = array_map(function ($item) {
+                                        return $item->id;
+                                    }, $sales->items);
 
-                                    </tr>
-                                <?php endforeach ?>
+                                    foreach ($sales->items as $key => $row) :
+                                        if ($row->qty <= 0) continue;
+                                ?>
+                                        <tr>
+                                            <td>
+                                            </td>
+                                            <td class="productimgname">
+                                                <?= $row->product->image_uri
+                                                    ? '<a class="product-img"><img src="' . base_url($row->product->image_uri) . '" alt="product"></a>'
+                                                    : '<a class="p-3"></a>' ?>
+                                                <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
+                                                    <?= $row->product->name ?>
+                                                    (<?= $row->store->name; ?><?= $row->store->location ? "(" . $row->store->location . ")" : null; ?>)</a>
+                                            </td>
+                                            <td>
+                                                <div class="increment-decrement">
+                                                    <div class="input-groups">
+                                                        <input type="button" value="-" class="button-minus dec button">
+                                                        <input type='hidden' name="items[<?= $key ?>][product_id]" value="<?= $row->product_id ?>">
+                                                        <input type="hidden" name="items[<?= $key ?>][unit_price]" value="<?= $row->unit_price; ?>">
+                                                        <input type="hidden" name="items[<?= $key ?>][tax_id]" value="<?= $row->tax_id ?>">
+                                                        <input type="hidden" name="items[<?= $key ?>][store_id]" value="<?= $row->store_id; ?>">
+                                                        <input type="hidden" name="items[<?= $key ?>][tax]" class="rtax" value="<?= $row->tax ?>">
+                                                        <input type="hidden" name="items[<?= $key ?>][discount]" class="rdiscount" value="<?= $row->discount ?>">
+                                                        <input type="hidden" name="items[<?= $key ?>][subtotal]" class="rsubtotal" value="<?= $row->subtotal ?>">
+                                                        <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" max="<?= $row->qty ?>" value="<?= $row->qty ?>" class="quantity-field" required>
+                                                        <input type="button" value="+" class="button-plus inc button">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><?= $row->unit_price ?></td>
+                                            <td data-discount="<?= $row->discount ?>"><?= $row->discount ?></td>
+                                            <td data-tax="<?= $row->tax ?>" class="suffix-percent"><?= number_format($row->tax, 2) ?></td>
+                                            <td><?= number_format($row->subtotal, 2) ?></td>
+                                            <td><a href="javascript:void(0);" class="delete-set" data-item-id="<?= $row->id ?>"><i class="fa text-danger fa-trash"></i></a></td>
+
+                                        </tr>
+                                <?php endforeach;
+                                endif ?>
                             </tbody>
                         </table>
 
@@ -164,7 +170,7 @@
                         <div class="total-order">
                             <ul>
                                 <li>
-                                    <h4>Total Sales </h4>
+                                    <h4>SubTotal </h4>
                                     <h5 class="subTotal">GHS 0.00</h5>
                                 </li>
                                 <li>
@@ -182,6 +188,11 @@
                                 <li class="total-value">
                                     <h4>Grand Total </h4>
                                     <h5 class="grandTotal">GHS 0.00</h5>
+                                </li>
+                                <li class="total-value">
+                                    <h4>Change/Due</h4>
+                                    <h5 class="dueTotal">GHS 0.00</h5>
+                                    <input type="hidden" name="paid" id="paid">
                                 </li>
                             </ul>
                         </div>
@@ -213,6 +224,11 @@
                 }
             });
         });
+        saleItemIds = <?= json_encode($ids) ?>;
+    </script>
+<?php } else if (isset($sales)) { ?>
+    <script>
+        saleItemIds = <?= json_encode($ids) ?>;
     </script>
 <?php } ?>
 <?= $this->endSection() ?>

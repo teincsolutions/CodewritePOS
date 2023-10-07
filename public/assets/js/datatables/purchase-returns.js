@@ -1,9 +1,9 @@
 let table;
 
 $(function () {
-  table = $("#dt-sales").DataTable({
+  table = $("#dt-returns").DataTable({
     ajax: {
-      url: baseUrl + "/sales/datatable",
+      url: baseUrl + "/purchases/returns/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
@@ -66,22 +66,20 @@ $(function () {
           return null;
         },
       },
-      { data: "sales_date", name: "sales.sales_date" },
+      { data: "return_date", name: "purchase_returns.return_date" },
       {
-        data: "customer",
-        name: "sales.customer_id",
+        data: "purchase",
+        name: "purchases.supplier_id",
         render: function (data, type, row) {
           if (type === "display")
-            return data
-              ? `<a target="_blank" href="${baseUrl}customers/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
-              : "walk-in-customer";
-          return data ? data.id : null;
+            return `<a target="_blank" href="${baseUrl}suppliers/${data.supplier_id}" class="btn btn-link btn-sm">${data.supplier.name}</a>`;
+          return data ? data.supplier_id : null;
         },
       },
-      { data: "invoice", name: "sales.invoice" },
+      { data: "invoice", name: "purchase_returns.invoice" },
       {
         data: "order_status",
-        name: "sales.order_status",
+        name: "purchase_returns.order_status",
         render: function (data, type) {
           if (type === "display") {
             const badges = {
@@ -96,7 +94,7 @@ $(function () {
       },
       {
         data: "payment_status",
-        name: "sales.payment_status",
+        name: "purchase_returns.payment_status",
         render: function (data, type) {
           if (type === "display") {
             const badges = {
@@ -117,7 +115,7 @@ $(function () {
       },
       {
         data: "paid",
-        name: "sales.paid",
+        name: "purchase_returns.paid",
         render: function (data) {
           return `GHS ${parseFloat(data).toFixed(2)}`;
         },
@@ -133,7 +131,7 @@ $(function () {
       },
       {
         data: "user",
-        name: "sales.user_id",
+        name: "purchase_returns.user_id",
         render: function (data, type, row) {
           if (type === "display")
             return data ? `${data.firstname} ${data.lastname}` : null;
@@ -142,26 +140,12 @@ $(function () {
       },
       {
         data: "id",
-        name: "sales.id",
+        name: "purchase_returns.id",
         render: function (data, type, row) {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
-                        ${
-                          row.payment_status === "due"
-                            ? `  <a  href="javascript:void(0);" class="me-3" onclick="editRow('#add-payment',{sale_id:${data},invoice_balance:${(
-                                row.total_amount - row.paid
-                              ).toFixed(2)},credit:${(
-                                row.total_amount - row.paid
-                              ).toFixed(2)}},{text:'${row.invoice} (${
-                                row.customer.name
-                              } - GHS ${row.total_amount})',id:${
-                                row.id
-                              },name:'sale_id'})"><i class="fa fa-money-bill fa-lg"></i></a>`
-                            : ""
-                        }
-                        <a target="_blank" href="${baseUrl}sales/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                        <a href="${baseUrl}sales/returns/create?invoice=${row.invoice}" class="me-3"><i class="fa fa-reply fa-lg"></i></a>
-                        <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}sales')"><i class="fa fa-trash fa-lg"></i></a>
+                        <a target="_blank" href="${baseUrl}purchases/returns/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
+                        <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}purchases/returns')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;
@@ -230,13 +214,13 @@ $(function () {
     table.ajax.reload();
   });
 
-  $(".select2-customer").select2({
+  $(".select2-supplier").select2({
     ajax: {
-      url: `${baseUrl}customers/select2`,
+      url: `${baseUrl}suppliers/select2`,
       dataType: "json",
     },
     allowClear: true,
-    placeholder: "Seach a customer",
+    placeholder: "Seach a supplier",
   });
 
   let form3 = $("#add-payment");
@@ -290,8 +274,8 @@ $(function () {
 
           if (d.status === true) {
             form3.trigger("reset");
+            $("select").val("").trigger("change.select2");
             form3.modal("hide");
-            table.ajax.reload();
             Swal.fire({
               icon: "success",
               text: d.message,
@@ -316,7 +300,7 @@ $(function () {
   let select2Invoices = $(".select2-invoices")
     .select2({
       ajax: {
-        url: `${baseUrl}sales/select2`,
+        url: `${baseUrl}purchases/select2`,
         dataType: "json",
         data: function (params) {
           params.filter = {
@@ -335,7 +319,7 @@ $(function () {
       const data = e.params.data;
       $("#inv-bal").val((data.total_amount - data.paid).toFixed(2));
       $("#inv-due").val((data.total_amount - data.paid).toFixed(2));
-      $("input[name='customer_id']").val(data.customer_id);
+      $("input[name='supplier_id']").val(data.supplier_id);
     })
     .on("select2:unselect", function (e) {
       $("#inv-bal").val((0).toFixed(2));

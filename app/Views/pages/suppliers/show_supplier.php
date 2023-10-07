@@ -84,10 +84,11 @@
                                                     <th>#Code</th>
                                                     <th>Date</th>
                                                     <th>Reference</th>
+                                                    <th>Type</th>
                                                     <th>Credit</th>
                                                     <th>Debit</th>
                                                     <th>A/c Balance</th>
-                                                    <th>Type</th>
+                                                    <th>Method</th>
                                                     <th>Added By</th>
                                                     <th>Action</th>
                                                 </tr>

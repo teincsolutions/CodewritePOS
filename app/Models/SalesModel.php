@@ -76,7 +76,13 @@ class SalesModel extends Model
             if ($model['singleton']) {
                 $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
                 $model['data']->customer = $cusModel->where('id', $model['data']->customer_id)->first();
-                $model['data']->items = $itemModel->where('sale_id', $model['data']->id)->findAll();
+                $model['data']->items = $itemModel->select('sales_items.id,sales_items.sale_id, sales_items.product_id, sales_items.store_id,sales_items.subtotal, sales_items.tax_id,sales_items.unit_price, (SUM(sales_items.qty)-SUM(ifnull(sales_returns_items.qty,0))) as qty, sales_items.tax, sales_items.discount,(SUM(sales_items.qty)-SUM(ifnull(sales_returns_items.qty,0))) as max_qty, sales_items.id as sale_item_id')
+                    ->where('sales_items.sale_id', $model['data']->id)
+                    ->join('sales_returns', 'sales_returns.sale_id=sales_items.sale_id', 'left')
+                    ->join('sales_returns_items', 'sales_returns_items.sales_return_id=sales_returns.id AND sales_returns_items.product_id=sales_items.product_id', 'left')
+                    ->groupBy('sales_items.product_id')
+                    ->findAll();
+
                 $model['data']->store = $storeModel->where('id', $model['data']->store_id)->first();
                 $model['data']->change = ($model['data']->paid > $model['data']->total_amount) ? abs($model['data']->total_amount - $model['data']->paid) : 0.00;
                 if ($model['data']->type === 'customer') {
@@ -90,7 +96,12 @@ class SalesModel extends Model
                 foreach ($model['data'] as $key => $row) {
                     $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
                     $model['data'][$key]->customer = $cusModel->where('id', $row->customer_id)->first();
-                    $model['data'][$key]->items = $itemModel->where('sale_id', $row->id)->findAll();
+                    $model['data'][$key]->items = $itemModel->select('sales_items.id,sales_items.sale_id,sales_items.product_id, sales_items.store_id,sales_items.subtotal, sales_items.tax_id,sales_items.unit_price, (SUM(sales_items.qty)-SUM(ifnull(sales_returns_items.qty,0))) as qty, sales_items.tax, sales_items.discount,(SUM(sales_items.qty)-SUM(ifnull(sales_returns_items.qty,0))) as max_qty, sales_items.id as sale_item_id')
+                        ->where('sales_items.sale_id', $row->id)
+                        ->join('sales_returns', 'sales_returns.sale_id=sales_items.sale_id', 'left')
+                        ->join('sales_returns_items', 'sales_returns_items.sales_return_id=sales_returns.id AND sales_returns_items.product_id=sales_items.product_id', 'left')
+                        ->groupBy('sales_items.product_id')
+                        ->findAll();
                     $model['data'][$key]->change = ($model['data'][$key]->paid >  $model['data'][$key]->total_amount) ?  abs($model['data'][$key]->total_amount -  $model['data'][$key]->paid) : 0.00;
                     if ($model['data'][$key]->type === 'customer') {
                         $total = $ledger->builder()->selectSum('credit', 'total')
@@ -144,5 +155,19 @@ class SalesModel extends Model
             ->selectSum(new RawSql('(total_amount - paid)'), 'total')->where('payment_status', 'due')
             ->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
+    }
+
+    public function updatePaymentStatus($id)
+    {
+        if (!$id) return;
+        $saleModel = new SalesModel();
+        $sale = $saleModel->where('id', $id)->first();
+        if ($sale) {
+            return $saleModel->save([
+                'id' => $id,
+                'payment_status' => ($sale->total_amount - $sale->paid) > 0 ? 'due' : 'paid'
+            ]);
+        }
+        return false;
     }
 }

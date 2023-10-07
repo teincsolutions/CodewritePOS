@@ -16,14 +16,15 @@
                         <li class="<?= getActiveUrl("sales/pos", "active"); ?>"><a href="<?= site_url('sales/pos') ?>"><i data-feather="hard-drive"></i><span>POS</a></li>
                         <li class="<?= getActiveUrl("quotes/create", "active"); ?>"><a href="<?= site_url('quotes/create') ?>"><i data-feather="save"></i><span>Quotation</span></a></li>
                         <li class="<?= getActiveUrl("sales", "active"); ?>"><a href="<?= site_url('sales') ?>"><i data-feather="shopping-cart"></i><span>Sales</span></a></li>
-                        <li class="<?= getActiveUrl("sales-returns/create", "active"); ?>"><a href="<?= site_url('sales-returns/create') ?>"><i data-feather="copy"></i><span>Sales Return</span></a></li>
+
                         <li class="submenu">
-                            <a href="javascript:void(0);" class="<?= getActiveUrl("returns/*", "active subdrop") ?>"><i data-feather="corner-up-left"></i>
-                                <span>Return</span><span class="menu-arrow"></span>
+                            <a href="javascript:void(0);" class="<?= getActiveUrl("sales/returns/*", "active subdrop") ?> <?= getActiveUrl("sales/returns", "active subdrop") ?>">
+                                <i data-feather="corner-up-left"></i>
+                                <span>Sales Returns</span><span class="menu-arrow"></span>
                             </a>
                             <ul>
-                                <li><a href="<?= site_url('sales/returns') ?>" class="<?= getActiveUrl("returns/sales", "active"); ?>">Sales Return</a></li>
-                                <li><a href="<?= site_url('returns/purchase') ?>" class="<?= getActiveUrl('returns/purchase', "active"); ?>">Purchase Return</a></li>
+                                <li><a class="<?= getActiveUrl("sales/returns/create"); ?>" href="<?= site_url('sales/returns/create') ?>"><span>Create Return</span></a></li>
+                                <li><a class="<?= getActiveUrl("sales/returns"); ?>" href="<?= site_url('sales/returns') ?>">Sales Returns</a></li>
                             </ul>
                         </li>
                         <li class="submenu">
@@ -39,9 +40,20 @@
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Purchases</h6>
                     <ul>
+                        <li class="<?= getActiveUrl("purchases/create", "active"); ?>">
+                            <a href="<?= site_url('purchases/create') ?>"> <i data-feather="file-minus"></i><span>Purchase Order</span></a>
+                        </li>
                         <li class="<?= getActiveUrl("purchases", "active"); ?>"><a href="<?= site_url('purchases') ?>"><i data-feather="shopping-bag"></i><span>Purchases</span></a></li>
-                        <li class="<?= getActiveUrl("purchases/create", "active"); ?>"><a href="<?= site_url('purchases/create') ?>"><i data-feather="file-minus"></i><span>Purchase Order</span></a></li>
-                        <li class="<?= getActiveUrl("purchase-returns/create", "active"); ?>"><a href="<?= site_url('purchase-returns/create') ?>"><i data-feather="refresh-cw"></i><span>Purchase Return</span></a></li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);" class="<?= getActiveUrl("purchases/returns/*", "active subdrop") ?> <?= getActiveUrl("purchases/returns", "active subdrop") ?>">
+                                <i data-feather="corner-up-left"></i>
+                                <span>Purchase Return</span><span class="menu-arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a class="<?= getActiveUrl("purchases/returns/create", "active"); ?>" href="<?= site_url('purchases/returns/create') ?>"><span>Create Return</span></a></li>
+                                <li><a class="<?= getActiveUrl("purchases/returns", "active"); ?>" href="<?= site_url('purchases/returns') ?>">Purchase Returns</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
 
@@ -56,7 +68,7 @@
                         <li hidden class="<?= getActiveUrl("products/print-barcode", "active"); ?>"><a href="<?= site_url('products/-print-barcode') ?>"><i data-feather="align-justify"></i><span>Print Barcode</span></a></li>
                         <li class="<?= getActiveUrl("products/import", "active"); ?>"><a href="<?= site_url('products/import') ?>/importproduct"><i data-feather="minimize-2"></i><span>Import Products</span></a></li>
                         <li class="submenu">
-                            <a class="<?= getActiveUrl("adjustments/*","subdrop active") ?>" href="javascript:void(0);">
+                            <a class="<?= getActiveUrl("adjustments/*", "subdrop active") ?>" href="javascript:void(0);">
                                 <i data-feather="align-justify"></i>
                                 <span>Adjustments</span><span class="menu-arrow"></span>
                             </a>
@@ -83,7 +95,7 @@
                         </li>
 
                         <li class="submenu">
-                            <a class="<?= getActiveUrl("account-debts/*","subdrop active") ?>" href="javascript:void(0);">
+                            <a class="<?= getActiveUrl("account-debts/*", "subdrop active") ?>" href="javascript:void(0);">
                                 <i data-feather="book"></i>
                                 <span>Account Debts</span><span class="menu-arrow"></span>
                             </a>
@@ -93,7 +105,7 @@
                             </ul>
                         </li>
                         <li class="submenu">
-                            <a class="<?= getActiveUrl("closing/*","subdrop active") ?>" href="javascript:void(0);">
+                            <a class="<?= getActiveUrl("closing/*", "subdrop active") ?>" href="javascript:void(0);">
                                 <i data-feather="airplay"></i>
                                 <span>Closing</span><span class="menu-arrow"></span>
                             </a>

@@ -51,6 +51,56 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-3 col-sm-6 col-12">
+            <div class="dash-widget dash1">
+                <div class="dash-widgetimg">
+                    <span class="text-success"><i class="fa fa-cart-arrow-down fa-lg"></i></span>
+                </div>
+                <div class="dash-widgetcontent">
+                    <h5>GHC <span class="counters" data-count="<?= model('SalesReturnModel')->getTodayTotalAmount() ?>">0.00</span></h5>
+                    <h6>Today's Sales Returns</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6 col-12">
+            <div class="dash-widget">
+                <div class="dash-widgetimg">
+                    <span class="text-warning"><i class="fa fa-shopping-cart fa-lg"></i></span>
+                </div>
+                <div class="dash-widgetcontent">
+                    <h5>GHC
+                        <span class="counters" data-count="<?= model('PurchaseReturnModel')->getTodayTotalAmount() ?>">0.00</span>
+                    </h5>
+                    <h6>Today's P. Returns</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-sm-6 col-12">
+            <div class="dash-widget dash1">
+                <div class="dash-widgetimg">
+                    <span class="text-success"><i class="fa fa-cart-arrow-down fa-lg"></i></span>
+                </div>
+                <div class="dash-widgetcontent">
+                    <h5>GHC <span class="counters" data-count="<?= model('SalesReturnModel')->getDueAmount() ?>">0.00</span></h5>
+                    <h6>Ttl Sales Returns Due</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6 col-12">
+            <div class="dash-widget">
+                <div class="dash-widgetimg">
+                    <span class="text-warning"><i class="fa fa-cart-plus fa-lg"></i></span>
+                </div>
+                <div class="dash-widgetcontent">
+                    <h5>GHC
+                        <span class="counters" data-count="<?= model('PurchaseReturnModel')->getDueAmount() ?>">0.00</span>
+                    </h5>
+                    <h6>Ttl P. Return Due</h6>
+                </div>
+            </div>
+        </div>
+
         <div class="col-lg-3 col-sm-6 col-12 d-flex">
             <div class="dash-count">
                 <div class="dash-counts">

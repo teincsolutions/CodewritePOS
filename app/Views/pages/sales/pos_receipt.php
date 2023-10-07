@@ -52,7 +52,7 @@
                     </td>
                 </tr>
                 <?php
-                $total_discount = 0;
+                $total_discount = ($sales->discount ?? 0);
                 foreach ($sales->items as $k => $row) : ?>
                     <?php $total_discount += $row->discount; ?>
                     <tr class="service">

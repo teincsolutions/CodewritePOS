@@ -26,7 +26,7 @@ class CustomerLedgerController extends BaseController
         }
     }
 
-     /**
+    /**
      * return view for list
      * @return Response - http response
      */
@@ -74,6 +74,7 @@ class CustomerLedgerController extends BaseController
             'message' => null,
             'input' => $inputs,
         ];
+        
         $CustomerLedger = $model->where('id', $id)->first();
         if ($CustomerLedger) {
             if ($model->save($inputs)) {
@@ -94,13 +95,10 @@ class CustomerLedgerController extends BaseController
                 ]);
             }
         } else {
+            $sales = $salesModel->where('id', $inputs['sale_id'])->first();
+            $inputs['customer_id'] = $sales->customer_id;
             if ($model->save($inputs)) {
-                $sales = $salesModel->where('id', $inputs['sale_id'])->first();
-                $salesModel->save([
-                    'id' => $inputs['sale_id'],
-                    'payment_status' => (($sales->total_amount - $sales->paid > 0) ? 'due' : 'paid')
-                ]);
-
+                $salesModel->updatePaymentStatus($inputs['sale_id']);
                 $res = array_merge($res, [
                     'status' => true,
                     'message' => "Payment added successfully!",
@@ -163,7 +161,10 @@ class CustomerLedgerController extends BaseController
     public function delete($id = null)
     {
         $model = new CustomerLedgerModel();
+        $ledger = $model->find($id);
         if ($model->delete($id)) {
+            $saleModel = new SalesModel();
+            $saleModel->updatePaymentStatus($ledger->sale_id);
             $res = [
                 'status' => true,
                 'message' => "Record deleted successfully!",
