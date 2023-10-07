@@ -81,4 +81,25 @@ class ProductUnitTransferController extends BaseController
         $model = new ProductUnitTransferModel();
         return $this->response->setJSON(toDatatableResult($model,$inputs));
     }
+
+     /**
+     * return json for delete
+     * @return Response - http response
+     */
+    public function delete($id = null)
+    {
+        $model = new ProductUnitTransferModel();
+        if ($model->delete($id)) {
+            $res = [
+                'status' => true,
+                'message' => "Transfer deleted successfully!",
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'message' => "Couldn't be deleted!"
+            ];
+        }
+        return $this->response->setJSON($res);
+    }
 }

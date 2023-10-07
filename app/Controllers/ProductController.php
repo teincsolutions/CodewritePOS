@@ -146,6 +146,27 @@ class ProductController extends BaseController
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
+     /**
+     * return json for delete
+     * @return Response - http response
+     */
+    public function delete($id = null)
+    {
+        $model = new ProductModel();
+        if ($model->delete($id)) {
+            $res = [
+                'status' => true,
+                'message' => "Product deleted successfully!",
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'message' => "Couldn't be deleted!"
+            ];
+        }
+        return $this->response->setJSON($res);
+    }
+
     /**
      * return json for search
      * @return Response - http response

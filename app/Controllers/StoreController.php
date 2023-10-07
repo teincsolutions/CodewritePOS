@@ -127,4 +127,25 @@ class StoreController extends BaseController
         $model = new StoreModel();
         return $this->response->setJSON(toDatatableResult($model,$inputs));
     }
+
+     /**
+     * return json for delete
+     * @return Response - http response
+     */
+    public function delete($id = null)
+    {
+        $model = new StoreModel();
+        if ($model->delete($id)) {
+            $res = [
+                'status' => true,
+                'message' => "Store deleted successfully!",
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'message' => "Couldn't be deleted!"
+            ];
+        }
+        return $this->response->setJSON($res);
+    }
 }

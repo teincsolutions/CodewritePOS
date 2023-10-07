@@ -23,6 +23,7 @@ class DashboardController extends BaseController
     {
         return view('dashboard');
     }
+    
     public function addGroup() : string {
        return print_r(auth()->user()->getGroups());
     }

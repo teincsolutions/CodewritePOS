@@ -114,4 +114,25 @@ class ExpenseController extends BaseController
         $model = new ExpenseModel();
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
+
+     /**
+     * return json for delete
+     * @return Response - http response
+     */
+    public function delete($id = null)
+    {
+        $model = new ExpenseModel();
+        if ($model->delete($id)) {
+            $res = [
+                'status' => true,
+                'message' => "Expense deleted successfully!",
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'message' => "Couldn't be deleted!"
+            ];
+        }
+        return $this->response->setJSON($res);
+    }
 }

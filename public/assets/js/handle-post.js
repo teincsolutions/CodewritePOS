@@ -20,8 +20,14 @@ form.validate({
 
 form.on("submit", function (e) {
   e.preventDefault();
-
   if ($(this).valid() === true) {
+    Swal.fire({
+      title: "Please wait !",
+      allowOutsideClick: false,
+      willOpen: () => {
+        Swal.showLoading();
+      },
+    });
     $.ajax({
       method: "POST",
       url: this.getAttribute("action"),
@@ -84,6 +90,6 @@ $(".select2-store").select2({
   placeholder: "Seach a store",
 });
 
-$(".select2-tax").on('change', (e)=>{
-  $("[name='tax']").val($(this).data('rate'))
+$(".select2-tax").on("change", (e) => {
+  $("[name='tax']").val($(this).data("rate"));
 });

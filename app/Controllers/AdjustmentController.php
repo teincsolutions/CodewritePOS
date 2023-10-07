@@ -81,4 +81,25 @@ class AdjustmentController extends BaseController
         $model = new StockAdjustmentModel();
         return $this->response->setJSON(toDatatableResult($model,$inputs));
     }
+
+     /**
+     * return json for delete
+     * @return Response - http response
+     */
+    public function delete($id = null)
+    {
+        $model = new StockAdjustmentModel();
+        if ($model->delete($id)) {
+            $res = [
+                'status' => true,
+                'message' => "Adjustment deleted successfully!",
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'message' => "Couldn't be deleted!"
+            ];
+        }
+        return $this->response->setJSON($res);
+    }
 }

@@ -107,4 +107,25 @@ class UnitController extends BaseController
         $model = new UnitModel();
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
+
+     /**
+     * return json for delete
+     * @return Response - http response
+     */
+    public function delete($id = null)
+    {
+        $model = new UnitModel();
+        if ($model->delete($id)) {
+            $res = [
+                'status' => true,
+                'message' => "Unit deleted successfully!",
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'message' => "Couldn't be deleted!"
+            ];
+        }
+        return $this->response->setJSON($res);
+    }
 }
