@@ -79,13 +79,6 @@
                             <div class="form-group">
                                 <select name="customer_id" class="select2-customer">
                                     <option value=""></option>
-                                    <?php
-                                    if (isset($customers))
-                                        foreach ($customers as $row) { ?>
-                                        <option value="<?= $row->id ?>">
-                                            <?= $row->name; ?><?= $row->address ? "($row->address)" : "($row->phone)"; ?>
-                                        </option>
-                                    <?php } ?>
                                 </select>
                             </div>
                         </div>

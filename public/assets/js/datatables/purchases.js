@@ -20,10 +20,14 @@ $(function () {
               filter[field.attr("name")] = field
                 .children("option:selected")
                 .val();
-          } else {
+          }else if (typeof field.attr("name") !== "undefined") {
             filter[field.attr("name")] = field.val();
           }
         });
+
+        params.date_range_column = "purchase_date";
+        params.date_from = $("#date-from").val();
+        params.date_to = $("#date-to").val();
 
         params.fields = filter;
       },
@@ -230,13 +234,18 @@ $(function () {
     table.ajax.reload();
   });
 
-  $(".select2-customer").select2({
+
+  $(".select2-supplier").select2({
     ajax: {
-      url: `${baseUrl}customers/select2`,
+      url: `${baseUrl}suppliers/select2`,
       dataType: "json",
     },
     allowClear: true,
-    placeholder: "Seach a customer",
+    placeholder: "Seach a supplier",
+  });
+  $(".select2-store").select2({
+    placeholder: "Seach a store",
+    allowClear: true,
   });
 
   $(".select2-store").select2({

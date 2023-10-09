@@ -20,10 +20,14 @@ $(function () {
               filter[field.attr("name")] = field
                 .children("option:selected")
                 .val();
-          } else {
+          } else if (typeof field.attr("name") !== "undefined") {
             filter[field.attr("name")] = field.val();
           }
         });
+
+        params.date_range_column = "quote_date";
+        params.date_from = $("#date-from").val();
+        params.date_to = $("#date-to").val();
 
         params.fields = filter;
       },
@@ -100,7 +104,7 @@ $(function () {
           return `GHS ${parseFloat(data).toFixed(2)}`;
         },
       },
-    
+
       {
         data: null,
         render: function (data, type, row) {
@@ -205,6 +209,6 @@ $(function () {
   });
   $(".select2-store").select2({
     placeholder: "Seach a store",
-    allowClear:true,
+    allowClear: true,
   });
 });

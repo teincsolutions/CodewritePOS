@@ -30,9 +30,29 @@
             </div>
 
             <div class="card" id="filter_inputs">
-                <div class="card-body pb-0">
+            <div class="card-body pb-0">
                     <div class="row">
                         <div class="col-lg-2 col-sm-6 col-12">
+                            <div class="form-group">
+                                <div class="input-groupicon">
+                                    <input type="text" class="datetimepicker" placeholder="From date" id="date-from">
+                                    <div class="addonset">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-sm-6 col-12">
+                            <div class="form-group">
+                                <div class="input-groupicon">
+                                    <input type="text" class="datetimepicker" placeholder="To date" id="date-to">
+                                    <div class="addonset">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
                                 <select name="type" class="select">
                                     <option value="">Select type</option>
@@ -55,32 +75,16 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="col-lg-4 col-sm-6 col-12">
                             <div class="form-group">
                                 <select name="customer_id" class="select2-customer">
                                     <option value=""></option>
-                                    <?php
-                                    if (isset($customers))
-                                        foreach ($customers as $row) { ?>
-                                        <option value="<?= $row->id ?>">
-                                            <?= $row->name; ?><?= $row->address ? "($row->address)" : "($row->phone)"; ?>
-                                        </option>
-                                    <?php } ?>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
                                 <input type="text" name="invoice" placeholder="Enter Reference No" value="">
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-sm-6 col-12">
-                            <div class="form-group">
-                                <select name="payment_status" class="select">
-                                    <option value="">Select a status</option>
-                                    <option value="due">Due</option>
-                                    <option value="paid">Paid</option>
-                                </select>
                             </div>
                         </div>
                         <div class="col-lg-3 col-sm-6 col-12">

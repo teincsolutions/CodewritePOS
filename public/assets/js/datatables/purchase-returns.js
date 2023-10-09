@@ -20,10 +20,14 @@ $(function () {
               filter[field.attr("name")] = field
                 .children("option:selected")
                 .val();
-          } else {
+          } else if (typeof field.attr("name") !== "undefined") {
             filter[field.attr("name")] = field.val();
           }
         });
+
+        params.date_range_column = "return_date";
+        params.date_from = $("#date-from").val();
+        params.date_to = $("#date-to").val();
 
         params.fields = filter;
       },
