@@ -6,9 +6,6 @@
             <h4>Cash Up</h4>
             <h6>Load your store cash</h6>
         </div>
-        <div class="page-btn">
-            <a href="<?= site_url('cashups') ?>" class="btn btn-added"><i class="fa fa-arrow-left me-2"></i>List Customers</a>
-        </div>
     </div>
     <div class="row">
         <div class="card">

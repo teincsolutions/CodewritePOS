@@ -7,7 +7,7 @@
             <h6>Manage your Closings</h6>
         </div>
         <div class="page-btn">
-            <a href="<?= site_url("closings/create"); ?>" class="btn btn-added"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus.svg" class="me-2" alt="img">Add New Closing</a>
+            <a href="<?= site_url("closings/create"); ?>" class="btn btn-added"><i class="fa fa-plus me-2"></i> Add New Closing</a>
         </div>
     </div>
 
