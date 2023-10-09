@@ -61,7 +61,7 @@ if (!function_exists('toDatatableResult')) {
         }
 
     if (isset($inputs['length']) && isset($inputs['start'])) 
-        $model->limit($inputs['length'],$inputs['start']);
+        $model->limit($inputs['length'],$inputs['start']+1);
 
      $data = $model->findAll();
         $filtered = sizeof($data);
