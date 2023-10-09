@@ -61,15 +61,16 @@ if (!function_exists('toDatatableResult')) {
         }
         $length = 10;
         $start = 0;
+        $filtered = $model->countAllResults(false);
+
         if (isset($inputs['length']) && isset($inputs['start'])){
             $length = intval($inputs['length']);
-            $start = intval($inputs['start']);
+            $start = intval($inputs['start'])*$length;
             $data = $model->findAll($inputs['length'], $inputs['start']);
         }
         else {
             $data = $model->findAll();
         }
-        $filtered = $total - ($start * $length);
 
         if ($callback)
             foreach ($data as $key => $item)
