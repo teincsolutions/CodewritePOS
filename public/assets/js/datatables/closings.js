@@ -90,8 +90,8 @@ $(function () {
         },
       },
       {
-        data: "cash_up",
-        name: "store_closings.cash_up",
+        data: "cashup",
+        name: "store_closings.cashup",
         render: function (data) {
           return `GHS ${parseFloat(data).toFixed(2)}`;
         },
