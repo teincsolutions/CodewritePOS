@@ -59,12 +59,18 @@ if (!function_exists('toDatatableResult')) {
                 $model->orderBy($inputs['columns'][$order['column']]['name'], $order['dir']);
             }
         }
-
-        if (isset($inputs['length']) && isset($inputs['start']))
+        $length = 10;
+        $start = 0;
+        if (isset($inputs['length']) && isset($inputs['start'])){
+            $length = intval($inputs['length']);
+            $start = intval($inputs['start']);
             $data = $model->findAll($inputs['length'], $inputs['start']);
-        else $data = $model->findAll();
+        }
+        else {
+            $data = $model->findAll();
+        }
+        $filtered = $total - ($start * $length);
 
-        $filtered = $total - sizeof($data);
         if ($callback)
             foreach ($data as $key => $item)
                 $data[$key] = $callback($item);
