@@ -34,15 +34,6 @@
                     <div class="row">
                         <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
-                                <select name="type" class="select">
-                                    <option value="">Select type</option>
-                                    <option value="walk-in-customer">walk-in-customer</option>
-                                    <option value="customer">regular customer</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 col-12">
-                            <div class="form-group">
                                 <select name="from_store_id" class="select2-from_store">
                                     <option value=""></option>
                                     <?php
