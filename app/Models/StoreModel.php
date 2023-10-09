@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use CodeIgniter\Database\RawSql;
 use CodeIgniter\Model;
 
 class StoreModel extends Model
@@ -17,6 +18,8 @@ class StoreModel extends Model
         'name',
         'description',
         'location',
+        'status',
+        'user_id'
     ];
 
     // Dates
@@ -47,12 +50,29 @@ class StoreModel extends Model
     {
         if ($model && $model['data']) {
             $userModel = new UserModel();
+            $ledgerModel = new StoreLedgerModel();
 
             if ($model['singleton']) {
                 $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
+                // balance
+                $total = $ledgerModel->builder()
+                    ->selectSum(new RawSql('(credit - debit)'), 'total')
+                    ->where('store_id', $model['data']->id)
+                    ->get()
+                    ->getRowObject()
+                    ->total;
+                $model['data']->balance = $total ? $total : 0.00;
             } else {
                 foreach ($model['data'] as $key => $row) {
                     $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
+                    // balance
+                    $total = $ledgerModel->builder()
+                        ->selectSum(new RawSql('(credit - debit)'), 'total')
+                        ->where('store_id', $row->id)
+                        ->get()
+                        ->getRowObject()
+                        ->total;
+                    $model['data'][$key]->balance = $total ? $total : 0.00;
                 }
             }
         }

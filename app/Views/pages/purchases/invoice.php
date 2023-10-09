@@ -115,7 +115,7 @@
                                 QTY
                             </td>
                             <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
-                                Price
+                                Cost
                             </td>
                             <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
                                 Subtotal

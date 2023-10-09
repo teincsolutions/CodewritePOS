@@ -5,7 +5,7 @@
         <div class="col-lg-3 col-sm-6 col-12">
             <div class="dash-widget dash1">
                 <div class="dash-widgetimg">
-                    <span class="text-success"><i class="fa fa-shopping-cart fa-lg"></i></span>
+                    <span class="text-info"><i class="fa fa-shopping-cart fa-lg"></i></span>
                 </div>
                 <div class="dash-widgetcontent">
                     <h5>GHC <span class="counters" data-count="<?= model('SalesModel')->getTodayTotalAmount() ?>">0.00</span></h5>
@@ -16,7 +16,7 @@
         <div class="col-lg-3 col-sm-6 col-12">
             <div class="dash-widget">
                 <div class="dash-widgetimg">
-                    <span class="text-warning"><i class="fa fa-cart-plus fa-lg"></i></span>
+                    <span class="text-info"><i class="fa fa-cart-plus fa-lg"></i></span>
                 </div>
                 <div class="dash-widgetcontent">
                     <h5>GHC
@@ -30,7 +30,7 @@
         <div class="col-lg-3 col-sm-6 col-12">
             <div class="dash-widget dash1">
                 <div class="dash-widgetimg">
-                    <span class="text-success"><i class="fa fa-cart-arrow-down fa-lg"></i></span>
+                    <span class="text-warning"><i class="fa fa-cart-arrow-down fa-lg"></i></span>
                 </div>
                 <div class="dash-widgetcontent">
                     <h5>GHC <span class="counters" data-count="<?= model('SalesModel')->getDueAmount() ?>">0.00</span></h5>
@@ -54,7 +54,7 @@
         <div class="col-lg-3 col-sm-6 col-12">
             <div class="dash-widget dash1">
                 <div class="dash-widgetimg">
-                    <span class="text-success"><i class="fa fa-cart-arrow-down fa-lg"></i></span>
+                    <span class="text-danger"><i class="fa fa-cart-arrow-down fa-lg"></i></span>
                 </div>
                 <div class="dash-widgetcontent">
                     <h5>GHC <span class="counters" data-count="<?= model('SalesReturnModel')->getTodayTotalAmount() ?>">0.00</span></h5>
@@ -65,7 +65,7 @@
         <div class="col-lg-3 col-sm-6 col-12">
             <div class="dash-widget">
                 <div class="dash-widgetimg">
-                    <span class="text-warning"><i class="fa fa-shopping-cart fa-lg"></i></span>
+                    <span class="text-danger"><i class="fa fa-shopping-cart fa-lg"></i></span>
                 </div>
                 <div class="dash-widgetcontent">
                     <h5>GHC
@@ -79,11 +79,11 @@
         <div class="col-lg-3 col-sm-6 col-12">
             <div class="dash-widget dash1">
                 <div class="dash-widgetimg">
-                    <span class="text-success"><i class="fa fa-cart-arrow-down fa-lg"></i></span>
+                    <span class="text-danger"><i class="fa fa-money-bill fa-lg"></i></span>
                 </div>
                 <div class="dash-widgetcontent">
-                    <h5>GHC <span class="counters" data-count="<?= model('SalesReturnModel')->getDueAmount() ?>">0.00</span></h5>
-                    <h6>Ttl Sales Returns Due</h6>
+                    <h5>GHC <span class="counters" data-count="<?= model('ExpenseModel')->getTodayTotalAmount() ?>">0.00</span></h5>
+                    <h6>Today's Expenses</h6>
                 </div>
             </div>
         </div>
@@ -100,7 +100,8 @@
                 </div>
             </div>
         </div>
-
+    </div>
+    <div class="row">
         <div class="col-lg-3 col-sm-6 col-12 d-flex">
             <div class="dash-count">
                 <div class="dash-counts">

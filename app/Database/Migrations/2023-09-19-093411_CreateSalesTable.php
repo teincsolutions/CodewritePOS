@@ -100,6 +100,12 @@ class CreateSalesTable extends Migration
                 'null' => false,
                 'defaut' => 0.00
             ],
+            'store_closing_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
+                'null' => true,
+            ],
             'created_at' => [
                 'type'    => 'TIMESTAMP',
                 'default' => new RawSql('CURRENT_TIMESTAMP'),
@@ -117,6 +123,7 @@ class CreateSalesTable extends Migration
         $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_sales_store_id');
         $forge->addForeignKey('customer_id', 'customers', 'id', 'CASCADE', 'CASCADE', 'fk_sales_customer_id');
         $forge->addForeignKey('tax_id', 'taxes', 'id', 'RESTRICT', 'RESTRICT', 'fk_sales_tax_id');
+        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'RESTRICT', 'RESTRICT', 'fk_sales_store_closing_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('sales', true, $attributes);

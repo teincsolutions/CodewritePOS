@@ -95,6 +95,12 @@ class CreatePurchasesTable extends Migration
                 'unsigned'   => true,
                 'null' => true,
             ],
+            'store_closing_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
+                'null' => true,
+            ],
             'created_at' => [
                 'type'    => 'TIMESTAMP',
                 'default' => new RawSql('CURRENT_TIMESTAMP'),
@@ -111,6 +117,7 @@ class CreatePurchasesTable extends Migration
         $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_purchase_store_id');
         $forge->addForeignKey('supplier_id', 'suppliers', 'id', 'CASCADE', 'CASCADE', 'fk_purchase_supplier_id');
         $forge->addForeignKey('tax_id', 'taxes', 'id', 'RESTRICT', 'RESTRICT', 'fk_purchase_tax_id');
+        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'RESTRICT', 'RESTRICT', 'fk_purchase_store_closing_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('purchases', true, $attributes);

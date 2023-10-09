@@ -32,8 +32,11 @@ class QuoteController extends BaseController
      */
     public function index()
     {
+        $storeModel = new StoreModel();
+        
         $data = [
             'title' => 'Quote List',
+            'stores' => $storeModel->where('status','opened')->findAll(),
         ];
         return view('pages/quotes/list_quote', $data);
     }
@@ -53,7 +56,7 @@ class QuoteController extends BaseController
         $data = [
             'title' => 'Create a Quote',
             'invoice' => substr(time() + $lastId, 0, 10),
-            'stores' => $storeModel->findAll(),
+            'stores' => $storeModel->where('status','opened')->findAll(),
             'quoteList' => $model->where($quoteWhere)->findAll(),
         ];
 

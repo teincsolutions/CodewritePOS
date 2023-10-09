@@ -7,7 +7,7 @@
             <h6>Transfer your stocks to one store another store.</h6>
         </div>
         <div class="page-btn">
-            <a href="<?=site_url('products/unit-transfers/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add Transfer</a>
+            <a href="<?=site_url('transfers/units/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add Transfer</a>
         </div>
     </div>
 

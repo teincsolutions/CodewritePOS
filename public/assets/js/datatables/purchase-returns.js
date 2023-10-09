@@ -223,6 +223,12 @@ $(function () {
     placeholder: "Seach a supplier",
   });
 
+  $(".select2-store").select2({
+    placeholder: "Seach a store",
+    allowClear:true,
+  });
+  
+
   let form3 = $("#add-payment");
 
   form3.validate({

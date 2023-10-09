@@ -27,14 +27,6 @@
                                 <li><a class="<?= getActiveUrl("sales/returns"); ?>" href="<?= site_url('sales/returns') ?>">Sales Returns</a></li>
                             </ul>
                         </li>
-                        <li class="submenu">
-                            <a class="<?= getActiveUrl("transfers/*", "active subdrop"); ?>" href="javascript:void(0);">
-                                <i data-feather="shuffle"></i><span>Transfer</span><span class="menu-arrow"></span></a>
-                            <ul>
-                                <li><a class="<?= getActiveUrl("transfers/product", "active"); ?>" href="<?= site_url('transfers/product') ?>">Transfer List</a></li>
-                                <li><a class="<?= getActiveUrl("transfers/product-unit", "active"); ?>" href="<?= site_url('transfers/product-unit') ?>">Unit Transfer List</a></li>
-                            </ul>
-                        </li>
                     </ul>
                 </li>
                 <li class="submenu-open">
@@ -67,6 +59,14 @@
                         <li class="<?= getActiveUrl("units", "active"); ?>"><a href="<?= site_url('units') ?>"><i data-feather="speaker"></i><span>Units</span></a></li>
                         <li hidden class="<?= getActiveUrl("products/print-barcode", "active"); ?>"><a href="<?= site_url('products/-print-barcode') ?>"><i data-feather="align-justify"></i><span>Print Barcode</span></a></li>
                         <li class="<?= getActiveUrl("products/import", "active"); ?>"><a href="<?= site_url('products/import') ?>/importproduct"><i data-feather="minimize-2"></i><span>Import Products</span></a></li>
+                        <li class="submenu">
+                            <a class="<?= getActiveUrl("transfers/*", "active subdrop"); ?>" href="javascript:void(0);">
+                                <i data-feather="shuffle"></i><span>Transfers</span><span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a class="<?= getActiveUrl("transfers/products", "active"); ?>" href="<?= site_url('transfers/products') ?>">Product Transfers</a></li>
+                                <li><a class="<?= getActiveUrl("transfers/units", "active"); ?>" href="<?= site_url('transfers/units') ?>">Unit Transfers</a></li>
+                            </ul>
+                        </li>
                         <li class="submenu">
                             <a class="<?= getActiveUrl("adjustments/*", "subdrop active") ?>" href="javascript:void(0);">
                                 <i data-feather="align-justify"></i>
@@ -105,15 +105,16 @@
                             </ul>
                         </li>
                         <li class="submenu">
-                            <a class="<?= getActiveUrl("closing/*", "subdrop active") ?>" href="javascript:void(0);">
+                            <a class="<?= getActiveUrl("closing/*", "subdrop active") ?> <?= getActiveUrl("closing", "subdrop active") ?>" href="javascript:void(0);">
                                 <i data-feather="airplay"></i>
                                 <span>Closing</span><span class="menu-arrow"></span>
                             </a>
                             <ul>
-                                <li><a class="<?= getActiveUrl("closing/user"); ?>" href="<?= site_url('closing/user') ?>">My Closing</a></li>
                                 <li><a class="<?= getActiveUrl("closing/store"); ?>" href="<?= site_url("closing/store") ?>">Store Closing</a></li>
+                                <li><a class="<?= getActiveUrl("closing"); ?>" href="<?= site_url("closing") ?>">List Closings</a></li>
                             </ul>
                         </li>
+                        <li class="<?= getActiveUrl("cashup", "active"); ?>"><a href="<?= site_url('cashup') ?>"><i data-feather="upload"></i><span>Cashup</span></a></li>
                     </ul>
                 </li>
                 <li class="submenu-open">

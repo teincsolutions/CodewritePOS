@@ -40,9 +40,12 @@ class SalesController extends BaseController
     public function index()
     {
         $cusModel = new CustomerModel();
+        $storeModel = new StoreModel();
+        
         $data = [
             'title' => 'Sales List',
             'customers' => $cusModel->findAll(),
+            'stores' => $storeModel->where('status','opened')->findAll(),
         ];
 
         return view('pages/sales/list_sales', $data);
@@ -73,7 +76,7 @@ class SalesController extends BaseController
         $data = [
             'title' => 'Point of Sales',
             'invoice' => substr(time() + $lastId, 0, 10),
-            'stores' => $storeModel->findAll(),
+            'stores' => $storeModel->where('status','opened')->findAll(),
             'saleList' => $model->where($saleWhere)->findAll(),
             'returnList' => $returnModel->where($returnWhere)->findAll(),
             'ledgerList' => $ledgerModel->where($ledgerWhere)->findAll(),

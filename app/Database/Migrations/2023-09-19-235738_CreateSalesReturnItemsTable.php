@@ -41,6 +41,12 @@ class CreateSalesReturnItemsTable extends Migration
                 'null' => false,
                 'default' => 0
             ],
+            'unit_cost' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'default' => 0
+            ],
             'qty' => [
                 'type'       => 'DECIMAL',
                 'constraint' => "10,2",

@@ -31,8 +31,8 @@ if (!function_exists('toDatatableResult')) {
         if (isset($inputs['date_from']) || isset($inputs['date_to'])) {
             if (!empty($inputs['date_from']) || !empty($inputs['date_to'])) {
                 $model->groupStart();
-                $model->where(new RawSql("DATE(" . $inputs['date_range_column'] . ")" . ' >='), $inputs['date_from']);
-                $model->where(new RawSql("DATE(" . $inputs['date_range_column'] . ")" . ' <='), $inputs['date_to']);
+                $model->where(new RawSql("DATE(" . $inputs['date_range_column'] . ")" . ' >='), date('Y-m-d', strtotime($inputs['date_from'])));
+                $model->where(new RawSql("DATE(" . $inputs['date_range_column'] . ")" . ' <='),  date('Y-m-d', strtotime($inputs['date_to'])));
                 $model->groupEnd();
             }
         }
@@ -40,7 +40,7 @@ if (!function_exists('toDatatableResult')) {
         if (isset($inputs['fields'])) {
             foreach ($inputs['fields'] as $field => $val) {
                 if (!empty(trim($val)))
-                    $model->like($field, $val);
+                    $model->where($field, $val);
             }
         }
 

@@ -3,13 +3,11 @@
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h4>Quotation List</h4>
-            <h6>Manage your Quotations</h6>
+            <h4>Quote List</h4>
+            <h6>Manage your quotes</h6>
         </div>
         <div class="page-btn">
-            <a href="<?=site_url('quotes') ?>" class="btn btn-added">
-                <i class="fa fa-plus" class="me-1"></i> Add Quotation
-            </a>
+            <a href="<?= site_url('quotes/pos') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add Quote</a>
         </div>
     </div>
 
@@ -28,17 +26,6 @@
                     </div>
                 </div>
                 <div class="wordset">
-                    <ul>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/pdf.svg" alt="img"></a>
-                        </li>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/excel.svg" alt="img"></a>
-                        </li>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"></a>
-                        </li>
-                    </ul>
                 </div>
             </div>
 
@@ -47,34 +34,58 @@
                     <div class="row">
                         <div class="col-lg-2 col-sm-6 col-12">
                             <div class="form-group">
-                                <input type="text" class="datetimepicker cal-icon" placeholder="Choose Date">
+                                <select name="type" class="select">
+                                    <option value="">Select type</option>
+                                    <option value="walk-in-customer">walk-in-customer</option>
+                                    <option value="customer">regular customer</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
-                                <input type="text" placeholder="Enter Reference ">
+                                <select name="store_id" class="select2-store">
+                                    <option value=""></option>
+                                    <?php
+                                    if (isset($stores))
+                                        foreach ($stores as $row) { ?>
+                                        <option value="<?= $row->id ?>">
+                                            <?= $row->name; ?> (<?= $row->location; ?>)
+                                        </option>
+                                    <?php } ?>
+                                </select>
                             </div>
                         </div>
-                        <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
-                                <select class="select">
-                                    <option>Choose Customer</option>
-                                    <option>Customer1</option>
+                                <select name="customer_id" class="select2-customer">
+                                    <option value=""></option>
+                                    <?php
+                                    if (isset($customers))
+                                        foreach ($customers as $row) { ?>
+                                        <option value="<?= $row->id ?>">
+                                            <?= $row->name; ?><?= $row->address ? "($row->address)" : "($row->phone)"; ?>
+                                        </option>
+                                    <?php } ?>
                                 </select>
                             </div>
                         </div>
                         <div class="col-lg-2 col-sm-6 col-12">
                             <div class="form-group">
-                                <select class="select">
-                                    <option>Choose Status</option>
-                                    <option>Inprogress</option>
-                                    <option>Complete</option>
+                                <input type="text" name="invoice" placeholder="Enter Reference No" value="">
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-sm-6 col-12">
+                            <div class="form-group">
+                                <select name="payment_status" class="select">
+                                    <option value="">Select a status</option>
+                                    <option value="due">Due</option>
+                                    <option value="paid">Paid</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-1 col-sm-6 col-12 ms-auto">
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
-                                <a class="btn btn-filters ms-auto"><img src="<?=base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                <a class="btn btn-filters ms-auto filter"><i class="fa fa-search"></i></a>
                             </div>
                         </div>
                     </div>
@@ -86,23 +97,93 @@
                     <thead>
                         <tr>
                             <th>
-                                <label class="checkboxs">
-                                    <input type="checkbox" id="select-all">
-                                    <span class="checkmarks"></span>
-                                </label>
                             </th>
-                            <th>Product Name</th>
+                            <th>Date</th>
+                            <th>Customer Name</th>
                             <th>Reference</th>
-                            <th>Custmer Name</th>
                             <th>Status</th>
-                            <th>Grand Total (GHS)</th>
-                            <th>Action</th>
+                            <th>Total</th>
+                            <th>Biller</th>
+                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
-                   
                 </table>
             </div>
         </div>
     </div>
 </div>
+<?= $this->endSection() ?>
+
+<?= $this->section('modal') ?>
+<form action="<?= site_url('customers/ledgers') ?>" class="modal fade" id="add-payment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Payment Date</label>
+                            <div class="input-groupicon">
+                                <input type="text" name="tdate" value="<?= date('d-m-Y', time()) ?>" class="datetimepicker" required>
+                                <div class="addonset">
+                                    <i class="fa fa-calendar fa-lg"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Reference</label>
+                            <select name="quote_id" class="select2-invoices" required>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <input type="hidden" name="customer_id">
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Invoice Balance</label>
+                            <input id="inv-bal" type="text" name="invoice_balance" value="0.00" placeholder="Enter Amount" disabled>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Paying Amount</label>
+                            <input type="text" onkeyup="$('#inv-due').val(($('#inv-bal').val()- $(this).val()).toFixed(2))" name="credit" min="0" value="" placeholder="Enter Amount" required>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Amount Due</label>
+                            <input id="inv-due" type="text" value="0.00" placeholder="Enter Amount" disabled>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Payment type</label>
+                            <select class="select" required>
+                                <option value="cash">Cash</option>
+                                <option value="momo">MoMo</option>
+                                <option value="credit">Credit Card</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-submit">Submit</button>
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</form>
+<?= $this->endSection() ?>
+
+<?= $this->section('script') ?>
+<script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/quotes.js') ?>"></script>
 <?= $this->endSection() ?>

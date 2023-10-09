@@ -20,11 +20,13 @@ $(function () {
               filter[field.attr("name")] = field
                 .children("option:selected")
                 .val();
-          } else {
+          } else if (typeof field.attr("name") !== "undefined") {
             filter[field.attr("name")] = field.val();
           }
         });
-
+        params.date_range_column = "sales_date";
+        params.date_from = $("#date-from").val();
+        params.date_to = $("#date-to").val();
         params.fields = filter;
       },
     },
@@ -160,7 +162,9 @@ $(function () {
                             : ""
                         }
                         <a target="_blank" href="${baseUrl}sales/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                        <a href="${baseUrl}sales/returns/create?invoice=${row.invoice}" class="me-3"><i class="fa fa-reply fa-lg"></i></a>
+                        <a href="${baseUrl}sales/returns/create?invoice=${
+              row.invoice
+            }" class="me-3"><i class="fa fa-reply fa-lg"></i></a>
                         <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}sales')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
@@ -237,6 +241,10 @@ $(function () {
     },
     allowClear: true,
     placeholder: "Seach a customer",
+  });
+  $(".select2-store").select2({
+    placeholder: "Seach a store",
+    allowClear: true,
   });
 
   let form3 = $("#add-payment");

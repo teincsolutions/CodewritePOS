@@ -57,7 +57,7 @@ form.on("submit", function (e) {
           if (typeof d.input === "object") {
             if (d.input._method === "post") {
               form.trigger("reset");
-              $("select").val("").trigger("change.select2");
+              //$("select").val("").trigger("change.select2");
             }
           }
 

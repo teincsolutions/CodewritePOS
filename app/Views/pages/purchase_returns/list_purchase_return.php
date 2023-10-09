@@ -7,7 +7,7 @@
             <h6>Manage your Returns</h6>
         </div>
         <div class="page-btn">
-            <a href="<?=site_url('returns/purchases/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add New Purchases Return</a>
+            <a href="<?= site_url('returns/purchases/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add New Purchases Return</a>
         </div>
     </div>
 
@@ -32,6 +32,20 @@
             <div class="card" id="filter_inputs">
                 <div class="card-body pb-0">
                     <div class="row">
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <select name="store_id" class="select2-store">
+                                    <option value=""></option>
+                                    <?php
+                                    if (isset($stores))
+                                        foreach ($stores as $row) { ?>
+                                        <option value="<?= $row->id ?>">
+                                            <?= $row->name; ?> (<?= $row->location; ?>)
+                                        </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
                                 <select name="supplier_id" class="select2-supplier">
@@ -81,7 +95,7 @@
                             <th>Status</th>
                             <th>Payment</th>
                             <th>Total</th>
-                            <th>Paid</th>
+                            <th>Received</th>
                             <th>Due</th>
                             <th>Biller</th>
                             <th class="text-center">Action</th>

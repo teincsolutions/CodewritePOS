@@ -16,6 +16,7 @@ class PurchaseReturnItemModel extends Model
     protected $allowedFields    = [
         'product_id',
         'unit_cost',
+        'unit_price',
         'purchase_return_id',
         'store_id',
         'qty',

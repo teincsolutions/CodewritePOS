@@ -89,6 +89,12 @@ class CreateSalesReturnsTable extends Migration
                 'unsigned'   => true,
                 'null' => true,
             ], 
+            'store_closing_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
+                'null' => true,
+            ],
             'created_at' => [
                 'type'    => 'TIMESTAMP',
                 'default' => new RawSql('CURRENT_TIMESTAMP'),
@@ -103,6 +109,7 @@ class CreateSalesReturnsTable extends Migration
         $forge->addPrimaryKey('id');
         $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_sales_returns_user_id');
         $forge->addForeignKey('sale_id', 'sales', 'id', 'CASCADE', 'CASCADE', 'fk_sales_returns_sale_id');
+        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'RESTRICT', 'RESTRICT', 'fk_sales_returns_store_closing_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('sales_returns', true, $attributes);

@@ -86,4 +86,26 @@ class CustomerLedgerModel extends Model
         }
         return $model;
     }
+
+    public function getTodayTotalCredit(): float
+    {
+        $total = $this->builder()
+            ->selectSum('credit', 'total')
+            ->where('tdate', date('Y-m-d', time()))
+            ->get()
+            ->getFirstRow()
+            ->total;
+        return $total ? $total : 0.00;
+    }
+
+    public function getTodayTotalDebit(): float
+    {
+        $total = $this->builder()
+            ->selectSum('debit', 'total')
+            ->where('tdate', date('Y-m-d', time()))
+            ->get()
+            ->getFirstRow()
+            ->total;
+        return $total ? $total : 0.00;
+    }
 }

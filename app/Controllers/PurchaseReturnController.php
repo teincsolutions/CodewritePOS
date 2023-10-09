@@ -36,8 +36,10 @@ class PurchaseReturnController extends BaseController
      */
     public function index()
     {
+        $storeModel = new StoreModel();
         $data = [
             'title' => 'Purchase Return List',
+            'stores' => $storeModel->where('status','opened')->findAll(),
         ];
         return view('pages/purchase_returns/list_purchase_return', $data);
     }
@@ -59,7 +61,7 @@ class PurchaseReturnController extends BaseController
         $data = [
             'title' => 'Create Purchase Return',
             'invoice' => substr((time() + 1000000000) + $lastId, 0, 10),
-            'stores' => $storeModel->findAll(),
+            'stores' => $storeModel->where('status','opened')->findAll(),
         ];
         $whereInvoice = [
             'invoice' => $invoice,

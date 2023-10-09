@@ -6,6 +6,9 @@
             <h4>Expense Panel</h4>
             <h6>Add/Update Expenses</h6>
         </div>
+        <div class="page-btn">
+            <a href="<?=site_url('expenses') ?>" class="btn btn-added"><i class="fa fa-arrow-left me-1"></i> List Expense</a>
+        </div>
     </div>
     <form action="<?= site_url('expenses') ?>" class="post-form" method="post">
         <?= csrf_field() ?>
@@ -18,7 +21,7 @@
                         <div class="form-group">
                             <label>Expense Date </label>
                             <div class="input-groupicon">
-                                <input type="text" placeholder="Choose Date" class="datetimepicker" value="<?= isset($expense) ? $expense->expense_date : null ?>">
+                                <input type="text" placeholder="Choose Date" name="expense_date" class="datetimepicker" value="<?= isset($expense) ? $expense->expense_date : date('d-m-Y',time()) ?>">
                                 <div class="addonset">
                                     <i class="fa fa-calendar fa-lg"></i>
                                 </div>

@@ -39,6 +39,12 @@ class CreateStockAdjustmentsTable extends Migration
                 'unsigned'   => true,
                 'null' => true,
             ],
+            'store_closing_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
+                'null' => true,
+            ],
             'created_at' => [
                 'type'    => 'TIMESTAMP',
                 'default' => new RawSql('CURRENT_TIMESTAMP'),
@@ -53,6 +59,7 @@ class CreateStockAdjustmentsTable extends Migration
         $forge->addPrimaryKey('id');
         $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_stock_adjustment_store_id');
         $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_stock_adjustoment_user_id');
+        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'RESTRICT', 'RESTRICT', 'fk_stock_adjustment_store_closing_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('stock_adjustments', true, $attributes);

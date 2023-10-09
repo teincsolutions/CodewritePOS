@@ -115,6 +115,7 @@
                                                         <input type="button" value="-" class="button-minus dec button">
                                                         <input type='hidden' name="items[<?= $key ?>][product_id]" value="<?= $row->product_id ?>">
                                                         <input type="hidden" name="items[<?= $key ?>][unit_price]" value="<?= $row->unit_price; ?>">
+                                                        <input type="hidden" name="items[<?= $key ?>][unit_cost]" value="<?= $row->unit_cost; ?>">
                                                         <input type="hidden" name="items[<?= $key ?>][tax_id]" value="<?= $row->tax_id ?>">
                                                         <input type="hidden" name="items[<?= $key ?>][store_id]" value="<?= $row->store_id; ?>">
                                                         <input type="hidden" name="items[<?= $key ?>][tax]" class="rtax" value="<?= $row->tax ?>">

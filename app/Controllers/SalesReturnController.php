@@ -35,8 +35,10 @@ class SalesReturnController extends BaseController
      */
     public function index()
     {
+        $storeModel = new StoreModel();
         $data = [
             'title' => 'Sales Return List',
+            'stores' => $storeModel->where('status','opened')->findAll(),
         ];
         return view('pages/sales_returns/list_sales_return', $data);
     }
@@ -57,7 +59,7 @@ class SalesReturnController extends BaseController
         $data = [
             'title' => 'Create Sales Return',
             'invoice' => substr((time() + 1000000000) + $lastId, 0, 10),
-            'stores' => $storeModel->findAll(),
+            'stores' => $storeModel->where('status','opened')->findAll(),
         ];
         $whereInvoice = [
             'invoice' => $invoice,

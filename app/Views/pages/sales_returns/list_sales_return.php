@@ -7,7 +7,7 @@
             <h6>Manage your Returns</h6>
         </div>
         <div class="page-btn">
-            <a href="<?=site_url('returns/sales/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add New Sales Return</a>
+            <a href="<?= site_url('returns/sales/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add New Sales Return</a>
         </div>
     </div>
 
@@ -38,6 +38,20 @@
                                     <option value="">Select type</option>
                                     <option value="walk-in-customer">walk-in-customer</option>
                                     <option value="customer">regular customer</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <select name="store_id" class="select2-store">
+                                    <option value=""></option>
+                                    <?php
+                                    if (isset($stores))
+                                        foreach ($stores as $row) { ?>
+                                        <option value="<?= $row->id ?>">
+                                            <?= $row->name; ?> (<?= $row->location; ?>)
+                                        </option>
+                                    <?php } ?>
                                 </select>
                             </div>
                         </div>

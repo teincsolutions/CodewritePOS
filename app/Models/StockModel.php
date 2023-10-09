@@ -39,7 +39,23 @@ class StockModel extends Model
     protected $beforeUpdate   = [];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
-    protected $afterFind      = [];
+    protected $afterFind      = ['setRelation'];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    protected function setRelation($model)
+    {
+        if ($model && $model['data']) {
+            $storeModel = new StoreModel();
+
+            if ($model['singleton']) {
+                $model['data']->store = $storeModel->where('id', $model['data']->store_id)->first();
+            } else {
+                foreach ($model['data'] as $key => $row) {
+                    $model['data'][$key]->store = $storeModel->where('id', $row->store_id)->first();
+                }
+            }
+        }
+        return $model;
+    }
 }

@@ -16,6 +16,7 @@ class SalesItemModel extends Model
     protected $allowedFields    = [
         'product_id',
         'unit_price',
+        'unit_cost',
         'sale_id',
         'store_id',
         'qty',

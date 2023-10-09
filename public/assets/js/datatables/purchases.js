@@ -159,7 +159,7 @@ $(function () {
                   },name:'purchase_id'})"><i class="fa fa-money-bill fa-lg"></i></a>`
                 : ""
             }
-                        <a href="${baseUrl}purchases/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
+                        <a target="_blank" href="${baseUrl}purchases/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
                         <a href="${baseUrl}purchases/returns/create?invoice=${row.invoice}" class="me-3"><i class="fa fa-reply fa-lg"></i></a>
                         <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}purchases')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
@@ -239,6 +239,11 @@ $(function () {
     placeholder: "Seach a customer",
   });
 
+  $(".select2-store").select2({
+    placeholder: "Seach a store",
+    allowClear:true,
+  });
+  
   let form3 = $("#add-payment");
 
   form3.validate({

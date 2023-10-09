@@ -6,6 +6,9 @@
             <h4>Add Expense Category</h4>
             <h6>Create new Expense Category</h6>
         </div>
+        <div class="page-btn">
+            <a href="<?=site_url('expense-categories') ?>" class="btn btn-added"><i class="fa fa-arrow-left me-1"></i> List Expense Category</a>
+        </div>
     </div>
 
     <form action="<?=site_url('expense-categories') ?>" class="post-form" method="post">

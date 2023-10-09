@@ -11,7 +11,6 @@
         </div>
     </div>
     <form class="post-form" action="<?= site_url('sales') ?>" method="post">
-
         <div class="row">
             <div class="col-sm-12 col-lg-8">
                 <?= csrf_field() ?>
@@ -26,8 +25,6 @@
                     <div class="card-body">
                         <div class="row">
                             <?php
-
-                            use App\Models\CustomerLedgerModel;
 
                             if (isset($error)) : ?>
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert"><?= $error ?>
@@ -128,6 +125,7 @@
                                                             <input type='hidden' name="items[<?= $key ?>][sale_id]" value="<?= $row->sale_id ?>">
                                                             <input type='hidden' name="items[<?= $key ?>][product_id]" value="<?= $row->product_id ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][unit_price]" value="<?= $row->unit_price; ?>">
+                                                            <input type="hidden" name="items[<?= $key ?>][unit_cost]" value="<?= $row->unit_cost; ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][tax_id]" value="<?= $row->tax_id ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][store_id]" value="<?= $row->store_id; ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][tax]" class="rtax" value="<?= $row->tax ?>">

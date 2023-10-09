@@ -25,6 +25,10 @@ class DashboardController extends BaseController
     }
     
     public function addGroup() : string {
-       return print_r(auth()->user()->getGroups());
+        $user = auth()->user();
+       // $user->addGroup('developer');
+       // $user->addPermission('sales.create', 'sales.edit', 'sales.view');
+      // $user->removeGroup('developer');
+       return print_r($user->can('sales.delete')?'true':'false');
     }
 }

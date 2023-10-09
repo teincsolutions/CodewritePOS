@@ -7,7 +7,7 @@
             <h6>Manage your purchases</h6>
         </div>
         <div class="page-btn">
-            <a href="<?=site_url('purchases/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add Purchases</a>
+            <a href="<?= site_url('purchases/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add Purchases</a>
         </div>
     </div>
 
@@ -34,6 +34,20 @@
                     <div class="row">
                         <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
+                                <select name="store_id" class="select2-store">
+                                    <option value=""></option>
+                                    <?php
+                                    if (isset($stores))
+                                        foreach ($stores as $row) { ?>
+                                        <option value="<?= $row->id ?>">
+                                            <?= $row->name; ?> (<?= $row->location; ?>)
+                                        </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
                                 <select name="supplier_id" class="select2-supplier">
                                     <option value=""></option>
                                     <?php
@@ -46,6 +60,7 @@
                                 </select>
                             </div>
                         </div>
+
                         <div class="col-lg-2 col-sm-6 col-12">
                             <div class="form-group">
                                 <input type="text" name="invoice" placeholder="Enter Reference No" value="">

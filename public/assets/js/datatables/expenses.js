@@ -179,4 +179,10 @@ $(function () {
     $("#date-from,#date-to").val("");
     table.ajax.reload();
   });
+
+  $(".select2-store").select2({
+    placeholder: "Seach a store",
+    allowClear:true,
+  });
+  
 });

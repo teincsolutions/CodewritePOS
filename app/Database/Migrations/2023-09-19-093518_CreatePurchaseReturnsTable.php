@@ -89,6 +89,12 @@ class CreatePurchaseReturnsTable extends Migration
                 'unsigned'   => true,
                 'null' => true,
             ],
+            'store_closing_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
+                'null' => true,
+            ],
             'created_at' => [
                 'type'    => 'TIMESTAMP',
                 'default' => new RawSql('CURRENT_TIMESTAMP'),
@@ -104,6 +110,7 @@ class CreatePurchaseReturnsTable extends Migration
         $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_purchase_returns_user_id');
         $forge->addForeignKey('purchase_id', 'purchases', 'id', 'CASCADE', 'CASCADE', 'fk_purchase_returns_purchase_id');
         $forge->addForeignKey('tax_id', 'taxes', 'id', 'RESTRICT', 'RESTRICT', 'fk_purchase_return_tax_id');
+        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'RESTRICT', 'RESTRICT', 'fk_purchase_return_store_closing_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('purchase_returns', true, $attributes);

@@ -67,4 +67,20 @@ class ExpenseModel extends Model
         }
         return $model;
     }
+
+    public function getTotalAmount(): float
+    {
+        $total = $this->builder()->selectSum('amount', 'total')->get()->getFirstRow()->total;
+        return $total ? $total : 0.00;
+    }
+
+    public function getTodayTotalAmount(): float
+    {
+        // total paid
+        $total = $this->builder()->selectSum('amount', 'total')
+            ->where('expense_date', date('Y-m-d', time()))
+            ->get()->getFirstRow()->total;
+            
+        return $total ? $total : 0.00;
+    }
 }

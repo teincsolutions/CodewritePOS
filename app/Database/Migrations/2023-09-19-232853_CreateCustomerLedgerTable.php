@@ -66,6 +66,12 @@ class CreateCustomerLedgerTable extends Migration
                 'unsigned'   => true,
                 'null' => true,
             ],
+            'store_closing_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
+                'null' => true,
+            ],
             'created_at' => [
                 'type'    => 'TIMESTAMP',
                 'default' => new RawSql('CURRENT_TIMESTAMP'),
@@ -86,6 +92,7 @@ class CreateCustomerLedgerTable extends Migration
         $forge->addForeignKey('sale_id', 'sales', 'id', 'CASCADE', 'CASCADE', 'fk_customer_ledger_sale_id');
         $forge->addForeignKey('sales_return_id', 'sales_returns', 'id', 'CASCADE', 'CASCADE', 'fk_customer_ledger_sales_return_id');
         $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_customer_ledger_user_id');
+        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'RESTRICT', 'RESTRICT', 'fk_customer_ledger_store_closing_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('customer_ledgers', true, $attributes);

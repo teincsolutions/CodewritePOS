@@ -8,7 +8,7 @@
             <h6>Full details of a product</h6>
         </div>
         <div class="page-btn">
-            <a href="<?=site_url('products') ?>" class="btn btn-added"><i class="fa fa-arrow-left me-1"></i> List Product</a>
+            <a href="<?= site_url('products') ?>" class="btn btn-added"><i class="fa fa-arrow-left me-1"></i> List Product</a>
         </div>
     </div>
     <div class="row">
@@ -17,9 +17,9 @@
                 <div class="card-body">
                     <?php if ($product->barcode) : ?>
                         <div class="bar-code-view">
-                            <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/barcode1.png" alt="barcode">
+                            <img src="" alt="barcode">
                             <a class="printimg">
-                                <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/printer.svg" alt="print">
+                                <img src="" alt="print">
                             </a>
                         </div>
                     <?php endif; ?>
@@ -94,6 +94,30 @@
                                 <h6></h6>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table" id="dt-inventory">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Store</th>
+                                    <th>Instock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach (model('StockModel')->where('product_id',$product->id)->findAll() as $key => $row): ?>
+                                <tr>
+                                    <th><?=$key + 1 ?></th>
+                                    <td><?=$row->store->name ?></td>
+                                    <td><?=$row->instock ?></td>
+                                </tr>
+                                <?php endforeach ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

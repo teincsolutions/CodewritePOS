@@ -66,6 +66,12 @@ class CreateSupplierLedgerTable extends Migration
                 'unsigned'   => true,
                 'null' => true,
             ],
+            'store_closing_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
+                'null' => true,
+            ],
             'created_at' => [
                 'type'    => 'TIMESTAMP',
                 'default' => new RawSql('CURRENT_TIMESTAMP'),
@@ -86,6 +92,7 @@ class CreateSupplierLedgerTable extends Migration
         $forge->addForeignKey('purchase_id', 'purchases', 'id', 'CASCADE', 'CASCADE', 'fk_supplier_ledger_purchase_id');
         $forge->addForeignKey('purchase_return_id', 'purchase_returns', 'id', 'CASCADE', 'CASCADE', 'fk_supplier_ledger_purchase_return_id');
         $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_supplier_ledger_user_id');
+        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'RESTRICT', 'RESTRICT', 'fk_supplier_ledger_store_closing_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('supplier_ledgers', true, $attributes);

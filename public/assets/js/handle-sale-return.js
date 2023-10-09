@@ -293,6 +293,9 @@ function autocomplete(inp) {
                                                 <input type="hidden" name="items[${prodIndex}][unit_price]" value="${
                 item.unit_price
               }">
+              <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
+                item.unit_cost
+              }">
                                                 <input type="hidden" name="items[${prodIndex}][tax_id]" value="${
                 item.tax_id ? item.tax_id : ""
               }">

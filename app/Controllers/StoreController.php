@@ -18,8 +18,8 @@ class StoreController extends BaseController
         LoggerInterface $logger
     ) {
         parent::initController($request, $response, $logger);
-        if(!auth()->loggedIn()){
-             return $response->redirect(site_url('login'));
+        if (!auth()->loggedIn()) {
+            return $response->redirect(site_url('login'));
         }
     }
 
@@ -29,8 +29,11 @@ class StoreController extends BaseController
      */
     public function index()
     {
+        $storeModel = new StoreModel();
+
         $data = [
             'title' => 'Store List',
+            'stores' => $storeModel->findAll(),
         ];
         return view('pages/stores/list_store', $data);
     }
@@ -58,9 +61,9 @@ class StoreController extends BaseController
     {
         $model = new StoreModel();
         $inputs = $this->request->getVar();
-        
-        if(auth()->user())
-        $inputs['user_id'] = auth()->user()->id;
+
+        if (auth()->user())
+            $inputs['user_id'] = auth()->user()->id;
 
         $id = $this->request->getPost('id');
         $res = [
@@ -69,9 +72,9 @@ class StoreController extends BaseController
             'message' => null,
             'input' => $inputs,
         ];
-        $Store = $model->where('id',$id)->first();
+        $store = $model->where('id', $id)->first();
 
-        if ($Store) {
+        if ($store) {
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -117,7 +120,7 @@ class StoreController extends BaseController
         return view('pages/stores/show_store', $data);
     }
 
-     /**
+    /**
      * return json for datatables
      * @return Response - http response
      */
@@ -125,10 +128,10 @@ class StoreController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new StoreModel();
-        return $this->response->setJSON(toDatatableResult($model,$inputs));
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
-     /**
+    /**
      * return json for delete
      * @return Response - http response
      */

@@ -7,7 +7,7 @@
             <h6>Manage your Expenses</h6>
         </div>
         <div class="page-btn">
-            <a href="<?=site_url("expenses/create");?>" class="btn btn-added"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus.svg" class="me-2" alt="img">Add New Expense</a>
+            <a href="<?= site_url("expenses/create"); ?>" class="btn btn-added"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus.svg" class="me-2" alt="img">Add New Expense</a>
         </div>
     </div>
 
@@ -28,28 +28,43 @@
                     </div>
                 </div>
                 <div class="wordset">
-                    
+
                 </div>
             </div>
 
-             <div class="card"  id="filter_inputs">
+            <div class="card" id="filter_inputs">
                 <div class="card-body pb-0">
                     <div class="row">
-                       
                         <div class="col-lg-2 col-sm-6 col-12">
                             <div class="form-group">
-                                <input name="expense_date" type="text" placeholder="Enter Date">
+                                <div class="input-groupicon">
+                                    <input type="date" name="expense_date" placeholder="Choose Date" class="form-control">
+                                </div>
                             </div>
                         </div>
-                        <div class="col-lg-2 col-sm-6 col-12">
-                            <div  class="form-group">
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <select name="store_id" class="select2-store">
+                                    <option value=""></option>
+                                    <?php
+                                    if (isset($stores))
+                                        foreach ($stores as $row) { ?>
+                                        <option value="<?= $row->id ?>">
+                                            <?= $row->name; ?> (<?= $row->location; ?>)
+                                        </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
                                 <input name="amount" type="text" placeholder="Enter Expense Amount">
                             </div>
                         </div>
-                        
+
                         <div class="col-lg-1 col-sm-6 col-12  ms-auto">
                             <div class="form-group">
-                                <button type="button" class="btn btn-filters filter ms-auto"><img src="<?=base_url('assets/icons/search-white.svg') ?>" alt="img"></button>
+                                <button type="button" class="btn btn-filters filter ms-auto"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></button>
                             </div>
                         </div>
                     </div>
@@ -57,7 +72,7 @@
             </div>
 
             <div class="table-responsive">
-                 <table class="table" id="expensestable">
+                <table class="table" id="expensestable">
                     <thead>
                         <tr>
                             <th></th>

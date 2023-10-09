@@ -38,7 +38,7 @@
                         <h2>Item</h2>
                     </td>
                     <td class="Hours">
-                        <h2>Price</h2>
+                        <h2>Cost</h2>
                     </td>
                     <td class="Hours">
                         <h2>Qty</h2>

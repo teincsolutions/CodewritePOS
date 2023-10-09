@@ -19,11 +19,6 @@ class CreateProductUnitTransfersTable extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'product_id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-            ],
             'from_unit_id' => [
                 'type'           => 'INT',
                 'constraint'     => 5,
@@ -33,11 +28,6 @@ class CreateProductUnitTransfersTable extends Migration
                 'type'           => 'INT',
                 'constraint'     => 5,
                 'unsigned'       => true,
-            ],
-            'qty' => [
-                'type'       => 'DECIMAL',
-                'constraint' => "10,2",
-                'null' => false,
             ],
             'user_id' => [
                 'type'       => 'INT',

@@ -30,8 +30,12 @@ class ExpenseController extends BaseController
      */
     public function index()
     {
+
+        $storeModel = new StoreModel();
+
         $data = [
             'title' => 'Expense List',
+            'stores' => $storeModel->where('status','opened')->findAll(),
         ];
         return view('pages/expenses/list_expense', $data);
     }
@@ -47,7 +51,7 @@ class ExpenseController extends BaseController
         $data = [
             'title' => 'Create Expense',
             'categories' => $eCatModel->where('status', 'opened')->findAll(),
-            'stores' => $storeModel->findAll(),
+            'stores' => $storeModel->where('status','opened')->findAll(),
         ];
 
         if ($id) {
@@ -115,7 +119,7 @@ class ExpenseController extends BaseController
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
-     /**
+    /**
      * return json for delete
      * @return Response - http response
      */

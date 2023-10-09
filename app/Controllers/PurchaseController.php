@@ -38,9 +38,12 @@ class PurchaseController extends BaseController
     public function index()
     {
         $supModel = new SupplierModel();
+        $storeModel = new StoreModel();
+
         $data = [
             'title' => 'Purchase List',
             'suppliers' => $supModel->findAll(),
+            'stores' => $storeModel->where('status','opened')->findAll(),
         ];
 
         return view('pages/purchases/list_purchase', $data);
@@ -68,7 +71,7 @@ class PurchaseController extends BaseController
         $data = [
             'title' => 'Purchase Order',
             'invoice' => substr(time() + $lastId, 0, 10),
-            'stores' => $storeModel->findAll(),
+            'stores' => $storeModel->where('status','opened')->findAll(),
             'suppliers' => $supModel->findAll(),
             'purchaseList' => $model->where($purchaseWhere)->findAll(),
             'returnList' => $returnModel->where($returnWhere)->findAll(),
