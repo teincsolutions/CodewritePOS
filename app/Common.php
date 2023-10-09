@@ -60,7 +60,6 @@ if (!function_exists('toDatatableResult')) {
             }
         }
 
-    }
     if (isset($inputs['length']) && isset($inputs['start'])) 
         $model->limit($inputs['length'],$inputs['start']);
 
