@@ -64,7 +64,7 @@ if (!function_exists('toDatatableResult')) {
             $data = $model->findAll($inputs['length'], $inputs['start']);
         else $data = $model->findAll();
 
-        $filtered = sizeof($data);
+        $filtered = $total - sizeof($data);
         if ($callback)
             foreach ($data as $key => $item)
                 $data[$key] = $callback($item);
