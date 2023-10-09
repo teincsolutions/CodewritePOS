@@ -85,8 +85,8 @@ $(function () {
         data: "opening_balance",
         render: function (data, type, row) {
           return data < 0
-            ? `(GHS ${Math.abs(data).toFixed(2)})`
-            : `GHS ${data.toFixed(2)}`;
+            ? `(GHS ${Math.abs(parseFloat(data)).toFixed(2)})`
+            : `GHS ${parseFloat(data).toFixed(2)}`;
         },
       },
       {
@@ -132,19 +132,11 @@ $(function () {
         },
       },
       {
-        data: "stock_adjust_balance",
-        render: function (data, type, row) {
-          return data < 0
-            ? `(GHS ${Math.abs(data).toFixed(2)})`
-            : `GHS ${data.toFixed(2)}`;
-        },
-      },
-      {
         data: "product_transfer_balance",
         render: function (data, type, row) {
           return data < 0
             ? `(GHS ${Math.abs(data).toFixed(2)})`
-            : `GHS ${data.toFixed(2)}`;
+            : `GHS ${parseFloat(data).toFixed(2)}`;
         },
       },
       {

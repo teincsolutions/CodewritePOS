@@ -90,7 +90,6 @@
                             <th>Tlt Walk-in Sales</th>
                             <th>Sales Rtn</th>
                             <th>Purchase Rtn</th>
-                            <th>Stock Adj. Bal</th>
                             <th>Transfers Bal</th>
                             <th>Expenses</th>
                             <th>Cash in Hand</th>
