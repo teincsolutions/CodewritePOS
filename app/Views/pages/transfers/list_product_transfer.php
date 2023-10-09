@@ -65,7 +65,7 @@
                                 <input type="text" name="invoice" placeholder="Enter Reference No" value="">
                             </div>
                         </div>
-                        <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="col-lg-2 col-sm-6 col-12">
                             <div class="form-group">
                                 <select name="payment_status" class="select">
                                     <option value="">Select a status</option>
@@ -74,7 +74,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="col-lg-1 col-sm-6 col-12">
                             <div class="form-group">
                                 <a class="btn btn-filters ms-auto filter"><i class="fa fa-search"></i></a>
                             </div>
