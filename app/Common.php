@@ -28,6 +28,7 @@ if (!function_exists('toDatatableResult')) {
                 $model->join($join['table'], $join['cond'], $join['type'] ?? '', null);
 
         $total = $model->countAllResults(false);
+       
         if (isset($inputs['date_from']) || isset($inputs['date_to'])) {
             if (!empty($inputs['date_from']) || !empty($inputs['date_to'])) {
                 $model->groupStart();
@@ -59,7 +60,11 @@ if (!function_exists('toDatatableResult')) {
             }
         }
 
-        $data = $model->findAll();
+    }
+    if (isset($inputs['length']) && isset($inputs['start'])) 
+        $model->limit($inputs['length'],$inputs['start']);
+
+     $data = $model->findAll();
         $filtered = sizeof($data);
         if ($callback)
             foreach ($data as $key => $item)
