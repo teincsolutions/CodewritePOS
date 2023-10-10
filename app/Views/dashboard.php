@@ -222,7 +222,7 @@
                                             <a href="<?= site_url('products/' . $row->id) ?>" class="product-img">
                                                 <img src="<?= $row->image_uri ? base_url($row->image_uri) : base_url('assets/images/noimage.png') ?>" alt="product">
                                             </a>
-                                            <a href="<?= site_url('products/' . $row->id) ?>"><?= $row->name; ?></a>
+                                            <a href="<?= site_url('products/' . $row->id) ?>"><?= $row->name; ?> <?= $row->brand ? "(".$row->brand->name.")" : ''; ?></a>
                                         </td>
                                         <td>GHS <?= $row->unit_price; ?></td>
                                     </tr>
