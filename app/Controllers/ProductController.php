@@ -146,7 +146,7 @@ class ProductController extends BaseController
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
-     /**
+    /**
      * return json for delete
      * @return Response - http response
      */
@@ -175,6 +175,10 @@ class ProductController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new ProductModel();
+        $model->select('products.*');
+        $model->join('categories', 'categories.id=products.category_id');
+        $model->join('brands', 'brands.id=products.brand_id', 'left');
+        
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
@@ -196,7 +200,7 @@ class ProductController extends BaseController
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
-     /**
+    /**
      * return json for search
      * @return Response - http response
      */
