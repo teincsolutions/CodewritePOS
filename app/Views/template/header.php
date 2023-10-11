@@ -1,3 +1,8 @@
+<?php
+
+use CodeIgniter\Shield\Authorization\Groups;
+
+?>
 <div class="header">
     <div class="header-left active">
         <a href="<?= site_url() ?>" class="logo logo-normal">
@@ -104,7 +109,7 @@
                         </span>
                         <span class="user-detail">
                             <span class="user-name"><?= auth()->user()->firstname ?> <?= auth()->user()->lastname ?></span>
-                            <span class="user-role"><?= auth()->user()->getGroups()[0] ?></span>
+                            <span class="user-role"><?= (new Groups())->info(auth()->user()->getGroups()[0])->title ?></span>
                         </span>
                     </span>
                 <?php } ?>
@@ -118,7 +123,7 @@
                                 <span class="status online"></span></span>
                             <div class="profilesets">
                                 <h6><?= auth()->user()->firstname ?> <?= auth()->user()->lastname ?></h6>
-                                <h5><?= auth()->user()->getGroups()[0] ?></h5>
+                                <h5><?= (new Groups())->info(auth()->user()->getGroups()[0])->title ?></h5>
                             </div>
                         </div>
                         <hr class="m-0">
