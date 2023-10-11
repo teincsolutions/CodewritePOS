@@ -4,14 +4,42 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\UserModel;
+use CodeIgniter\Events\Events;
+use CodeIgniter\Exceptions\ModelException;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\Shield\Authentication\Passwords;
+use CodeIgniter\Shield\Entities\User;
+use CodeIgniter\Shield\Exceptions\ValidationException;
+use CodeIgniter\Shield\Models\DatabaseException;
+use CodeIgniter\Shield\Traits\Viewable;
+use Config\Services;
 use Psr\Log\LoggerInterface;
 
 class UserController extends BaseController
 {
+    use Viewable;
+    /**
+     * Auth Table names
+     */
+    private array $tables;
 
+    public function initController(
+        RequestInterface $request,
+        ResponseInterface $response,
+        LoggerInterface $logger
+    ): void {
+        parent::initController(
+            $request,
+            $response,
+            $logger
+        );
+
+        /** @var Auth $authConfig */
+        $authConfig   = config('Auth');
+        $this->tables = $authConfig->tables;
+    }
     /**
      * return view for list
      * @return Response - http response
@@ -37,13 +65,13 @@ class UserController extends BaseController
         if ($id) {
             $model = new UserModel();
             $data = array_merge($data, [
-                'user' => $model->where('id',$id)->first(),
+                'user' => $model->where('id', $id)->first(),
                 'title' => 'Edit User',
             ]);
         }
         return view('pages/users/edit_user', $data);
     }
-     /**
+    /**
      * return view for show
      * @return Response - http response
      */
@@ -76,36 +104,45 @@ class UserController extends BaseController
             'message' => null,
             'input' => $inputs,
         ];
-        $User = $model->where('id', $id)->first();
+        $user = $model->where('id', $id)->first();
 
-        if ($User) {
+        if ($user) {
             if ($model->save($inputs)) {
-                $res = array_merge($res, [
+                if (isset($inputs['groups']))
+                    $user->syncGroups(...$inputs['groups']);
+                return $this->response->setJSON([
                     'status' => true,
                     'message' => "User updated successfully!",
                     'data' => $model->find($id),
-                ]);
-            } else {
-                $res = array_merge($res, [
-                    'status' => false,
-                    'message' => "Couldn't be updated!"
+                    'input' => $inputs,
                 ]);
             }
         } else {
-            if ($model->save($inputs)) {
-                $res = array_merge($res, [
-                    'status' => true,
-                    'message' => "User created successfully!",
-                    'data' => $model->find($model->getInsertID()),
-                ]);
-            } else {
-                $res = array_merge($res, [
+            $rules  = setting('Validation.registration');
+            if (!$this->validateData($inputs, $rules)) {
+                return $this->response->setJSON([
                     'status' => false,
-                    'message' => "Couldn't be created!"
+                    'message' => join(" and ", array_map(function ($error) {
+                        return $error;
+                    }, $this->validator->getErrors()))
                 ]);
             }
+            $allowedPostFields = array_keys($rules);
+
+            $user = new User();
+            $user->fill($this->request->getPost($allowedPostFields));
+
+            $model->save($user);
+            $user = $model->find($model->getInsertID());
+            $user->syncGroups(...$inputs['groups']);
+
+            return $this->response->setJSON([
+                'status' => true,
+                'message' => "User created successfully!",
+                'input' => $inputs,
+                'data' => $model->find($model->getInsertID()),
+            ]);
         }
-        return $this->response->setJSON($res);
     }
     /**
      * return json for datatables
@@ -116,5 +153,26 @@ class UserController extends BaseController
         $inputs = $this->request->getVar();
         $model = new UserModel();
         return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+    /**
+     * return json for delete
+     * @return Response - http response
+     */
+    public function delete($id = null)
+    {
+        $model = new UserModel();
+        if ($model->delete($id, true)) {
+            $res = [
+                'status' => true,
+                'message' => "User deleted successfully!",
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'message' => "Couldn't be deleted!"
+            ];
+        }
+        return $this->response->setJSON($res);
     }
 }

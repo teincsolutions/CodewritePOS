@@ -5,12 +5,16 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\Shield\Authorization\Groups;
+use CodeIgniter\Shield\Entities\Group;
 
 class SettingController extends BaseController
 {
     public function general()
     {
-        return view('pages/settings/general');
+        $data = [
+            'title' => 'General Settings',
+        ];
+        return view('pages/settings/general', $data);
     }
 
     public function group_permissions($key = null)
@@ -66,9 +70,47 @@ class SettingController extends BaseController
         }
     }
 
+    /**
+     * return json for savePermissions
+     * @return Response - http response
+     */
+    public function save_group()
+    {
+        $inputs = $this->request->getVar();
+        $alias = strtolower(str_replace(' ', '-', $inputs['title']));
+        $group = [$alias => ['title' => $inputs['title'], 'description' => $inputs['description']],];
+        $groups = setting('AuthGroups.groups');
+        $groups[$alias] = $inputs;
+        setting('AuthGroups.groups', $groups);
+
+        $groups = new Groups();
+        $group  = $groups->info($alias);
+        if ($group) {
+            return $this->response->setJSON(
+                [
+                    'status' => true,
+                    'data' => $group,
+                    'message' => "Group Created Successfully!",
+                    'input' => $inputs,
+                ]
+            );
+        } else {
+            return $this->response->setJSON(
+                [
+                    'status' => false,
+                    'message' => "No Permissions Selected!",
+                    'input' => $inputs,
+                ]
+            );
+        }
+    }
+
     public function groups()
     {
-        return view('pages/settings/groups');
+        $data = [
+            'title' => 'Group Permissions',
+        ];
+        return view('pages/settings/groups', $data);
     }
 
     public function delete_group(string $group)

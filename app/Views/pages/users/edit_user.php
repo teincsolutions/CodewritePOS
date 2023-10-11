@@ -77,7 +77,18 @@
                                 </div>
                             </div>
                         </div>
-
+                    </div>
+                <?php else : ?>
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Role(s)<sup class="text-danger">*</sup></label>
+                            <select name="groups[]" id="select2-groups" multiple required>
+                                <option value=""></option>
+                                <?php foreach (setting('AuthGroups.groups') as $key => $row) : ?>
+                                    <option value="<?= $key ?>" <?= in_array($key, $user->groups) ? 'selected' : '' ?>><?= $row['title'] ?></option>
+                                <?php endforeach ?>
+                            </select>
+                        </div>
                     </div>
                 <?php endif ?>
                 <div class="col-lg-12">

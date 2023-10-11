@@ -89,7 +89,7 @@ $(function () {
         name: "users.active",
         render: function (data, type, row) {
           if (type === "display") {
-            return `<div class="d-flex align-items-center">
+            return `
                         <div class="me-3 status-toggle d-flex align-items-center">
                         <input type="checkbox" ${
                           ["", "checked"][data === true ? 1 : 0]
@@ -101,13 +101,19 @@ $(function () {
                         <label for="user${
                           row.id
                         }" class="checktoggle">checkbox</label>
-                        </div>
-                        <a class="me-3 text-secondary" href="${baseUrl}users/edit/${
-              row.id
-            }"><i class="fa fa-edit fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${
-                          row.id
-                        }, '${baseUrl}users')"><i class="fa fa-trash fa-lg"></i></a>
+                        </div>`;
+          }
+          return data;
+        },
+      },
+      {
+        data: "id",
+        name: "users.id",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return `<div class="d-flex align-items-center">
+                        <a class="me-3 text-secondary" href="${baseUrl}users/edit/${row.id}"><i class="fa fa-edit fa-lg"></i></a>
+                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${row.id}, '${baseUrl}users')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;

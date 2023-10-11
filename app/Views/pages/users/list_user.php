@@ -69,7 +69,8 @@
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Address</th>
-                             <th>Added By</th>
+                            <th>Added By</th>
+                             <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>

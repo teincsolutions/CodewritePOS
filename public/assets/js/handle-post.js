@@ -59,6 +59,8 @@ form.on("submit", function (e) {
               form.trigger("reset");
               //$("select").val("").trigger("change.select2");
             }
+            if (form.hasClass("modal")) form.modal('hide');
+            if (form.hasClass("refresh-page")) location.reload();
           }
 
           Swal.fire({

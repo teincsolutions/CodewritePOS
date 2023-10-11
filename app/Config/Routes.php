@@ -39,6 +39,7 @@ $routes->group('settings',static function (RouteCollection $routes) {
     $routes->get('groups', [SettingController::class, 'groups']);
     $routes->delete('groups/(:any)', [SettingController::class, 'delete_group/$1']);
     $routes->post('group-permissions', [SettingController::class, 'save_permissions']);
+    $routes->post('groups', [SettingController::class, 'save_group']);
 });
 //indexs
 $routes->get('users', [UserController::class, 'index']);
@@ -185,6 +186,8 @@ $routes->post('suppliers', [SupplierController::class, 'save']);
 $routes->post('units', [UnitController::class, 'save']);
 $routes->post('cashup', [StoreLedgerController::class, 'save']);
 $routes->post('closing/save', [ClosingController::class, 'save']);
+$routes->post('users', [UserController::class, 'save']);
+$routes->put('users', [UserController::class, 'save']);
 
 // delete requests
 $routes->delete('product-adjustments/(:num)', [AdjustmentController::class, 'delete']);
@@ -207,5 +210,6 @@ $routes->delete('suppliers/(:num)', [SupplierController::class, 'delete']);
 $routes->delete('suppliers/ledger/(:num)', [SupplierLedgerController::class, 'delete']);
 $routes->delete('units/(:num)', [UnitController::class, 'delete']);
 $routes->delete('cashup/(:num)', [StoreLedgerController::class, 'delete']);
+$routes->delete('users/(:num)', [UserController::class, 'delete']);
 
 service('auth')->routes($routes);
