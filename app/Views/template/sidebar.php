@@ -158,7 +158,7 @@
                             </a>
                             <ul>
                                 <li class="<?= getActiveUrl("settings/general", "active"); ?>"><a href="<?= site_url('settings/general') ?>">General Settings</a></li>
-                                <li class="<?= getActiveUrl("settings/group-permissions", "active"); ?>"><a href="<?= site_url('settings/group-permissions') ?>">Group Permissions</a></li>
+                                <li class="<?= getActiveUrl("settings/groups", "active"); ?>"><a href="<?= site_url('settings/groups') ?>">Group Permissions</a></li>
                                 <li class="<?= getActiveUrl("settings/email", "active"); ?>"><a href="<?= site_url('settings/email') ?>">Email Settings</a></li>
                                 <li class="<?= getActiveUrl("settings/sms", "active"); ?>"><a href="<?= site_url('settings/sms') ?>">SMS Settings</a></li>
                                 <li class="<?= getActiveUrl("settings/payment", "active"); ?>"><a href="<?= site_url('settings/payment') ?>">Payment Settings</a></li>
