@@ -3,7 +3,7 @@ let table;
 $(function () {
   table = $("#dt-quotes").DataTable({
     ajax: {
-      url: baseUrl + "/quotes/datatable",
+      url: baseUrl + "quotes/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
@@ -70,7 +70,7 @@ $(function () {
           return null;
         },
       },
-      { data: "quotes_date", name: "quotes.quotes_date" },
+      { data: "quote_date", name: "quotes.quote_date" },
       {
         data: "customer",
         name: "quotes.customer_id",
@@ -84,34 +84,9 @@ $(function () {
       },
       { data: "invoice", name: "quotes.invoice" },
       {
-        data: "order_status",
-        name: "quotes.order_status",
-        render: function (data, type) {
-          if (type === "display") {
-            const badges = {
-              completed: "bg-lightgreen",
-              pending: "lightred",
-            };
-            return `<span class="badges ${badges[data]}">${data}</span>`;
-          }
-
-          return data;
-        },
-      },
-      {
         data: "total_amount",
         render: function (data) {
           return `GHS ${parseFloat(data).toFixed(2)}`;
-        },
-      },
-
-      {
-        data: null,
-        render: function (data, type, row) {
-          due = data.total_amount - data.paid;
-          return due < 0
-            ? `(GHS ${Math.abs(due).toFixed(2)})`
-            : `GHS ${due.toFixed(2)}`;
         },
       },
       {

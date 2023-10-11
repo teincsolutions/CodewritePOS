@@ -97,15 +97,13 @@
             </div>
 
             <div class="table-responsive">
-                <table id="dt-quotes" class="table">
+                <table id="dt-quotes" class="table w-100">
                     <thead>
                         <tr>
-                            <th>
-                            </th>
+                            <th></th>
                             <th>Date</th>
                             <th>Customer Name</th>
                             <th>Reference</th>
-                            <th>Status</th>
                             <th>Total</th>
                             <th>Biller</th>
                             <th class="text-center">Action</th>
@@ -116,75 +114,6 @@
         </div>
     </div>
 </div>
-<?= $this->endSection() ?>
-
-<?= $this->section('modal') ?>
-<form action="<?= site_url('customers/ledgers') ?>" class="modal fade" id="add-payment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Create Payment</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label>Payment Date</label>
-                            <div class="input-groupicon">
-                                <input type="text" name="tdate" value="<?= date('d-m-Y', time()) ?>" class="datetimepicker" required>
-                                <div class="addonset">
-                                    <i class="fa fa-calendar fa-lg"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label>Reference</label>
-                            <select name="quote_id" class="select2-invoices" required>
-                                <option value=""></option>
-                            </select>
-                        </div>
-                    </div>
-                    <input type="hidden" name="customer_id">
-                    <div class="col-lg-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label>Invoice Balance</label>
-                            <input id="inv-bal" type="text" name="invoice_balance" value="0.00" placeholder="Enter Amount" disabled>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label>Paying Amount</label>
-                            <input type="text" onkeyup="$('#inv-due').val(($('#inv-bal').val()- $(this).val()).toFixed(2))" name="credit" min="0" value="" placeholder="Enter Amount" required>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label>Amount Due</label>
-                            <input id="inv-due" type="text" value="0.00" placeholder="Enter Amount" disabled>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label>Payment type</label>
-                            <select class="select" required>
-                                <option value="cash">Cash</option>
-                                <option value="momo">MoMo</option>
-                                <option value="credit">Credit Card</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-submit">Submit</button>
-                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</form>
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>

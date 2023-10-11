@@ -176,13 +176,16 @@ class AuthGroups extends ShieldAuthGroups
         'stocks.create'        => 'Can add new stocks',
         'stocks.edit'          => 'Can edit stocks',
         'stocks.delete'        => 'Can delete existing stocks',
-
+       
+        'closing.view'        => 'Can view closings',
+        'closing.create'        => 'Can create closing report',
+        'closing.delete'        => 'Can delete existing closing',
+        
         'general-settings.access'      => 'Can view and edit the general settings',
         'email-settings.access'      => 'Can view and edit the email settings',
         'payment-settings.access'      => 'Can view and edit the payment settings',
         'permission-settings.access'      => 'Can view and edit the permssions settings',
         'updates.access'      => 'Can access new version update settings',
-
     ];
 
     /**
@@ -206,8 +209,8 @@ class AuthGroups extends ShieldAuthGroups
         'units'        => 'Units Managements',
         'expense-categories'        => 'Expense Categories Management',
         'expenses'        => 'Expenses Management',
-        'customer-ledgers'        => 'Customer Ledgers Management',
-        'supplier-ledgers'        => 'Supplier Ledgers Management',
+        'customer-ledgers'        => 'Customer Account Book Management',
+        'supplier-ledgers'        => 'Supplier Account Book Management',
         'purchases'        => 'Purchases Management',
         'purchase-returns'        => 'Purchase Returns Management',
         'sales'        => 'Sales Managements',
@@ -215,12 +218,12 @@ class AuthGroups extends ShieldAuthGroups
         'quotes'        => 'Quotes Management',
         'adjustments'        => 'Adjustments Management',
         'stocks'        => 'Stocks Management',
+        'closing'        => 'Store Closing Management',
         'general-settings'      => 'General Settings',
         'email-settings'      => 'Email Settings',
         'payment-settings'      => 'Payment Settings',
         'permission-settings'      => 'Permssions Settings',
         'updates'      => 'New Version Update Settings',
-
     ];
 
     /**
@@ -237,16 +240,14 @@ class AuthGroups extends ShieldAuthGroups
             'categories.*', 'units.*', 'product-transfers.*', 'unit-transfers.*', 'expense-categories.*',
             'expenses.*', 'customer-ledgers.*', 'supplier-ledgers.*', 'purchases.*', 'sales.*',
             'purchase-returns.*', 'sales-returns.*', 'quotes.*', 'adjustments.*',
-            'general-settings.*', 'email-settings.*', 'invoice-settings.*', 'sales-settings.*',
-            'receipt-settings.*', 'purchase-settings.*', 'payment-settings.*', 'permission-settings.*',
+            'general-settings.*','email-settings.*', 'payment-settings.*', 'permission-settings.*',
         ],
         'developer' => [
             'users.*', 'customers.*', 'suppliers.*', 'stores.*', 'products.*', 'brands.*',
             'categories.*', 'units.*', 'product-transfers.*', 'unit-transfers.*', 'expense-categories.*',
             'expenses.*', 'customer-ledgers.*', 'supplier-ledgers.*', 'purchases.*', 'sales.*',
             'purchase-returns.*', 'sales-returns.*', 'quotes.*', 'adjustments.*', 'stocks.*',
-            'general-settings.*', 'email-settings.*', 'invoice-settings.*', 'sales-settings.*', 'receipt-settings.*',
-            'purchase-settings.*', 'payment-settings.*', 'permission-settings.*', 'updates.access',
+            'general-settings.*', 'email-settings.*', 'payment-settings.*', 'permission-settings.*', 'updates.access',
         ],
         'guest' => [
             'customers.view', 'suppliers.view', 'stores.view', 'products.view', 'brands.view',
