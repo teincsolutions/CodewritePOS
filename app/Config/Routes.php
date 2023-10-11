@@ -25,8 +25,6 @@ use App\Controllers\SupplierLedgerController;
 use App\Controllers\UnitController;
 use App\Controllers\UserController;
 use CodeIgniter\Router\RouteCollection;
-use CodeIgniter\Shield\Controllers\LoginController;
-use CodeIgniter\Shield\Entities\User;
 
 /**
  * @var RouteCollection $routes
