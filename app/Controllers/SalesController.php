@@ -22,17 +22,6 @@ use Psr\Log\LoggerInterface;
 
 class SalesController extends BaseController
 {
-    public function initController(
-        RequestInterface $request,
-        ResponseInterface $response,
-        LoggerInterface $logger
-    ) {
-        parent::initController($request, $response, $logger);
-        if (!auth()->loggedIn()) {
-            return $response->redirect(site_url('login'));
-        }
-    }
-
     /**
      * return view for list
      * @return Response - http response

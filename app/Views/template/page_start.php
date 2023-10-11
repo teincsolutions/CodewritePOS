@@ -8,8 +8,8 @@
     <meta name="keywords" content="admin, estimates, business, corporate, creative, management, minimal, modern">
     <meta name="author" content="Codewrite Technology Ltd - CODEWRITE POS">
     <meta name="robots" content="noindex, nofollow">
-    <meta name="base-url" content="<?=site_url() ?>">
-    <title>Codewrite Pos</title>
+    <meta name="base-url" content="<?= site_url() ?>">
+    <title><?= $title ?? '' ?> - Codewrite POS </title>
 
     <link rel="shortcut icon" type="image/x-icon" href="<?= base_url('assets/images/logo.png') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap.min.css') ?>">

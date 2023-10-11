@@ -18,6 +18,14 @@ class AuthGroups extends ShieldAuthGroups
 
     /**
      * --------------------------------------------------------------------
+     * Disabled Groups
+     * --------------------------------------------------------------------
+     * The group that are not allowed to be edit.
+     */
+    public array $disabledGroup = [];
+
+    /**
+     * --------------------------------------------------------------------
      * Groups
      * --------------------------------------------------------------------
      * An associative array of the available groups in the system, where the keys
@@ -63,16 +71,6 @@ class AuthGroups extends ShieldAuthGroups
      * If a permission is not listed here it cannot be used.
      */
     public array $permissions = [
-        'general-settings.edit'      => 'Can view and edit the general settings',
-        'email-settings.edit'      => 'Can view and edit the email settings',
-        'invoice-settings.edit'      => 'Can view and edit the invoice settings',
-        'receipt-settings.edit'      => 'Can view and edit the receipt settings',
-        'sales-settings.edit'      => 'Can view and edit the sales settings',
-        'purchase-settings.edit'      => 'Can view and edit the purchase settings',
-        'payment-settings.edit'      => 'Can view and edit the payment settings',
-        'permission-settings.edit'      => 'Can view and edit the permssions settings',
-        'updates.access'      => 'Can access new version update settings',
-
         'users.view'        => 'Can view users',
         'users.create'        => 'Can create new users',
         'users.edit'          => 'Can edit existing users',
@@ -97,17 +95,18 @@ class AuthGroups extends ShieldAuthGroups
         'products.create'        => 'Can add new products',
         'products.edit'          => 'Can edit products',
         'products.delete'        => 'Can delete existing products',
-       
+        'products.import'        => 'Can import new products',
+
         'product-transfers.view'        => 'Can view product transfers',
         'product-transfers.create'        => 'Can add new product transfers',
         'product-transfers.edit'          => 'Can edit product transfers',
         'product-transfers.delete'        => 'Can delete existing product transfers',
-       
+
         'unit-transfers.view'        => 'Can view unit transfers',
         'unit-transfers.create'        => 'Can add new unit transfers',
         'unit-transfers.edit'          => 'Can edit unit transfers',
         'unit-transfers.delete'        => 'Can delete existing unit transfers',
-       
+
         'categories.view'        => 'Can view categories',
         'categories.create'        => 'Can add new categories',
         'categories.edit'          => 'Can edit categories',
@@ -177,6 +176,51 @@ class AuthGroups extends ShieldAuthGroups
         'stocks.create'        => 'Can add new stocks',
         'stocks.edit'          => 'Can edit stocks',
         'stocks.delete'        => 'Can delete existing stocks',
+
+        'general-settings.access'      => 'Can view and edit the general settings',
+        'email-settings.access'      => 'Can view and edit the email settings',
+        'payment-settings.access'      => 'Can view and edit the payment settings',
+        'permission-settings.access'      => 'Can view and edit the permssions settings',
+        'updates.access'      => 'Can access new version update settings',
+
+    ];
+
+    /**
+     * --------------------------------------------------------------------
+     * Permissions
+     * --------------------------------------------------------------------
+     * The available permissions in the system.
+     *
+     * If a permission is not listed here it cannot be used.
+     */
+    public array $permissionItems = [
+        'users'        => 'Users Management',
+        'customers'        => 'Customers Management',
+        'suppliers'        => 'Suppliers Management',
+        'stores'        => 'Stores Management',
+        'products'        => 'Products Management',
+        'product-transfers'        => 'Product Transfers Management',
+        'unit-transfers'        => 'Unit transfers Management',
+        'categories'        => 'Categories Management',
+        'brands'        => 'Brands Management',
+        'units'        => 'Units Managements',
+        'expense-categories'        => 'Expense Categories Management',
+        'expenses'        => 'Expenses Management',
+        'customer-ledgers'        => 'Customer Ledgers Management',
+        'supplier-ledgers'        => 'Supplier Ledgers Management',
+        'purchases'        => 'Purchases Management',
+        'purchase-returns'        => 'Purchase Returns Management',
+        'sales'        => 'Sales Managements',
+        'sales-returns'        => 'Sales Returns Management',
+        'quotes'        => 'Quotes Management',
+        'adjustments'        => 'Adjustments Management',
+        'stocks'        => 'Stocks Management',
+        'general-settings'      => 'General Settings',
+        'email-settings'      => 'Email Settings',
+        'payment-settings'      => 'Payment Settings',
+        'permission-settings'      => 'Permssions Settings',
+        'updates'      => 'New Version Update Settings',
+
     ];
 
     /**
@@ -189,26 +233,26 @@ class AuthGroups extends ShieldAuthGroups
      */
     public array $matrix = [
         'admin' => [
-            'users.*','customers.*','suppliers.*','stores.*','products.*','brands.*',
-            'categories.*','units.*','product-transfers.*','unit-transfers.*','expense-categories.*',
-            'expenses.*', 'customer-ledgers.*','supplier-ledgers.*','purchases.*','sales.*',
-            'purchase-returns.*','sales-returns.*','quotes.*','adjustments.*',
-            'general-settings.*' ,'email-settings.*','invoice-settings.*','sales-settings.*',
-            'receipt-settings.*', 'purchase-settings.*','payment-settings.*','permission-settings.*',
+            'users.*', 'customers.*', 'suppliers.*', 'stores.*', 'products.*', 'brands.*',
+            'categories.*', 'units.*', 'product-transfers.*', 'unit-transfers.*', 'expense-categories.*',
+            'expenses.*', 'customer-ledgers.*', 'supplier-ledgers.*', 'purchases.*', 'sales.*',
+            'purchase-returns.*', 'sales-returns.*', 'quotes.*', 'adjustments.*',
+            'general-settings.*', 'email-settings.*', 'invoice-settings.*', 'sales-settings.*',
+            'receipt-settings.*', 'purchase-settings.*', 'payment-settings.*', 'permission-settings.*',
         ],
         'developer' => [
-            'users.*','customers.*','suppliers.*','stores.*','products.*','brands.*',
-            'categories.*','units.*','product-transfers.*','unit-transfers.*','expense-categories.*',
-            'expenses.*', 'customer-ledgers.*','supplier-ledgers.*','purchases.*','sales.*',
-            'purchase-returns.*','sales-returns.*','quotes.*','adjustments.*','stocks.*',
-            'general-settings.*' ,'email-settings.*','invoice-settings.*','sales-settings.*','receipt-settings.*', 
-            'purchase-settings.*','payment-settings.*', 'permission-settings.*','updates.access',
+            'users.*', 'customers.*', 'suppliers.*', 'stores.*', 'products.*', 'brands.*',
+            'categories.*', 'units.*', 'product-transfers.*', 'unit-transfers.*', 'expense-categories.*',
+            'expenses.*', 'customer-ledgers.*', 'supplier-ledgers.*', 'purchases.*', 'sales.*',
+            'purchase-returns.*', 'sales-returns.*', 'quotes.*', 'adjustments.*', 'stocks.*',
+            'general-settings.*', 'email-settings.*', 'invoice-settings.*', 'sales-settings.*', 'receipt-settings.*',
+            'purchase-settings.*', 'payment-settings.*', 'permission-settings.*', 'updates.access',
         ],
         'guest' => [
-            'customers.view','suppliers.view','stores.view','products.view','brands.view',
-            'categories.view','units.view','product-transfers.view','unit-transfers.view','expense-categories.view',
-            'expenses.view', 'customer-ledgers.view','supplier-ledgers.view','purchases.view','sales.view',
-            'purchase-returns.view','sales-returns.view','quotes.view','adjustments.view',
+            'customers.view', 'suppliers.view', 'stores.view', 'products.view', 'brands.view',
+            'categories.view', 'units.view', 'product-transfers.view', 'unit-transfers.view', 'expense-categories.view',
+            'expenses.view', 'customer-ledgers.view', 'supplier-ledgers.view', 'purchases.view', 'sales.view',
+            'purchase-returns.view', 'sales-returns.view', 'quotes.view', 'adjustments.view',
         ],
     ];
 }

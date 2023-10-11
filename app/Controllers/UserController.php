@@ -11,16 +11,6 @@ use Psr\Log\LoggerInterface;
 
 class UserController extends BaseController
 {
-    public function initController(
-        RequestInterface $request,
-        ResponseInterface $response,
-        LoggerInterface $logger
-    ) {
-        parent::initController($request, $response, $logger);
-        if(!auth()->loggedIn()){
-             return $response->redirect(site_url('login'));
-        }
-    }
 
     /**
      * return view for list
@@ -47,7 +37,7 @@ class UserController extends BaseController
         if ($id) {
             $model = new UserModel();
             $data = array_merge($data, [
-                'user' => $model->find($id),
+                'user' => $model->where('id',$id)->first(),
                 'title' => 'Edit User',
             ]);
         }

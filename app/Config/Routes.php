@@ -17,6 +17,7 @@ use App\Controllers\PurchaseReturnController;
 use App\Controllers\QuoteController;
 use App\Controllers\SalesController;
 use App\Controllers\SalesReturnController;
+use App\Controllers\SettingController;
 use App\Controllers\StoreController;
 use App\Controllers\StoreLedgerController;
 use App\Controllers\SupplierController;
@@ -31,11 +32,16 @@ use CodeIgniter\Shield\Entities\User;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'DashboardController::index');
-$routes->get('/groups', 'DashboardController::addGroup');
 $routes->get('products/search', 'ProductController::search');
 $routes->get('products/sales/search', 'ProductController::sale_search');
 $routes->get('products/purchases/search', 'ProductController::purchase_search');
-
+$routes->group('settings',static function (RouteCollection $routes) {
+    $routes->get('general', [SettingController::class, 'general']);
+    $routes->get('group-permissions/(:any)', [SettingController::class, 'group_permissions/$1']);
+    $routes->get('groups', [SettingController::class, 'groups']);
+    $routes->delete('groups/(:any)', [SettingController::class, 'delete_group/$1']);
+    $routes->post('group-permissions', [SettingController::class, 'save_permissions']);
+});
 //indexs
 $routes->get('users', [UserController::class, 'index']);
 $routes->get('product-adjustments', [AdjustmentController::class, 'index']);

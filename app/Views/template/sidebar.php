@@ -140,7 +140,7 @@
                     <h6 class="submenu-hdr">User Management</h6>
                     <ul>
                         <li class="submenu">
-                            <a class="<?= getActiveUrl("users/*", "active"); ?>" href="javascript:void(0);"><i data-feather="users"></i><span>Manage Users</span><span class="menu-arrow"></span></a>
+                            <a class="<?= getActiveUrl("users/*", "subdrop active"); ?> <?= getActiveUrl("users", "subdrop active"); ?>" href="javascript:void(0);"><i data-feather="users"></i><span>Manage Users</span><span class="menu-arrow"></span></a>
                             <ul>
                                 <li><a class="<?= getActiveUrl("users/create", "active"); ?>" href="<?= site_url('users/create') ?>">New User </a></li>
                                 <li><a class="<?= getActiveUrl("users", "active"); ?>" href="<?= site_url('users') ?>">Users List</a></li>
@@ -153,14 +153,16 @@
                     <ul>
                         <li class="<?= getActiveUrl("stores", "active"); ?>"><a href="<?= site_url('stores') ?>"><i data-feather="home"></i><span>Stores</span></a></li>
                         <li class="submenu">
-                            <a href="javascript:void(0);"><i data-feather="settings"></i><span>Settings</span><span class="menu-arrow"></span></a>
+                            <a href="javascript:void(0);" class="<?= getActiveUrl("settings/*", "subdrop active"); ?> <?= getActiveUrl("settings", "subdrop active"); ?>">
+                                <i data-feather="settings"></i><span>Settings</span><span class="menu-arrow"></span>
+                            </a>
                             <ul>
-                                <li class="<?= getActiveUrl("general-settings", "active"); ?>"><a href="<?= site_url('general-settings') ?>">General Settings</a></li>
-                                <li class="<?= getActiveUrl("email-settings", "active"); ?>"><a href="<?= site_url('email-settings') ?>">Email Settings</a></li>
-                                <li class="<?= getActiveUrl("payment-settings", "active"); ?>"><a href="<?= site_url('payment-settings') ?>">Payment Settings</a></li>
-                                <li class="<?= getActiveUrl("group-permissions", "active"); ?>"><a href="<?= site_url('group-permissions') ?>">Group Permissions</a></li>
-                                <li class="<?= getActiveUrl("tax-rates", "active"); ?>"><a href="<?= site_url('tax-rates') ?>">Tax Rates</a></li>
-                            </ul>
+                                <li class="<?= getActiveUrl("settings/general", "active"); ?>"><a href="<?= site_url('settings/general') ?>">General Settings</a></li>
+                                <li class="<?= getActiveUrl("settings/group-permissions", "active"); ?>"><a href="<?= site_url('settings/group-permissions') ?>">Group Permissions</a></li>
+                                <li class="<?= getActiveUrl("settings/email", "active"); ?>"><a href="<?= site_url('settings/email') ?>">Email Settings</a></li>
+                                <li class="<?= getActiveUrl("settings/sms", "active"); ?>"><a href="<?= site_url('settings/sms') ?>">SMS Settings</a></li>
+                                <li class="<?= getActiveUrl("settings/payment", "active"); ?>"><a href="<?= site_url('settings/payment') ?>">Payment Settings</a></li>
+                                </ul>
                         </li>
                         <li>
                             <a href="<?= site_url('logout') ?>"><i data-feather="log-out"></i><span>Logout</span> </a>

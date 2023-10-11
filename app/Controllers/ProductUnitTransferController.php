@@ -4,23 +4,11 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\ProductUnitTransferModel;
-use CodeIgniter\HTTP\RequestInterface;
+use App\Models\UnitTransferModel;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
 
 class ProductUnitTransferController extends BaseController
 {
-    public function initController(
-        RequestInterface $request,
-        ResponseInterface $response,
-        LoggerInterface $logger
-    ) {
-        parent::initController($request, $response, $logger);
-        if(!auth()->loggedIn()){
-             return $response->redirect(site_url('login'));
-        }
-    }
 
     /**
      * return view for list
@@ -45,7 +33,7 @@ class ProductUnitTransferController extends BaseController
         ];
 
         if ($id) {
-            $model = new ProductUnitTransferModel();
+            $model = new UnitTransferModel();
             $data = array_merge($data, [
                 'product' => $model->find($id),
                 'title' => 'Edit Product Unit Transfer',
@@ -63,7 +51,7 @@ class ProductUnitTransferController extends BaseController
         $data = [
             'title' => 'Product Unit Transfer Details'
         ];
-        $model = new ProductUnitTransferModel();
+        $model = new UnitTransferModel();
         $data = array_merge($data, [
             'product' => $model->find($id),
         ]);
@@ -78,7 +66,7 @@ class ProductUnitTransferController extends BaseController
     public function datatable(): Response
     {
         $inputs = $this->request->getVar();
-        $model = new ProductUnitTransferModel();
+        $model = new UnitTransferModel();
         return $this->response->setJSON(toDatatableResult($model,$inputs));
     }
 
@@ -88,7 +76,7 @@ class ProductUnitTransferController extends BaseController
      */
     public function delete($id = null)
     {
-        $model = new ProductUnitTransferModel();
+        $model = new UnitTransferModel();
         if ($model->delete($id)) {
             $res = [
                 'status' => true,
