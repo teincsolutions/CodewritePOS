@@ -8,7 +8,7 @@ foreach (setting('AuthGroups.permissions') as $key => $value) {
 $skipRoles = ['developer'];
 $disabled = array_merge(setting('AuthGroups.disabledGroup'), [setting('AuthGroups.defaultGroup')]);
 
-$skip = in_array($group->alias, $skipRoles) ? ['updates'] : [];
+$skip = in_array($group->alias, $skipRoles) ? [] : ['updates'];
 $disabled =  in_array($group->alias, $disabled);
 ?>
 <?= $this->extend('template/default') ?>
