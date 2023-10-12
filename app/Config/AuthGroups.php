@@ -276,12 +276,12 @@ class AuthGroups extends ShieldAuthGroups
             'expenses.*', 'customer-ledgers.*', 'supplier-ledgers.*', 'purchases.*', 'sales.*',
             'purchase-returns.*', 'sales-returns.*', 'quotes.*', 'adjustments.*', 'closing.*',
             'general-settings.*', 'email-settings.*', 'payment-settings.*', 'permission-settings.*',
-            'sms-settings.*', 'closing.*', 'cashup.*'
+            'sms-settings.*', 'cashup.*'
         ],
         'developer' => [
             'users.*', 'customers.*', 'suppliers.*', 'stores.*', 'products.*', 'brands.*',
             'categories.*', 'units.*', 'product-transfers.*', 'unit-transfers.*', 'expense-categories.*',
-            'expenses.*', 'customer-ledgers.*', 'supplier-ledgers.*', 'purchases.*', 'sales.*', 'cashup.*',
+            'expenses.*', 'customer-ledgers.*', 'supplier-ledgers.*', 'purchases.*', 'sales.*', 'cashup.*','closing.*',
             'purchase-returns.*', 'sales-returns.*', 'quotes.*', 'adjustments.*', 'stocks.*', 'account-debts.*',
             'general-settings.*', 'email-settings.*', 'payment-settings.*', 'permission-settings.*', 'updates.*',
         ],
