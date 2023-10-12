@@ -5,10 +5,10 @@ foreach (setting('AuthGroups.permissions') as $key => $value) {
         $permissions[explode('.', $key)[0]][] =  explode('.', $key)[1];
     else  $permissions[explode('.', $key)[0]][] = explode('.', $key)[1];
 }
-$skipRoles = ['developer'];
+$skipGroups = ['developer'];
 $disabled = array_merge(setting('AuthGroups.disabledGroup'), [setting('AuthGroups.defaultGroup')]);
 
-$skip = $user->inGroup(...$skipRoles) ? [] : ['updates'];
+$skip = $user->inGroup(...$skipGroups) ? [] : ['updates','email-settings','payment-settings','sms-settings'];
 $disabled =  $user->inGroup(...$disabled);
 ?>
 <?= $this->extend('template/default') ?>
@@ -376,8 +376,8 @@ $disabled =  $user->inGroup(...$disabled);
                                                         <div class="input-checkset">
                                                             <ul>
                                                                 <?php foreach ($perm as $action) :
-                                                                    if ($action === '*') continue;
-                                                                ?>
+                                                                    if($action === '*')continue;
+                                                                    ?>
                                                                     <li>
                                                                         <label class="inputcheck text-capitalize"><?= $action ?>
                                                                             <input name="permissions[]" value="<?= $role ?>.<?= $action ?>" type="checkbox" <?= $user->can("$role.$action") ? 'checked' : '' ?> <?= $disabled ? 'disabled' : null ?>>
@@ -385,13 +385,13 @@ $disabled =  $user->inGroup(...$disabled);
                                                                         </label>
                                                                     </li>
                                                                 <?php endforeach ?>
-                                                                <li>
-                                                                    <label class="inputcheck">Select All
-                                                                        <input type="checkbox" name="permissions[]" value="<?= $role ?>.*" <?= $user->can($role . ".*") ? 'checked' : '' ?> <?= $disabled ? 'disabled' : null ?>>
-                                                                        <span class="checkmark"></span>
-                                                                    </label>
-                                                                </li>
-
+                                                                    <li>
+                                                                        <label class="inputcheck">Select All
+                                                                            <input type="checkbox" name="permissions[]" value="<?= $role ?>.*" <?= $user->can($role . ".*") ? 'checked' : '' ?> <?= $disabled ? 'disabled' : null ?>>
+                                                                            <span class="checkmark"></span>
+                                                                        </label>
+                                                                    </li>
+                                                                
                                                             </ul>
                                                         </div>
                                                     </li>
