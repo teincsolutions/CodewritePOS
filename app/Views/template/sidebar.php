@@ -232,11 +232,21 @@
                                     <i data-feather="settings"></i><span>Settings</span><span class="menu-arrow"></span>
                                 </a>
                                 <ul>
-                                    <li class="<?= getActiveUrl("settings/general", "active"); ?>"><a href="<?= site_url('settings/general') ?>">General Settings</a></li>
-                                    <li class="<?= getActiveUrl("settings/groups", "active"); ?>"><a href="<?= site_url('settings/groups') ?>">Group Permissions</a></li>
-                                    <li class="<?= getActiveUrl("settings/email", "active"); ?>"><a href="<?= site_url('settings/email') ?>">Email Settings</a></li>
-                                    <li class="<?= getActiveUrl("settings/sms", "active"); ?>"><a href="<?= site_url('settings/sms') ?>">SMS Settings</a></li>
-                                    <li class="<?= getActiveUrl("settings/payment", "active"); ?>"><a href="<?= site_url('settings/payment') ?>">Payment Settings</a></li>
+                                    <?php if (auth()->user()->can('general-settings.*')) : ?>
+                                        <li class="<?= getActiveUrl("settings/general", "active"); ?>"><a href="<?= site_url('settings/general') ?>">General Settings</a></li>
+                                    <?php endif ?>
+                                    <?php if (auth()->user()->can('permission-settings.*')) : ?>
+                                        <li class="<?= getActiveUrl("settings/groups", "active"); ?>"><a href="<?= site_url('settings/groups') ?>">Group Permissions</a></li>
+                                    <?php endif ?>
+                                    <?php if (auth()->user()->can('email-settings.*')) : ?>
+                                        <li class="<?= getActiveUrl("settings/email", "active"); ?>"><a href="<?= site_url('settings/email') ?>">Email Settings</a></li>
+                                    <?php endif ?>
+                                    <?php if (auth()->user()->can('sms-settings.*')) : ?>
+                                        <li class="<?= getActiveUrl("settings/sms", "active"); ?>"><a href="<?= site_url('settings/sms') ?>">SMS Settings</a></li>
+                                    <?php endif ?>
+                                    <?php if (auth()->user()->can('payment-settings.*')) : ?>
+                                        <li class="<?= getActiveUrl("settings/payment", "active"); ?>"><a href="<?= site_url('settings/payment') ?>">Payment Settings</a></li>
+                                    <?php endif ?>
                                 </ul>
                             </li>
                             <li>
