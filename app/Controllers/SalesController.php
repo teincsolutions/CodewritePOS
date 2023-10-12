@@ -11,13 +11,8 @@ use App\Models\SalesReturnModel;
 use App\Models\StockModel;
 use App\Models\StoreModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
-use CodeIgniter\Database\RawSql;
-use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
 use Config\Database;
-use PhpParser\Node\Expr\AssignOp\Mod;
-use Psr\Log\LoggerInterface;
 
 
 class SalesController extends BaseController

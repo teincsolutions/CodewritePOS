@@ -30,7 +30,8 @@ class SalesModel extends Model
         'payment_type',
         'total_amount',
         'paid',
-        'user_id'
+        'user_id',
+        'store_closing_id',
     ];
 
     // Dates

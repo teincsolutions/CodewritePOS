@@ -25,7 +25,7 @@ class UnitTransferItemModel extends Model
         'to_unit_id',
         'qty',
         'from_unit_qty',
-        'to_unit_qty',
+        'to_unit_qty'
     ];
 
     // Dates

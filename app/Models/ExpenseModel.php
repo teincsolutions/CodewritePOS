@@ -20,6 +20,7 @@ class ExpenseModel extends Model
         'description',
         'user_id',
         'amount',
+        'store_closing_id',
     ];
 
     // Dates

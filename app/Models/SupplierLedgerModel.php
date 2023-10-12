@@ -22,7 +22,8 @@ class SupplierLedgerModel extends Model
         'credit',
         'user_id',
         'payment_type',
-        'ledger_type'
+        'ledger_type',
+        'store_closing_id',
     ];
 
     // Dates

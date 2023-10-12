@@ -23,7 +23,8 @@ class ProductTransferModel extends Model
         'paid',
         'discount',
         'shipping',
-        'user_id'
+        'user_id',
+        'store_closing_id',
     ];
 
     // Dates

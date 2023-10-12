@@ -10,15 +10,13 @@ use App\Models\PurchaseModel;
 use App\Models\PurchaseReturnModel;
 use App\Models\SalesModel;
 use App\Models\SalesReturnModel;
-use App\Models\StockAdjustmentModel;
 use App\Models\StoreClosingModel;
 use App\Models\StoreLedgerModel;
 use App\Models\StoreModel;
 use App\Models\SupplierLedgerModel;
-use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
+use Config\Database;
 
 class ClosingController extends BaseController
 {
@@ -123,7 +121,6 @@ class ClosingController extends BaseController
         $customerLedgerModel = new CustomerLedgerModel();
         $supplierLedgerModel = new SupplierLedgerModel();
         $expenseModel = new ExpenseModel();
-        $closingModel = new StoreClosingModel();
         $storeLedgerModel = new StoreLedgerModel();
 
         $inputs = $this->request->getVar();
@@ -131,25 +128,54 @@ class ClosingController extends BaseController
         if (auth()->user())
             $inputs['user_id'] = auth()->user()->id;
 
-        $id = $this->request->getPost('id');
         $res = [
             'status' => false,
             'data' => null,
             'message' => null,
             'input' => $inputs,
         ];
-        $closing = $model->where('id', $id)->first();
+        $this->db = Database::connect();
 
-        if ($model->save($inputs)) {
+        try {
+            $this->db->transException(true)->transStart();
+            if ($model->save($inputs)) {
+                $id = $model->getInsertID();
+                $data = ['store_closing_id' => $id];
+                $where = ['store_closing_id' => null];
+                $saleModel->where($where);
+                $saleModel->update(null, $data);
+                $purchaseModel->where($where);
+                $purchaseModel->update(null, $data);
+                $purchaseReturnModel->where($where);
+                $purchaseReturnModel->update(null, $data);
+                $saleReturnModel->where($where);
+                $saleReturnModel->update(null, $data);
+                $storeLedgerModel->where($where);
+                $storeLedgerModel->update(null, $data);
+                $customerLedgerModel->where($where);
+                $customerLedgerModel->update(null, $data);
+                $supplierLedgerModel->where($where);
+                $supplierLedgerModel->update(null, $data);
+                $expenseModel->where($where);
+                $expenseModel->update(null, $data);
+                $transferModel->where($where);
+                $transferModel->update(null, $data);
+
+                $res = array_merge($res, [
+                    'status' => true,
+                    'message' => "Closing created successfully!",
+                    'data' => $model->find($model->getInsertID()),
+                ]);
+            } else {
+                $res = array_merge($res, [
+                    'status' => false,
+                    'message' => "Couldn't be created!"
+                ]);
+            }
+            $this->db->transComplete();
+        } catch (DatabaseException $e) {
             $res = array_merge($res, [
-                'status' => true,
-                'message' => "Closing created successfully!",
-                'data' => $model->find($model->getInsertID()),
-            ]);
-        } else {
-            $res = array_merge($res, [
-                'status' => false,
-                'message' => "Couldn't be created!"
+                'message' => $e->getMessage(),
             ]);
         }
         return $this->response->setJSON($res);
