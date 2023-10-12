@@ -36,7 +36,7 @@
                                 <li class="submenu">
                                     <a href="javascript:void(0);" class="<?= getActiveUrl("quotes.*", "active subdrop") ?> <?= getActiveUrl("quotes", "active subdrop") ?>">
                                         <i data-feather="file"></i>
-                                        <span>Qoutations</span><span class="menu-arrow"></span>
+                                        <span>Quotations</span><span class="menu-arrow"></span>
                                     </a>
                                     <ul>
                                         <li><a class="<?= getActiveUrl("quotes/create"); ?>" href="<?= site_url('quotes/create') ?>"><span>Quotation</span></a></li>
