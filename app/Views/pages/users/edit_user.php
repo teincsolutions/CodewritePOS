@@ -41,7 +41,7 @@
                 <div class="col-lg-6 col-12">
                     <div class="form-group">
                         <label>Address</label>
-                        <input type="text" class="form-control" autocomplete="address" value="<?= isset($user) ? $user->address : null ?>" placeholder="User address">
+                        <input type="text" class="form-control" autocomplete="address" name="address" value="<?= isset($user) ? $user->address : null ?>" placeholder="User address">
                     </div>
                 </div>
                 <?php if (!isset($user)) : ?>
