@@ -186,6 +186,7 @@ class AuthGroups extends ShieldAuthGroups
         'payment-settings.access'      => 'Can view and edit the payment settings',
         'permission-settings.access'      => 'Can view and edit the permssions settings',
         'updates.access'      => 'Can access new version update settings',
+        'sms-settings.access'      => 'Can access sms settings',
 
         'users.*' => 'Has full control',
         'customers.*' => 'Has full control',
@@ -213,6 +214,7 @@ class AuthGroups extends ShieldAuthGroups
         'email-settings.*' => 'Has full control',
         'payment-settings.*' => 'Has full control',
         'permission-settings.*' => 'Has full control',
+        'sms-settings.*' => 'Has full control'
     ];
 
     /**
@@ -268,6 +270,7 @@ class AuthGroups extends ShieldAuthGroups
             'expenses.*', 'customer-ledgers.*', 'supplier-ledgers.*', 'purchases.*', 'sales.*',
             'purchase-returns.*', 'sales-returns.*', 'quotes.*', 'adjustments.*', 'closing.*',
             'general-settings.*', 'email-settings.*', 'payment-settings.*', 'permission-settings.*',
+            'sms-settings.*','closing.*'
         ],
         'developer' => [
             'users.*', 'customers.*', 'suppliers.*', 'stores.*', 'products.*', 'brands.*',
