@@ -10,6 +10,7 @@ use App\Models\PurchaseModel;
 use App\Models\PurchaseReturnModel;
 use App\Models\SalesModel;
 use App\Models\SalesReturnModel;
+use App\Models\StockAdjustmentModel;
 use App\Models\StoreClosingModel;
 use App\Models\StoreLedgerModel;
 use App\Models\StoreModel;
@@ -114,6 +115,17 @@ class ClosingController extends BaseController
     public function save()
     {
         $model = new StoreClosingModel();
+        $saleModel = new SalesModel();
+        $saleReturnModel = new SalesReturnModel();
+        $purchaseModel = new PurchaseModel();
+        $purchaseReturnModel = new PurchaseReturnModel();
+        $transferModel = new ProductTransferModel();
+        $customerLedgerModel = new CustomerLedgerModel();
+        $supplierLedgerModel = new SupplierLedgerModel();
+        $expenseModel = new ExpenseModel();
+        $closingModel = new StoreClosingModel();
+        $storeLedgerModel = new StoreLedgerModel();
+
         $inputs = $this->request->getVar();
 
         if (auth()->user())
@@ -128,32 +140,17 @@ class ClosingController extends BaseController
         ];
         $closing = $model->where('id', $id)->first();
 
-        if ($closing) {
-            if ($model->save($inputs)) {
-                $res = array_merge($res, [
-                    'status' => true,
-                    'message' => "Closing updated successfully!",
-                    'data' => $model->find($id),
-                ]);
-            } else {
-                $res = array_merge($res, [
-                    'status' => false,
-                    'message' => "Couldn't be updated!"
-                ]);
-            }
+        if ($model->save($inputs)) {
+            $res = array_merge($res, [
+                'status' => true,
+                'message' => "Closing created successfully!",
+                'data' => $model->find($model->getInsertID()),
+            ]);
         } else {
-            if ($model->save($inputs)) {
-                $res = array_merge($res, [
-                    'status' => true,
-                    'message' => "Closing created successfully!",
-                    'data' => $model->find($model->getInsertID()),
-                ]);
-            } else {
-                $res = array_merge($res, [
-                    'status' => false,
-                    'message' => "Couldn't be created!"
-                ]);
-            }
+            $res = array_merge($res, [
+                'status' => false,
+                'message' => "Couldn't be created!"
+            ]);
         }
         return $this->response->setJSON($res);
     }

@@ -112,6 +112,7 @@ $(function () {
         render: function (data, type, row) {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
+                        <a target="_blank" href="${baseUrl}users/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
                         <a class="me-3 text-secondary" href="${baseUrl}users/edit/${row.id}"><i class="fa fa-edit fa-lg"></i></a>
                         <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${row.id}, '${baseUrl}users')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;

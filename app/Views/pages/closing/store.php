@@ -132,7 +132,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-post.js') ?>"></script>
+<script src="<?= base_url('assets/js/handle-closing.js') ?>"></script>
 <script>
     function updateClosing() {
         // inflows

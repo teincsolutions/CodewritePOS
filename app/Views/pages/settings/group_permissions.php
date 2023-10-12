@@ -56,7 +56,9 @@ $disabled =  in_array($group->alias, $disabled);
                                         <h4><?= $desc ?></h4>
                                         <div class="input-checkset">
                                             <ul>
-                                                <?php foreach ($perm as $action) : ?>
+                                                <?php foreach ($perm as $action) :
+                                                    if ($action === '*') continue;
+                                                ?>
                                                     <li>
                                                         <label class="inputcheck text-capitalize"><?= $action ?>
                                                             <input name="permissions[]" value="<?= $role ?>.<?= $action ?>" type="checkbox" <?= $group->can("$role.$action") ? 'checked' : '' ?> <?= $disabled ? 'disabled' : null ?>>

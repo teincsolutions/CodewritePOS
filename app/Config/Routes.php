@@ -164,6 +164,7 @@ $routes->get('units/select2', [UnitController::class, 'select2']);
 
 // post requests
 $routes->post('users', [UserController::class, 'save']);
+$routes->post('users/(:num)/permissions', [UserController::class, 'save_permissions/$1']);
 $routes->post('product-adjustments', [AdjustmentController::class, 'save']);
 $routes->post('brands', [BrandController::class, 'save']);
 $routes->post('categories', [CategoryController::class, 'save']);

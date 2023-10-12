@@ -144,6 +144,45 @@ class UserController extends BaseController
             ]);
         }
     }
+      /**
+     * return json for savePermissions
+     * @return Response - http response
+     */
+    public function save_permissions($user_id=null)
+    {
+        $inputs = $this->request->getVar();
+        $model = new UserModel();
+        $user = $model->where('id', $user_id)->first();
+
+        if (!$user) return $this->response->setJSON(
+            [
+                'status' => false,
+                'message' => "No User Selected!",
+                'input' => $inputs,
+            ]
+        );
+
+        if (isset($inputs['permissions'])) {
+            $user->syncPermissions(...$inputs['permissions']);
+            return $this->response->setJSON(
+                [
+                    'status' => true,
+                    'data' => $user->getPermissions(),
+                    'message' => "Permission Saved Successfully!",
+                    'input' => $inputs,
+                ]
+            );
+        } else {
+            return $this->response->setJSON(
+                [
+                    'status' => false,
+                    'message' => "No Permissions Selected!",
+                    'input' => $inputs,
+                ]
+            );
+        }
+    }
+
     /**
      * return json for datatables
      * @return Response - http response
