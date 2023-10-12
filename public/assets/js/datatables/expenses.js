@@ -84,7 +84,7 @@ $(function () {
         render: function (data, type, row) {
           if (type === "display") {
             return data
-              ? `<a target="_blank" href="${baseUrl}expense-categories/${data.id}" class="btn btn-link btn-sm">${data.label}</a>`
+              ? `<a target="_blank" href="${baseUrl}expenses/categories/${data.id}" class="btn btn-link btn-sm">${data.label}</a>`
               : "";
           }
           return data ? data.id : null;

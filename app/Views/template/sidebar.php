@@ -137,32 +137,35 @@
                         <ul>
                             <?php if (auth()->user()->can('expenses.*')) : ?>
                                 <li class="submenu">
-                                    <a class="<?= getActiveUrl("expenses", true) || getActiveUrl("expenses/*", true) ? "active subdrop"
-                                                    : (getActiveUrl("expense-categories", true) || getActiveUrl("expense-categories/*", true) ? "active subdrop" : '') ?>" href="javascript:void(0);">
+                                    <a class="<?= getActiveUrl("expenses*",  "active subdrop") ?>" href="javascript:void(0);">
                                         <i data-feather="file-text"></i>
                                         <span>Manage Expense</span><span class="menu-arrow"></span>
                                     </a>
                                     <ul>
                                         <li><a class="<?= getActiveUrl("expenses", "active"); ?>" href="<?= site_url('expenses') ?>">Expenses</a></li>
-                                        <li><a class="<?= getActiveUrl("expense-categories", "active"); ?>" href="<?= site_url('expense-categories') ?>">Expense Category</a></li>
+                                        <li><a class="<?= getActiveUrl("expense/categories", "active"); ?>" href="<?= site_url('expenses/categories') ?>">Expense Category</a></li>
                                     </ul>
                                 </li>
                             <?php endif ?>
-                            <?php if (auth()->user()->can('account-debts.*')) : ?>
+                            <?php if (auth()->user()->can('supplier-ledgers.*', 'customer-ledgers.*')) : ?>
                                 <li class="submenu">
                                     <a class="<?= getActiveUrl("account-debts/*", "subdrop active") ?>" href="javascript:void(0);">
                                         <i data-feather="book"></i>
                                         <span>Account Debts</span><span class="menu-arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a class="<?= getActiveUrl("account-debts/customers"); ?>" href="<?= site_url('account-debts/customers') ?>">Customers Debt</a></li>
-                                        <li><a class="<?= getActiveUrl("account-debts/suppliers"); ?>" href="<?= site_url("account-debts/suppliers") ?>">Suppliers Debt</a></li>
+                                        <?php if (auth()->user()->can('customer-ledgers.view')) : ?>
+                                            <li><a class="<?= getActiveUrl("account-debts/customers"); ?>" href="<?= site_url('account-debts/customers') ?>">Customers Debt</a></li>
+                                        <?php endif ?>
+                                        <?php if (auth()->user()->can('supplier-ledgers.view')) : ?>
+                                            <li><a class="<?= getActiveUrl("account-debts/suppliers"); ?>" href="<?= site_url("account-debts/suppliers") ?>">Suppliers Debt</a></li>
+                                        <?php endif ?>
                                     </ul>
                                 </li>
                             <?php endif ?>
-                            <?php if (auth()->user()->can('closing.create', 'closing.view', 'closing.delete')) : ?>
+                            <?php if (auth()->user()->can('closing.create', 'closing.view')) : ?>
                                 <li class="submenu">
-                                    <a class="<?= getActiveUrl("closing/*", "subdrop active") ?> <?= getActiveUrl("closing", "subdrop active") ?>" href="javascript:void(0);">
+                                    <a class="<?= getActiveUrl("closing*", "subdrop active") ?>" href="javascript:void(0);">
                                         <i data-feather="airplay"></i>
                                         <span>Closing</span><span class="menu-arrow"></span>
                                     </a>

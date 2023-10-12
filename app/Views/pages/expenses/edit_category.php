@@ -7,11 +7,11 @@
             <h6>Create new Expense Category</h6>
         </div>
         <div class="page-btn">
-            <a href="<?=site_url('expense-categories') ?>" class="btn btn-added"><i class="fa fa-arrow-left me-1"></i> List Expense Category</a>
+            <a href="<?=site_url('expenses/categories') ?>" class="btn btn-added"><i class="fa fa-arrow-left me-1"></i> List Expense Category</a>
         </div>
     </div>
 
-    <form action="<?=site_url('expense-categories') ?>" class="post-form" method="post">
+    <form action="<?=site_url('expenses/categories') ?>" class="post-form" method="post">
          <?= csrf_field() ?>
         <input type="hidden" name="id" value="<?= isset($expense_category) ? $expense_category->id : null ?>">
         <input type="hidden" name="_method" value="<?= isset($expense_category) ? 'put' : 'post' ?>">
@@ -33,7 +33,7 @@
                 </div>
                 <div class="col-lg-12">
                     <button type="submit" class="btn btn-submit me-2">Submit</button>
-                    <a href="<?=site_url('expense-categories') ?>" class="btn btn-cancel">Cancel</a>
+                    <a href="<?=site_url('expenses/categories') ?>" class="btn btn-cancel">Cancel</a>
                 </div>
             </div>
         </div>

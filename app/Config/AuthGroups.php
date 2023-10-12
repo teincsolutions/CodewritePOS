@@ -181,6 +181,10 @@ class AuthGroups extends ShieldAuthGroups
         'closing.create'        => 'Can create closing report',
         'closing.delete'        => 'Can delete existing closing',
 
+        'cashup.view'           => 'Can view cashup',
+        'cashup.create'           => 'Can create cashup',
+        'cashup.delete'           => 'Can delte cashup',
+
         'general-settings.access'      => 'Can view and edit the general settings',
         'email-settings.access'      => 'Can view and edit the email settings',
         'payment-settings.access'      => 'Can view and edit the payment settings',
@@ -210,6 +214,7 @@ class AuthGroups extends ShieldAuthGroups
         'stocks.*' => 'Has full control',
         'adjustments.*' => 'Has full control',
         'closing.*' => 'Has full control',
+        'cashup.*' => 'Has full control',
         'general-settings.*' => 'Has full control',
         'email-settings.*' => 'Has full control',
         'payment-settings.*' => 'Has full control',
@@ -248,6 +253,7 @@ class AuthGroups extends ShieldAuthGroups
         'adjustments'        => 'Adjustments Management',
         'stocks'        => 'Stocks Management',
         'closing'        => 'Store Closing Management',
+        'cashup'            => 'Cashup Management',
         'general-settings'      => 'General Settings',
         'email-settings'      => 'Email Settings',
         'payment-settings'      => 'Payment Settings',
@@ -270,13 +276,13 @@ class AuthGroups extends ShieldAuthGroups
             'expenses.*', 'customer-ledgers.*', 'supplier-ledgers.*', 'purchases.*', 'sales.*',
             'purchase-returns.*', 'sales-returns.*', 'quotes.*', 'adjustments.*', 'closing.*',
             'general-settings.*', 'email-settings.*', 'payment-settings.*', 'permission-settings.*',
-            'sms-settings.*','closing.*'
+            'sms-settings.*', 'closing.*', 'cashup.*'
         ],
         'developer' => [
             'users.*', 'customers.*', 'suppliers.*', 'stores.*', 'products.*', 'brands.*',
             'categories.*', 'units.*', 'product-transfers.*', 'unit-transfers.*', 'expense-categories.*',
-            'expenses.*', 'customer-ledgers.*', 'supplier-ledgers.*', 'purchases.*', 'sales.*',
-            'purchase-returns.*', 'sales-returns.*', 'quotes.*', 'adjustments.*', 'stocks.*',
+            'expenses.*', 'customer-ledgers.*', 'supplier-ledgers.*', 'purchases.*', 'sales.*', 'cashup.*',
+            'purchase-returns.*', 'sales-returns.*', 'quotes.*', 'adjustments.*', 'stocks.*', 'account-debts.*',
             'general-settings.*', 'email-settings.*', 'payment-settings.*', 'permission-settings.*', 'updates.*',
         ],
         'guest' => [

@@ -7,7 +7,7 @@
             <h6>View/Search Expense Category</h6>
         </div>
         <div class="page-btn">
-            <a href="<?=site_url("expense-categories/create");?>" class="btn btn-added">
+            <a href="<?=site_url("expenses/categories/create");?>" class="btn btn-added">
                <i class="fa fa-plus fa-lg me-1"></i>Add Category
             </a>
         </div>

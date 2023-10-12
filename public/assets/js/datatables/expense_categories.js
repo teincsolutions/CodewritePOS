@@ -3,7 +3,7 @@ let table;
 $(function () {
   table = $("#expensecategoriestable").DataTable({
     ajax: {
-      url: baseUrl + "/expense-categories/datatable",
+      url: baseUrl + "/expenses/categories/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
@@ -90,17 +90,17 @@ $(function () {
               row.id
             },status:${
               status[data == "opened" ? 0 : 1]
-            }}, '${baseUrl}expense-categories')" class="check">
+            }}, '${baseUrl}expenses/categories')" class="check">
                         <label for="user${
                           row.id
                         }" class="checktoggle">checkbox</label>
                         </div>
-                        <a class="me-3 text-secondary" href="${baseUrl}expense-categories/edit/${
+                        <a class="me-3 text-secondary" href="${baseUrl}expenses/categories/edit/${
               row.id
             }"><i class="fa fa-edit fa-lg"></i></a>
                         <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${
                           row.id
-                        }, '${baseUrl}expense-categories')"><i class="fa fa-trash fa-lg"></i></a>
+                        }, '${baseUrl}expenses/categories')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;
