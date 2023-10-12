@@ -34,6 +34,7 @@ $routes->get('products/search', 'ProductController::search');
 $routes->get('products/sales/search', 'ProductController::sale_search');
 $routes->get('products/purchases/search', 'ProductController::purchase_search');
 $routes->group('settings',static function (RouteCollection $routes) {
+    $routes->post('/', [SettingController::class, 'save_settings']);
     $routes->get('general', [SettingController::class, 'general']);
     $routes->get('group-permissions/(:any)', [SettingController::class, 'group_permissions/$1']);
     $routes->get('groups', [SettingController::class, 'groups']);

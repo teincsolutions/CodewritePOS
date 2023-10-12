@@ -74,6 +74,24 @@ class SettingController extends BaseController
      * return json for savePermissions
      * @return Response - http response
      */
+    public function save_settings()
+    {
+        $inputs = $this->request->getVar();
+        foreach ($inputs as $key => $val)
+            setting("App.$key", $val);
+
+
+        return $this->response->setJSON([
+            'status' => true,
+            'message' => "Permission Saved Successfully!",
+            'input' => $inputs,
+        ]);
+    }
+
+    /**
+     * return json for savePermissions
+     * @return Response - http response
+     */
     public function save_group()
     {
         $inputs = $this->request->getVar();

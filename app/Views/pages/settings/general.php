@@ -22,9 +22,8 @@
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane show active" id="system-tab">
-                            <form action="<?= site_url('settings/general') ?>" class="row post-form" method="post">
-                                <input type="hidden" name="_method" value="put">
-                                <p class="text-muted m-5">
+                            <form action="<?= site_url('settings') ?>" class="row post-form" method="post">
+                                <p class="text-muted mt-5 mb-5">
                                     Edit the information of your business/company. Click on "Save Changes" button at the bottom of the page when done.
                                 </p>
                                 <div class="col-lg-12">
@@ -37,13 +36,13 @@
                                             <tr>
                                                 <td>Name</td>
                                                 <td>
-                                                    <input type="text" class="form-control border-0 border-bottom w-50" name="companyName" value="<?= setting('App.companyName') ?>" placeholder="Business Name">
+                                                    <input type="text" class="form-control border-0 border-bottom " name="companyName" value="<?= setting('App.companyName') ?>" placeholder="Business Name">
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>Contact(s)</td>
                                                 <td>
-                                                    <div class="input-group  w-50">
+                                                    <div class="input-group  ">
                                                         <div class="input-group-text text-info">
                                                             <i class="fa fa-phone"></i>
                                                         </div>
@@ -54,7 +53,7 @@
                                             <tr>
                                                 <td>Address</td>
                                                 <td>
-                                                    <textarea class="form-control border-0 border-bottom w-50" name="companyAddress" value="<?= setting('App.companyAddress') ?>" placeholder="Business Address"></textarea>
+                                                    <textarea class="form-control border-0 border-bottom " name="companyAddress" placeholder="Business Address"><?= setting('App.companyAddress') ?></textarea>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -67,7 +66,7 @@
                                                 <td>Logo</td>
                                                 <td>
                                                     <div class="d-flex flex-row align-items-start gap-3">
-                                                        <input type="file" class="form-control w-50" name="companyLogo">
+                                                        <input type="file" class="form-control">
                                                         <div style="height: 50px;" class="w-10">
                                                             <img width="50" height="50" class="<?= setting('App.companyLogo') ? null : 'd-none'  ?>" src="<?= site_url(setting('App.companyLogo') ?? '') ?>" alt="Logo">
                                                         </div>

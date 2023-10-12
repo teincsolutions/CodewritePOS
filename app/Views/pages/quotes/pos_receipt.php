@@ -7,7 +7,8 @@
         </div>
         <div class="logo" style="background: url(<?= base_url('assets/images/logo.png') ?>) no-repeat;"></div>
         <div class="info">
-            <h2 class="text-uppercase">Codewrite Technology Ltd</h2>
+            <h2 class="text-uppercase"><?= setting('App.companyName') ?></h2>
+            <small> <?= setting('App.companyAddress') ?> | tel:<?= setting('App.companyContacts') ?></small>
             <p class="text-uppercase"><?= $quote->store->name; ?> at <?= $quote->store->location; ?></p>
         </div><!--End Info-->
     </center>

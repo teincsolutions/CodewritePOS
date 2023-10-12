@@ -7,8 +7,9 @@
         </div>
         <div class="logo" style="background: url(<?= base_url('assets/images/logo.png') ?>) no-repeat;"></div>
         <div class="info">
-            <h2 class="text-uppercase">Codewrite Technology Ltd</h2>
-            <p class="text-uppercase"><?= $returns->sale->store->name; ?> at <?= $returns->sale->store->location; ?></p>
+        <h2 class="text-uppercase"><?= setting('App.companyName') ?></h2>
+            <small> <?= setting('App.companyAddress') ?> | tel:<?= setting('App.companyContacts') ?></small>
+            <p class="text-uppercase">Branch: <?= $returns->sale->store->name; ?> at <?= $returns->sale->store->location; ?></p>
         </div><!--End Info-->
     </center>
     <div class="d-flex flex-row justify-content-between gap-1">
