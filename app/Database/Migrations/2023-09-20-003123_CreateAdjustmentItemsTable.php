@@ -35,6 +35,17 @@ class CreateAdjustmentItemsTable extends Migration
                 'constraint' => 11,
                 'unsigned'  => true,
             ],
+            'unit_cost' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'default' => 0
+            ],
+            'instock_qty' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "10,2",
+                'null' => false,
+            ],
             'qty' => [
                 'type'       => 'DECIMAL',
                 'constraint' => "10,2",

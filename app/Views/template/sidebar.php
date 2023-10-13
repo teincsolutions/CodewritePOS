@@ -130,7 +130,7 @@
                             <?php endif ?>
                             <?php if (auth()->user()->can('adjustments.create', 'adjustments.view')) : ?>
                                 <li class="submenu">
-                                    <a class="<?= getActiveUrl("adjustments/*", "subdrop active") ?>" href="javascript:void(0);">
+                                    <a class="<?= getActiveUrl("adjustments*", "subdrop active") ?>" href="javascript:void(0);">
                                         <i data-feather="align-justify"></i>
                                         <span>Adjustments</span><span class="menu-arrow"></span>
                                     </a>

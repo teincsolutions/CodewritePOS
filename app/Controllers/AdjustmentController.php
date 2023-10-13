@@ -3,8 +3,13 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\AdjustmentItemModel;
 use App\Models\StockAdjustmentModel;
+use App\Models\StockModel;
+use App\Models\StoreModel;
+use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\HTTP\Response;
+use Config\Database;
 
 class AdjustmentController extends BaseController
 {
@@ -18,27 +23,28 @@ class AdjustmentController extends BaseController
         $data = [
             'title' => 'Adjustment List',
         ];
-        return view('pages/adjustments/list_adjutment', $data);
+        return view('pages/adjustments/list_adjustment', $data);
     }
 
     /**
      * return view for edit
      * @return Response - http response
      */
-    public function edit($id = null)
+    public function edit()
     {
+
+        $model = new StockAdjustmentModel();
+        $lastItem = $model->orderBy('id', 'desc')->first();
+        $lastId = $lastItem ? $lastItem->id : 1;
+        $storeModel = new StoreModel();
+
         $data = [
-            'title' => 'Create Adjustment'
+            'title' => 'Create Adjustment',
+            'invoice' => substr(time() + $lastId, 0, 10),
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
         ];
 
-        if ($id) {
-            $model = new StockAdjustmentModel();
-            $data = array_merge($data, [
-                'product' => $model->find($id),
-                'title' => 'Edit Product',
-            ]);
-        }
-        return view('pages/adjustment/edit_adjustment', $data);
+        return view('pages/adjustments/edit_adjustment', $data);
     }
 
     /**
@@ -51,11 +57,103 @@ class AdjustmentController extends BaseController
             'title' => 'Adjustment Details'
         ];
         $model = new StockAdjustmentModel();
+
         $data = array_merge($data, [
-            'product' => $model->find($id),
+            'adjustment' => $model->find($id),
         ]);
 
-        return view('pages/products/show_product', $data);
+        return view('pages/adjustments/invoice', $data);
+    }
+
+    /**
+     * return json for save
+     * @return Response - http response
+     */
+    public function save()
+    {
+        if (!auth()->user()->can('adjustments.create'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to create this record!"
+            ]);
+
+        $model = new StockAdjustmentModel();
+        $adjustmentItemModel = new AdjustmentItemModel();
+        $stockModel = new StockModel();
+
+        $inputs = $this->request->getVar();
+        if (auth()->user())
+            $inputs['user_id'] = (auth()->user()->id ?? 0);
+
+        $inputs['adj_date'] = date('Y-m-d', strtotime($inputs['adj_date']));
+        $items = $this->request->getVar('items');
+        if (!$items || sizeof($items) === 0) return $this->response->setJSON(
+            [
+                'status' => false,
+                'data' => null,
+                'message' => "No product selected!",
+                'input' => $inputs,
+            ]
+        );
+        unset($inputs['items']);
+
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => "Adjustment couldn't be save!",
+            'input' => $inputs,
+        ];
+        $this->db = Database::connect();
+        try {
+            $this->db->transException(true)->transStart();
+            $saved = $model->save($inputs, true);
+
+            if ($saved) {
+                $id = $model->getInsertID();
+                $adjustmentItems = [];
+                $builder = $stockModel->builder();
+                foreach ($items as $k => $row) {
+                    $items[$k]['adjustment_id'] = $id;
+                    $items[$k]['store_id'] = $inputs['store_id'];
+
+                    array_push($adjustmentItems, $items[$k]);
+                    $stockWhere = [
+                        'product_id' => $items[$k]['product_id'],
+                        'store_id' => $items[$k]['store_id']
+                    ];
+
+                    if ($builder->where($stockWhere)->get()->getRowObject()) {
+                        $builder->set('instock',  $items[$k]['qty'], false)
+                            ->update(null, $stockWhere);
+                    } else {
+                        $builder->insert([
+                            'product_id' => $items[$k]['product_id'],
+                            'store_id' =>  $items[$k]['store_id'],
+                            'instock' => $items[$k]['qty']
+                        ]);
+                    }
+                }
+                $adjustmentItemModel->insertBatch($adjustmentItems);
+            }
+            $this->db->transComplete();
+        } catch (DatabaseException $e) {
+            $res = array_merge($res, [
+                'message' => $e->getMessage(),
+            ]);
+            return $this->response->setJSON($res);
+        }
+        if ($this->db->transStatus()) {
+            $adjustment = $model->find($id);
+            $res = array_merge($res, [
+                'status' => true,
+                'message' => "Adjustment created successfully!",
+                'data' => $adjustment,
+               // 'receipt' => view('pages/adjustments/pos_receipt', ['adjustment' => $adjustment])
+            ]);
+        } else {
+            $res = array_merge($res, ['status' => false]);
+        }
+        return $this->response->setJSON($res);
     }
 
     /**

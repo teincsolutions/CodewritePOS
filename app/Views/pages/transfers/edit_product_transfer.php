@@ -204,6 +204,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-product-transfer.js?') ?>"></script>
+<script src="<?= base_url('assets/js/handle-product-transfer.js?v=1') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?= $this->endSection() ?>

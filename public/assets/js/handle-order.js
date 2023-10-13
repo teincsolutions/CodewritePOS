@@ -299,21 +299,15 @@ $(".tr-items").on("click", ".delete-set", function () {
 $(".tr-items").on("click", ".inc.button", function () {
   var $this = $(this),
     $input = $this.prev("input"),
-    $parent = $input.closest("div"),
     newValue = parseFloat($input.val()) + 1;
-  $parent.find(".inc").addClass("a" + newValue);
   if (newValue > 0) $input.val(newValue);
-  newValue += newValue;
   updateItemRow(this);
 });
 $(".tr-items").on("click", ".dec.button", function () {
   var $this = $(this),
-    $input = $(".quantity-field"),
-    $parent = $input.closest("div"),
+    $input = $this.next("input"),
     newValue = parseFloat($input.val()) - 1;
-  $parent.find(".inc").addClass("a" + newValue);
   if (newValue > 0) $input.val(newValue);
-  newValue += newValue;
   updateItemRow(this);
 });
 
@@ -401,7 +395,6 @@ function autocomplete(inp) {
                                         <td>
                                         <div class="increment-decrement">
                                             <div class="input-groups">
-                                                <input type="button" value="-" class="button-minus dec button">
                                                 <input type='hidden' name="items[${prodIndex}][product_id]" value="${
               item.id
             }">
@@ -416,7 +409,7 @@ function autocomplete(inp) {
             ).val()}">
                                 <input type="hidden" name="items[${prodIndex}][subtotal]" class="rsubtotal" value="${
               item.unit_cost
-            }">
+            }">                                 <input type="button" value="-" class="button-minus dec button">
                                                 <input onblur="updateItemRow(this)" min="1" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>

@@ -33,6 +33,12 @@ class CreateStockAdjustmentsTable extends Migration
                 'unsigned'  => true,
                 'null' => true,
             ],
+            'total_amount' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'defaut' => 0.00
+            ],
             'user_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,

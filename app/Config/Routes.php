@@ -44,7 +44,7 @@ $routes->group('settings', static function (RouteCollection $routes) {
 });
 //indexs
 $routes->get('users', [UserController::class, 'index'], ['filter' => 'permission:users.view']);
-$routes->get('product-adjustments', [AdjustmentController::class, 'index'], ['filter' => 'permission:adjustments.view']);
+$routes->get('adjustments', [AdjustmentController::class, 'index'], ['filter' => 'permission:adjustments.view']);
 $routes->get('brands', [BrandController::class, 'index'], ['filter' => 'permission:brands.view']);
 $routes->get('categories', [CategoryController::class, 'index'], ['filter' => 'permission:categories.view']);
 $routes->get('customers', [CustomerController::class, 'index'], ['filter' => 'permission:customers.view']);
@@ -67,7 +67,7 @@ $routes->get('closing', [ClosingController::class, 'index'], ['filter' => 'permi
 
 //shows
 $routes->get('users/(:num)', [UserController::class, 'show/$1'], ['filter' => 'permission:users.view']);
-$routes->get('product-adjustments/(:num)', [AdjustmentController::class, 'show/$1'], ['filter' => 'permission:adjustments.view']);
+$routes->get('adjustments/(:num)', [AdjustmentController::class, 'show/$1'], ['filter' => 'permission:adjustments.view']);
 $routes->get('customers/(:num)', [CustomerController::class, 'show/$1'], ['filter' => 'permission:customers.view']);
 $routes->get('products/(:num)', [ProductController::class, 'show/$1'], ['filter' => 'permission:products.view']);
 $routes->get('transfers/products/(:num)', [ProductTransferController::class, 'show/$1'], ['filter' => 'permission:product-transfers.view']);
@@ -82,7 +82,7 @@ $routes->get('suppliers/(:num)', [SupplierController::class, 'show/$1'], ['filte
 
 //edit
 $routes->get('users/edit/(:num)', [UserController::class, 'edit/$1'],['filter'=>'permission:users.edit']);
-$routes->get('product-adjustments/edit/(:num)', [AdjustmentController::class, 'edit/$1'],['filter'=>'permission:adjustments.edit']);
+$routes->get('adjustments/edit/(:num)', [AdjustmentController::class, 'edit/$1'],['filter'=>'permission:adjustments.edit']);
 $routes->get('brands/edit/(:num)', [BrandController::class, 'edit/$1'],['filter'=>'permission:brands.edit']);
 $routes->get('categories/edit/(:num)', [CategoryController::class, 'edit/$1'],['filter'=>'permission:categories.edit']);
 $routes->get('customers/edit/(:num)', [CustomerController::class, 'edit/$1'],['filter'=>'permission:customers.edit']);
@@ -98,7 +98,7 @@ $routes->get('units/edit/(:num)', [UnitController::class, 'edit/$1'],['filter'=>
 
 //create
 $routes->get('users/create', [UserController::class, 'edit'],['filter'=>'permission:users.create']);
-$routes->get('product-adjustments/create', [AdjustmentController::class, 'edit'],['filter'=>'permission:adjustments.create']);
+$routes->get('adjustments/create', [AdjustmentController::class, 'edit'],['filter'=>'permission:adjustments.create']);
 $routes->get('brands/create', [BrandController::class, 'edit'],['filter'=>'permission:brands.create']);
 $routes->get('categories/create', [CategoryController::class, 'edit'],['filter'=>'permission:categories.create']);
 $routes->get('customers/create', [CustomerController::class, 'edit'],['filter'=>'permission:customers.create']);
@@ -121,7 +121,7 @@ $routes->get('cashup', [StoreLedgerController::class, 'edit'],['filter'=>'permis
 
 //datatables
 $routes->get('users/datatable', [UserController::class, 'datatable']);
-$routes->get('product-adjustments/datatable', [AdjustmentController::class, 'datatable']);
+$routes->get('adjustments/datatable', [AdjustmentController::class, 'datatable']);
 $routes->get('brands/datatable', [BrandController::class, 'datatable']);
 $routes->get('categories/datatable', [CategoryController::class, 'datatable']);
 $routes->get('customers/datatable', [CustomerController::class, 'datatable']);
@@ -147,7 +147,7 @@ $routes->get('closing/datatable', [ClosingController::class, 'datatable']);
 
 //select2
 $routes->get('users/select2', [UserController::class, 'select2']);
-$routes->get('product-adjustments/select2', [AdjustmentController::class, 'select2']);
+$routes->get('adjustments/select2', [AdjustmentController::class, 'select2']);
 $routes->get('brands/select2', [BrandController::class, 'select2']);
 $routes->get('categories/select2', [CategoryController::class, 'select2']);
 $routes->get('customers/select2', [CustomerController::class, 'select2']);
@@ -166,7 +166,7 @@ $routes->get('units/select2', [UnitController::class, 'select2']);
 // post requests
 $routes->post('users', [UserController::class, 'save']);
 $routes->post('users/(:num)/permissions', [UserController::class, 'save_permissions/$1']);
-$routes->post('product-adjustments', [AdjustmentController::class, 'save']);
+$routes->post('adjustments', [AdjustmentController::class, 'save']);
 $routes->post('brands', [BrandController::class, 'save']);
 $routes->post('categories', [CategoryController::class, 'save']);
 $routes->post('customers', [CustomerController::class, 'save']);
@@ -190,7 +190,7 @@ $routes->post('cashup', [StoreLedgerController::class, 'save']);
 $routes->post('closing/save', [ClosingController::class, 'save']);
 
 $routes->put('users/(:num)/permissions', [UserController::class, 'save_permissions/$1']);
-$routes->put('product-adjustments', [AdjustmentController::class, 'save']);
+$routes->put('adjustments', [AdjustmentController::class, 'save']);
 $routes->put('brands', [BrandController::class, 'save']);
 $routes->put('categories', [CategoryController::class, 'save']);
 $routes->put('customers', [CustomerController::class, 'save']);
@@ -215,7 +215,7 @@ $routes->put('closing/save', [ClosingController::class, 'save']);
 $routes->put('users', [UserController::class, 'save']);
 
 // delete requests
-$routes->delete('product-adjustments/(:num)', [AdjustmentController::class, 'delete']);
+$routes->delete('adjustments/(:num)', [AdjustmentController::class, 'delete']);
 $routes->delete('brands/(:num)', [BrandController::class, 'delete']);
 $routes->delete('categories/(:num)', [CategoryController::class, 'delete']);
 $routes->delete('customers/(:num)', [CustomerController::class, 'delete']);
