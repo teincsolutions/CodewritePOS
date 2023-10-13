@@ -135,7 +135,7 @@ class SupplierController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new SupplierModel();
-        return $this->response->setJSON(toSelect2Result($model, ['name', 'phone', 'address'], $inputs, 'concat(name," (",ifnull(address,phone), ")") as text,suppliers.*'));
+        return $this->response->setJSON(toSelect2Result($model, ['name', 'phone', 'address'], $inputs, 'concat(name," (",ifnull(address,ifnull(phone,"")), ")") as text,suppliers.*'));
     }
 
     /**
