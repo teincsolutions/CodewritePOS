@@ -7,7 +7,7 @@
             <h6>Manage your Returns</h6>
         </div>
         <div class="page-btn">
-            <a href="<?= site_url('returns/purchases/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add New Purchases Return</a>
+            <a href="<?= site_url('purchases/returns/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-3"></i>New Purchase Return</a>
         </div>
     </div>
 
