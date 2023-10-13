@@ -33,17 +33,17 @@
                 <div class="card-body pb-0">
                     <div class="row">
                        
-                        <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
                                 <input name="name" type="text" placeholder="Enter Supplier Name">
                             </div>
                         </div>
-                        <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div  class="form-group">
                                 <input name="phone" type="text" placeholder="Enter Phone Number">
                             </div>
                         </div>
-                        <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
                                 <input name="email" type="text" placeholder="Enter Email">
                             </div>
