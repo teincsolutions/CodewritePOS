@@ -26,7 +26,7 @@ class ClosingController extends BaseController
         $data = [
             'title' => 'Closing List',
         ];
-        return view('pages/closing/list_closing');
+        return view('pages/closing/list_closing', $data);
     }
 
     public function store(): string

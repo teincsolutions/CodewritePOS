@@ -14,7 +14,7 @@
                     <h3>Sign In</h3>
                     <h4>Please login to your account</h4>
                 </div>
-                 <?php if (session('error') !== null) : ?>
+                <?php if (session('error') !== null) : ?>
                     <div class="alert alert-danger" role="alert"><?= session('error') ?></div>
                 <?php elseif (session('errors') !== null) : ?>
                     <div class="alert alert-danger" role="alert">
@@ -30,39 +30,39 @@
                 <?php endif ?>
 
                 <?php if (session('message') !== null) : ?>
-                <div class="alert alert-success" role="alert"><?= session('message') ?></div>
+                    <div class="alert alert-success" role="alert"><?= session('message') ?></div>
                 <?php endif ?>
-                    <form action="<?= url_to('login') ?>" method="post">
+                <form action="<?= url_to('login') ?>" method="post">
                     <?= csrf_field() ?>
 
-                <div class="form-login">
-                    <label>Email</label>
-                    <div class="form-addons">
-                        <input type="text" class="form-control" name="username" inputmode="text" autocomplete="email" placeholder="<?= lang('Auth.username') ?>" value="<?= old('username') ?>" required />
+                    <div class="form-login">
+                        <label>Email</label>
+                        <div class="form-addons">
+                            <input type="text" class="form-control" name="username" inputmode="text" autocomplete="email" placeholder="<?= lang('Auth.username') ?>" value="<?= old('username') ?>" required />
+                        </div>
                     </div>
-                </div>
-                <div class="form-login">
-                    <label>Password</label>
-                    <div class="pass-group">
-                         <input type="password" class="form-control" name="password" inputmode="text" autocomplete="current-password" placeholder="<?= lang('Auth.password') ?>" required />
-                        <span class="fas toggle-password fa-eye-slash"></span>
+                    <div class="form-login">
+                        <label>Password</label>
+                        <div class="pass-group">
+                            <input type="password" class="form-control" name="password" inputmode="text" autocomplete="current-password" placeholder="<?= lang('Auth.password') ?>" required />
+                            <span class="fas toggle-password fa-eye-slash"></span>
+                        </div>
                     </div>
-                </div>
-                <div class="form-login">
-                    <div class="alreadyuser">
-                        <h4><a href="<?=site_url('forgot-password') ?>" class="hover-a">Forgot Password?</a></h4>
+                    <div class="form-login">
+                        <div class="alreadyuser">
+                            <h4><a href="<?= site_url('forgot-password') ?>" class="hover-a">Forgot Password?</a></h4>
+                        </div>
                     </div>
-                </div>
-                <div class="form-login">
-                    <button type="submit" class="btn btn-login" href="">Sign In</button>
-                </div>
+                    <div class="form-login">
+                        <button type="submit" class="btn btn-login" href="">Sign In</button>
+                    </div>
 
             </div>
         </div>
         <div class="login-img">
             <img src="<?= base_url('assets/images/login-bg.jpg') ?>" alt="img">
         </div>
-    </form>
+        </form>
     </div>
 </div>
 <?= $this->endSection() ?>
