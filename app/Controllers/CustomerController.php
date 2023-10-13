@@ -104,6 +104,12 @@ class CustomerController extends BaseController
         $customer = $model->where('id', $id)->first();
 
         if ($customer) {
+            if (!auth()->user()->can('customers.edit'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to edit this record!"
+                ]);
+
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -117,6 +123,12 @@ class CustomerController extends BaseController
                 ]);
             }
         } else {
+            if (!auth()->user()->can('customers.create'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to create this record!"
+                ]);
+
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -139,6 +151,12 @@ class CustomerController extends BaseController
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('customers.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new CustomerModel();
         if ($model->delete($id)) {
             $res = [

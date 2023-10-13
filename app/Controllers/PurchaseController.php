@@ -122,6 +122,12 @@ class PurchaseController extends BaseController
         $stockModel = new StockModel();
         $ledger = new SupplierLedgerModel();
 
+        if (!auth()->user()->can('purchases.create'))
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => "Don't have permission to create this record!"
+        ]);
+
         $inputs = $this->request->getVar();
         if (auth()->user())
             $inputs['user_id'] = (auth()->user()->id ?? 0);
@@ -223,6 +229,12 @@ class PurchaseController extends BaseController
      */
     public function hold()
     {
+        if (!auth()->user()->can('purchases.create'))
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => "Don't have permission to create this record!"
+        ]);
+        
         $model = new PurchaseModel();
         $purchasesItemModel = new PurchaseItemModel();
 
@@ -330,6 +342,12 @@ class PurchaseController extends BaseController
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('purchases.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new PurchaseModel();
         if ($model->delete($id)) {
             $res = [

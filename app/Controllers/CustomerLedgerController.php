@@ -64,9 +64,15 @@ class CustomerLedgerController extends BaseController
             'message' => null,
             'input' => $inputs,
         ];
-        
+
         $CustomerLedger = $model->where('id', $id)->first();
         if ($CustomerLedger) {
+            if (!auth()->user()->can('customer-ledgers.edit'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to edit this record!"
+                ]);
+
             if ($model->save($inputs)) {
                 $sales = $salesModel->where('id', $CustomerLedger->sale_id)->first();
                 $salesModel->save([
@@ -85,6 +91,12 @@ class CustomerLedgerController extends BaseController
                 ]);
             }
         } else {
+            if (!auth()->user()->can('customer-ledgers.create'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to create this record!"
+                ]);
+
             $sales = $salesModel->where('id', $inputs['sale_id'])->first();
             $inputs['customer_id'] = $sales->customer_id;
             if ($model->save($inputs)) {
@@ -150,6 +162,12 @@ class CustomerLedgerController extends BaseController
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('customer-ledgers.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new CustomerLedgerModel();
         $ledger = $model->find($id);
         if ($model->delete($id)) {

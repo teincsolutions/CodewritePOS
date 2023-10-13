@@ -86,6 +86,12 @@ class SalesReturnController extends BaseController
      */
     public function save()
     {
+        if (!auth()->user()->can('sales-returns.create'))
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => "Don't have permission to create this record!"
+        ]);
+
         $model = new SalesReturnModel();
         $returnItemModel = new SalesReturnItemModel();
         $stockModel = new StockModel();
@@ -203,6 +209,12 @@ class SalesReturnController extends BaseController
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('sales-returns.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new SalesReturnModel();
         if ($model->delete($id)) {
             $res = [

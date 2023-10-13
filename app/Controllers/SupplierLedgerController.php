@@ -63,6 +63,12 @@ class SupplierLedgerController extends BaseController
         ];
         $SupplierLedger = $model->where('id', $id)->first();
         if ($SupplierLedger) {
+            if (!auth()->user()->can('purchases.edit'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to edit this record!"
+                ]);
+
             if ($model->save($inputs)) {
                 $purchasesModel->updatePaymentStatus($inputs['purchase_id']);
                 $res = array_merge($res, [
@@ -77,6 +83,11 @@ class SupplierLedgerController extends BaseController
                 ]);
             }
         } else {
+            if (!auth()->user()->can('supplier-ledgers.create'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to create this record!"
+                ]);
             $purchases = $purchasesModel->where('id', $inputs['purchase_id'])->first();
             $inputs['supplier_id'] = $purchases->supplier_id;
 
@@ -142,6 +153,12 @@ class SupplierLedgerController extends BaseController
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('supplier-ledgers.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new SupplierLedgerModel();
         if ($model->delete($id)) {
             $res = [

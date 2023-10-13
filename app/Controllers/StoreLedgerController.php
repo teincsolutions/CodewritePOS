@@ -52,6 +52,12 @@ class StoreLedgerController extends BaseController
 
         $StoreLedger = $model->where('id', $id)->first();
         if ($StoreLedger) {
+            if (!auth()->user()->can('purchases.edit'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to edit this record!"
+                ]);
+
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -65,6 +71,13 @@ class StoreLedgerController extends BaseController
                 ]);
             }
         } else {
+
+            if (!auth()->user()->can('cashup.create'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to create this record!"
+                ]);
+
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -98,6 +111,12 @@ class StoreLedgerController extends BaseController
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('cashup.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new StoreLedgerModel();
         if ($model->delete($id)) {
             $res = [

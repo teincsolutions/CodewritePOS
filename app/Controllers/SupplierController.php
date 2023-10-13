@@ -58,6 +58,12 @@ class SupplierController extends BaseController
         $Supplier = $model->where('id', $id)->first();
 
         if ($Supplier) {
+            if (!auth()->user()->can('suppliers.edit'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to edit this record!"
+                ]);
+
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -71,6 +77,12 @@ class SupplierController extends BaseController
                 ]);
             }
         } else {
+            if (!auth()->user()->can('suppliers.create'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to create this record!"
+                ]);
+
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -126,12 +138,18 @@ class SupplierController extends BaseController
         return $this->response->setJSON(toSelect2Result($model, ['name', 'phone', 'address'], $inputs, 'concat(name," (",ifnull(address,phone), ")") as text,suppliers.*'));
     }
 
-     /**
+    /**
      * return jwon for delete
      * @return Response - http response
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('suppliers.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new SupplierModel();
         if ($model->delete($id)) {
             $res = [

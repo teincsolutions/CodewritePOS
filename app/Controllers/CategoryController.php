@@ -76,6 +76,11 @@ class CategoryController extends BaseController
         $category = $model->find($id);
 
         if ($category) {
+            if (!auth()->user()->can('categories.edit'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to edit this record!"
+                ]);
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -89,6 +94,12 @@ class CategoryController extends BaseController
                 ]);
             }
         } else {
+            if (!auth()->user()->can('categories.create'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to create this record!"
+                ]);
+                
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -111,6 +122,12 @@ class CategoryController extends BaseController
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('categories.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new CategoryModel();
         if ($model->delete($id)) {
             $res = [

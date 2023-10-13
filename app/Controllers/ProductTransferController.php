@@ -27,7 +27,7 @@ class ProductTransferController extends BaseController
 
         $data = [
             'title' => 'Product Transfer List',
-            'stores' => $storeModel->where('status','opened')->findAll(),
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
         ];
         return view('pages/transfers/list_product_transfer', $data);
     }
@@ -45,7 +45,7 @@ class ProductTransferController extends BaseController
 
         $data = [
             'title' => 'Transfer Products',
-            'stores' => $storeModel->where('status','opened')->findAll(),
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
             'invoice' => substr(time() + 2000000000 + $lastId, 0, 10),
         ];
         return view('pages/transfers/edit_product_transfer', $data);
@@ -78,12 +78,17 @@ class ProductTransferController extends BaseController
         $transferItemModel = new ProductTransferItemModel();
         $stockModel = new StockModel();
 
+        if (!auth()->user()->can('product-transfers.create'))
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => "Don't have permission to create this record!"
+        ]);
+
         $inputs = $this->request->getVar();
         if (auth()->user())
             $inputs['user_id'] = (auth()->user()->id ?? 0);
 
         unset($inputs['items']);
-
         $inputs['transfer_date'] = date('Y-m-d', strtotime($inputs['transfer_date']));
 
         $items = $this->request->getVar('items');
@@ -95,8 +100,6 @@ class ProductTransferController extends BaseController
                 'input' => $inputs,
             ]
         );
-        $id = $this->request->getPost('id');
-
         $res = [
             'status' => false,
             'data' => null,
@@ -104,7 +107,6 @@ class ProductTransferController extends BaseController
             'input' => $inputs,
         ];
         $this->db = Database::connect();
-
         $res = array_merge($res, ['message' => "Transfer created successfully!"]);
 
         try {
@@ -166,7 +168,7 @@ class ProductTransferController extends BaseController
             $res = array_merge($res, [
                 'status' => true,
                 'data' => $transfer,
-               // 'receipt' => view('pages/transfers/pos_receipt1', ['transfer' => $transfer])
+                // 'receipt' => view('pages/transfers/pos_receipt1', ['transfer' => $transfer])
             ]);
         } else {
             $res = array_merge($res, ['status' => false]);
@@ -192,6 +194,12 @@ class ProductTransferController extends BaseController
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('product-transfers.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new ProductTransferModel();
         if ($model->delete($id)) {
             $res = [

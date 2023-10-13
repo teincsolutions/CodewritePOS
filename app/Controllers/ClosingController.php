@@ -132,6 +132,12 @@ class ClosingController extends BaseController
         if (auth()->user())
             $inputs['user_id'] = auth()->user()->id;
 
+        if (!auth()->user()->can('closing.create'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to create this record!"
+            ]);
+
         $res = [
             'status' => false,
             'data' => null,
@@ -194,5 +200,32 @@ class ClosingController extends BaseController
         $inputs = $this->request->getVar();
         $model = new StoreClosingModel();
         return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+    /**
+     * return jwon for delete
+     * @return Response - http response
+     */
+    public function delete($id = null)
+    {
+        if (!auth()->user()->can('closing.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
+        $model = new StoreClosingModel();
+        if ($model->delete($id)) {
+            $res = [
+                'status' => true,
+                'message' => "Closing deleted successfully!",
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'message' => "Couldn't be deleted!"
+            ];
+        }
+        return $this->response->setJSON($res);
     }
 }

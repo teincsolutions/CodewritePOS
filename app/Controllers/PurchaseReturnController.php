@@ -89,6 +89,12 @@ class PurchaseReturnController extends BaseController
      */
     public function save()
     {
+        if (!auth()->user()->can('purchase-returns.create'))
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => "Don't have permission to create this record!"
+        ]);
+
         $model = new PurchaseReturnModel();
         $returnItemModel = new PurchaseReturnItemModel();
         $stockModel = new StockModel();
@@ -210,6 +216,12 @@ class PurchaseReturnController extends BaseController
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('purchase-returns.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new PurchaseReturnModel();
         if ($model->delete($id)) {
             $res = [

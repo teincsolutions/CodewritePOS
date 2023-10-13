@@ -73,6 +73,12 @@ class BrandController extends BaseController
         $brand = $model->find($id);
 
         if ($brand) {
+            if (!auth()->user()->can('brands.edit'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to edit this record!"
+                ]);
+
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -86,6 +92,12 @@ class BrandController extends BaseController
                 ]);
             }
         } else {
+            if (!auth()->user()->can('brands.create'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to create this record!"
+                ]);
+                
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -108,6 +120,12 @@ class BrandController extends BaseController
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('brands.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new BrandModel();
         if ($model->delete($id)) {
             $res = [

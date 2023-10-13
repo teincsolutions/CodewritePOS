@@ -58,6 +58,12 @@ class UnitController extends BaseController
         $Unit = $model->where('id', $id)->first();
 
         if ($Unit) {
+            if (!auth()->user()->can('units.edit'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to edit this record!"
+                ]);
+
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -71,6 +77,12 @@ class UnitController extends BaseController
                 ]);
             }
         } else {
+            if (!auth()->user()->can('units.create'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to create this record!"
+                ]);
+
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -97,12 +109,18 @@ class UnitController extends BaseController
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
-     /**
+    /**
      * return json for delete
      * @return Response - http response
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('units.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new UnitModel();
         if ($model->delete($id)) {
             $res = [

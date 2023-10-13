@@ -72,10 +72,15 @@ class ProductController extends BaseController
             'message' => null,
             'input' => $inputs,
         ];
-
         $product = $model->where('id', $id)->first();
 
         if ($product) {
+            if (!auth()->user()->can('products.edit'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to edit this record!"
+                ]);
+
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -89,6 +94,12 @@ class ProductController extends BaseController
                 ]);
             }
         } else {
+            if (!auth()->user()->can('products.create'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to create this record!"
+                ]);
+
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -141,6 +152,12 @@ class ProductController extends BaseController
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('products.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new ProductModel();
         if ($model->delete($id)) {
             $res = [
@@ -167,7 +184,7 @@ class ProductController extends BaseController
         $model->select('products.*');
         $model->join('categories', 'categories.id=products.category_id');
         $model->join('brands', 'brands.id=products.brand_id', 'left');
-        
+
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 

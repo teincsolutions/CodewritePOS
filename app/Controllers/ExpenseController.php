@@ -25,7 +25,7 @@ class ExpenseController extends BaseController
 
         $data = [
             'title' => 'Expense List',
-            'stores' => $storeModel->where('status','opened')->findAll(),
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
         ];
         return view('pages/expenses/list_expense', $data);
     }
@@ -41,7 +41,7 @@ class ExpenseController extends BaseController
         $data = [
             'title' => 'Create Expense',
             'categories' => $eCatModel->where('status', 'opened')->findAll(),
-            'stores' => $storeModel->where('status','opened')->findAll(),
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
         ];
 
         if ($id) {
@@ -70,6 +70,12 @@ class ExpenseController extends BaseController
         $Expense = $model->where('id', $id)->first();
 
         if ($Expense) {
+            if (!auth()->user()->can('expenses.edit'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to edit this record!"
+                ]);
+
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -83,6 +89,12 @@ class ExpenseController extends BaseController
                 ]);
             }
         } else {
+            if (!auth()->user()->can('expenses.create'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to create this record!"
+                ]);
+
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -115,6 +127,12 @@ class ExpenseController extends BaseController
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('expenses.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new ExpenseModel();
         if ($model->delete($id)) {
             $res = [

@@ -76,6 +76,12 @@ class ProductUnitTransferController extends BaseController
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('unit-transfers.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new UnitTransferModel();
         if ($model->delete($id)) {
             $res = [

@@ -64,6 +64,12 @@ class StoreController extends BaseController
         $store = $model->where('id', $id)->first();
 
         if ($store) {
+            if (!auth()->user()->can('stores.edit'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to edit this record!"
+            ]);
+
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -77,6 +83,12 @@ class StoreController extends BaseController
                 ]);
             }
         } else {
+            if (!auth()->user()->can('stores.create'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to create this record!"
+            ]);
+
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,
@@ -126,6 +138,12 @@ class StoreController extends BaseController
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('stores.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new StoreModel();
         if ($model->delete($id)) {
             $res = [

@@ -116,6 +116,12 @@ class SalesController extends BaseController
      */
     public function save()
     {
+        if (!auth()->user()->can('sales.create'))
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => "Don't have permission to create this record!"
+        ]);
+
         $model = new SalesModel();
         $salesItemModel = new SalesItemModel();
         $stockModel = new StockModel();
@@ -224,6 +230,12 @@ class SalesController extends BaseController
      */
     public function hold()
     {
+        if (!auth()->user()->can('sales.create'))
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => "Don't have permission to create this record!"
+        ]);
+
         $model = new SalesModel();
         $salesItemModel = new SalesItemModel();
 
@@ -330,6 +342,12 @@ class SalesController extends BaseController
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('sales.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new SalesModel();
         if ($model->delete($id)) {
             $res = [

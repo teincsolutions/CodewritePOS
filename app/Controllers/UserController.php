@@ -108,6 +108,12 @@ class UserController extends BaseController
         $user = $model->where('id', $id)->first();
 
         if ($user) {
+            if (!auth()->user()->can('users.edit'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to edit this record!"
+                ]);
+
             if ($model->save($inputs)) {
                 if (isset($inputs['groups']))
                     $user->syncGroups(...$inputs['groups']);
@@ -119,6 +125,12 @@ class UserController extends BaseController
                 ]);
             }
         } else {
+            if (!auth()->user()->can('users.create'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to create this record!"
+                ]);
+
             $rules  = setting('Validation.registration');
             if (!$this->validateData($inputs, $rules)) {
                 return $this->response->setJSON([
@@ -205,6 +217,12 @@ class UserController extends BaseController
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('users.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new UserModel();
         if ($model->delete($id, true)) {
             $res = [

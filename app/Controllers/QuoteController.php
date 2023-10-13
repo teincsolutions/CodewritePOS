@@ -75,6 +75,12 @@ class QuoteController extends BaseController
      */
     public function save()
     {
+        if (!auth()->user()->can('quotes.create'))
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => "Don't have permission to create this record!"
+        ]);
+
         $model = new QuoteModel();
         $quoteItemModel = new QuoteItemModel();
 
@@ -163,6 +169,12 @@ class QuoteController extends BaseController
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('quotes.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new QuoteModel();
         if ($model->delete($id)) {
             $res = [

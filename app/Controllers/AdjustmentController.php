@@ -66,15 +66,21 @@ class AdjustmentController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new StockAdjustmentModel();
-        return $this->response->setJSON(toDatatableResult($model,$inputs));
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
-     /**
+    /**
      * return json for delete
      * @return Response - http response
      */
     public function delete($id = null)
     {
+        if (!auth()->user()->can('adjustments.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $model = new StockAdjustmentModel();
         if ($model->delete($id)) {
             $res = [

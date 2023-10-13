@@ -74,6 +74,12 @@ class SettingController extends BaseController
      */
     public function save_settings()
     {
+        if (!auth()->user()->can('general-settings.access'))
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => "Don't have permission to manage this record!"
+        ]);
+
         $inputs = $this->request->getVar();
         foreach ($inputs as $key => $val)
             setting("App.$key", $val);
@@ -92,6 +98,12 @@ class SettingController extends BaseController
      */
     public function save_group()
     {
+        if (!auth()->user()->can('permission-settings.access'))
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => "Don't have permission to manage this record!"
+        ]);
+
         $inputs = $this->request->getVar();
         $alias = strtolower(str_replace(' ', '-', $inputs['title']));
         $group = [$alias => ['title' => $inputs['title'], 'description' => $inputs['description']],];
@@ -131,6 +143,12 @@ class SettingController extends BaseController
 
     public function delete_group(string $group)
     {
+        if (!auth()->user()->can('permission-settings.delete'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to delete this record!"
+            ]);
+
         $notAllowed = array_merge(setting('AuthGroups.disabledGroup'), [setting('AuthGroups.defaultGroup')]);
 
         if (in_array($group, $notAllowed))
