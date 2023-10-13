@@ -8,14 +8,22 @@ $(function () {
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $("#filter_inputs input, #filter_inputs select:selected");
+        let filterForm = $(
+          "#filter_inputs input, #filter_inputs select:selected"
+        );
         filterForm.each((i, item) => {
           field = $(item);
-         if (field.prop("tagName") === "SELECT"){
- if (typeof field
-                .children("option:selected").val() !== "undefined" && field.children("option:selected").val() !='')
-              filter[field.attr("name")] = field.children("option:selected").val();
-            }else {filter[field.attr("name")] = field.val();}
+          if (field.prop("tagName") === "SELECT") {
+            if (
+              typeof field.children("option:selected").val() !== "undefined" &&
+              field.children("option:selected").val() != ""
+            )
+              filter[field.attr("name")] = field
+                .children("option:selected")
+                .val();
+          } else if (typeof field.attr("name") !== "undefined") {
+            filter[field.attr("name")] = field.val();
+          }
         });
 
         params.fields = filter;
@@ -101,7 +109,9 @@ $(function () {
                           row.id
                         }" class="checktoggle">checkbox</label>
                         </div>
-                        <a href="${baseUrl}customers/${row.id}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
+                        <a href="${baseUrl}customers/${
+              row.id
+            }" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
                         <a class="me-3 text-secondary" href="${baseUrl}customers/edit/${
               row.id
             }"><i class="fa fa-edit fa-lg"></i></a>
