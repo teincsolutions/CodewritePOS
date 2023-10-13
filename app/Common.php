@@ -42,7 +42,7 @@ if (!function_exists('toDatatableResult')) {
             foreach ($inputs['fields'] as $field => $val) {
                 if (!empty(trim($val)) && in_array($field, ['type']))
                     $model->where($field, $val);
-                else $model->like($field, $val);
+                else if (!empty(trim($val))) $model->like($field, $val);
             }
         }
 
