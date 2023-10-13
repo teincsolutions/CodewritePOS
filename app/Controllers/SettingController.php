@@ -3,9 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\Shield\Authorization\Groups;
-use CodeIgniter\Shield\Entities\Group;
 
 class SettingController extends BaseController
 {

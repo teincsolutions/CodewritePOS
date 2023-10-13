@@ -25,7 +25,6 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-
         params.fields = filter;
       },
     },

@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\UserModel;
+use CodeIgniter\Database\RawSql;
 use CodeIgniter\Events\Events;
 use CodeIgniter\Exceptions\ModelException;
 use CodeIgniter\HTTP\RequestInterface;
@@ -144,11 +145,11 @@ class UserController extends BaseController
             ]);
         }
     }
-      /**
+    /**
      * return json for savePermissions
      * @return Response - http response
      */
-    public function save_permissions($user_id=null)
+    public function save_permissions($user_id = null)
     {
         $inputs = $this->request->getVar();
         $model = new UserModel();
@@ -191,6 +192,10 @@ class UserController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new UserModel();
+        $model->select('users.*');
+        $model->join('auth_groups_users', 'auth_groups_users.user_id=users.id', 'left');
+        $model->whereNotIn('group', ['developer']);
+        $model->groupBy('users.id');
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
