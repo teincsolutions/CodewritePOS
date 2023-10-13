@@ -7,7 +7,7 @@
             <h6>Manage your sales</h6>
         </div>
         <div class="page-btn">
-            <a href="<?= site_url('sales-returns/create') ?>" class="btn btn-added"><i class="fa fa-plus me-1"></i> Sales Return</a>
+            <a href="<?= site_url('sales/returns/create') ?>" class="btn btn-added"><i class="fa fa-plus me-1"></i> Sales Return</a>
         </div>
     </div>
     <form class="post-form" action="<?= site_url('sales') ?>" method="post">

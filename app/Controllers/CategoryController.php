@@ -19,7 +19,7 @@ class CategoryController extends BaseController
     public function index()
     {
         $data = [
-            'title' => 'Product List',
+            'title' => 'Category List',
         ];
         return view('pages/categories/list_category', $data);
     }
@@ -31,14 +31,14 @@ class CategoryController extends BaseController
     public function edit($id = null)
     {
         $data = [
-            'title' => 'Create Product'
+            'title' => 'Create Category'
         ];
 
         if ($id) {
             $model = new CategoryModel();
             $data = array_merge($data, [
                 'category' => $model->find($id),
-                'title' => 'Edit Product',
+                'title' => 'Edit Category',
             ]);
         }
         return view('pages/categories/edit_category', $data);

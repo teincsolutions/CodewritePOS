@@ -23,6 +23,9 @@ class ClosingController extends BaseController
 
     public function index(): string
     {
+        $data = [
+            'title' => 'Closing List',
+        ];
         return view('pages/closing/list_closing');
     }
 
@@ -45,6 +48,7 @@ class ClosingController extends BaseController
 
         $data = [
             'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'title' => 'Store Closing',
         ];
 
         if ($store) {

@@ -20,15 +20,19 @@
                             <?php if (auth()->user()->can('sales.view')) : ?>
                                 <li class="<?= getActiveUrl("sales", "active"); ?>"><a href="<?= site_url('sales') ?>"><i data-feather="shopping-cart"></i><span>Sales</span></a></li>
                             <?php endif ?>
-                            <?php if (auth()->user()->can('purchases.create')) : ?>
+                            <?php if (auth()->user()->can('sales-returns.create', 'sales-returns.view')) : ?>
                                 <li class="submenu">
-                                    <a href="javascript:void(0);" class="<?= getActiveUrl("sales/returns/*", "active subdrop") ?> <?= getActiveUrl("sales/returns", "active subdrop") ?>">
+                                    <a href="javascript:void(0);" class="<?= getActiveUrl("sales/returns*", "active subdrop") ?>">
                                         <i data-feather="corner-up-left"></i>
                                         <span>Sales Returns</span><span class="menu-arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a class="<?= getActiveUrl("sales/returns/create"); ?>" href="<?= site_url('sales/returns/create') ?>"><span>Create Return</span></a></li>
-                                        <li><a class="<?= getActiveUrl("sales/returns"); ?>" href="<?= site_url('sales/returns') ?>">Sales Returns</a></li>
+                                        <?php if (auth()->user()->can('sales-returns.create')) : ?>
+                                            <li><a class="<?= getActiveUrl("sales/returns/create"); ?>" href="<?= site_url('sales/returns/create') ?>"><span>Create Return</span></a></li>
+                                        <?php endif ?>
+                                        <?php if (auth()->user()->can('sales-returns.view')) : ?>
+                                            <li><a class="<?= getActiveUrl("sales/returns"); ?>" href="<?= site_url('sales/returns') ?>">Sales Returns</a></li>
+                                        <?php endif ?>
                                     </ul>
                                 </li>
                             <?php endif ?>
@@ -39,8 +43,12 @@
                                         <span>Quotations</span><span class="menu-arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a class="<?= getActiveUrl("quotes/create"); ?>" href="<?= site_url('quotes/create') ?>"><span>Quotation</span></a></li>
-                                        <li><a class="<?= getActiveUrl("quotes"); ?>" href="<?= site_url('quotes') ?>">List Quotation</a></li>
+                                        <?php if (auth()->user()->can('quotes.create')) : ?>
+                                            <li><a class="<?= getActiveUrl("quotes/create"); ?>" href="<?= site_url('quotes/create') ?>"><span>Quotation</span></a></li>
+                                        <?php endif ?>
+                                        <?php if (auth()->user()->can('quotes.view')) : ?>
+                                            <li><a class="<?= getActiveUrl("quotes"); ?>" href="<?= site_url('quotes') ?>">List Quotation</a></li>
+                                        <?php endif ?>
                                     </ul>
                                 </li>
                             <?php endif ?>
@@ -61,13 +69,17 @@
                             <?php endif ?>
                             <?php if (auth()->user()->can('purchase-returns.view', 'purchase-returns.create')) : ?>
                                 <li class="submenu">
-                                    <a href="javascript:void(0);" class="<?= getActiveUrl("purchases/returns/*", "active subdrop") ?> <?= getActiveUrl("purchases/returns", "active subdrop") ?>">
+                                    <a href="javascript:void(0);" class="<?= getActiveUrl("purchases/returns*", "active subdrop") ?>">
                                         <i data-feather="corner-up-left"></i>
                                         <span>Purchase Return</span><span class="menu-arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a class="<?= getActiveUrl("purchases/returns/create", "active"); ?>" href="<?= site_url('purchases/returns/create') ?>"><span>Create Return</span></a></li>
-                                        <li><a class="<?= getActiveUrl("purchases/returns", "active"); ?>" href="<?= site_url('purchases/returns') ?>">Purchase Returns</a></li>
+                                        <?php if (auth()->user()->can('purchase-returns.create')) : ?>
+                                            <li><a class="<?= getActiveUrl("purchases/returns/create", "active"); ?>" href="<?= site_url('purchases/returns/create') ?>"><span>Create Return</span></a></li>
+                                        <?php endif ?>
+                                        <?php if (auth()->user()->can('purchase-returns.view')) : ?>
+                                            <li><a class="<?= getActiveUrl("purchases/returns", "active"); ?>" href="<?= site_url('purchases/returns') ?>">Purchase Returns</a></li>
+                                        <?php endif ?>
                                     </ul>
                                 </li>
                             <?php endif ?>
@@ -131,19 +143,33 @@
                         </ul>
                     </li>
                 <?php endif ?>
-                <?php if (auth()->user()->can('expenses.*', 'account-debts.*', 'closing.*', 'cashup.*')) : ?>
+                <?php if (auth()->user()->can(
+                    'expenses.create',
+                    'expenses.view',
+                    'expense-categories.create',
+                    'expense-categories.view',
+                    'customer-ledgers.view',
+                    'supplier-ledgers.view',
+                    'closing.view',
+                    'closing.create',
+                    'cashup.access'
+                )) : ?>
                     <li class="submenu-open">
                         <h6 class="submenu-hdr">Finance & Accounts</h6>
                         <ul>
-                            <?php if (auth()->user()->can('expenses.*')) : ?>
+                            <?php if (auth()->user()->can('expenses.create', 'expenses.view')) : ?>
                                 <li class="submenu">
                                     <a class="<?= getActiveUrl("expenses*",  "active subdrop") ?>" href="javascript:void(0);">
                                         <i data-feather="file-text"></i>
                                         <span>Manage Expense</span><span class="menu-arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a class="<?= getActiveUrl("expenses", "active"); ?>" href="<?= site_url('expenses') ?>">Expenses</a></li>
-                                        <li><a class="<?= getActiveUrl("expense/categories", "active"); ?>" href="<?= site_url('expenses/categories') ?>">Expense Category</a></li>
+                                        <?php if (auth()->user()->can('expenses.create', 'expenses.view')) : ?>
+                                            <li><a class="<?= getActiveUrl("expenses", "active"); ?>" href="<?= site_url('expenses') ?>">Expenses</a></li>
+                                        <?php endif ?>
+                                        <?php if (auth()->user()->can('expense-categories.create', 'expense-categories.view')) : ?>
+                                            <li><a class="<?= getActiveUrl("expense/categories", "active"); ?>" href="<?= site_url('expenses/categories') ?>">Expense Category</a></li>
+                                        <?php endif ?>
                                     </ul>
                                 </li>
                             <?php endif ?>
@@ -170,12 +196,16 @@
                                         <span>Closing</span><span class="menu-arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a class="<?= getActiveUrl("closing/store"); ?>" href="<?= site_url("closing/store") ?>">Store Closing</a></li>
-                                        <li><a class="<?= getActiveUrl("closing"); ?>" href="<?= site_url("closing") ?>">List Closings</a></li>
+                                        <?php if (auth()->user()->can('closing.create')) : ?>
+                                            <li><a class="<?= getActiveUrl("closing/store"); ?>" href="<?= site_url("closing/store") ?>">Store Closing</a></li>
+                                        <?php endif ?>
+                                        <?php if (auth()->user()->can('closing.view')) : ?>
+                                            <li><a class="<?= getActiveUrl("closing"); ?>" href="<?= site_url("closing") ?>">List Closings</a></li>
+                                        <?php endif ?>
                                     </ul>
                                 </li>
                             <?php endif ?>
-                            <?php if (auth()->user()->can('cashup.*')) : ?>
+                            <?php if (auth()->user()->can('cashup.access')) : ?>
                                 <li class="<?= getActiveUrl("cashup", "active"); ?>"><a href="<?= site_url('cashup') ?>"><i data-feather="upload"></i><span>Cashup</span></a></li>
                             <?php endif ?>
                         </ul>
