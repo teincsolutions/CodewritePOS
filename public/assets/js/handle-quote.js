@@ -211,7 +211,12 @@ function autocomplete(inp) {
     this.parentNode.appendChild(a);
     searchParams.search.value = val;
 
+    b = document.createElement("DIV");
+    b.innerHTML = "<i>Searching...</i>";
+    a.appendChild(b);
+    
     $.get(`${baseUrl}products/search`, searchParams, (d, s) => {
+      a.innerHTML = "";
       if (s !== "success") {
         // if fail
         b = document.createElement("DIV");
