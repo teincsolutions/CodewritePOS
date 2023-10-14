@@ -88,7 +88,7 @@ $(function () {
           if (type === "display") {
             const badges = {
               completed: "bg-lightgreen",
-              pending: "lightred",
+              pending: "bg-lightred",
             };
             return `<span class="badges ${badges[data]}">${data}</span>`;
           }
