@@ -162,9 +162,11 @@ $(function () {
                             : ""
                         }
                         <a target="_blank" href="${baseUrl}sales/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                        <a href="${baseUrl}sales/returns/create?invoice=${
-              row.invoice
-            }" class="me-3"><i class="fa fa-reply fa-lg"></i></a>
+                        ${
+                          row.order_status === "completed"
+                            ? `<a href="${baseUrl}sales/returns/create?invoice=${row.invoice}" class="me-3"><i class="fa fa-reply fa-lg"></i></a>`
+                            : ""
+                        }
                         <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}sales')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
