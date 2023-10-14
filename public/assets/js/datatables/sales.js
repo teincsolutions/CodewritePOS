@@ -149,7 +149,7 @@ $(function () {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
                         ${
-                          row.payment_status === "due"
+                          row.payment_status === "due" && row.customer
                             ? `  <a  href="javascript:void(0);" class="me-3" onclick="editRow('#add-payment',{sale_id:${data},invoice_balance:${(
                                 row.total_amount - row.paid
                               ).toFixed(2)},credit:${(

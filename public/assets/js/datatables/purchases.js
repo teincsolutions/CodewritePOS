@@ -20,7 +20,7 @@ $(function () {
               filter[field.attr("name")] = field
                 .children("option:selected")
                 .val();
-          }else if (typeof field.attr("name") !== "undefined") {
+          } else if (typeof field.attr("name") !== "undefined") {
             filter[field.attr("name")] = field.val();
           }
         });
@@ -151,7 +151,7 @@ $(function () {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
             ${
-              row.payment_status === "due"
+              row.payment_status === "due" && row.supplier
                 ? `  <a  href="javascript:void(0);" class="me-3" onclick="editRow('#add-payment',{purchase_id:${data},invoice_balance:${(
                     row.total_amount - row.paid
                   ).toFixed(2)},debit:${(row.total_amount - row.paid).toFixed(
@@ -164,7 +164,9 @@ $(function () {
                 : ""
             }
                         <a target="_blank" href="${baseUrl}purchases/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                        <a href="${baseUrl}purchases/returns/create?invoice=${row.invoice}" class="me-3"><i class="fa fa-reply fa-lg"></i></a>
+                        <a href="${baseUrl}purchases/returns/create?invoice=${
+              row.invoice
+            }" class="me-3"><i class="fa fa-reply fa-lg"></i></a>
                         <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}purchases')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
@@ -234,7 +236,6 @@ $(function () {
     table.ajax.reload();
   });
 
-
   $(".select2-supplier").select2({
     ajax: {
       url: `${baseUrl}suppliers/select2`,
@@ -250,9 +251,9 @@ $(function () {
 
   $(".select2-store").select2({
     placeholder: "Seach a store",
-    allowClear:true,
+    allowClear: true,
   });
-  
+
   let form3 = $("#add-payment");
 
   form3.validate({

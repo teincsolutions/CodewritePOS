@@ -152,7 +152,8 @@
                     'supplier-ledgers.view',
                     'closing.view',
                     'closing.create',
-                    'cashup.access'
+                    'cashup.view',
+                    'cashup.create'
                 )) : ?>
                     <li class="submenu-open">
                         <h6 class="submenu-hdr">Finance & Accounts</h6>
@@ -173,7 +174,7 @@
                                     </ul>
                                 </li>
                             <?php endif ?>
-                            <?php if (auth()->user()->can('supplier-ledgers.*', 'customer-ledgers.*')) : ?>
+                            <?php if (auth()->user()->can('supplier-ledgers.view', 'customer-ledgers.view')) : ?>
                                 <li class="submenu">
                                     <a class="<?= getActiveUrl("account-debts/*", "subdrop active") ?>" href="javascript:void(0);">
                                         <i data-feather="book"></i>
@@ -205,7 +206,7 @@
                                     </ul>
                                 </li>
                             <?php endif ?>
-                            <?php if (auth()->user()->can('cashup.access')) : ?>
+                            <?php if (auth()->user()->can('cashup.view', 'cashup.create')) : ?>
                                 <li class="<?= getActiveUrl("cashup", "active"); ?>"><a href="<?= site_url('cashup') ?>"><i data-feather="upload"></i><span>Cashup</span></a></li>
                             <?php endif ?>
                         </ul>
