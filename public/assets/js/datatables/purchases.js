@@ -169,7 +169,9 @@ $(function () {
                             ? ` <a href="${baseUrl}purchases/returns/create?invoice=${row.invoice}" class="me-3"><i class="fa fa-reply fa-lg"></i></a>`
                             : ""
                         }
-                        <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}purchases')"><i class="fa fa-trash fa-lg"></i></a>
+                        <a ${
+                          row.order_status === "completed" ? "hidden" : ""
+                        } class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}purchases')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;
