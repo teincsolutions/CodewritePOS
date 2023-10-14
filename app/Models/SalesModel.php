@@ -170,7 +170,9 @@ class SalesModel extends Model
     public function getDueAmount(): float
     {
         $total = $this->builder()
-            ->selectSum(new RawSql('(total_amount - paid)'), 'total')->where('payment_status', 'due')
+            ->selectSum(new RawSql('(total_amount - paid)'), 'total')
+            ->where('order_status', 'completed')
+            ->where('payment_status', 'due')
             ->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
