@@ -117,7 +117,6 @@
                                                 <td>
                                                     <div class="increment-decrement">
                                                         <div class="input-groups">
-                                                            <input type="button" value="-" class="button-minus dec button">
                                                             <input type='hidden' name="items[<?= $key ?>][id]" value="<?= $row->id ?>">
                                                             <input type='hidden' name="items[<?= $key ?>][purchase_id]" value="<?= $row->purchase_id ?>">
                                                             <input type='hidden' name="items[<?= $key ?>][product_id]" value="<?= $row->product_id ?>">
@@ -125,6 +124,7 @@
                                                             <input type="hidden" name="items[<?= $key ?>][unit_price]" value="<?= $row->unit_price; ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][store_id]" value="<?= $row->store_id; ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][subtotal]" class="rsubtotal" value="<?= $row->unit_cost * $row->qty - $row->discount + ($row->unit_cost * $row->qty * $row->tax) / 100 ?>">
+                                                            <input type="button" value="-" class="button-minus dec button">
                                                             <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" value="<?= $row->qty ?>" class="quantity-field" required>
                                                             <input type="button" value="+" class="button-plus inc button">
                                                         </div>
