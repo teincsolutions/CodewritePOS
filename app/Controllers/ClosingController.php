@@ -69,6 +69,7 @@ class ClosingController extends BaseController
 
             $sale_total = $saleModel->builder()->where($where)
                 ->where('type', 'walk-in-customer')
+                ->where('order_status', 'completed')
                 ->selectSum('total_amount', 'total')->get()->getFirstRow()->total;
 
             $sale_return_total = $saleReturnModel->builder()->where($where)
