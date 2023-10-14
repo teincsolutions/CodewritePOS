@@ -114,7 +114,8 @@ class PurchaseModel extends Model
 
     public function getTotalAmount(): float
     {
-        $total = $this->builder()->selectSum('total_amount', 'total')->get()->getFirstRow()->total;
+        $total = $this->builder()->selectSum('total_amount', 'total')
+            ->where('order_status', 'completed')->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
 
@@ -122,6 +123,7 @@ class PurchaseModel extends Model
     {
         $total = $this->builder()
             ->selectSum('total_amount', 'total')
+            ->where('order_status', 'completed')
             ->where('purchase_date', date('Y-m-d', time()))
             ->get()
             ->getFirstRow()
@@ -131,7 +133,8 @@ class PurchaseModel extends Model
 
     public function getPaidAmount(): float
     {
-        $total = $this->builder()->selectSum('paid', 'total')->get()->getFirstRow()->total;
+        $total = $this->builder()->selectSum('paid', 'total')
+            ->where('order_status', 'completed')->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
 

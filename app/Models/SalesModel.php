@@ -121,7 +121,8 @@ class SalesModel extends Model
 
     public function getTotalAmount(): float
     {
-        $total = $this->builder()->selectSum('total_amount', 'total')->get()->getFirstRow()->total;
+        $total = $this->builder()->selectSum('total_amount', 'total')
+            ->where('order_status', 'completed')->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
 
@@ -139,6 +140,7 @@ class SalesModel extends Model
         $total += $this->builder()->selectSum('total_amount', 'total')
             ->where('sales_date', date('Y-m-d', time()))
             ->where('type', 'walk-in-customer')
+            ->where('order_status', 'completed')
             ->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
@@ -149,6 +151,7 @@ class SalesModel extends Model
         $total = $this->builder()->selectSum('total_amount', 'total')
             ->where('sales_date', date('Y-m-d', time()))
             ->where('type', 'walk-in-customer')
+            ->where('order_status', 'completed')
             ->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
@@ -158,7 +161,9 @@ class SalesModel extends Model
         // total paid by customers
         $total = (new CustomerLedgerModel())->selectSum('credit', 'total')->get()->getFirstRow()->total;
         // total paid by walk-in-customers
-        $total = ($total ?? 0) + $this->builder()->selectSum('paid', 'total')->where('type', 'walk-in-customer')->get()->getFirstRow()->total;
+        $total = ($total ?? 0) + $this->builder()->selectSum('total_amount', 'total')
+            ->where('order_status', 'completed')
+            ->where('type', 'walk-in-customer')->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
 
