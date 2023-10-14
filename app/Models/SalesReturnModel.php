@@ -88,27 +88,51 @@ class SalesReturnModel extends Model
 
     public function getTotalAmount(): float
     {
-        return (new SalesReturnItemModel())->getTotalAmount();
+        return (new SalesReturnItemModel())
+            ->where('order_status', 'completed')
+            ->getTotalAmount();
     }
 
     public function getTodayTotalAmount(): float
     {
-        return (new SalesReturnItemModel())->getTodayTotalAmount();
+        $total = 0;
+        // total paid by customers
+        $total += (new CustomerLedgerModel())
+            ->join('sales_returns', 'sales_returns.id=customer_ledgers.sales_return_id')
+            ->selectSum('credit', 'total')
+            ->where('sales_returns.return_date', date('Y-m-d', time()))
+            ->get()->getFirstRow()->total;
+
+        // total paid by walk-in-customers
+        $total += $this->builder()->selectSum('sales_returns.total_amount', 'total')
+            ->join('sales', 'sales.id=sales_returns.sale_id')
+            ->where('return_date', date('Y-m-d', time()))
+            ->where('sales.type', 'walk-in-customer')
+            ->where('sales_returns.order_status', 'completed')
+            ->get()->getFirstRow()->total;
+        return $total ? $total : 0.00;
     }
 
     public function getPaidAmount(): float
     {
         // total paid by customers
-        $total = (new CustomerLedgerModel())->selectSum('credit', 'total')->get()->getFirstRow()->total;
+        $total = (new CustomerLedgerModel())
+            ->selectSum('credit', 'total')
+            ->get()->getFirstRow()->total;
         // total paid by walk-in-customers
-        $total = ($total ?? 0) + $this->builder()->selectSum('paid', 'total')->where('type', 'walk-in-customer')->get()->getFirstRow()->total;
+        $total = ($total ?? 0) + $this->builder()->selectSum('paid', 'total')
+            ->where('type', 'walk-in-customer')
+            ->where('order_status', 'completed')
+            ->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
 
     public function getDueAmount(): float
     {
         $total = $this->builder()
-            ->selectSum(new RawSql('(total_amount - paid)'), 'total')->where('payment_status', 'due')
+            ->selectSum(new RawSql('(total_amount - paid)'), 'total')
+            ->where('payment_status', 'due')
+            ->where('order_status', 'completed')
             ->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }

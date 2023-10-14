@@ -87,12 +87,21 @@ class PurchaseReturnModel extends Model
 
     public function getTotalAmount(): float
     {
-        return (new PurchaseReturnItemModel())->getTotalAmount();
+        return (new PurchaseReturnItemModel())
+            ->where('order_status', 'completed')
+            ->getTotalAmount();
     }
 
     public function getTodayTotalAmount(): float
     {
-        return (new PurchaseReturnItemModel())->getTodayTotalAmount();
+        $total = $this->builder()
+            ->selectSum('total_amount', 'total')
+            ->where('order_status', 'completed')
+            ->where('return_date', date('Y-m-d', time()))
+            ->get()
+            ->getFirstRow()
+            ->total;
+        return $total ? $total : 0.00;
     }
 
     public function getPaidAmount(): float
@@ -105,7 +114,9 @@ class PurchaseReturnModel extends Model
     public function getDueAmount(): float
     {
         $total = $this->builder()
-            ->selectSum(new RawSql('(total_amount - paid)'), 'total')->where('payment_status', 'due')
+            ->selectSum(new RawSql('(total_amount - paid)'), 'total')
+            ->where('payment_status', 'due')
+            ->where('order_status', 'completed')
             ->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
