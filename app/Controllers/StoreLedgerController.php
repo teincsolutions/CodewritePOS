@@ -24,6 +24,7 @@ class StoreLedgerController extends BaseController
 
         $data = [
             'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'title' => 'Cashup'
         ];
         if ($store) $data = array_merge($data, [
             'store' => $store,
