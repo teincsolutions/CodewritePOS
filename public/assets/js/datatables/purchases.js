@@ -167,7 +167,7 @@ $(function () {
                         ${
                           row.order_status === "completed"
                             ? ` <a href="${baseUrl}purchases/returns/create?invoice=${row.invoice}" class="me-3"><i class="fa fa-reply fa-lg"></i></a>`
-                            : ""
+                            : `<a href="${baseUrl}purchases/edit/${data}" class="me-3"><i class="fa fa-play fa-lg"></i></a>`
                         }
                         <a ${
                           row.order_status === "completed" ? "hidden" : ""
