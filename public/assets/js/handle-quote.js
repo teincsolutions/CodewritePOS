@@ -75,11 +75,11 @@ if (initCompleted) updateTotals();
 
 function updateItemRow(row) {
   let row1 = $(row).parents("tr").first();
-    qty = parseFloat(row1.find(".rqty").val()),
-    price = parseFloat(row1.find(".runit_price").val()),
-    discount = parseFloat(row1.find(".rdiscount").val()),
-    tax = parseFloat(row1.find(".rtax").val()),
-    subtotal = qty * price + (tax / 100) * price * qty - qty * discount;
+  (qty = parseFloat(row1.find(".rqty").val())),
+    (price = parseFloat(row1.find(".runit_price").val())),
+    (discount = parseFloat(row1.find(".rdiscount").val())),
+    (tax = parseFloat(row1.find(".rtax").val())),
+    (subtotal = qty * price + (tax / 100) * price * qty - qty * discount);
   $(".rsubtotal", row1).val(subtotal);
   $("td:eq(3)", row1).html(price.toFixed(2));
   $("td:eq(4)", row1).html(discount.toFixed(2));
@@ -295,7 +295,10 @@ function autocomplete(inp) {
             }">
                                                 <input type="hidden" name="items[${prodIndex}][unit_price]" value="${
               item.unit_price
-            }">
+            }" class="runit_price">
+            <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
+              item.unit_cost
+            }" class="runit_cost">
                                                 <input type="hidden" name="items[${prodIndex}][tax_id]" value="${
               item.tax_id ? item.tax_id : ""
             }">
@@ -303,7 +306,7 @@ function autocomplete(inp) {
               ".select2-store"
             ).val()}">
                                                 <input type="hidden" name="items[${prodIndex}][tax]" class="rtax" value="${
-              (item.unit_price * (item.tax ? item.tax.rate : 0)) / 100
+              item.tax ? item.tax.rate : 0
             }">
                                                 <input type="hidden" name="items[${prodIndex}][discount]" class="rdiscount" value="${
               item?.discount
@@ -314,22 +317,16 @@ function autocomplete(inp) {
               (item.unit_price * (item.tax ? item.tax.rate : 0.0)) / 100
             }">
                                                 <input type="button" value="-" class="button-minus dec button">
-                                                <input onblur="updateItemRow(this)" min="1" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field" required>
+                                                <input onblur="updateItemRow(this)" min="1" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field rqty" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>
                                         </td>
                                         <td>${item.unit_price}</td>
-                                        <td data-discount="${
-                                          item?.discount
-                                        }" class="suffix-percent">${
-              item?.discount
-            }</td>
-                                        <td data-tax="${
-                                          item.tax ? item.tax.rate : 0
-                                        }">${parseFloat(
-              (item.unit_price * (item.tax ? item.tax.rate : 0)) / 100
-            ).toFixed(2)}</td>
+                                        <td>${item.discount}</td>
+                                        <td class="suffix-percent">${
+                                          item.tax ? item.tax.rate : "0.00"
+                                        }</td>
                                         <td>${(
                                           item.unit_price -
                                           item?.discount +
