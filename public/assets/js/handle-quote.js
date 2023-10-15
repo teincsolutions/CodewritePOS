@@ -75,18 +75,15 @@ if (initCompleted) updateTotals();
 
 function updateItemRow(row) {
   let row1 = $(row).parents("tr").first();
-  let data = tableItems.row(row1).data(),
-    qty = parseFloat(row1.find(".quantity-field").val()),
-    price = parseFloat(data[3]),
-    discount = parseFloat($("td:eq(4)", row1).data("discount")),
-    tax = parseFloat($("td:eq(5)", row1).data("tax")),
+    qty = parseFloat(row1.find(".rqty").val()),
+    price = parseFloat(row1.find(".runit_price").val()),
+    discount = parseFloat(row1.find(".rdiscount").val()),
+    tax = parseFloat(row1.find(".rtax").val()),
     subtotal = qty * price + (tax / 100) * price * qty - qty * discount;
-
-  $(".rtax", row1).val((tax / 100) * qty * price);
   $(".rsubtotal", row1).val(subtotal);
-  $(".rdiscount", row1).val(qty * discount);
-  $("td:eq(5)", row1).html(((tax / 100) * qty * price).toFixed(2));
-  $("td:eq(4)", row1).html((qty * discount).toFixed(2));
+  $("td:eq(3)", row1).html(price.toFixed(2));
+  $("td:eq(4)", row1).html(discount.toFixed(2));
+  $("td:eq(5)", row1).html(tax.toFixed(2));
   $("td:eq(6)", row1).html(subtotal.toFixed(2));
   tableItems.draw();
 }
@@ -96,42 +93,46 @@ function updateTotals() {
     discountAmtTotal = 0;
   (taxTotal = 0),
     (taxAmtTotal = 0),
+    (amountTotal = 0),
     (shipping = intVal($("[name='shipping']").val())),
     (orderDiscount = intVal($("[name='discount']").val())),
     (orderTax = intVal($("[name='tax']").val()));
   grandTotal = 0;
   for (let i = 0; i < tableItems.rows().data().length; i++) {
     const row = $(`tr:eq(${i + 1})`, ".tr-items");
-    (discountTotal += intVal($("td:eq(4)", row).html())),
-      (discountAmtTotal +=
-        intVal($("td:eq(4)", row).html()) * intVal($("td:eq(3)", row).html())),
-      (taxTotal += intVal($("td:eq(5)", row).html())),
+    (qty = intVal($(".rqty", row).val())),
+      (amountTotal += intVal($(".runit_price", row).val()) * qty),
+      (discountTotal += intVal($(".rdiscount", row).val()) * qty),
+      (taxTotal += intVal($(".rtax", row).val())),
       (taxAmtTotal +=
-        intVal($("td:eq(5)", row).html()) * intVal($("td:eq(3)", row).html())),
-      (grandTotal += intVal($("td:eq(6)", row).html()));
+        (intVal($(".rtax", row).val()) / 100) *
+        intVal($(".runit_price", row).val()) *
+        qty),
+      (grandTotal += intVal($(".rsubtotal", row).val()));
   }
   $(".subTotal").html("GHS " + grandTotal.toFixed(2));
-  discountAmtTotal += (orderDiscount / 100) * grandTotal;
+  orderDiscountAmt = (orderDiscount / 100) * grandTotal;
   taxTotal += orderTax;
-  discountTotal += orderDiscount;
+  discountTotal += orderDiscountAmt;
   grandTotal += (orderTax / 100) * grandTotal;
+  taxAmtTotal += (orderTax / 100) * grandTotal;
   grandTotal += shipping;
-  grandTotal -= (orderDiscount / 100) * grandTotal;
+  grandTotal -= discountAmtTotal;
   dueTotal =
     grandTotal - $("input[name='paid']").first().val() - customerBalance;
 
   $(".grandTotal").html("GHS " + grandTotal.toFixed(2));
-  $("#quote-total").val(grandTotal);
+  $("#sales-total").val(grandTotal);
   $(".shippingTotal").html("GHS " + shipping.toFixed(2));
-  $(".discountTotal").html(
-    "GHS " +
-      discountAmtTotal.toFixed(2) +
-      " (" +
-      discountTotal.toFixed(2) +
-      "%)"
-  );
+  $(".discountTotal").html("GHS " + discountTotal.toFixed(2));
   $(".orderTaxes").html(
     "GHS " + taxAmtTotal.toFixed(2) + " (" + taxTotal.toFixed(2) + "%)"
+  );
+  $(".dueTotal").html(
+    "GHS " +
+      (dueTotal < 0
+        ? "(" + Math.abs(dueTotal).toFixed(2) + ")"
+        : dueTotal.toFixed(2))
   );
 }
 function printInvoice(result) {
@@ -214,7 +215,7 @@ function autocomplete(inp) {
     b = document.createElement("DIV");
     b.innerHTML = "<i>Searching...</i>";
     a.appendChild(b);
-    
+
     $.get(`${baseUrl}products/search`, searchParams, (d, s) => {
       a.innerHTML = "";
       if (s !== "success") {

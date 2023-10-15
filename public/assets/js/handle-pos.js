@@ -87,18 +87,15 @@ if (initCompleted) updateTotals();
 
 function updateItemRow(row) {
   let row1 = $(row).parents("tr").first();
-  let data = tableItems.row(row1).data(),
-    qty = parseFloat(row1.find(".quantity-field").val()),
-    price = parseFloat(data[3]),
-    discount = parseFloat($("td:eq(4)", row1).data("discount")),
-    tax = parseFloat($("td:eq(5)", row1).data("tax")),
+    qty = parseFloat(row1.find(".rqty").val()),
+    price = parseFloat(row1.find(".runit_price").val()),
+    discount = parseFloat(row1.find(".rdiscount").val()),
+    tax = parseFloat(row1.find(".rtax").val()),
     subtotal = qty * price + (tax / 100) * price * qty - qty * discount;
-
-  $(".rtax", row1).val((tax / 100) * qty * price);
   $(".rsubtotal", row1).val(subtotal);
-  $(".rdiscount", row1).val(qty * discount);
-  $("td:eq(5)", row1).html(((tax / 100) * qty * price).toFixed(2));
-  $("td:eq(4)", row1).html((qty * discount).toFixed(2));
+  $("td:eq(3)", row1).html(price.toFixed(2));
+  $("td:eq(4)", row1).html(discount.toFixed(2));
+  $("td:eq(5)", row1).html(tax.toFixed(2));
   $("td:eq(6)", row1).html(subtotal.toFixed(2));
   tableItems.draw();
 }
@@ -108,23 +105,29 @@ function updateTotals() {
     discountAmtTotal = 0;
   (taxTotal = 0),
     (taxAmtTotal = 0),
+    (amountTotal = 0),
     (shipping = intVal($("[name='shipping']").val())),
     (orderDiscount = intVal($("[name='discount']").val())),
     (orderTax = intVal($("[name='tax']").val()));
   grandTotal = 0;
   for (let i = 0; i < tableItems.rows().data().length; i++) {
     const row = $(`tr:eq(${i + 1})`, ".tr-items");
-    (discountTotal += intVal($("td:eq(4)", row).html())),
-      (taxTotal += intVal($("td:eq(5)", row).html())),
+    (qty = intVal($(".rqty", row).val())),
+      (amountTotal += intVal($(".runit_price", row).val()) * qty),
+      (discountTotal += intVal($(".rdiscount", row).val()) * qty),
+      (taxTotal += intVal($(".rtax", row).val())),
       (taxAmtTotal +=
-        intVal($("td:eq(5)", row).html()) * intVal($("td:eq(3)", row).html())),
-      (grandTotal += intVal($("td:eq(6)", row).html()));
+        (intVal($(".rtax", row).val()) / 100) *
+        intVal($(".runit_price", row).val()) *
+        qty),
+      (grandTotal += intVal($(".rsubtotal", row).val()));
   }
   $(".subTotal").html("GHS " + grandTotal.toFixed(2));
-  discountAmtTotal = (orderDiscount / 100) * grandTotal;
+  orderDiscountAmt = (orderDiscount / 100) * grandTotal;
   taxTotal += orderTax;
-  discountTotal += discountAmtTotal;
+  discountTotal += orderDiscountAmt;
   grandTotal += (orderTax / 100) * grandTotal;
+  taxAmtTotal += (orderTax / 100) * grandTotal;
   grandTotal += shipping;
   grandTotal -= discountAmtTotal;
   dueTotal =
@@ -133,7 +136,7 @@ function updateTotals() {
   $(".grandTotal").html("GHS " + grandTotal.toFixed(2));
   $("#sales-total").val(grandTotal);
   $(".shippingTotal").html("GHS " + shipping.toFixed(2));
-  $(".discountTotal").html("GHS " + discountAmtTotal.toFixed(2));
+  $(".discountTotal").html("GHS " + discountTotal.toFixed(2));
   $(".orderTaxes").html(
     "GHS " + taxAmtTotal.toFixed(2) + " (" + taxTotal.toFixed(2) + "%)"
   );
@@ -334,6 +337,25 @@ function qoute(e) {
     },
   });
 }
+// price change
+let editModal = new bootstrap.Modal($("#edit-product")[0]);
+let rowSelected;
+$(".tr-items").on("click", ".edit-price", function () {
+  rowSelected = this;
+  let row = $(rowSelected).parents("tr").first();
+  $("#edit-product #unit-price").val($(".runit_price", row).val());
+  $("#edit-product #discount").val($(".rdiscount", row).val());
+
+  editModal.show();
+});
+
+function updateProduct() {
+  let row = $(rowSelected).parents("tr").first();
+  $(".runit_price", row).val($("#edit-product #unit-price").val());
+  $(".rdiscount", row).val($("#edit-product #discount").val());
+  updateItemRow(rowSelected);
+  editModal.hide();
+}
 
 $(".tr-items").on("click", ".delete-set", function () {
   tableItems.row($(this).parents("tr")).remove().draw();
@@ -436,7 +458,7 @@ function autocomplete(inp) {
               store = "(" + $(".select2-store option:selected").text() + ")";
             }
             inp.value = "";
-            let row = ` <tr>
+            let row = `<tr>
                                         <td>
                                         </td>
                                         <td class="productimgname">
@@ -456,18 +478,18 @@ function autocomplete(inp) {
             }">
                                                 <input type="hidden" name="items[${prodIndex}][unit_price]" value="${
               item.unit_price
-            }">
+            }" class="runit_price">
             <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
               item.unit_cost
-            }">
+            }" class="runit_cost">
                                                 <input type="hidden" name="items[${prodIndex}][tax_id]" value="${
-              item.tax_id ? item.tax_id : ""
+              item.tax_id
             }">
                                                 <input type="hidden" name="items[${prodIndex}][store_id]" value="${$(
               ".select2-store"
             ).val()}">
                                                 <input type="hidden" name="items[${prodIndex}][tax]" class="rtax" value="${
-              (item.unit_price * (item.tax ? item.tax.rate : 0)) / 100
+              item.tax ? item.tax.rate : "0.00"
             }">
                                                 <input type="hidden" name="items[${prodIndex}][discount]" class="rdiscount" value="${
               item?.discount
@@ -478,22 +500,18 @@ function autocomplete(inp) {
               (item.unit_price * (item.tax ? item.tax.rate : 0.0)) / 100
             }">
                                                 <input type="button" value="-" class="button-minus dec button">
-                                                <input onblur="updateItemRow(this)" min="1" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field" required>
+                                                <input onblur="updateItemRow(this)" min="1" type="text" name="items[${prodIndex}][qty]" value="1" class="rqty quantity-field" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>
                                         </td>
-                                        <td>${item.unit_price}</td>
-                                        <td data-discount="${
-                                          item?.discount
-                                        }" class="suffix-percent">${
-              item?.discount
-            }</td>
-                                        <td data-tax="${
-                                          item.tax ? item.tax.rate : 0
-                                        }">${parseFloat(
-              (item.unit_price * (item.tax ? item.tax.rate : 0)) / 100
-            ).toFixed(2)}</td>
+                                        <td>
+                                        ${item.unit_price}
+                                        </td>
+                                        <td>${item?.discount}</td>
+                                        <td class="suffix-percent">${
+                                          item.tax ? parseFloat(item.tax.rate).toFixed(2) : "0.00"
+                                        }</td>
                                         <td>${(
                                           item.unit_price -
                                           item?.discount +
@@ -501,7 +519,13 @@ function autocomplete(inp) {
                                             (item.tax ? item.tax.rate : 0.0)) /
                                             100
                                         ).toFixed(2)}</td>
-                                        <td><a   href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
+                                        <td> ${
+                                          Settings.AllowPriceChange === "yes" ||
+                                          Settings.AllowCustomerDiscountChange === "yes"
+                                            ? `<span class="edit-price btn btn-icon"><i class="fa fa-edit"></i></span>`
+                                            : ""
+                                        }
+                                        <a   href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
                                     </tr>`;
             tableItems.row.add($(row)).draw();
             tableItems.draw();

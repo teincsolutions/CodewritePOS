@@ -1,4 +1,5 @@
 <?= $this->extend('template/auth') ?>
+<?= $this->section('title') ?>Login<?= $this->endSection(); ?>
 <?= $this->section('content') ?>
 <div class="account-content">
     <div class="login-wrapper">

@@ -1,4 +1,4 @@
-<?= $this->include('template/page_start', ['bodyCalss' => 'account-page']); ?>
+<?= $this->include('template/page_start'); ?>
 <div class="main-wrapper">
     <?= $this->renderSection('content') ?>
 </div>

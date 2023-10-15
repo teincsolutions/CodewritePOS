@@ -16,6 +16,7 @@
                 <div class="card-body">
                     <ul class="nav nav-tabs nav-justified">
                         <li class="nav-item"><a class="nav-link active" href="#system-tab" data-bs-toggle="tab">System Information</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#pos-tab" data-bs-toggle="tab">POS</a></li>
                         <li class="nav-item"><a class="nav-link" href="#receipt-tab" data-bs-toggle="tab">Receipt</a></li>
                         <li class="nav-item"><a class="nav-link" href="#invoice-tab" data-bs-toggle="tab">Invoice</a></li>
                         <li class="nav-item"><a class="nav-link" href="#tax-tab" data-bs-toggle="tab">Tax</a></li>
@@ -42,7 +43,7 @@
                                             <tr>
                                                 <td>Contact(s)</td>
                                                 <td>
-                                                    <div class="input-group  ">
+                                                    <div class="input-group">
                                                         <div class="input-group-text text-info">
                                                             <i class="fa fa-phone"></i>
                                                         </div>
@@ -77,6 +78,100 @@
                                                 <td>Tax ID</td>
                                                 <td>
                                                     <input type="text" class="form-control border-0 border-bottom w-75" name="companyTaxId" value="<?= setting('App.companyTaxId') ?>" placeholder="Tax ID">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 mt-3">
+                                    <button class="btn btn-primary">Save Changes</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane" id="pos-tab">
+                            <form action="<?= site_url('settings') ?>" class="row post-form" method="post">
+                                <p class="text-muted mt-5 mb-5">
+                                    Edit the configuration of your POS. Click on "Save Changes" button at the bottom of the page when done.
+                                </p>
+                                <div class="col-lg-12">
+                                    <div class="table-responsive">
+                                        <table class="table w-100">
+                                            <thead>
+                                                <th style="width: 25%;">Products</th>
+                                                <th>Value</th>
+                                            </thead>
+                                            <tr>
+                                                <td>Allow Price Change</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="AllowPriceChange" value="yes" <?= setting('App.AllowPriceChange') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="AllowPriceChange" value="no" <?= setting('App.AllowPriceChange') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Allow Cost Change</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="AllowCostChange" value="yes" <?= setting('App.AllowCostChange') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="AllowCostChange" value="no" <?= setting('App.AllowCostChange') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Allow Customer Discount Change</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="AllowCustomerDiscountChange" value="yes" <?= setting('App.AllowCustomerDiscountChange') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="AllowCustomerDiscountChange" value="no" <?= setting('App.AllowCustomerDiscountChange') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>Allow Supplier Discount Change</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="AllowSupplierDiscountChange" value="yes" <?= setting('App.AllowSupplierDiscountChange') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="AllowSupplierDiscountChange" value="no" <?= setting('App.AllowSupplierDiscountChange') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <thead class="border-top-0">
+                                                <th style="width: 25%;">Sales</th>
+                                                <th>Value</th>
+                                            </thead>
+                                            <tr>
+                                                <td>Tax Rates(%)</td>
+                                                <td>
+                                                    <div class="input-group w-50">
+                                                        <input type="number" class="form-control" min="0" name="SalesTax" value="<?= setting('App.SalesTax') ?>" placeholder="Tax rate">
+                                                        <div class="input-group-text text-info">%</div>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         </table>

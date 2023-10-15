@@ -149,7 +149,7 @@
                                 <div class="form-group">
                                     <label>Order Tax</label>
                                     <div class="input-group">
-                                        <input type="text" name="tax" value="<?= isset($quote) ? $quote->tax : null ?>" class="form-control" placeholder="Order taxes" readonly>
+                                        <input type="text" name="tax" value="<?= isset($quote) ? $quote->tax :  setting("App.SalesTax") ?>" class="form-control" placeholder="Order taxes" readonly>
                                         <span class="input-group-text">%</span>
                                     </div>
                                 </div>

@@ -123,15 +123,15 @@
                                                             <input type='hidden' name="items[<?= $key ?>][id]" value="<?= $row->id ?>">
                                                             <input type='hidden' name="items[<?= $key ?>][sale_id]" value="<?= $row->sale_id ?>">
                                                             <input type='hidden' name="items[<?= $key ?>][product_id]" value="<?= $row->product_id ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][unit_price]" value="<?= $row->unit_price; ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][unit_cost]" value="<?= $row->unit_cost; ?>">
+                                                            <input type="hidden" name="items[<?= $key ?>][unit_price]" value="<?= $row->unit_price; ?>" class="runit_price">
+                                                            <input type="hidden" name="items[<?= $key ?>][unit_cost]" value="<?= $row->unit_cost; ?>" class="runit_cost">
                                                             <input type="hidden" name="items[<?= $key ?>][tax_id]" value="<?= $row->tax_id ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][store_id]" value="<?= $row->store_id; ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][tax]" class="rtax" value="<?= $row->tax ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][discount]" class="rdiscount" value="<?= $row->discount ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][subtotal]" class="rsubtotal" value="<?= $row->subtotal ?>">
+                                                            <input type="hidden" name="items[<?= $key ?>][tax]" value="<?= $row->tax ?>" class="rtax">
+                                                            <input type="hidden" name="items[<?= $key ?>][discount]" value="<?= $row->discount ?>" class="rdiscount">
+                                                            <input type="hidden" name="items[<?= $key ?>][subtotal]" value="<?= $row->subtotal ?>" class="rsubtotal">
                                                             <input type="button" value="-" class="button-minus dec button">
-                                                            <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" value="<?= $row->qty ?>" class="quantity-field" required>
+                                                            <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" value="<?= $row->qty ?>" class="rqty quantity-field" required>
                                                             <input type="button" value="+" class="button-plus inc button">
                                                         </div>
                                                     </div>
@@ -140,7 +140,11 @@
                                                 <td data-discount="<?= $row->discount ?>"><?= number_format($row->discount, 2) ?></td>
                                                 <td data-tax="<?= $row->tax ?>" class="suffix-percent"><?= number_format($row->tax, 2) ?></td>
                                                 <td><?= number_format($row->subtotal, 2) ?></td>
-                                                <td><a href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
+                                                <td> <?= setting("App.AllowPriceChange") === "yes" || setting("App.AllowCustomerDiscountChange") === "yes"
+                                                            ? '<span class="edit-price btn btn-icon"><i class="fa fa-edit"></i></span>'
+                                                            : "" ?>
+                                                    <a href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a>
+                                                </td>
 
                                             </tr>
                                         <?php endforeach ?>
@@ -154,7 +158,7 @@
                                 <div class="form-group">
                                     <label>Order Tax</label>
                                     <div class="input-group">
-                                        <input type="text" name="tax" value="<?= isset($sales) ? $sales->tax : null ?>" class="form-control" placeholder="Sales taxes" readonly>
+                                        <input type="text" name="tax" value="<?= isset($sales) ? $sales->tax : setting("App.SalesTax") ?>" class="form-control" placeholder="Sales taxes" readonly>
                                         <span class="input-group-text">%</span>
                                     </div>
                                 </div>
@@ -405,58 +409,26 @@
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="sales" role="tabpanel" aria-labelledby="sales-tab">
                             <div class="table-top">
-
                                 <div class="sales-wordset">
                                 </div>
                             </div>
+                            <div id="input-filter" class="row">
+                                <input type="hidden" name="user_id" value="<?= user_id() ?>">
+                            </div>
+
                             <div class="table-responsive">
-                                <table id="dt-sales" class="table">
+                                <table id="dt-sales" class="table w-100">
                                     <thead>
                                         <tr>
+                                            <th></th>
                                             <th>Date</th>
                                             <th>Invoice No.</th>
                                             <th>Customer</th>
                                             <th>Order Status</th>
-                                            <th>Amount </th>
+                                            <th>Amount</th>
                                             <th class="text-end">Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <?php
-                                        $badges =  [
-                                            'completed' => "bg-lightgreen",
-                                            'pending' => "bg-lightred",
-                                        ];
-                                        if (isset($saleList))
-                                            foreach ($saleList as $key => $row) {
-                                        ?>
-                                            <tr>
-                                                <td><?= $row->sales_date; ?></td>
-                                                <td><a target="_blank" href="<?= site_url('sales/' . $row->id) ?>" class="btn btn-link btn-sm"><?= $row->invoice; ?></a></td>
-                                                <td>
-                                                    <?php if ($row->customer) : ?>
-                                                        <a target="_blank" href="<?= site_url('customers/' . $row->customer_id) ?>" class="btn btn-link btn-sm"><?= $row->customer->name ?></a>
-                                                    <?php else : ?>
-                                                        walk-in-customer
-                                                    <?php endif ?>
-                                                </td>
-                                                <td><span class="badges <?= $badges[$row->order_status]; ?>"><?= $row->order_status; ?></span></td>
-                                                <td>GHS <?= $row->total_amount < 0 ? "(" . number_format(abs($row->total_amount), 2) . ")" : number_format($row->total_amount, 2); ?></td>
-                                                <td>
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <a target="_blank" href="<?= site_url('sales/' . $row->id) ?>" class="btn btn-icon btn-sm"><i class="fa fa-eye fa-lg"></i></a>
-                                                        <?php if ($row->order_status === 'completed') : ?>
-                                                            <a class="me-3 text-secondary" href="<?= site_url('returns/sales/create?invoice=' . $row->invoice) ?>"><i class="fa fa-reply fa-lg"></i></a>
-                                                        <?php else : ?>
-                                                            <a class="me-3 text-secondary" href="<?= site_url('sales/pos/' . $row->id) ?>"><i class="fa fa-play fa-lg"></i></a>
-                                                            <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('sales') ?>', '<?= site_url('sales/pos') ?>')"><i class="fa fa-trash fa-lg"></i></a>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php
-                                            } ?>
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -633,11 +605,44 @@
         </div>
     </div>
 </form>
+
+<div class="modal fade" id="edit-product" tabindex="-1" aria-labelledby="editproduct" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Product Info</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+
+                    <div <?= setting('App.AllowPriceChange') === 'yes' ? '' : 'hidden' ?> class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Unit Price</label>
+                            <input id="unit-price" type="number" class="form-control" placeholder="Unit Price">
+                        </div>
+                    </div>
+                    <div <?= setting('App.AllowCustomerDiscountChange') === 'yes' ? '' : 'hidden' ?> class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Discount</label>
+                            <input id="discount" type="number" placeholder="Discount Amount" class="form-control">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="updateProduct()" type="submit" class="btn btn-submit">Update</button>
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/handle-pos.js?v=2') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/pos.modal.js') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/pos.modal.js?v=1') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?php if (isset($sales) && $sales->customer) {
     $customer = $sales->customer;

@@ -158,7 +158,12 @@
                     <li class="submenu-open">
                         <h6 class="submenu-hdr">Finance & Accounts</h6>
                         <ul>
-                            <?php if (auth()->user()->can('expenses.create', 'expenses.view')) : ?>
+                            <?php if (auth()->user()->can(
+                                'expenses.create',
+                                'expenses.view',
+                                'expense-categories.create',
+                                'expense-categories.view'
+                            )) : ?>
                                 <li class="submenu">
                                     <a class="<?= getActiveUrl("expenses*",  "active subdrop") ?>" href="javascript:void(0);">
                                         <i data-feather="file-text"></i>

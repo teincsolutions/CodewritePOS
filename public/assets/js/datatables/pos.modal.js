@@ -2,6 +2,36 @@ let table, table2, table3;
 
 $(function () {
   table = $("#dt-sales").DataTable({
+    ajax: {
+      url: baseUrl + "/sales/datatable",
+      dataType: "json",
+      contentType: "application/json",
+      data: function (params) {
+        let filter = {};
+        let filterForm = $("#sales #input-filter input, #sales #input-filter select");
+        filterForm.each((i, item) => {
+          field = $(item);
+
+          if (field.prop("tagName") === "SELECT") {
+            if (
+              typeof field.children("option:selected").val() !== "undefined" &&
+              field.children("option:selected").val() != ""
+            )
+              filter[field.attr("name")] = field
+                .children("option:selected")
+                .val();
+          } else if (typeof field.attr("name") !== "undefined") {
+            filter[field.attr("name")] = field.val();
+          }
+        });
+        params.date_range_column = "sales_date";
+        params.date_from = moment().format("YYYY-MM-DD");
+        params.date_to = moment().format("YYYY-MM-DD");
+        params.fields = filter;
+      },
+    },
+    processing: true,
+    serverSide: true,
     bFilter: true,
     dom: "fBtlpi",
     buttons: [
@@ -31,10 +61,124 @@ $(function () {
       searchPlaceholder: "Search...",
       info: "_START_ - _END_ of _TOTAL_ items",
     },
-    initComplete: (settings, json) => {},
+    columns: [
+      {
+        data: null,
+        render: function (data, type, row) {
+          return null;
+        },
+      },
+      { data: "sales_date", name: "sales.sales_date" },
+      {
+        data: "customer",
+        name: "sales.customer_id",
+        render: function (data, type, row) {
+          if (type === "display")
+            return data
+              ? `<a target="_blank" href="${baseUrl}customers/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+              : "walk-in-customer";
+          return data ? data.id : null;
+        },
+      },
+      { data: "invoice", name: "sales.invoice" },
+      {
+        data: "order_status",
+        name: "sales.order_status",
+        render: function (data, type) {
+          if (type === "display") {
+            const badges = {
+              completed: "bg-lightgreen",
+              pending: "bg-lightred",
+            };
+            return `<span class="badges ${badges[data]}">${data}</span>`;
+          }
+
+          return data;
+        },
+      },
+      {
+        data: "total_amount",
+        render: function (data) {
+          return `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
+      {
+        data: "id",
+        name: "sales.id",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return `<div class="d-flex align-items-center">
+                        <a target="_blank" href="${baseUrl}sales/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
+                        ${
+                          row.order_status === "completed"
+                            ? `<a href="${baseUrl}sales/returns/create?invoice=${row.invoice}" class="me-3"><i class="fa fa-reply fa-lg"></i></a>`
+                            : `<a href="${baseUrl}sales/pos/${data}" class="me-3"><i class="fa fa-play fa-lg"></i></a>`
+                        }
+                        <a ${
+                          row.order_status === "completed" ? "hidden" : ""
+                        } class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}sales')"><i class="fa fa-trash fa-lg"></i></a>
+                    </div>`;
+          }
+          return data;
+        },
+      },
+    ],
+    initComplete: (settings, json) => {
+      $("#sales .dataTables_filter").appendTo("#sales #tableSearch");
+      $("#sales .dataTables_filter").appendTo("#sales .search-input");
+      if ($('#sales [data-bs-toggle="tooltip"]').length > 0) {
+        var tooltipTriggerList = [].slice.call(
+          document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        );
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+      }
+
+      var selectAllItems = "#select-all";
+      var checkboxItem = ":checkbox";
+
+      $(selectAllItems).click(function () {
+        if (this.checked) {
+          $(checkboxItem).each(function () {
+            this.checked = true;
+          });
+        } else {
+          $(checkboxItem).each(function () {
+            this.checked = false;
+          });
+        }
+      });
+    },
+    footerCallback: function (row, data, start, end, display) {
+      var api = this.api();
+      // Remove the formatting to get integer data for summation
+      var intVal = function (i) {
+        return typeof i === "string"
+          ? i.replace(/[\$,]/g, "") * 1
+          : typeof i === "number"
+          ? i
+          : 0;
+      };
+    },
     order: [[1, "desc"]],
+    columnDefs: [
+      {
+        orderable: false,
+        className: "select-checkbox",
+        targets: 0,
+      },
+    ],
+    select: {
+      style: "multi",
+      selector: "td:first-child",
+    },
   });
   table.buttons().container().appendTo(".sales-wordset");
+
+  $("#sales .filter").on("click select2:select select2:unselect", function (params) {
+    table.ajax.reload();
+  });
 
   table2 = $("#dt-payments").DataTable({
     bFilter: true,

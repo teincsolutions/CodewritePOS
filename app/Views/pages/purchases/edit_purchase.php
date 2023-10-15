@@ -93,6 +93,7 @@
                                             <th>Product Name</th>
                                             <th>QTY</th>
                                             <th>Cost</th>
+                                            <th>Discount</th>
                                             <th>Subtotal</th>
                                             <th></th>
                                         </tr>
@@ -120,19 +121,25 @@
                                                             <input type='hidden' name="items[<?= $key ?>][id]" value="<?= $row->id ?>">
                                                             <input type='hidden' name="items[<?= $key ?>][purchase_id]" value="<?= $row->purchase_id ?>">
                                                             <input type='hidden' name="items[<?= $key ?>][product_id]" value="<?= $row->product_id ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][unit_cost]" value="<?= $row->unit_cost; ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][unit_price]" value="<?= $row->unit_price; ?>">
+                                                            <input type="hidden" name="items[<?= $key ?>][unit_cost]" value="<?= $row->unit_cost; ?>" class="runit_cost">
+                                                            <input type="hidden" name="items[<?= $key ?>][unit_price]" value="<?= $row->unit_price; ?>" class="runit_price">
+                                                            <input type="hidden" name="items[<?= $key ?>][discount]" value="<?= $row->discount; ?>" class="rdiscount">
                                                             <input type="hidden" name="items[<?= $key ?>][store_id]" value="<?= $row->store_id; ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][subtotal]" class="rsubtotal" value="<?= $row->unit_cost * $row->qty - $row->discount + ($row->unit_cost * $row->qty * $row->tax) / 100 ?>">
+                                                            <input type="hidden" name="items[<?= $key ?>][subtotal]" class="rsubtotal" value="<?= $row->subtotal ?>">
                                                             <input type="button" value="-" class="button-minus dec button">
-                                                            <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" value="<?= $row->qty ?>" class="quantity-field" required>
+                                                            <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" value="<?= $row->qty ?>" class="quantity-field rqty" required>
                                                             <input type="button" value="+" class="button-plus inc button">
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td><?= $row->unit_cost ?></td>
-                                                <td><?= number_format($row->unit_cost * $row->qty, 2) ?></td>
-                                                <td><a href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
+                                                <td><?= $row->discount ?></td>
+                                                <td><?= number_format($row->subtotal, 2) ?></td>
+                                                <td><?= setting("App.AllowCostChange") === "yes" || setting("App.AllowSupplierDiscountChange") === "yes"
+                                                        ? '<span class="edit-cost btn btn-icon"><i class="fa fa-edit"></i></span>'
+                                                        : "" ?>
+                                                    <a href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a>
+                                                </td>
 
                                             </tr>
                                         <?php endforeach ?>
@@ -142,16 +149,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-3 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Order Tax</label>
-                                    <div class="input-group">
-                                        <input type="text" name="tax" value="<?= isset($purchase) ? $purchase->tax : null ?>" class="form-control" placeholder="Purchase taxes" readonly>
-                                        <span class="input-group-text">%</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Supplier Discount</label>
                                     <div class="input-group">
@@ -160,7 +158,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Shipping</label>
                                     <input onkeyup="updateTotals()" type="number" name="shipping" value="<?= isset($purchase) ? $purchase->shipping : null ?>" class="form-control" placeholder="Shipping amount">
@@ -172,8 +170,6 @@
                                     <div class="total-order w-100 max-widthauto m-auto mb-4">
                                         <ul>
                                             <li>
-                                                <h4>Order Tax</h4>
-                                                <h5 class="orderTaxes">0.00 (0.00%)</h5>
                                             </li>
                                             <li>
                                                 <h4>Discount </h4>
@@ -242,10 +238,6 @@
                                 <li>
                                     <h6>Total Shipping </h6>
                                     <h6 class="shippingTotal">GHS 0.00</h6>
-                                </li>
-                                <li>
-                                    <h6>Total Tax</h6>
-                                    <h6 class="orderTaxes">GHS 0.0</h6>
                                 </li>
                                 <li>
                                     <h6>Total Discount</h6>
@@ -534,7 +526,10 @@
                                                 <td><span class="badges <?= $badges[$row->order_status]; ?>"><?= $row->order_status; ?></span></td>
                                                 <td><?= $row->total_amount < 0 ? "(" . number_format(abs($row->total_amount), 2) . ")" : number_format($row->total_amount, 2); ?></td>
                                                 <td>
-                                                    <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center">
+                                                        <?= setting("App.AllowCosthange") === "yes" || setting("App.AllowSupplierDiscountChange") === "yes"
+                                                            ? '<span class="edit-cost btn btn-icon"><i class="fa fa-edit"></i></span>'
+                                                            : "" ?>
                                                         <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('purchases') ?>', '<?= site_url('returns/purchases') ?>')"><i class="fa fa-trash fa-lg"></i></a>
                                                     </div>
                                                 </td>
@@ -618,10 +613,40 @@
         </div>
     </div>
 </form>
+<div class="modal fade" id="edit-product" tabindex="-1" aria-labelledby="editproduct" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Product Info</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div <?= setting('App.AllowCostChange') === 'yes' ? '' : 'hidden'  ?> class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Unit Cost</label>
+                            <input id="unit-cost" type="number" class="form-control" placeholder="Unit Cost">
+                        </div>
+                    </div>
+                    <div <?= setting('App.AllowSupplierDiscountChange') === 'yes' ? '' : 'hidden'  ?> class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Discount</label>
+                            <input id="discount" type="number" placeholder="Discount Amount" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="updateProduct()" type="submit" class="btn btn-submit">Update</button>
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-order.js?v=2') ?>"></script>
+<script src="<?= base_url('assets/js/handle-order.js?v=3') ?>"></script>
 <script src="<?= base_url('assets/js/datatables/order.modal.js') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?php if (isset($purchase) && $purchase->supplier) {

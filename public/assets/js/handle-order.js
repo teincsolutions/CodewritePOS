@@ -87,34 +87,52 @@ if (initCompleted) updateTotals();
 
 function updateItemRow(row) {
   let row1 = $(row).parents("tr").first();
-  let data = tableItems.row(row1).data(),
-    qty = parseFloat(row1.find(".quantity-field").val()),
-    price = parseFloat(data[3]),
-    subtotal = qty * price;
-
+  (qty = parseFloat(row1.find(".rqty").val())),
+    (cost = parseFloat(row1.find(".runit_cost").val())),
+    (discount = parseFloat(row1.find(".rdiscount").val())),
+    (subtotal = qty * (cost - discount));
   $(".rsubtotal", row1).val(subtotal);
-  $("td:eq(4)", row1).html(subtotal.toFixed(2));
+  $("td:eq(3)", row1).html(cost.toFixed(2));
+  $("td:eq(4)", row1).html(discount.toFixed(2));
+  $("td:eq(5)", row1).html(subtotal.toFixed(2));
   tableItems.draw();
+}
+
+// cost change
+let editModal = new bootstrap.Modal($("#edit-product")[0]);
+let rowSelected;
+$(".tr-items").on("click", ".edit-cost", function () {
+  rowSelected = this;
+  let row = $(rowSelected).parents("tr").first();
+  $("#edit-product #unit-cost").val($(".runit_cost", row).val());
+  $("#edit-product #discount").val($(".rdiscount", row).val());
+
+  editModal.show();
+});
+
+function updateProduct() {
+  let row = $(rowSelected).parents("tr").first();
+  $(".runit_cost", row).val($("#edit-product #unit-cost").val());
+  $(".rdiscount", row).val($("#edit-product #discount").val());
+  updateItemRow(rowSelected);
+  editModal.hide();
 }
 
 function updateTotals() {
   let discountTotal = 0,
     discountAmtTotal = 0;
-  (taxTotal = 0),
-    (taxAmtTotal = 0),
     (shipping = intVal($("[name='shipping']").val())),
     (orderDiscount = intVal($("[name='discount']").val())),
-    (orderTax = intVal($("[name='tax']").val()));
-  grandTotal = 0;
+    (grandTotal = 0);
   for (let i = 0; i < tableItems.rows().data().length; i++) {
     const row = $(`tr:eq(${i + 1})`, ".tr-items");
-    grandTotal += intVal($("td:eq(4)", row).html());
+    (qty = intVal($(".rqty", row).val())),
+      (discountTotal += intVal($(".rdiscount", row).val()) * qty),
+      (grandTotal += intVal($(".rsubtotal", row).val()));
   }
   $(".subTotal").html("GHS " + grandTotal.toFixed(2));
-  discountAmtTotal = (orderDiscount / 100) * grandTotal;
-  taxTotal += orderTax;
-  discountTotal += orderDiscount;
-  grandTotal += (orderTax / 100) * grandTotal;
+  orderDiscountAmt = (orderDiscount / 100) * grandTotal;
+  discountTotal += orderDiscountAmt;
   grandTotal += shipping;
   grandTotal -= discountAmtTotal;
   dueTotal =
@@ -123,10 +141,7 @@ function updateTotals() {
   $(".grandTotal").html("GHS " + grandTotal.toFixed(2));
   $("#purchase-total").val(grandTotal);
   $(".shippingTotal").html("GHS " + shipping.toFixed(2));
-  $(".discountTotal").html("GHS " + discountAmtTotal.toFixed(2));
-  $(".orderTaxes").html(
-    "GHS " + taxAmtTotal.toFixed(2) + " (" + taxTotal.toFixed(2) + "%)"
-  );
+  $(".discountTotal").html("GHS " + discountTotal.toFixed(2));
   $(".dueTotal").html(
     "GHS " +
       (dueTotal < 0
@@ -405,17 +420,21 @@ function autocomplete(inp) {
             }">
                                                 <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
               item.unit_cost
-            }">
+            }" class="runit_cost">
             <input type="hidden" name="items[${prodIndex}][unit_price]" value="${
               item.unit_price
-            }">
+            }" class="runit_price">
                                                 <input type="hidden" name="items[${prodIndex}][store_id]" value="${$(
               ".select2-store"
             ).val()}">
-                                <input type="hidden" name="items[${prodIndex}][subtotal]" class="rsubtotal" value="${
-              item.unit_cost
-            }">                                 <input type="button" value="-" class="button-minus dec button">
-                                                <input onblur="updateItemRow(this)" min="1" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field" required>
+            <input type="hidden" name="items[${prodIndex}][discount]" class="rdiscount" value="${
+              item?.pdiscount
+            }">
+              <input type="hidden" name="items[${prodIndex}][subtotal]" class="rsubtotal" value="${
+              item.unit_cost - item?.pdiscount
+            }"> 
+                            <input type="button" value="-" class="button-minus dec button">
+                                                <input onblur="updateItemRow(this)" min="1" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field rqty" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>
@@ -423,10 +442,19 @@ function autocomplete(inp) {
                                         <td>${parseFloat(
                                           item.unit_cost
                                         ).toFixed(2)}</td>
+                                        <td>${item?.pdiscount}</td>
                                         <td>${parseFloat(
-                                          item.unit_cost
+                                          item.unit_cost - item.pdiscount
                                         ).toFixed(2)}</td>
-                                        <td><a   href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
+                                        <td>
+                                        ${
+                                          Settings.AllowCostChange === "yes" ||
+                                          Settings.AllowSupplierDiscountChange ===
+                                            "yes"
+                                            ? `<span class="edit-cost btn btn-icon"><i class="fa fa-edit"></i></span>`
+                                            : ""
+                                        }
+                                        <a   href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
                                     </tr>`;
             tableItems.row.add($(row)).draw();
             tableItems.draw();

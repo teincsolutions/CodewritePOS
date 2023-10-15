@@ -1,7 +1,5 @@
 <?= $this->extend('template/auth') ?>
-
-<?= $this->section('title') ?><?= lang('Auth.register') ?> <?= $this->endSection() ?>
-
+<?= $this->section('title') ?><?= lang('Auth.register') ?><?= $this->endSection() ?>
 <?= $this->section('content') ?>
 
 <div class="container d-flex justify-content-center p-5">

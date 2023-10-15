@@ -21,6 +21,7 @@ class SupplierModel extends Model
         'status',
         'address',
         'note',
+        'discount',
         'user_id'
     ];
 

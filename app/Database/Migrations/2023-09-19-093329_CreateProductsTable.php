@@ -69,6 +69,11 @@ class CreateProductsTable extends Migration
                 'constraint' => "8,2",
                 'default' => 0
             ],
+            'pdiscount' => [
+                'type' => 'DECIMAL',
+                'constraint' => "8,2",
+                'default' => 0
+            ],
             'min_qty' => [
                 'type' => 'DECIMAL',
                 'constraint' => "10,2",

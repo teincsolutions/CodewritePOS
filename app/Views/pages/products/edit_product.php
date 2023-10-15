@@ -140,8 +140,14 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Product Discount</label>
-                        <input type="number" name="discount" step="any" class="form-control" value="<?= isset($product) ? $product->discount : "0.00" ?>" placeholder="Discount percentage (e.g. 1 = 1%)">
+                        <label>Sales Discount</label>
+                        <input type="number" name="discount" step="any" class="form-control" value="<?= isset($product) ? $product->discount : "0.00" ?>" placeholder="Discount amount">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Purchase Discount</label>
+                        <input type="number" name="pdiscount" step="any" class="form-control" value="<?= isset($product) ? $product->pdiscount : "0.00" ?>" placeholder="Discount amount">
                     </div>
                 </div>
                 <div class="col-lg-12">

@@ -113,22 +113,22 @@
                                                 <div class="increment-decrement">
                                                     <div class="input-groups">
                                                         <input type='hidden' name="items[<?= $key ?>][product_id]" value="<?= $row->product_id ?>">
-                                                        <input type="hidden" name="items[<?= $key ?>][unit_price]" value="<?= $row->unit_price; ?>">
-                                                        <input type="hidden" name="items[<?= $key ?>][unit_cost]" value="<?= $row->unit_cost; ?>">
+                                                        <input type="hidden" name="items[<?= $key ?>][unit_price]" value="<?= $row->unit_price; ?>" class="runit_price">
+                                                        <input type="hidden" name="items[<?= $key ?>][unit_cost]" value="<?= $row->unit_cost; ?>" class="runit_cost">
                                                         <input type="hidden" name="items[<?= $key ?>][tax_id]" value="<?= $row->tax_id ?>">
                                                         <input type="hidden" name="items[<?= $key ?>][store_id]" value="<?= $row->store_id; ?>">
-                                                        <input type="hidden" name="items[<?= $key ?>][tax]" class="rtax" value="<?= $row->tax ?>">
-                                                        <input type="hidden" name="items[<?= $key ?>][discount]" class="rdiscount" value="<?= $row->discount ?>">
-                                                        <input type="hidden" name="items[<?= $key ?>][subtotal]" class="rsubtotal" value="<?= $row->subtotal ?>">
+                                                        <input type="hidden" name="items[<?= $key ?>][tax]" value="<?= $row->tax ?>" class="rtax">
+                                                        <input type="hidden" name="items[<?= $key ?>][discount]" value="<?= $row->discount ?>" class="rdiscount">
+                                                        <input type="hidden" name="items[<?= $key ?>][subtotal]" value="<?= $row->subtotal ?>" class="rsubtotal">
                                                         <input type="button" value="-" class="button-minus dec button">
-                                                        <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" max="<?= $row->qty ?>" value="<?= $row->qty ?>" class="quantity-field" required>
+                                                        <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" max="<?= $row->qty ?>" value="<?= $row->qty ?>" class="quantity-field rqty" required>
                                                         <input type="button" value="+" class="button-plus inc button">
                                                     </div>
                                                 </div>
                                             </td>
                                             <td><?= $row->unit_price ?></td>
-                                            <td data-discount="<?= $row->discount ?>"><?= $row->discount ?></td>
-                                            <td data-tax="<?= $row->tax ?>" class="suffix-percent"><?= number_format($row->tax, 2) ?></td>
+                                            <td><?= $row->discount ?></td>
+                                            <td class="suffix-percent"><?= number_format($row->tax, 2) ?></td>
                                             <td><?= number_format($row->subtotal, 2) ?></td>
                                             <td><a href="javascript:void(0);" class="delete-set" data-item-id="<?= $row->id ?>"><i class="fa text-danger fa-trash"></i></a></td>
 

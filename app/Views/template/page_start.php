@@ -9,7 +9,7 @@
     <meta name="author" content="Codewrite Technology Ltd - CODEWRITE POS">
     <meta name="robots" content="noindex, nofollow">
     <meta name="base-url" content="<?= site_url() ?>">
-    <title><?= $title ?? '' ?> - Codewrite POS </title>
+    <title><?= $title ?? $this->renderSection('title') ?> - Codewrite POS </title>
 
     <link rel="shortcut icon" type="image/x-icon" href="<?= base_url('assets/images/logo.png') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap.min.css') ?>">
@@ -22,6 +22,22 @@
     <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/search.css') ?>">
     <?= $this->renderSection('link') ?>
+    <script>
+        <?php
+        $settings = [
+            'AllowPriceChange', 
+            'AllowCostChange', 
+            'AllowCustomerDiscountChange', 
+            'AllowSupplierDiscountChange', 
+            'companyName', 
+            'companyContacts',
+        ];
+        $data = [];
+        foreach ($settings as  $key)
+            $data = array_merge($data, [$key => setting("App.$key")]);
+        ?>
+        var Settings = <?= json_encode($data) ?>;
+    </script>
 </head>
 
 <body class="<?= isset($bodyClass) ? $bodyClass : null ?>">

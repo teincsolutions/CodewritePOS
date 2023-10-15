@@ -140,10 +140,8 @@ class UserController extends BaseController
                     }, $this->validator->getErrors()))
                 ]);
             }
-            $allowedPostFields = array_keys($rules);
-
             $user = new User();
-            $user->fill($this->request->getPost($allowedPostFields));
+            $user->fill($inputs);
 
             $model->save($user);
             $user = $model->find($model->getInsertID());
