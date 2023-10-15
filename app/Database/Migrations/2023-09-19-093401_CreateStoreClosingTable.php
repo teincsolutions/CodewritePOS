@@ -81,6 +81,21 @@ class CreateStoreClosingTable extends Migration
                 'constraint' => "32,2",
                 'unsigned'     => true,
             ],
+            'status' => [
+                'type' => 'ENUM',
+                'constraint' => ['pending', 'approved','dispute'],
+                'default' => 'pending'
+            ],
+             'approved_at' => [
+                'type'    => 'TIMESTAMP',
+                'default' => null,
+            ],
+            'approval_user_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
+                'null' => true,
+            ],
             'user_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,
@@ -104,6 +119,8 @@ class CreateStoreClosingTable extends Migration
         $forge->addField($fields);
         $forge->addPrimaryKey('id');
         $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_store_closing_store_id');
+        $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_store_closing_user_id');
+        $forge->addForeignKey('approval_user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_store_closing_approval_user_id');
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('store_closings', true, $attributes);
     }

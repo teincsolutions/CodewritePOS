@@ -104,12 +104,6 @@ class Validation extends BaseConfig
                 'valid_email'
             ],
         ],
-        'groups' => [
-            'label' => 'Group/Role',
-            'rules' => [
-                'required'
-            ],
-        ],
         'phone' => [
             'label' => 'Phone Number',
             'rules' => [

@@ -14,6 +14,10 @@
     <div class="row">
         <div class="col-lg-8 col-sm-12">
             <div class="card">
+                <div class="card-header">
+                    Details of <?= $product->name; ?>
+                    <a href="<?= site_url('products/edit/' . $product->id) ?>"><i class="fa fa-edit"></i> </a>
+                </div>
                 <div class="card-body">
                     <?php if ($product->barcode) : ?>
                         <div class="bar-code-view">
@@ -109,12 +113,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach (model('StockModel')->where('product_id',$product->id)->findAll() as $key => $row): ?>
-                                <tr>
-                                    <th><?=$key + 1 ?></th>
-                                    <td><?=$row->store->name ?></td>
-                                    <td><?=$row->instock ?></td>
-                                </tr>
+                                <?php foreach (model('StockModel')->where('product_id', $product->id)->findAll() as $key => $row) : ?>
+                                    <tr>
+                                        <th><?= $key + 1 ?></th>
+                                        <td><?= $row->store->name ?></td>
+                                        <td><?= $row->instock ?></td>
+                                    </tr>
                                 <?php endforeach ?>
                             </tbody>
                         </table>

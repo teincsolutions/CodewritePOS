@@ -44,7 +44,8 @@ class ClosingController extends BaseController
 
         $storeId = $this->request->getVar('store_id');
         $store = $storeModel->where('id', $storeId)->first();
-        $closing = $closingModel->orderBy('id', 'desc')->first();
+        $closingWhere = ['status' => 'pending'];
+        $closing = $closingModel->where($closingWhere)->orderBy('id', 'desc')->first();
 
         $data = [
             'stores' => $storeModel->where('status', 'opened')->findAll(),

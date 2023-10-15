@@ -87,11 +87,11 @@ if (initCompleted) updateTotals();
 
 function updateItemRow(row) {
   let row1 = $(row).parents("tr").first();
-    qty = parseFloat(row1.find(".rqty").val()),
-    price = parseFloat(row1.find(".runit_price").val()),
-    discount = parseFloat(row1.find(".rdiscount").val()),
-    tax = parseFloat(row1.find(".rtax").val()),
-    subtotal = qty * price + (tax / 100) * price * qty - qty * discount;
+  (qty = parseFloat(row1.find(".rqty").val())),
+    (price = parseFloat(row1.find(".runit_price").val())),
+    (discount = parseFloat(row1.find(".rdiscount").val())),
+    (tax = parseFloat(row1.find(".rtax").val())),
+    (subtotal = qty * price + (tax / 100) * price * qty - qty * discount);
   $(".rsubtotal", row1).val(subtotal);
   $("td:eq(3)", row1).html(price.toFixed(2));
   $("td:eq(4)", row1).html(discount.toFixed(2));
@@ -483,7 +483,7 @@ function autocomplete(inp) {
               item.unit_cost
             }" class="runit_cost">
                                                 <input type="hidden" name="items[${prodIndex}][tax_id]" value="${
-              item.tax_id
+              item.tax_id ? item.tax_id : ""
             }">
                                                 <input type="hidden" name="items[${prodIndex}][store_id]" value="${$(
               ".select2-store"
@@ -510,7 +510,11 @@ function autocomplete(inp) {
                                         </td>
                                         <td>${item?.discount}</td>
                                         <td class="suffix-percent">${
-                                          item.tax ? parseFloat(item.tax.rate).toFixed(2) : "0.00"
+                                          item.tax
+                                            ? parseFloat(item.tax.rate).toFixed(
+                                                2
+                                              )
+                                            : "0.00"
                                         }</td>
                                         <td>${(
                                           item.unit_price -
@@ -521,7 +525,8 @@ function autocomplete(inp) {
                                         ).toFixed(2)}</td>
                                         <td> ${
                                           Settings.AllowPriceChange === "yes" ||
-                                          Settings.AllowCustomerDiscountChange === "yes"
+                                          Settings.AllowCustomerDiscountChange ===
+                                            "yes"
                                             ? `<span class="edit-price btn btn-icon"><i class="fa fa-edit"></i></span>`
                                             : ""
                                         }
