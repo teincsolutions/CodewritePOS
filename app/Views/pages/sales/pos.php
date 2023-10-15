@@ -25,7 +25,6 @@
                     <div class="card-body">
                         <div class="row">
                             <?php
-
                             if (isset($error)) : ?>
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert"><?= $error ?>
                                     <a href="<?= site_url('sales/pos') ?>" type="button" class="btn-close" aria-label="Close"></a>
@@ -607,32 +606,39 @@
 </form>
 
 <div class="modal fade" id="edit-product" tabindex="-1" aria-labelledby="editproduct" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Update Product Info</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
-                <div class="row">
-
-                    <div <?= setting('App.AllowPriceChange') === 'yes' ? '' : 'hidden' ?> class="col-lg-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label>Unit Price</label>
-                            <input id="unit-price" type="number" class="form-control" placeholder="Unit Price">
+                <?php if (auth()->user()->can('products.edit')) : ?>
+                    <div class="row">
+                        <div <?= setting('App.AllowPriceChange') === 'yes' ? '' : 'hidden' ?> class="col-lg-6 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label>Unit Price</label>
+                                <input id="unit-price" type="number" class="form-control" placeholder="Unit Price">
+                            </div>
+                        </div>
+                        <div <?= setting('App.AllowCustomerDiscountChange') === 'yes' ? '' : 'hidden' ?> class="col-lg-6 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label>Discount</label>
+                                <input id="discount" type="number" placeholder="Discount Amount" class="form-control">
+                            </div>
                         </div>
                     </div>
-                    <div <?= setting('App.AllowCustomerDiscountChange') === 'yes' ? '' : 'hidden' ?> class="col-lg-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label>Discount</label>
-                            <input id="discount" type="number" placeholder="Discount Amount" class="form-control">
-                        </div>
+                <?php else : ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        You don't have permission to Edit Products. Please Contact Admin
                     </div>
-
-                </div>
+                <?php endif ?>
             </div>
+
             <div class="modal-footer">
-                <button onclick="updateProduct()" type="submit" class="btn btn-submit">Update</button>
+                <?php if (auth()->user()->can('products.edit')) : ?>
+                    <button onclick="updateProduct()" type="submit" class="btn btn-submit">Update</button>
+                <?php endif ?>
                 <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
