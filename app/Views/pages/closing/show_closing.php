@@ -47,7 +47,7 @@
                                 </ul>
                             </div>
                             <div class="productdetails mt-1">
-                            <h3>Status Information</h3>
+                                <h3>Status Information</h3>
                                 <ul class="product-bar">
                                     <li>
                                         <h4>Status</h4>
@@ -98,6 +98,20 @@
                                         <h4>Closing Balance</h4>
                                         <h6>GHS <?= $closing->closing_balance < 0 ? "(" . number_format(abs($closing->closing_balance), 2) . ")" : number_format($closing->closing_balance, 2) ?></h6>
                                     </li>
+                                </ul>
+                            </div>
+                            <div class="productdetails mt-1">
+                                <h3>Management Information</h3>
+                                <ul class="product-bar">
+                                    <li>
+                                        <h4>Closing Time</h4>
+                                        <h6><?= date('d/m/Y H:i A', strtotime($closing->approved_at)) ?></h6>
+                                    </li>
+                                    <li>
+                                        <h4>Closing By</h4>
+                                        <h6><?= $closing->user->firstname ?> <?= $closing->user->lastname ?></h6>
+                                    </li>
+
                                 </ul>
                             </div>
                         </div>
