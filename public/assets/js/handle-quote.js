@@ -62,7 +62,7 @@ let initCompleted = false;
 
 let tableItems = $(".tr-items").DataTable({
   dom: "ftpi",
-  length: 10,
+  pageLength: 100,
   rowCallback: function (row, data, dispNum) {
     $("td:eq(0)", row).html(dispNum + 1);
     if (initCompleted) updateTotals();

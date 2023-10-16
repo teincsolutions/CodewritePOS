@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="table-responsive mb-3">
+                    <div style="max-height: 500px !important;overflow-y:scroll" class="table-responsive mb-3">
                         <table class="table tr-items">
                             <thead>
                                 <tr>

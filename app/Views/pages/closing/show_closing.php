@@ -146,5 +146,5 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-post.js?v=1') ?>"></script>
+<script src="<?= base_url('assets/js/handle-post.js?v=2') ?>"></script>
 <?= $this->endSection() ?>

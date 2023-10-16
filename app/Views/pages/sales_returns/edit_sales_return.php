@@ -74,7 +74,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="table-responsive mb-3">
+                    <div style="max-height: 500px !important;overflow-y:scroll" class="table-responsive mb-3">
                         <table class="table tr-items">
                             <thead>
                                 <tr>
@@ -208,7 +208,7 @@
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-sale-return.js?v=2') ?>"></script>
+<script src="<?= base_url('assets/js/handle-sale-return.js?v=3') ?>"></script>
 <?php if (isset($sales) && $sales->customer) {
     $customer = $sales->customer;
     $customer->text = $customer->name . " (" . ($customer->address ? $customer->address : $customer->phone) . ")";

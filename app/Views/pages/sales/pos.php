@@ -85,11 +85,11 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="table-responsive mb-3">
+                            <div style="max-height: 500px !important;overflow-y:scroll" class="table-responsive mb-3">
                                 <table class="table tr-items">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
+                                            <th>#SN</th>
                                             <th>Product Name</th>
                                             <th>QTY</th>
                                             <th>Price</th>
@@ -647,7 +647,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-pos.js?v=5') ?>"></script>
+<script src="<?= base_url('assets/js/handle-pos.js?v=6') ?>"></script>
 <script src="<?= base_url('assets/js/datatables/pos.modal.js?v=1') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?php if (isset($sales) && $sales->customer) {

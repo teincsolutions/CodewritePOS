@@ -85,7 +85,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="table-responsive mb-3">
+                            <div style="max-height: 500px !important;overflow-y:scroll" class="table-responsive mb-3">
                                 <table class="table tr-items">
                                     <thead>
                                         <tr>
@@ -654,7 +654,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-order.js?v=4') ?>"></script>
+<script src="<?= base_url('assets/js/handle-order.js?v=5') ?>"></script>
 <script src="<?= base_url('assets/js/datatables/order.modal.js') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?php if (isset($purchase) && $purchase->supplier) {

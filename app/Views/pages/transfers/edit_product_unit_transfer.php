@@ -52,7 +52,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="table-responsive">
+                <div style="max-height: 500px !important;overflow-y:scroll" class="table-responsive">
                     <table class="table">
                         <thead>
                             <tr>
