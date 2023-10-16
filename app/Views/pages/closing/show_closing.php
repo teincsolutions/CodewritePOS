@@ -14,7 +14,7 @@
         <div class="col-md-12">
             <div class="card bg-white">
                 <div class="card-body">
-                    <h5 class="card-title">Closing Report of <?= date('d/m/Y H:i A', strtotime($closing->created_at)); ?></h5>
+                    <h5 class="card-title">Closing Report of <?= date('jS M Y H:i A', strtotime($closing->created_at)); ?></h5>
                     <div class="row">
                         <div class="col-md-6">
                             <h3 class="text-success">InFlows</h3>
