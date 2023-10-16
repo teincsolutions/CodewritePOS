@@ -141,7 +141,7 @@ class UserController extends BaseController
             }
 
             $user = new User();
-            $user->fill($inputs);
+            $user->fill($this->request->getPost(array_keys($rules)));
 
             $model->save($user);
             $user = $model->findById($model->getInsertID());

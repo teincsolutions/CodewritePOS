@@ -128,6 +128,8 @@ class Validation extends BaseConfig
             'label' => 'Confirm Password',
             'rules' => 'required|matches[password]',
         ],
+        'user_id' => [
+        ],
     ];
 
     /**
