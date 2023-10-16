@@ -130,6 +130,7 @@ class UserController extends BaseController
                 ]);
 
             $rules  = setting('Validation.registration');
+
             if (!$this->validateData($inputs, $rules)) {
                 return $this->response->setJSON([
                     'status' => false,
@@ -138,6 +139,7 @@ class UserController extends BaseController
                     }, $this->validator->getErrors()))
                 ]);
             }
+
             $user = new User();
             $user->fill($inputs);
 
@@ -149,7 +151,7 @@ class UserController extends BaseController
                 'status' => true,
                 'message' => "User created successfully!",
                 'input' => $inputs,
-                'data' => $model->find($model->getInsertID()),
+                'data' => $user,
             ]);
         }
     }
