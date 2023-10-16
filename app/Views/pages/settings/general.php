@@ -145,7 +145,6 @@
                                                     </div>
                                                 </td>
                                             </tr>
-
                                             <tr>
                                                 <td>Allow Supplier Discount Change</td>
                                                 <td>
@@ -156,6 +155,21 @@
                                                         </label>
                                                         <label class="inputcheck text-capitalize">No
                                                             <input type="radio" name="AllowSupplierDiscountChange" value="no" <?= setting('App.AllowSupplierDiscountChange') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Limit Price Change to Default</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="LimitPriceChange" value="yes" <?= setting('App.LimitPriceChange') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="LimitPriceChange" value="no" <?= setting('App.LimitPriceChange') === 'no' ? 'checked' : '' ?>>
                                                             <span class="checkmark"></span>
                                                         </label>
                                                     </div>

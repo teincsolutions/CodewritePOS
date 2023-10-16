@@ -98,13 +98,11 @@ class UserController extends BaseController
         $inputs = $this->request->getVar();
         if (auth()->user())
             $inputs['user_id'] = auth()->user()->id;
+
+        if (isset($inputs['email']) && empty($inputs['email']))
+            $inputs['email'] = null;
+
         $id = $this->request->getPost('id');
-        $res = [
-            'status' => false,
-            'data' => null,
-            'message' => null,
-            'input' => $inputs,
-        ];
         $user = $model->where('id', $id)->first();
 
         if ($user) {

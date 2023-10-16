@@ -19,7 +19,8 @@ class UserModel extends ShieldUserModel
              'photo_uri',
              'phone',
              'address',
-             'employee_id'
+             'employee_id',
+             'user_id'
         ];
     }
 }

@@ -344,6 +344,8 @@ $(".tr-items").on("click", ".edit-price", function () {
   rowSelected = this;
   let row = $(rowSelected).parents("tr").first();
   $("#edit-product #unit-price").val($(".runit_price", row).val());
+  if (Settings.LimitPriceChange === "yes")
+    $("#edit-product #unit-price").attr("min", $(".runit_price", row).val());
   $("#edit-product #discount").val($(".rdiscount", row).val());
 
   editModal.show();
@@ -351,7 +353,11 @@ $(".tr-items").on("click", ".edit-price", function () {
 
 function updateProduct() {
   let row = $(rowSelected).parents("tr").first();
-  $(".runit_price", row).val($("#edit-product #unit-price").val());
+  if (
+    $("#edit-product #unit-price").val() >=
+    $("#edit-product #unit-price").attr("min")
+  )
+    $(".runit_price", row).val($("#edit-product #unit-price").val());
   $(".rdiscount", row).val($("#edit-product #discount").val());
   updateItemRow(rowSelected);
   editModal.hide();

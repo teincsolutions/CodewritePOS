@@ -626,7 +626,7 @@
                         <div <?= setting('App.AllowCostChange') === 'yes' ? '' : 'hidden'  ?> class="col-lg-6 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Unit Cost</label>
-                                <input id="unit-cost" type="number" class="form-control" placeholder="Unit Cost">
+                                <input id="unit-cost" min="0" type="number" class="form-control" placeholder="Unit Cost">
                             </div>
                         </div>
                         <div <?= setting('App.AllowSupplierDiscountChange') === 'yes' ? '' : 'hidden'  ?> class="col-lg-6 col-sm-12 col-12">
@@ -654,7 +654,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-order.js?v=3') ?>"></script>
+<script src="<?= base_url('assets/js/handle-order.js?v=4') ?>"></script>
 <script src="<?= base_url('assets/js/datatables/order.modal.js') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?php if (isset($purchase) && $purchase->supplier) {

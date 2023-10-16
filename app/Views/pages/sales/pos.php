@@ -618,7 +618,7 @@
                         <div <?= setting('App.AllowPriceChange') === 'yes' ? '' : 'hidden' ?> class="col-lg-6 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Unit Price</label>
-                                <input id="unit-price" type="number" class="form-control" placeholder="Unit Price">
+                                <input id="unit-price" min="0" type="number" class="form-control" placeholder="Unit Price">
                             </div>
                         </div>
                         <div <?= setting('App.AllowCustomerDiscountChange') === 'yes' ? '' : 'hidden' ?> class="col-lg-6 col-sm-12 col-12">
@@ -647,7 +647,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-pos.js?v=3') ?>"></script>
+<script src="<?= base_url('assets/js/handle-pos.js?v=4') ?>"></script>
 <script src="<?= base_url('assets/js/datatables/pos.modal.js?v=1') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?php if (isset($sales) && $sales->customer) {

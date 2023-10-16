@@ -105,6 +105,8 @@ $(".tr-items").on("click", ".edit-cost", function () {
   rowSelected = this;
   let row = $(rowSelected).parents("tr").first();
   $("#edit-product #unit-cost").val($(".runit_cost", row).val());
+  if (Settings.LimitCostChange === "yes")
+    $("#edit-product #unit-cost").attr("min", $(".runit_cost", row).val());
   $("#edit-product #discount").val($(".rdiscount", row).val());
 
   editModal.show();
@@ -112,7 +114,11 @@ $(".tr-items").on("click", ".edit-cost", function () {
 
 function updateProduct() {
   let row = $(rowSelected).parents("tr").first();
-  $(".runit_cost", row).val($("#edit-product #unit-cost").val());
+  if (
+    $("#edit-product #unit-cost").val() >=
+    $("#edit-product #unit-cost").attr("min")
+  )
+    $(".runit_cost", row).val($("#edit-product #unit-cost").val());
   $(".rdiscount", row).val($("#edit-product #discount").val());
   updateItemRow(rowSelected);
   editModal.hide();
@@ -121,7 +127,7 @@ function updateProduct() {
 function updateTotals() {
   let discountTotal = 0,
     discountAmtTotal = 0;
-    (shipping = intVal($("[name='shipping']").val())),
+  (shipping = intVal($("[name='shipping']").val())),
     (orderDiscount = intVal($("[name='discount']").val())),
     (grandTotal = 0);
   for (let i = 0; i < tableItems.rows().data().length; i++) {

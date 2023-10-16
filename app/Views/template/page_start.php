@@ -26,7 +26,9 @@
         <?php
         $settings = [
             'AllowPriceChange', 
+            'LimitPriceChange', 
             'AllowCostChange', 
+            'LimitCostChange', 
             'AllowCustomerDiscountChange', 
             'AllowSupplierDiscountChange', 
             'companyName', 
