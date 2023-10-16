@@ -221,7 +221,7 @@ $(function () {
           : 0;
       };
     },
-    order: [[1, "desc"]],
+    order: [[0, "desc"]],
     columnDefs: [
       {
         orderable: false,
