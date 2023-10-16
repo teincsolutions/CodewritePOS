@@ -74,7 +74,7 @@ form.validate({
 let initCompleted = false;
 
 let tableItems = $(".tr-items").DataTable({
-  dom: "ftpi",
+  dom: "fti",
   pageLength: 100,
   rowCallback: function (row, data, dispNum) {
     $("td:eq(0)", row).html(dispNum + 1);

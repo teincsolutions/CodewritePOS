@@ -408,7 +408,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-quote.js?v=3') ?>"></script>
+<script src="<?= base_url('assets/js/handle-quote.js?v=7') ?>"></script>
 <script src="<?= base_url('assets/js/datatables/quote.modal.js') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?= $this->endSection() ?>
