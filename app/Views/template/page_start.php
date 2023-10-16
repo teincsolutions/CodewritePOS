@@ -31,6 +31,11 @@
             'LimitCostChange', 
             'AllowCustomerDiscountChange', 
             'AllowSupplierDiscountChange', 
+            'AllowDeleteSales',
+            'AllowDeleteSalesReturns',
+            'AllowDeletePurchases',
+            'AllowDeletePurchaseReturns',
+            'AllowDeleteQuotes',
             'companyName', 
             'companyContacts',
         ];

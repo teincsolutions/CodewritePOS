@@ -17,6 +17,7 @@
                     <ul class="nav nav-tabs nav-justified">
                         <li class="nav-item"><a class="nav-link active" href="#system-tab" data-bs-toggle="tab">System Information</a></li>
                         <li class="nav-item"><a class="nav-link" href="#pos-tab" data-bs-toggle="tab">POS</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#reports-tab" data-bs-toggle="tab">Reports</a></li>
                         <li class="nav-item"><a class="nav-link" href="#receipt-tab" data-bs-toggle="tab">Receipt</a></li>
                         <li class="nav-item"><a class="nav-link" href="#invoice-tab" data-bs-toggle="tab">Invoice</a></li>
                         <li class="nav-item"><a class="nav-link" href="#tax-tab" data-bs-toggle="tab">Tax</a></li>
@@ -185,6 +186,60 @@
                                                     <div class="input-group w-50">
                                                         <input type="number" class="form-control" min="0" name="SalesTax" value="<?= setting('App.SalesTax') ?>" placeholder="Tax rate">
                                                         <div class="input-group-text text-info">%</div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 mt-3">
+                                    <button class="btn btn-primary">Save Changes</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane" id="reports-tab">
+                            <form action="<?= site_url('settings') ?>" class="row post-form" method="post">
+                                <p class="text-muted mt-5 mb-5">
+                                    Edit the configuration of your Reports. Click on "Save Changes" button at the bottom of the page when done.
+                                </p>
+                                <div class="col-lg-12">
+                                    <div class="table-responsive">
+                                        <table class="table w-100">
+                                            <thead>
+                                                <th style="width: 25%;">Sales</th>
+                                                <th>Value</th>
+                                            </thead>
+                                            <tr>
+                                                <td>Allow Delete Sales</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="AllowDeleteSales" value="yes" <?= setting('App.AllowDeleteSales') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="AllowDeleteSales" value="no" <?= setting('App.AllowDeleteSales') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <thead class="border-top-0">
+                                                <th style="width: 25%;">Sales Returns</th>
+                                                <th>Value</th>
+                                            </thead>
+                                            <tr>
+                                                <td>Allow Delete Sales Returns</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="AllowDeleteSalesReturns" value="yes" <?= setting('App.AllowDeleteSalesReturns') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="AllowDeleteSalesReturns" value="no" <?= setting('App.AllowDeleteSalesReturns') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
                                                     </div>
                                                 </td>
                                             </tr>

@@ -149,7 +149,13 @@ $(function () {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
                         <a target="_blank" href="${baseUrl}purchases/returns/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                        <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}purchases/returns')"><i class="fa fa-trash fa-lg"></i></a>
+                        <a ${
+                          row.order_status === "completed"
+                            ? Settings.AllowDeletePurchaseReturns === "yes"
+                              ? ""
+                              : "hidden"
+                            : ""
+                        } class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}purchases/returns')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;
@@ -229,9 +235,8 @@ $(function () {
 
   $(".select2-store").select2({
     placeholder: "Seach a store",
-    allowClear:true,
+    allowClear: true,
   });
-  
 
   let form3 = $("#add-payment");
 

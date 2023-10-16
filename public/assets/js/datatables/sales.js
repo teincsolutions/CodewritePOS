@@ -168,7 +168,11 @@ $(function () {
                             : `<a href="${baseUrl}sales/pos/${data}" class="me-3"><i class="fa fa-play fa-lg"></i></a>`
                         }
                         <a ${
-                          row.order_status === "completed" ? "hidden" : ""
+                          row.order_status === "completed"
+                            ? Settings.AllowDeleteSales === "yes"
+                              ? ""
+                              : "hidden"
+                            : ""
                         } class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}sales')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
