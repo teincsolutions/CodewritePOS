@@ -179,6 +179,7 @@ class AuthGroups extends ShieldAuthGroups
 
         'closing.view'        => 'Can view closings',
         'closing.create'        => 'Can create closing report',
+        'closing.approve'        => 'Can approve closing report',
         'closing.delete'        => 'Can delete existing closing',
 
         'cashup.view'           => 'Can view cashup',

@@ -214,6 +214,7 @@ class ClosingController extends BaseController
      */
     public function update()
     {
+
         $model = new StoreClosingModel();
         $inputs = $this->request->getVar();
         if (auth()->user())
@@ -232,10 +233,10 @@ class ClosingController extends BaseController
         $closing = $model->where('id', $id)->first();
 
         if ($closing) {
-            if (!auth()->user()->can('closing.edit'))
+            if (!auth()->user()->can('closing.approve'))
                 return $this->response->setJSON([
                     'status' => false,
-                    'message' => "Don't have permission to edit this record!"
+                    'message' => "Don't have permission to approve this record!"
                 ]);
 
             if ($model->save($inputs)) {
