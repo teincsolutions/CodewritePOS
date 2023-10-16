@@ -81,6 +81,10 @@
                                         <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
                                             Order Status:</font>
                                     </font>
+                                    <font style="vertical-align: inherit;">
+                                        <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
+                                            Payment Method:</font>
+                                    </font>
                                 </div>
                             </td>
                             <td style="padding:5px;vertical-align:top;text-align:right;padding-bottom:20px;width:calc(25%)">
@@ -94,12 +98,16 @@
                                             INV<?= $sales->invoice; ?> </font>
                                     </font><br>
                                     <font style="vertical-align: inherit;">
-                                        <font style="vertical-align: inherit;font-size: 14px;color:#2E7D32;font-weight: 400;">
+                                        <font  class="text-capitalize" style="vertical-align: inherit;font-size: 14px;color:#2E7D32;font-weight: 400;">
                                             <?= $sales->payment_status; ?></font>
                                     </font><br>
                                     <font style="vertical-align: inherit;">
-                                        <font style="vertical-align: inherit;font-size: 14px;color:#2E7D32;font-weight: 400;">
+                                        <font  class="text-capitalize" style="vertical-align: inherit;font-size: 14px;color:#2E7D32;font-weight: 400;">
                                             <?= $sales->order_status; ?></font>
+                                    </font><br>
+                                      <font style="vertical-align: inherit;">
+                                        <font class="text-capitalize" style="vertical-align: inherit;font-size: 14px;color:#FE7D32;font-weight: 400;">
+                                            <?= $sales->payment_type; ?></font>
                                     </font>
                                 </div>
                             </td>
