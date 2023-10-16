@@ -291,5 +291,11 @@ class AuthGroups extends ShieldAuthGroups
             'expenses.view', 'customer-ledgers.view', 'supplier-ledgers.view', 'purchases.view', 'sales.view',
             'purchase-returns.view', 'sales-returns.view', 'quotes.view', 'adjustments.view',
         ],
+        'seller' => [
+            'customers.view', 'products.view', 'brands.view', 'customers.edit',
+            'categories.view', 'units.view', 'product-transfers.view', 'expense-categories.view',
+            'expenses.view','expenses.create','expenses.edit', 'customer-ledgers.view','customer-ledgers.create', 'sales.view','sales.create',
+            'sales-returns.view','sales-returns.create', 'quotes.view','quotes.create','cashup.create','cashup.view','closing.create','closing.view'
+        ],
     ];
 }
