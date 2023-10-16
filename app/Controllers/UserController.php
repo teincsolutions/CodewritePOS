@@ -144,7 +144,7 @@ class UserController extends BaseController
             $user->fill($inputs);
 
             $model->save($user);
-            $user = $model->find($model->getInsertID());
+            $user = $model->findById($model->getInsertID());
             $user->syncGroups(...$inputs['groups']);
             Events::trigger('register', $user);
             
