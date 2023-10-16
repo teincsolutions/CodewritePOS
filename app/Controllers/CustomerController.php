@@ -81,7 +81,7 @@ class CustomerController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new CustomerModel();
-        return $this->response->setJSON(toSelect2Result($model, ['name', 'phone', 'address'], $inputs, 'concat(name," (",ifnull(address,phone), ")") as text,customers.*'));
+        return $this->response->setJSON(toSelect2Result($model, ['name', 'phone', 'address'], $inputs, 'concat(name," (",ifnull(address,ifnull(phone,"")), ")") as text,customers.*'));
     }
 
     /**

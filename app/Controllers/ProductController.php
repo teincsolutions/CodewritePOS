@@ -58,6 +58,7 @@ class ProductController extends BaseController
         }
         return view('pages/products/edit_product', $data);
     }
+    
     public function save()
     {
         $model = new ProductModel();

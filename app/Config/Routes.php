@@ -79,6 +79,7 @@ $routes->get('sales/(:num)', [SalesController::class, 'show/$1'], ['filter' => '
 $routes->get('sales/returns/(:num)', [SalesReturnController::class, 'show/$1'], ['filter' => 'permission:sales-returns.view']);
 $routes->get('stores/(:num)', [StoreController::class, 'show/$1'], ['filter' => 'permission:stores.view']);
 $routes->get('suppliers/(:num)', [SupplierController::class, 'show/$1'], ['filter' => 'permission:suppliers.view']);
+$routes->get('closing/(:num)', [ClosingController::class, 'show/$1'], ['filter' => 'permission:closing.view']);
 
 //edit
 $routes->get('users/edit/(:num)', [UserController::class, 'edit/$1'],['filter'=>'permission:users.edit']);
@@ -188,6 +189,7 @@ $routes->post('suppliers', [SupplierController::class, 'save']);
 $routes->post('units', [UnitController::class, 'save']);
 $routes->post('cashup', [StoreLedgerController::class, 'save']);
 $routes->post('closing/save', [ClosingController::class, 'save']);
+$routes->post('closing/update', [ClosingController::class, 'update']);
 
 $routes->put('users/(:num)/permissions', [UserController::class, 'save_permissions/$1']);
 $routes->put('adjustments', [AdjustmentController::class, 'save']);

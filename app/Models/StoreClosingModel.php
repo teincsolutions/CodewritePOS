@@ -27,7 +27,10 @@ class StoreClosingModel extends Model
         'cashup',
         'closing_balance',
         'user_id',
-        'store_id'
+        'store_id',
+        'approval_user_id',
+        'approved_at',
+        'status'
     ];
 
     // Dates
@@ -62,10 +65,12 @@ class StoreClosingModel extends Model
             
             if ($model['singleton']) {
                 $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
+                $model['data']->approvalUser = $userModel->where('id', $model['data']->approval_user_id)->first();
                 $model['data']->store = $storeModel->where('id', $model['data']->store_id)->first();
             } else {
                 foreach ($model['data'] as $key => $row) {
                     $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
+                    $model['data'][$key]->approvalUser = $userModel->where('id', $row->approval_user_id)->first();
                     $model['data'][$key]->store = $storeModel->where('id', $row->store_id)->first();
                 }
             }

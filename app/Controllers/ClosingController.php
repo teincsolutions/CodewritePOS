@@ -15,6 +15,7 @@ use App\Models\StoreLedgerModel;
 use App\Models\StoreModel;
 use App\Models\SupplierLedgerModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
+use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\Response;
 use Config\Database;
 
@@ -27,6 +28,20 @@ class ClosingController extends BaseController
             'title' => 'Closing List',
         ];
         return view('pages/closing/list_closing', $data);
+    }
+
+    public function show($id = null): string
+    {
+        $closingModel = new StoreClosingModel();
+
+        $closing = $closingModel->where('id', $id)->first();
+        $data = [
+            'closing' => $closing,
+            'title' => 'Details of Closing',
+        ];
+        if (!$closing) throw PageNotFoundException::forPageNotFound('Closing Record Not Found!');
+
+        return view('pages/closing/show_closing', $data);
     }
 
     public function store(): string
@@ -193,6 +208,51 @@ class ClosingController extends BaseController
         return $this->response->setJSON($res);
     }
 
+    /**
+     * return json for update
+     * @return Response - http response
+     */
+    public function update()
+    {
+        $model = new StoreClosingModel();
+        $inputs = $this->request->getVar();
+        if (auth()->user())
+            $inputs['approval_user_id'] = auth()->user()->id;
+        if ($inputs['status'] === 'approved')
+            $inputs['approved_at'] = date('Y-m-d H:i:s');
+        else   $inputs['approved_at'] = null;
+
+        $id = $this->request->getPost('id');
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => null,
+            'input' => $inputs,
+        ];
+        $closing = $model->where('id', $id)->first();
+
+        if ($closing) {
+            if (!auth()->user()->can('closing.edit'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to edit this record!"
+                ]);
+
+            if ($model->save($inputs)) {
+                $res = array_merge($res, [
+                    'status' => true,
+                    'message' => "Status updated successfully!",
+                    'data' => $model->find($id),
+                ]);
+            } else {
+                $res = array_merge($res, [
+                    'status' => false,
+                    'message' => "Couldn't be updated!"
+                ]);
+            }
+        }
+        return $this->response->setJSON($res);
+    }
     /**
      * return json for datatables
      * @return Response - http response
