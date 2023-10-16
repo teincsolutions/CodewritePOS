@@ -146,7 +146,8 @@ class UserController extends BaseController
             $model->save($user);
             $user = $model->find($model->getInsertID());
             $user->syncGroups(...$inputs['groups']);
-
+            Events::trigger('register', $user);
+            
             return $this->response->setJSON([
                 'status' => true,
                 'message' => "User created successfully!",
