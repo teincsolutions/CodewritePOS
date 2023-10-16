@@ -649,6 +649,7 @@ form.on("submit", function (e) {
             $("select").trigger("change");
             updateTotals();
           }
+          table.ajax.reload();
         } else {
           Swal.fire({
             icon: "error",
