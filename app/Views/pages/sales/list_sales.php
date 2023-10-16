@@ -75,6 +75,16 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-lg-2 col-sm-6 col-12">
+                            <div class="form-group">
+                                <select name="payment_type" class="select">
+                                    <option value="">Select method</option>
+                                    <option value="cash">Cash</option>
+                                    <option value="momo">MoMo</option>
+                                    <option value="credit">Credit Card</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-lg-4 col-sm-6 col-12">
                             <div class="form-group">
                                 <select name="customer_id" class="select2-customer">

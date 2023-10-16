@@ -40,7 +40,7 @@ if (!function_exists('toDatatableResult')) {
 
         if (isset($inputs['fields'])) {
             foreach ($inputs['fields'] as $field => $val) {
-                if (!empty(trim($val)) && in_array($field, ['type', 'user_id']))
+                if (!empty(trim($val)) && in_array($field, ['type', 'user_id','payment_type']))
                     $model->where($field, $val);
                 else if (!empty(trim($val))) $model->like($field, $val);
             }
