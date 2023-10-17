@@ -117,7 +117,6 @@
                                                     <div class="increment-decrement">
                                                         <div class="input-groups">
                                                             <input type="button" value="-" class="button-minus dec button">
-                                                            <input type='hidden' name="items[<?= $key ?>][id]" value="<?= $row->id ?>">
                                                             <input type='hidden' name="items[<?= $key ?>][quote_id]" value="<?= $row->quote_id ?>">
                                                             <input type='hidden' name="items[<?= $key ?>][product_id]" value="<?= $row->product_id ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][unit_cost]" value="<?= $row->unit_cost; ?>">

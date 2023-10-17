@@ -119,7 +119,6 @@
                                                 <td>
                                                     <div class="increment-decrement">
                                                         <div class="input-groups">
-                                                            <input type='hidden' name="items[<?= $key ?>][id]" value="<?= $row->id ?>">
                                                             <input type='hidden' name="items[<?= $key ?>][sale_id]" value="<?= $row->sale_id ?>">
                                                             <input type='hidden' name="items[<?= $key ?>][product_id]" value="<?= $row->product_id ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][unit_price]" value="<?= $row->unit_price; ?>" class="runit_price">
