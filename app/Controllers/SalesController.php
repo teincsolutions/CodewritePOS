@@ -25,11 +25,11 @@ class SalesController extends BaseController
     {
         $cusModel = new CustomerModel();
         $storeModel = new StoreModel();
-        
+
         $data = [
             'title' => 'Sales List',
             'customers' => $cusModel->findAll(),
-            'stores' => $storeModel->where('status','opened')->findAll(),
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
         ];
 
         return view('pages/sales/list_sales', $data);
@@ -60,7 +60,7 @@ class SalesController extends BaseController
         $data = [
             'title' => 'Point of Sales',
             'invoice' => substr(time() + $lastId, 0, 10),
-            'stores' => $storeModel->where('status','opened')->findAll(),
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
             'saleList' => $model->where($saleWhere)->findAll(),
             'returnList' => $returnModel->where($returnWhere)->findAll(),
             'ledgerList' => $ledgerModel->where($ledgerWhere)->findAll(),
@@ -117,10 +117,10 @@ class SalesController extends BaseController
     public function save()
     {
         if (!auth()->user()->can('sales.create'))
-        return $this->response->setJSON([
-            'status' => false,
-            'message' => "Don't have permission to create this record!"
-        ]);
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to create this record!"
+            ]);
 
         $model = new SalesModel();
         $salesItemModel = new SalesItemModel();
@@ -231,10 +231,10 @@ class SalesController extends BaseController
     public function hold()
     {
         if (!auth()->user()->can('sales.create'))
-        return $this->response->setJSON([
-            'status' => false,
-            'message' => "Don't have permission to create this record!"
-        ]);
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to create this record!"
+            ]);
 
         $model = new SalesModel();
         $salesItemModel = new SalesItemModel();
@@ -287,15 +287,15 @@ class SalesController extends BaseController
                 }
                 $salesItemModel->insertBatch($salesItems);
             } else if ($saved) {
+                $salesItemModel->builder()->where('sale_id', $sales->id)->delete();
                 $salesItems = [];
-
                 foreach ($items as $k => $row) {
                     if (empty($items[$k]['tax_id'])) $items[$k]['tax_id'] = null;
                     if (empty($items[$k]['store_id']) && isset($inputs['store_id'])) $items[$k]['store_id'] = $inputs['store_id'];
                     if (empty($items[$k]['store_id'])) unset($items[$k]['store_id']);
                     array_push($salesItems, $items[$k]);
                 }
-                $salesItemModel->updateBatch($salesItems, 'id');
+                $salesItemModel->insertBatch($salesItems);
             }
 
             $sales = $model->find($id);
