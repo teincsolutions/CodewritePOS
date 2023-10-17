@@ -122,5 +122,5 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/purchase-returns.js') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/purchase-returns.js?v=7') ?>"></script>
 <?= $this->endSection() ?>

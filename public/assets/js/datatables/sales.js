@@ -218,7 +218,7 @@ $(function () {
           : 0;
       };
     },
-    order: [[1, "desc"]],
+    order: [[3, "desc"]],
     columnDefs: [
       {
         orderable: false,
