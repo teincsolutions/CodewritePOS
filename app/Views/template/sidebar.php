@@ -243,17 +243,17 @@
                         </ul>
                     </li>
                 <?php endif ?>
-                <?php if (auth()->user()->can('sales.reports', 'purchases.reports', 'stocks.reports')) : ?>
+                <?php if (auth()->user()->can('sales.report', 'purchases.report', 'stocks.report')) : ?>
                     <li class="submenu-open">
                         <h6 class="submenu-hdr">Reports</h6>
                         <ul>
-                            <?php if (auth()->user()->can('reports.sales')) : ?>
+                            <?php if (auth()->user()->can('sales.report')) : ?>
                                 <li class="<?= getActiveUrl("reports/sales", "active"); ?>"><a href="<?= site_url('reports/sales') ?>"><i data-feather="bar-chart-2"></i><span>Sales Report</span></a></li>
                             <?php endif ?>
-                            <?php if (auth()->user()->can('reports.purchases')) : ?>
+                            <?php if (auth()->user()->can('purchases.report')) : ?>
                                 <li class="<?= getActiveUrl("purchases/report", "active"); ?>"><a href="<?= site_url('reports/purchases') ?>"><i data-feather="pie-chart"></i><span>Purchase report</span></a></li>
                             <?php endif ?>
-                            <?php if (auth()->user()->can('reports.stocks')) : ?>
+                            <?php if (auth()->user()->can('stocks.report')) : ?>
                                 <li class="<?= getActiveUrl("reports/stocks", "active"); ?>"><a href="<?= site_url('reports/stocks') ?>"><i data-feather="credit-card"></i><span>Inventory Report</span></a></li>
                             <?php endif ?>
                         </ul>
