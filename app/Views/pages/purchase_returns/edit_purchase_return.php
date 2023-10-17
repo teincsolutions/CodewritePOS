@@ -102,7 +102,7 @@
                                                     : '<a class="p-3"></a>' ?>
                                                 <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
                                                     <?= $row->product->name ?>
-                                                    (<?= $row->store->name; ?><?= $row->store->location ? "(" . $row->store->location . ")" : null; ?>)</a>
+                                                    (<?= $purchase->store->name; ?><?= $purchase->store->location ? "(" . $purchase->store->location . ")" : null; ?>)</a>
                                             </td>
                                             <td>
                                                 <div class="increment-decrement">

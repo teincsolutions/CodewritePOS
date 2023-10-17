@@ -75,12 +75,7 @@ class PurchaseModel extends Model
             if ($model['singleton']) {
                 $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
                 $model['data']->supplier = $supModel->where('id', $model['data']->supplier_id)->first();
-                $model['data']->items = $itemModel->select('purchase_items.id,purchase_items.purchase_id, purchase_items.product_id, purchase_items.store_id,purchase_items.subtotal, purchase_items.tax_id,purchase_items.unit_cost,purchase_items.unit_price, (SUM(purchase_items.qty)-SUM(ifnull(purchase_returns_items.qty,0))) as qty, purchase_items.tax, purchase_items.discount,(SUM(purchase_items.qty)-SUM(ifnull(purchase_returns_items.qty,0))) as max_qty, purchase_items.id as purchase_item_id')
-                    ->where('purchase_items.purchase_id', $model['data']->id)
-                    ->join('purchase_returns', 'purchase_returns.purchase_id=purchase_items.purchase_id', 'left')
-                    ->join('purchase_returns_items', 'purchase_returns_items.purchase_return_id=purchase_returns.id AND purchase_returns_items.product_id=purchase_items.product_id', 'left')
-                    ->groupBy('purchase_items.product_id')
-                    ->findAll();
+                $model['data']->items = $itemModel->where('purchase_id', $model['data']->id)->findAll();
                 $model['data']->store = $storeModel->where('id', $model['data']->store_id)->first();
                 $total = $ledger->builder()->selectSum('debit', 'total')
                     ->where('purchase_id', $model['data']->id)
