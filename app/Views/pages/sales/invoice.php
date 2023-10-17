@@ -118,6 +118,9 @@
                     <tbody>
                         <tr class="heading" style="background: #F3F2F7;">
                             <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
+                                #
+                            </td>
+                            <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
                                 Product Name
                             </td>
                             <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
@@ -140,6 +143,7 @@
                         if (isset($sales))
                             foreach ($sales->items as $key => $row) : ?>
                             <tr class="details" style="border-bottom:1px solid #E9ECEF;">
+                                <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $key + 1 ?></td>
                                 <td class="productimgname" style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
                                     <?= $row->product->image_uri
                                         ? '<a class="product-img"><img src="' . base_url($row->product->image_uri) . '" alt="product"></a>'
