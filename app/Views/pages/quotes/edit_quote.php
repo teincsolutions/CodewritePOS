@@ -142,7 +142,7 @@
                                     </tbody>
                                 </table>
                                 <script>
-                                    prodIndex = <?= isset($quote) ? sizeof($quote->items) : 0 ?>;
+                                    let prodIndex = <?= isset($quote) ? sizeof($quote->items) : 0 ?>;
                                 </script>
                             </div>
                         </div>

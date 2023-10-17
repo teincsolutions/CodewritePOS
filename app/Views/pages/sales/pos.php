@@ -149,7 +149,7 @@
                                         <?php endforeach ?>
                                     </tbody>
                                     <script>
-                                        prodIndex = <?= isset($sales) ? sizeof($sales->items) : 0 ?>;
+                                        let prodIndex = <?= isset($sales) ? sizeof($sales->items) : 0 ?>;
                                     </script>
                                 </table>
 
