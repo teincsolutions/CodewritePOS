@@ -287,7 +287,7 @@ class SalesController extends BaseController
                 }
                 $salesItemModel->insertBatch($salesItems);
             } else if ($saved) {
-                $salesItemModel->builder()->where('sale_id', $sales->id)->delete();
+                $salesItemModel->builder()->delete(['sale_id' => $sales->id]);
                 $salesItems = [];
                 foreach ($items as $k => $row) {
                     if (empty($items[$k]['tax_id'])) $items[$k]['tax_id'] = null;
