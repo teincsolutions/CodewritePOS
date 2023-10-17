@@ -28,7 +28,7 @@ const searchParams = {
   },
 };
 
-let prodIndex = prodIndex ? prodIndex : 0;
+prodIndex = prodIndex ? prodIndex : 0;
   purchaseItemIds = [];
 (dueTotal = 0), (grandTotal = 0), (supplierBalance = 0);
 
