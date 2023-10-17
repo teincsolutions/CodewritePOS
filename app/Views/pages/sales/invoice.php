@@ -25,16 +25,16 @@
 
                                 <font style="vertical-align: inherit;">
                                     <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
-                                        <h1><?= $sales->store->name; ?></h1>
+                                        <h1><?= $sales->store ? $sales->store->name : ''; ?></h1>
                                     </font>
                                 </font><br>
                                 <font style="vertical-align: inherit;">
                                     <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
-                                        <?= $sales->store->location; ?></font>
+                                        <?= $sales->store ? $sales->store->location : ''; ?></font>
                                 </font><br>
                                 <font style="vertical-align: inherit;">
                                     <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
-                                        <?= $sales->store->description; ?></font>
+                                        <?= $sales->store ? $sales->store->description : ''; ?></font>
                                 </font>
                             </td>
                         </tr>
@@ -98,14 +98,14 @@
                                             INV<?= $sales->invoice; ?> </font>
                                     </font><br>
                                     <font style="vertical-align: inherit;">
-                                        <font  class="text-capitalize" style="vertical-align: inherit;font-size: 14px;color:#2E7D32;font-weight: 400;">
+                                        <font class="text-capitalize" style="vertical-align: inherit;font-size: 14px;color:#2E7D32;font-weight: 400;">
                                             <?= $sales->payment_status; ?></font>
                                     </font><br>
                                     <font style="vertical-align: inherit;">
-                                        <font  class="text-capitalize" style="vertical-align: inherit;font-size: 14px;color:#2E7D32;font-weight: 400;">
+                                        <font class="text-capitalize" style="vertical-align: inherit;font-size: 14px;color:#2E7D32;font-weight: 400;">
                                             <?= $sales->order_status; ?></font>
                                     </font><br>
-                                      <font style="vertical-align: inherit;">
+                                    <font style="vertical-align: inherit;">
                                         <font class="text-capitalize" style="vertical-align: inherit;font-size: 14px;color:#FE7D32;font-weight: 400;">
                                             <?= $sales->payment_type; ?></font>
                                     </font>

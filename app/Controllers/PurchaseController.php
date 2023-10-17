@@ -287,9 +287,11 @@ class PurchaseController extends BaseController
                 $purchasesItemModel->insertBatch($purchasesItems);
             } else if ($saved) {
                 $purchasesItems = [];
-                $purchasesItemModel->builder()->where('purchase_id', $purchases->id)->delete();
+                $id = $purchases->id;
+                $purchasesItemModel->builder()->where('purchase_id', $id)->delete();
 
                 foreach ($items as $k => $row) {
+                    $items[$k]['purchase_id'] = $id;
                     if (empty($items[$k]['tax_id'])) $items[$k]['tax_id'] = null;
                     if (empty($items[$k]['store_id']) && isset($inputs['store_id'])) $items[$k]['store_id'] = $inputs['store_id'];
                     if (empty($items[$k]['store_id'])) unset($items[$k]['store_id']);

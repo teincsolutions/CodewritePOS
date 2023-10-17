@@ -282,15 +282,20 @@ class SalesController extends BaseController
                     $items[$k]['sale_id'] = $id;
                     if (empty($items[$k]['tax_id'])) $items[$k]['tax_id'] = null;
                     if (empty($items[$k]['store_id']) && isset($inputs['store_id'])) $items[$k]['store_id'] = $inputs['store_id'];
+                    if (empty($items[$k]['store_id'])) $items[$k]['store_id'] = null;
                     array_push($salesItems, $items[$k]);
                 }
                 $salesItemModel->insertBatch($salesItems);
             } else if ($saved) {
-                $salesItemModel->builder()->delete(['sale_id' => $sales->id]);
+                $id = $sales->id;
+                $salesItemModel->builder()->delete(['sale_id' => $id]);
+                
                 $salesItems = [];
                 foreach ($items as $k => $row) {
+                    $items[$k]['sale_id'] = $id;
                     if (empty($items[$k]['tax_id'])) $items[$k]['tax_id'] = null;
                     if (empty($items[$k]['store_id']) && isset($inputs['store_id'])) $items[$k]['store_id'] = $inputs['store_id'];
+                    if (empty($items[$k]['store_id'])) $items[$k]['store_id'] = null;
                     array_push($salesItems, $items[$k]);
                 }
                 $salesItemModel->insertBatch($salesItems);
