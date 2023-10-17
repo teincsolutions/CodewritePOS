@@ -1,9 +1,9 @@
 let table;
 
 $(function () {
-  table = $("#productstable").DataTable({
+  table = $("#dt-outofstocks").DataTable({
     ajax: {
-      url: baseUrl + "products/datatable",
+      url: baseUrl + "outofstock/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
@@ -23,6 +23,7 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
+       params.store_id = $('.select2-store').val();
 
         params.fields = filter;
       },
@@ -66,8 +67,6 @@ $(function () {
         },
       },
       { data: "name", name: "products.name" },
-      { data: "description", name: "products.description" },
-      { data: "barcode", name: "products.barcode" },
       { data: "sku", name: "products.sku" },
       {
         data: "brand",
@@ -93,47 +92,7 @@ $(function () {
           return data ? data.id : null;
         },
       },
-      { data: "unit_cost", name: "products.unit_cost" },
-      { data: "unit_price", name: "products.unit_price" },
-      {
-        data: "unit",
-        name: "products.unit_id",
-        render: function (data, type, row) {
-          if (type === "display") {
-            return data ? data.label : "";
-          }
-          return data ? data.id : null;
-        },
-      },
       { data: "instock" },
-      {
-        data: "discontinued",
-        name: "products.discontinued",
-        render: function (data, type, row) {
-          if (type === "display") {
-            return `<label class="checkboxs"><input type="checkbox"
-                        ${
-                          ["", "checked"][data]
-                        }><span onclick="updateRow(table,{id:${
-              row.id
-            },discontinued:${
-              data == 0 ? 1 : 0
-            }},'${baseUrl}products')" class="checkmarks"></span></label>`;
-          }
-          return data;
-        },
-      },
-      {
-        data: "user",
-        name: "products.user_id",
-        render: function (data, type, row) {
-          if (type === "display")
-            return data
-              ? `<a target="_blank" href="${baseUrl}users/${data.id}" class="btn btn-link btn-sm">${data.firstname} ${data.lastname}</a>`
-              : null;
-          return data ? data.id : null;
-        },
-      },
       {
         data: "id",
         name: "products.id",
@@ -209,5 +168,9 @@ $(function () {
   $(".filter-clear").on("click", function (params) {
     $("#date-from,#date-to").val("");
     table.ajax.reload();
+  });
+
+  $(".select2-store").select2({
+    placeholder: "Seach a store"
   });
 });

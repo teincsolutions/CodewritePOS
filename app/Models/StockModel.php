@@ -47,12 +47,18 @@ class StockModel extends Model
     {
         if ($model && $model['data']) {
             $storeModel = new StoreModel();
+            $productModel = new ProductModel();
+            $brandModel = new BrandModel();
+            $categoryModel = new CategoryModel();
 
             if ($model['singleton']) {
                 $model['data']->store = $storeModel->where('id', $model['data']->store_id)->first();
             } else {
                 foreach ($model['data'] as $key => $row) {
                     $model['data'][$key]->store = $storeModel->where('id', $row->store_id)->first();
+                    $model['data'][$key]->product = $productModel->builder()->where('id', $row->product_id)->get()->getRowObject();
+                    $model['data'][$key]->brand = $brandModel->builder()->where('id', $model['data'][$key]->product->brand_id)->get()->getRowObject();
+                    $model['data'][$key]->category = $categoryModel->builder()->where('id', $model['data'][$key]->product->category_id)->get()->getRowObject();
                 }
             }
         }

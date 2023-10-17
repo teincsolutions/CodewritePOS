@@ -1,9 +1,9 @@
 let table;
 
 $(function () {
-  table = $("#productstable").DataTable({
+  table = $("#dt-instocks").DataTable({
     ajax: {
-      url: baseUrl + "products/datatable",
+      url: baseUrl + "instock/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
@@ -23,7 +23,7 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-
+        filter['store_id'] = $('.select2-store').val();
         params.fields = filter;
       },
     },
@@ -65,17 +65,13 @@ $(function () {
           return null;
         },
       },
-      { data: "name", name: "products.name" },
-      { data: "description", name: "products.description" },
-      { data: "barcode", name: "products.barcode" },
-      { data: "sku", name: "products.sku" },
       {
-        data: "brand",
-        name: "products.brand_id",
+        data: "product",
+        name: "product_id",
         render: function (data, type, row) {
           if (type === "display") {
             return data
-              ? `<a target="_blank" href="${baseUrl}brands/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+              ? `<a target="_blank" href="${baseUrl}products/${data.id}" class="btn btn-link btn-sm"><span class="text-warning">${data.sku}</span> ${data.name}</a>`
               : "";
           }
           return data ? data.id : null;
@@ -83,7 +79,6 @@ $(function () {
       },
       {
         data: "category",
-        name: "products.category_id",
         render: function (data, type, row) {
           if (type === "display") {
             return data
@@ -93,56 +88,27 @@ $(function () {
           return data ? data.id : null;
         },
       },
-      { data: "unit_cost", name: "products.unit_cost" },
-      { data: "unit_price", name: "products.unit_price" },
       {
-        data: "unit",
-        name: "products.unit_id",
+        data: "brand",
         render: function (data, type, row) {
           if (type === "display") {
-            return data ? data.label : "";
+            return data
+              ? `<a target="_blank" href="${baseUrl}brands/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+              : "";
           }
           return data ? data.id : null;
         },
       },
       { data: "instock" },
       {
-        data: "discontinued",
-        name: "products.discontinued",
-        render: function (data, type, row) {
-          if (type === "display") {
-            return `<label class="checkboxs"><input type="checkbox"
-                        ${
-                          ["", "checked"][data]
-                        }><span onclick="updateRow(table,{id:${
-              row.id
-            },discontinued:${
-              data == 0 ? 1 : 0
-            }},'${baseUrl}products')" class="checkmarks"></span></label>`;
-          }
-          return data;
-        },
-      },
-      {
-        data: "user",
-        name: "products.user_id",
-        render: function (data, type, row) {
-          if (type === "display")
-            return data
-              ? `<a target="_blank" href="${baseUrl}users/${data.id}" class="btn btn-link btn-sm">${data.firstname} ${data.lastname}</a>`
-              : null;
-          return data ? data.id : null;
-        },
-      },
-      {
-        data: "id",
-        name: "products.id",
+        data: "product_id",
+        name: "product_id",
         render: function (data, type, row) {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
-                        <a class="me-3" href="${baseUrl}products/${row.id}"><i class="fa fa-eye fa-lg"></i></a>
-                        <a class="me-3" href="${baseUrl}products/edit/${row.id}"><i class="fa fa-edit fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${row.id}, '${baseUrl}products')"><i class="fa fa-trash fa-lg"></i></a>
+                        <a class="me-3" href="${baseUrl}products/${data}"><i class="fa fa-eye fa-lg"></i></a>
+                        <a class="me-3" href="${baseUrl}products/edit/${data}"><i class="fa fa-edit fa-lg"></i></a>
+                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}products')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;
@@ -209,5 +175,9 @@ $(function () {
   $(".filter-clear").on("click", function (params) {
     $("#date-from,#date-to").val("");
     table.ajax.reload();
+  });
+
+  $(".select2-store").select2({
+    placeholder: "Seach a store"
   });
 });

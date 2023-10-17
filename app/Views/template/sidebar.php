@@ -140,6 +140,19 @@
                                     </ul>
                                 </li>
                             <?php endif ?>
+                            <?php if (auth()->user()->can('stocks.view')) : ?>
+                                <li class="submenu">
+                                    <a class="<?= getActiveUrl("inventory*", "subdrop active") ?>" href="javascript:void(0);">
+                                        <i data-feather="align-justify"></i>
+                                        <span>Inventory</span><span class="menu-arrow"></span>
+                                    </a>
+                                    <ul>
+                                        <li><a class="<?= getActiveUrl("inventory/short-stocks"); ?>" href="<?= site_url('inventory/short-stocks') ?>">Short Stocks</a></li>
+                                        <li><a class="<?= getActiveUrl("inventory/outofstocks"); ?>" href="<?= site_url('inventory/outofstocks') ?>">Out of Stocks</a></li>
+                                        <li><a class="<?= getActiveUrl("inventory/instocks"); ?>" href="<?= site_url('inventory/instocks') ?>">In Stocks</a></li>
+                                    </ul>
+                                </li>
+                            <?php endif ?>
                         </ul>
                     </li>
                 <?php endif ?>

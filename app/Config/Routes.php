@@ -9,6 +9,7 @@ use App\Controllers\CustomerLedgerController;
 use App\Controllers\ExpenseCategoryController;
 use App\Controllers\ExpenseController;
 use App\Controllers\ImportController;
+use App\Controllers\InventoryController;
 use App\Controllers\ProductController;
 use App\Controllers\ProductTransferController;
 use App\Controllers\ProductUnitTransferController;
@@ -52,6 +53,9 @@ $routes->get('account-debts/customers', [CustomerLedgerController::class, 'custo
 $routes->get('expenses/categories', [ExpenseCategoryController::class, 'index'], ['filter' => 'permission:expense-categories.view']);
 $routes->get('expenses', [ExpenseController::class, 'index'], ['filter' => 'permission:expenses.view']);
 $routes->get('products', [ProductController::class, 'index'], ['filter' => 'permission:products.view']);
+$routes->get('inventory/short-stocks', [InventoryController::class, 'short_stocks'], ['filter' => 'permission:stocks.view']);
+$routes->get('inventory/instocks', [InventoryController::class, 'instocks'], ['filter' => 'permission:stocks.view']);
+$routes->get('inventory/outofstocks', [InventoryController::class, 'outofstocks'], ['filter' => 'permission:stocks.view']);
 $routes->get('transfers/products', [ProductTransferController::class, 'index'], ['filter' => 'permission:product-transfers.view']);
 $routes->get('transfers/units', [ProductUnitTransferController::class, 'index'], ['filter' => 'permission:unit-transfers.view']);
 $routes->get('purchases', [PurchaseController::class, 'index'], ['filter' => 'permission:purchases.view']);
@@ -131,6 +135,9 @@ $routes->get('customers/debtors/datatable', [CustomerLedgerController::class, 'd
 $routes->get('expenses/categories/datatable', [ExpenseCategoryController::class, 'datatable']);
 $routes->get('expenses/datatable', [ExpenseController::class, 'datatable']);
 $routes->get('products/datatable', [ProductController::class, 'datatable']);
+$routes->get('instock/datatable', [InventoryController::class, 'instock_datatable']);
+$routes->get('short-stock/datatable', [InventoryController::class, 'short_stock_datatable']);
+$routes->get('outofstock/datatable', [InventoryController::class, 'outofstock_datatable']);
 $routes->get('transfers/products/datatable', [ProductTransferController::class, 'datatable']);
 $routes->get('transfers/units/datatable', [ProductUnitTransferController::class, 'datatable']);
 $routes->get('purchases/datatable', [PurchaseController::class, 'datatable']);
