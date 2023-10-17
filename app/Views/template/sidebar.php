@@ -243,18 +243,19 @@
                         </ul>
                     </li>
                 <?php endif ?>
-                <?php if (auth()->user()->can('reports*')) : ?>
+                <?php if (auth()->user()->can('sales.reports', 'purchases.reports', 'stocks.reports')) : ?>
                     <li class="submenu-open">
                         <h6 class="submenu-hdr">Reports</h6>
                         <ul>
                             <?php if (auth()->user()->can('reports.sales')) : ?>
                                 <li class="<?= getActiveUrl("reports/sales", "active"); ?>"><a href="<?= site_url('reports/sales') ?>"><i data-feather="bar-chart-2"></i><span>Sales Report</span></a></li>
                             <?php endif ?>
-                            <li class="<?= getActiveUrl("purchases/report", "active"); ?>"><a href="<?= site_url('purchases/order-report') ?>"><i data-feather="pie-chart"></i><span>Purchase report</span></a></li>
-                            <li class="<?= getActiveUrl("inventory/report", "active"); ?>"><a href="<?= site_url('inventory/report') ?>"><i data-feather="credit-card"></i><span>Inventory Report</span></a></li>
-                            <li class="<?= getActiveUrl("purchases/report", "active"); ?>"><a href="<?= site_url('purchases/report') ?>"><i data-feather="bar-chart"></i><span>Purchase Report</span></a></li>
-                            <li class="<?= getActiveUrl("suppliers/report", "active"); ?>"><a href="<?= site_url('suppliers/report') ?>"><i data-feather="database"></i><span>Supplier Report</span></a></li>
-                            <li class="<?= getActiveUrl("customers/report", "active"); ?>"><a href="<?= site_url('customers/report') ?>"><i data-feather="pie-chart"></i><span>Customer Report</span></a></li>
+                            <?php if (auth()->user()->can('reports.purchases')) : ?>
+                                <li class="<?= getActiveUrl("purchases/report", "active"); ?>"><a href="<?= site_url('reports/purchases') ?>"><i data-feather="pie-chart"></i><span>Purchase report</span></a></li>
+                            <?php endif ?>
+                            <?php if (auth()->user()->can('reports.stocks')) : ?>
+                                <li class="<?= getActiveUrl("reports/stocks", "active"); ?>"><a href="<?= site_url('reports/stocks') ?>"><i data-feather="credit-card"></i><span>Inventory Report</span></a></li>
+                            <?php endif ?>
                         </ul>
                     </li>
                 <?php endif ?>
