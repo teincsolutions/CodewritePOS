@@ -46,6 +46,7 @@ $routes->group('settings', static function (RouteCollection $routes) {
 
 $routes->group('reports', static function (RouteCollection $routes) {
     $routes->get('sales', [SalesController::class, 'daily_report']);
+    $routes->get('purchases', [PurchaseController::class, 'daily_report']);
 });
 
 //indexs
@@ -150,6 +151,7 @@ $routes->get('purchases/returns/datatable', [PurchaseReturnController::class, 'd
 $routes->get('quotes/datatable', [QuoteController::class, 'datatable']);
 $routes->get('sales/datatable', [SalesController::class, 'datatable']);
 $routes->get('daily-sales/datatable', [SalesController::class, 'daily_datatable']);
+$routes->get('daily-purchases/datatable', [PurchaseController::class, 'daily_datatable']);
 $routes->get('sales/returns/datatable', [SalesReturnController::class, 'datatable']);
 $routes->get('stores/datatable', [StoreController::class, 'datatable']);
 $routes->get('suppliers/datatable', [SupplierController::class, 'datatable']);

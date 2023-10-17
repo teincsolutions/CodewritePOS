@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use CodeIgniter\Database\MySQLi\Builder;
 use CodeIgniter\Database\RawSql;
 use CodeIgniter\Model;
 
@@ -156,5 +157,29 @@ class PurchaseModel extends Model
             ]);
         }
         return false;
+    }
+
+    public function getDailyWalkinReport($where = [], $from = null, $to = null): Builder
+    {
+        $builder = $this->builder();
+
+        if ($from && $to) {
+            $from  = $builder->db->escape($from);
+            $to = $builder->db->escape($to);
+            $builder->where("purchase_date BETWEEN $from AND $to");
+        }
+        $builder->select(
+            "purchase_date,
+            SUM(CASE WHEN supplier_ledgers.payment_type = 'cash' THEN (ifnull(supplier_ledgers.debit,0)) ELSE 0 END) AS cash_purchases,
+            SUM(CASE WHEN supplier_ledgers.payment_type = 'momo' THEN (ifnull(supplier_ledgers.debit,0)) ELSE 0 END) AS momo_purchases,
+            SUM(total_amount) AS total_purchases,
+            SUM(CASE WHEN purchases.payment_status = 'due' THEN (total_amount - paid) ELSE 0 END) AS due_purchases",
+            false
+        )->join('supplier_ledgers', 'supplier_ledgers.purchase_id=purchases.id', 'left')
+            ->where($where)
+            ->where('order_status', 'completed')
+            ->groupBy('purchase_date');
+
+        return $builder;
     }
 }

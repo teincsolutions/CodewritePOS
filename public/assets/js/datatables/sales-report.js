@@ -145,7 +145,7 @@ $(function () {
           : 0;
       };
     },
-    order: [[3, "desc"]],
+    order: [[1, "desc"]],
     columnDefs: [
       {
         orderable: false,

@@ -78,11 +78,11 @@
                         <tr>
                             <th></th>
                             <th>Date</th>
-                            <th>Cus. Cash</th>
-                            <th>Walkin Cash</th>
-                            <th>Cus. MoMo</th>
-                            <th>Walkin MoMo</th>
-                            <th>Total</th>
+                            <th>Cus. Cash Paid</th>
+                            <th>Walkin Cash Paid</th>
+                            <th>Cus. MoMo Paid</th>
+                            <th>Walkin MoMo Paid</th>
+                            <th>Total Sales</th>
                             <th>Due</th>
                         </tr>
                     </thead>
@@ -94,5 +94,5 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/datatables/sales-report.js?v=7') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/sales-report.js?v=8') ?>"></script>
 <?= $this->endSection() ?>

@@ -38,6 +38,22 @@ class PurchaseController extends BaseController
         return view('pages/purchases/list_purchase', $data);
     }
 
+        /**
+     * return view for list
+     * @return Response - http response
+     */
+    public function daily_report()
+    {
+        $storeModel = new StoreModel();
+
+        $data = [
+            'title' => 'Daily Purchase Report',
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
+        ];
+
+        return view('pages/reports/daily_purchases', $data);
+    }
+
     /**
      * return view for edit
      * @return Response - http response
@@ -97,18 +113,6 @@ class PurchaseController extends BaseController
         ]);
 
         return view('pages/purchases/invoice', $data);
-    }
-
-    /**
-     * return json for datatables
-     * @return Response - http response
-     */
-    public function datatable(): Response
-    {
-        $inputs = $this->request->getVar();
-        $model = new PurchaseModel();
-
-        return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
     /**
@@ -338,6 +342,29 @@ class PurchaseController extends BaseController
         ));
     }
 
+        /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new PurchaseModel();
+
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+        /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function daily_datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new PurchaseModel();
+
+        return $this->response->setJSON(toBuilderDatatableResult($model->getDailyWalkinReport(), $inputs));
+    }
 
     /**
      * return json for delete
