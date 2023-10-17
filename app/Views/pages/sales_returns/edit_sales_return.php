@@ -137,7 +137,9 @@
                                 endif ?>
                             </tbody>
                         </table>
-
+                        <script>
+                            prodIndex = <?= isset($sales) ? sizeof($sales->items) : 0 ?>;
+                        </script>
                     </div>
                 </div>
                 <div class="row">
@@ -208,7 +210,7 @@
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-sale-return.js?v=7') ?>"></script>
+<script src="<?= base_url('assets/js/handle-sale-return.js?v=8') ?>"></script>
 <?php if (isset($sales) && $sales->customer) {
     $customer = $sales->customer;
     $customer->text = $customer->name . " (" . ($customer->address ? $customer->address : $customer->phone) . ")";

@@ -148,6 +148,9 @@
                                             </tr>
                                         <?php endforeach ?>
                                     </tbody>
+                                    <script>
+                                        prodIndex = <?= isset($sales) ? sizeof($sales->items) : 0 ?>;
+                                    </script>
                                 </table>
 
                             </div>
@@ -647,7 +650,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-pos.js?v=7') ?>"></script>
+<script src="<?= base_url('assets/js/handle-pos.js?v=8') ?>"></script>
 <script src="<?= base_url('assets/js/datatables/pos.modal.js?v=1') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?php if (isset($sales) && $sales->customer) {

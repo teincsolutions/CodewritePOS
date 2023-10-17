@@ -141,7 +141,9 @@
                                         <?php endforeach ?>
                                     </tbody>
                                 </table>
-
+                                <script>
+                                    prodIndex = <?= isset($quote) ? sizeof($quote->items) : 0 ?>;
+                                </script>
                             </div>
                         </div>
                         <div class="row">
@@ -408,7 +410,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-quote.js?v=7') ?>"></script>
+<script src="<?= base_url('assets/js/handle-quote.js?v=8') ?>"></script>
 <script src="<?= base_url('assets/js/datatables/quote.modal.js') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?= $this->endSection() ?>

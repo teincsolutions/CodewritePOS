@@ -128,7 +128,9 @@
                                 endif ?>
                             </tbody>
                         </table>
-
+                        <script>
+                            prodIndex = <?= isset($purchase) ? sizeof($purchase->items) : 0 ?>;
+                        </script>
                     </div>
                 </div>
                 <div class="row">

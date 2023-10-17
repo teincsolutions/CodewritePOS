@@ -145,7 +145,9 @@
                                         <?php endforeach ?>
                                     </tbody>
                                 </table>
-
+                                <script>
+                                    prodIndex = <?= isset($purchase) ? sizeof($purchase->items) : 0 ?>;
+                                </script>
                             </div>
                         </div>
                         <div class="row">
@@ -654,7 +656,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-order.js?v=7') ?>"></script>
+<script src="<?= base_url('assets/js/handle-order.js?v=8') ?>"></script>
 <script src="<?= base_url('assets/js/datatables/order.modal.js') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?php if (isset($purchase) && $purchase->supplier) {
