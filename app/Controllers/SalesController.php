@@ -99,18 +99,6 @@ class SalesController extends BaseController
     }
 
     /**
-     * return json for datatables
-     * @return Response - http response
-     */
-    public function datatable(): Response
-    {
-        $inputs = $this->request->getVar();
-        $model = new SalesModel();
-
-        return $this->response->setJSON(toDatatableResult($model, $inputs));
-    }
-
-    /**
      * return json for save
      * @return Response - http response
      */
@@ -289,7 +277,7 @@ class SalesController extends BaseController
             } else if ($saved) {
                 $id = $sales->id;
                 $salesItemModel->builder()->delete(['sale_id' => $id]);
-                
+
                 $salesItems = [];
                 foreach ($items as $k => $row) {
                     $items[$k]['sale_id'] = $id;
@@ -338,6 +326,32 @@ class SalesController extends BaseController
             ]
         ));
     }
+
+    /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new SalesModel();
+
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+
+    /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function daily_datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new SalesModel();
+
+        return $this->response->setJSON(toBuilderDatatableResult($model->getDailyWalkinReport(), $inputs));
+    }
+
 
     /**
      * return json for delete

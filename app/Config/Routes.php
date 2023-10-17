@@ -144,6 +144,7 @@ $routes->get('purchases/datatable', [PurchaseController::class, 'datatable']);
 $routes->get('purchases/returns/datatable', [PurchaseReturnController::class, 'datatable']);
 $routes->get('quotes/datatable', [QuoteController::class, 'datatable']);
 $routes->get('sales/datatable', [SalesController::class, 'datatable']);
+$routes->get('daily-sales/datatable', [SalesController::class, 'daily_datatable']);
 $routes->get('sales/returns/datatable', [SalesReturnController::class, 'datatable']);
 $routes->get('stores/datatable', [StoreController::class, 'datatable']);
 $routes->get('suppliers/datatable', [SupplierController::class, 'datatable']);

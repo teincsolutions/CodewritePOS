@@ -40,7 +40,7 @@ if (!function_exists('toDatatableResult')) {
 
         if (isset($inputs['fields'])) {
             foreach ($inputs['fields'] as $field => $val) {
-                if (!empty(trim($val)) && in_array($field, ['type', 'user_id','payment_type']))
+                if (!empty(trim($val)) && in_array($field, ['type', 'user_id', 'payment_type']))
                     $model->where($field, $val);
                 else if (!empty(trim($val))) $model->like($field, $val);
             }
@@ -66,10 +66,72 @@ if (!function_exists('toDatatableResult')) {
 
         if (isset($inputs['length']) && isset($inputs['start'])) {
             $length = intval($inputs['length']);
-            $start = intval($inputs['start']) * $length;
-            $data = $model->findAll($inputs['length'], $inputs['start']);
+            $start = intval($inputs['start']);
+            $data = $model->findAll($length, $start);
         } else {
             $data = $model->findAll();
+        }
+
+        if ($callback)
+            foreach ($data as $key => $item)
+                $data[$key] = $callback($item);
+        return  [
+            'draw' => isset($inputs['draw']) ? $inputs['draw'] : 1,
+            'recordsTotal' => $total,
+            'recordsFiltered' => $filtered,
+            'data' => $data,
+            'inputs' => $inputs,
+        ];
+    }
+}
+
+if (!function_exists('toBuilderDatatableResult')) {
+
+    function toBuilderDatatableResult(Builder $model, array $inputs = null, $callback = null)
+    {
+        $total = $model->countAllResults(false);
+
+        if (isset($inputs['date_from']) || isset($inputs['date_to'])) {
+            if (!empty($inputs['date_from']) || !empty($inputs['date_to'])) {
+                $model->groupStart();
+                $model->where(new RawSql("DATE(" . $inputs['date_range_column'] . ")" . ' >='), date('Y-m-d', strtotime($inputs['date_from'])));
+                $model->where(new RawSql("DATE(" . $inputs['date_range_column'] . ")" . ' <='),  date('Y-m-d', strtotime($inputs['date_to'])));
+                $model->groupEnd();
+            }
+        }
+
+        if (isset($inputs['fields'])) {
+            foreach ($inputs['fields'] as $field => $val) {
+                if (!empty(trim($val)) && in_array($field, ['type', 'user_id', 'payment_type']))
+                    $model->where($field, $val);
+                else if (!empty(trim($val))) $model->like($field, $val);
+            }
+        }
+
+        if (isset($inputs['columns'])) {
+            $model->groupStart();
+            foreach ($inputs['columns'] as $col) {
+                if (isset($col['searchable']) && $col['searchable'] && isset($col['name']) && $col['name'])
+                    $model->orLike($col['name'], trim($inputs['search']['value']), 'both');
+                else if (isset($col['name']) && $col['name'])   $model->orLike($col['name'], $inputs['search']['value'], 'both');;
+            }
+            $model->groupEnd();
+        }
+        if (isset($inputs['order'])) {
+            foreach ($inputs['order'] as $order) {
+                $model->orderBy($inputs['columns'][$order['column']]['name'], $order['dir']);
+            }
+        }
+        $length = 10;
+        $start = 0;
+        $filtered = $model->countAllResults(false);
+
+        if (isset($inputs['length']) && isset($inputs['start'])) {
+            $length = intval($inputs['length']);
+            $start = intval($inputs['start']);
+            $data = $model->get($length, $start)->getResult();
+        } else {
+            $data = $model->get()->getResult();
         }
 
         if ($callback)

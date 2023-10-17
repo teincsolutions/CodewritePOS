@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use CodeIgniter\Database\MySQLi\Builder;
 use CodeIgniter\Database\RawSql;
 use CodeIgniter\Model;
 
@@ -183,5 +184,31 @@ class SalesModel extends Model
             ]);
         }
         return false;
+    }
+
+    public function getDailyWalkinReport($where = [], $from = null, $to = null): Builder
+    {
+        $builder = $this->builder();
+
+        if ($from && $to) {
+            $from  = $builder->db->escape($from);
+            $to = $builder->db->escape($to);
+            $builder->where("sales_date BETWEEN $from AND $to");
+        }
+        $builder->select(
+            "sales_date,
+            SUM(CASE WHEN customer_ledgers.payment_type = 'cash' AND type = 'customer' THEN (ifnull(customer_ledgers.credit,0)) ELSE 0 END) AS customer_cash_sales,
+            SUM(CASE WHEN sales.payment_type = 'cash' AND type = 'walk-in-customer' THEN (paid) ELSE 0 END) AS cash_sales,
+            SUM(CASE WHEN customer_ledgers.payment_type = 'momo' AND type = 'customer' THEN (ifnull(customer_ledgers.credit,0)) ELSE 0 END) AS customer_momo_sales,
+            SUM(CASE WHEN sales.payment_type = 'momo' AND type = 'walk-in-customer' THEN (paid) ELSE 0 END) AS momo_sales,
+            SUM(total_amount) AS total_sales,
+            SUM(CASE WHEN sales.payment_status = 'due' AND type = 'customer' THEN (total_amount - paid) ELSE 0 END) AS due_sales",
+            false
+        )->join('customer_ledgers', 'customer_ledgers.sale_id=sales.id', 'left')
+            ->where($where)
+            ->where('order_status', 'completed')
+            ->groupBy('sales_date');
+
+        return $builder;
     }
 }
