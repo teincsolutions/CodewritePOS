@@ -146,36 +146,43 @@ class AuthGroups extends ShieldAuthGroups
         'purchases.create'        => 'Can add new purchases',
         'purchases.edit'          => 'Can edit purchases',
         'purchases.delete'        => 'Can delete existing purchases',
+        'purchases.report'        => 'Can access purchases reports',
 
         'purchase-returns.view'        => 'Can view purchase returns',
         'purchase-returns.create'        => 'Can add new purchase returns',
         'purchase-returns.edit'          => 'Can edit purchase returns',
         'purchase-returns.delete'        => 'Can delete existing purchase returns',
+        'purchase-returns.report'        => 'Can access purchase returns reports',
 
         'sales.view'        => 'Can view sales',
         'sales.create'        => 'Can add new sales',
         'sales.edit'          => 'Can edit sales',
         'sales.delete'        => 'Can delete existing sales',
+        'sales.report'        => 'Can access sales reports',
 
         'sales-returns.view'        => 'Can view sales returns',
         'sales-returns.create'        => 'Can add new sales returns',
         'sales-returns.edit'          => 'Can edit sales returns',
         'sales-returns.delete'        => 'Can delete existing sales returns',
+        'sales-returns.report'        => 'Can access sales returns reports',
 
         'quotes.view'        => 'Can view quotes',
         'quotes.create'        => 'Can add new quotes',
         'quotes.edit'          => 'Can edit quotes',
         'quotes.delete'        => 'Can delete existing quotes',
+        'quotes.report'        => 'Can access quotes reports',
 
         'adjustments.view'        => 'Can view adjustments',
         'adjustments.create'        => 'Can add new adjustments',
         'adjustments.edit'          => 'Can edit adjustments',
         'adjustments.delete'        => 'Can delete existing adjustments',
+        'adjustments.report'        => 'Can access adjustments reports',
 
         'stocks.view'        => 'Can view stocks',
         'stocks.create'        => 'Can add new stocks',
         'stocks.edit'          => 'Can edit stocks',
         'stocks.delete'        => 'Can delete existing stocks',
+        'stocks.report'        => 'Can access stocks reports',
 
         'closing.view'        => 'Can view closings',
         'closing.create'        => 'Can create closing report',

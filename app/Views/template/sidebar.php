@@ -243,11 +243,13 @@
                         </ul>
                     </li>
                 <?php endif ?>
-                <?php if (auth()->user()->can('reports.*')) : ?>
+                <?php if (auth()->user()->can('reports*')) : ?>
                     <li class="submenu-open">
                         <h6 class="submenu-hdr">Reports</h6>
                         <ul>
-                            <li class="<?= getActiveUrl("sales/report", "active"); ?>"><a href="<?= site_url('sales/report') ?>"><i data-feather="bar-chart-2"></i><span>Sales Report</span></a></li>
+                            <?php if (auth()->user()->can('reports.sales')) : ?>
+                                <li class="<?= getActiveUrl("reports/sales", "active"); ?>"><a href="<?= site_url('reports/sales') ?>"><i data-feather="bar-chart-2"></i><span>Sales Report</span></a></li>
+                            <?php endif ?>
                             <li class="<?= getActiveUrl("purchases/report", "active"); ?>"><a href="<?= site_url('purchases/order-report') ?>"><i data-feather="pie-chart"></i><span>Purchase report</span></a></li>
                             <li class="<?= getActiveUrl("inventory/report", "active"); ?>"><a href="<?= site_url('inventory/report') ?>"><i data-feather="credit-card"></i><span>Inventory Report</span></a></li>
                             <li class="<?= getActiveUrl("purchases/report", "active"); ?>"><a href="<?= site_url('purchases/report') ?>"><i data-feather="bar-chart"></i><span>Purchase Report</span></a></li>

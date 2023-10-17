@@ -43,6 +43,11 @@ $routes->group('settings', static function (RouteCollection $routes) {
     $routes->post('group-permissions', [SettingController::class, 'save_permissions']);
     $routes->post('groups', [SettingController::class, 'save_group']);
 });
+
+$routes->group('reports', static function (RouteCollection $routes) {
+    $routes->get('sales', [SalesController::class, 'daily_report']);
+});
+
 //indexs
 $routes->get('users', [UserController::class, 'index'], ['filter' => 'permission:users.view']);
 $routes->get('adjustments', [AdjustmentController::class, 'index'], ['filter' => 'permission:adjustments.view']);

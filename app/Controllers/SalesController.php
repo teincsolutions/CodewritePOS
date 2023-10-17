@@ -35,6 +35,23 @@ class SalesController extends BaseController
         return view('pages/sales/list_sales', $data);
     }
 
+     /**
+     * return view for list
+     * @return Response - http response
+     */
+    public function daily_report()
+    {
+        $cusModel = new CustomerModel();
+        $storeModel = new StoreModel();
+
+        $data = [
+            'title' => 'Daily Sales Report',
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
+        ];
+
+        return view('pages/reports/daily_sales', $data);
+    }
+
     /**
      * return view for edit
      * @return Response - http response
