@@ -24,7 +24,7 @@
                 </div>
                 <div class="row">
 
-                    <div class="col-lg-4 col-sm-6 col-12">
+                    <div class="col-lg-6 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Reference</label>
                             <select name="purchase_id" class="select2-invoices" required>
