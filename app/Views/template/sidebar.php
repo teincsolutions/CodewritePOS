@@ -147,9 +147,9 @@
                                         <span>Inventory</span><span class="menu-arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a class="<?= getActiveUrl("inventory/short-stocks"); ?>" href="<?= site_url('inventory/short-stocks') ?>">Short Stocks</a></li>
-                                        <li><a class="<?= getActiveUrl("inventory/outofstocks"); ?>" href="<?= site_url('inventory/outofstocks') ?>">Out of Stocks</a></li>
-                                        <li><a class="<?= getActiveUrl("inventory/instocks"); ?>" href="<?= site_url('inventory/instocks') ?>">In Stocks</a></li>
+                                        <li><a class="<?= getActiveUrl("inventory/short-stocks"); ?>" href="<?= site_url('inventory/short-stocks') ?>">Short Stocks <span class="badge bg-warning ms-1"><?=model('StockModel')->getShortTotal() ?></span></a></li>
+                                        <li><a class="<?= getActiveUrl("inventory/outofstocks"); ?>" href="<?= site_url('inventory/outofstocks') ?>">Out of Stocks <span class="badge bg-danger ms-1"><?=model('StockModel')->getOutOfStockTotal() ?></span></a></a></li>
+                                        <li><a class="<?= getActiveUrl("inventory/instocks"); ?>" href="<?= site_url('inventory/instocks') ?>">In Stocks <span class="badge bg-info ms-1"><?=model('StockModel')->getInstockTotal() ?></span></a></a></li>
                                     </ul>
                                 </li>
                             <?php endif ?>
@@ -254,7 +254,7 @@
                                 <li class="<?= getActiveUrl("purchases/report", "active"); ?>"><a href="<?= site_url('reports/purchases') ?>"><i data-feather="pie-chart"></i><span>Purchase report</span></a></li>
                             <?php endif ?>
                             <?php if (auth()->user()->can('stocks.report')) : ?>
-                                <li class="<?= getActiveUrl("reports/stocks", "active"); ?>"><a href="<?= site_url('reports/stocks') ?>"><i data-feather="credit-card"></i><span>Inventory Report</span></a></li>
+                                <li hidden class="<?= getActiveUrl("reports/stocks", "active"); ?>"><a href="<?= site_url('reports/stocks') ?>"><i data-feather="credit-card"></i><span>Inventory Report</span></a></li>
                             <?php endif ?>
                         </ul>
                     </li>

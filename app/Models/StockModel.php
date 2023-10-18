@@ -64,4 +64,41 @@ class StockModel extends Model
         }
         return $model;
     }
+
+    public function getShortTotal(): float
+    {
+        return
+            $this->builder()
+            ->selectCount('*', 'total')
+            ->join('products', 'products.id=stocks.product_id')
+            ->where('stocks.instock <=', 'products.min_qty', false)
+            ->where('stocks.instock >=', 0)
+            ->get()
+            ->getRowObject()
+            ->total;
+    }
+
+    public function getInstockTotal(): float
+    {
+        return
+            $this->builder()
+            ->selectCount("*", 'total')
+            ->where('instock >', 0, false)
+            ->get()
+            ->getRowObject()
+            ->total;
+    }
+
+    public function getOutOfStockTotal(): float
+    {
+        $model = new ProductModel();
+
+        return
+            $model->builder()
+            ->selectCount("*", 'total')
+            ->where('ifnull((SELECT sum(ifnull(stocks.instock,0)) from stocks where stocks.product_id=products.id),0) <=', 0, false)
+            ->get()
+            ->getRowObject()
+            ->total;
+    }
 }
