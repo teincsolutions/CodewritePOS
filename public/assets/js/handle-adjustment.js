@@ -40,8 +40,8 @@ const searchParams = {
   },
 };
 
-prodIndex = prodIndex ? prodIndex : 0;
-  adjustmentItemIds = [];
+let prodIndex = 0;
+adjustmentItemIds = [];
 (dueTotal = 0), (grandTotal = 0);
 
 let form = $(".post-form");
