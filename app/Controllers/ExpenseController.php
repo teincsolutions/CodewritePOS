@@ -60,6 +60,9 @@ class ExpenseController extends BaseController
         if (auth()->user())
             $inputs['user_id'] = auth()->user()->id;
 
+
+        $inputs['expense_date'] = date('Y-m-d', strtotime($inputs['expense_date']));
+
         $id = $this->request->getPost('id');
         $res = [
             'status' => false,
