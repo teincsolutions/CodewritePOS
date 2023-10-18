@@ -38,7 +38,7 @@
                         <div class="col-lg-2 col-sm-6 col-12">
                             <div class="form-group">
                                 <div class="input-groupicon">
-                                    <input type="text" name="created_at" placeholder="Choose Date" class="datetimepicker">
+                                    <input type="text" placeholder="Choose Date" class="datetimepicker closing-date">
                                 </div>
                             </div>
                         </div>
@@ -106,5 +106,5 @@
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/closings.js?v=1') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/closings.js?v=2') ?>"></script>
 <?= $this->endSection() ?>

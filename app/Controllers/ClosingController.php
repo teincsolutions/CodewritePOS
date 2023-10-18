@@ -24,8 +24,10 @@ class ClosingController extends BaseController
 
     public function index(): string
     {
+        $storeModel = new StoreModel();
         $data = [
             'title' => 'Closing List',
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
         ];
         return view('pages/closing/list_closing', $data);
     }

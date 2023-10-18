@@ -24,9 +24,9 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-        params.date_range_column = "store_closings_date";
-        params.date_from = $("#date-from").val();
-        params.date_to = $("#date-to").val();
+        params.date_range_column = "created_at";
+        params.date_from = $(".closing-date").val();
+        params.date_to = $(".closing-date").val();
         params.fields = filter;
       },
     },
