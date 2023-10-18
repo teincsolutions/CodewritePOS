@@ -35,14 +35,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Supplier</label>
-                            <select name="supplier_id" class="select2-supplier">
-                                <option value="">walk-in-supplier</option>
-                            </select>
-                        </div>
-                    </div>
+                   
                     <div class="col-lg-2 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Date</label>
