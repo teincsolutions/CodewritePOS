@@ -51,6 +51,12 @@ class CreateAdjustmentItemsTable extends Migration
                 'constraint' => "10,2",
                 'null' => false,
             ],
+            'subtotal' => [
+                'type'       => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => false,
+                'default' => 0
+            ],
         ];
 
         $forge->addField($fields);
