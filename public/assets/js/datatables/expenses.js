@@ -65,6 +65,7 @@ $(function () {
           return null;
         },
       },
+      { data: "id", name: "expenses.id" },
       { data: "expense_date", name: "expenses.expense_date" },
       {
         data: "store",
@@ -156,7 +157,7 @@ $(function () {
           : 0;
       };
     },
-    order: [[0, "desc"]],
+    order: [[1, "desc"]],
     columnDefs: [
       {
         orderable: false,

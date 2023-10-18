@@ -76,6 +76,7 @@
                     <thead>
                         <tr>
                             <th></th>
+                            <th>#SN</th>
                             <th>Expenses Date</th>
                             <th>Store</th>
                             <th>Category</th>
@@ -93,5 +94,5 @@
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/expenses.js') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/expenses.js?v=1') ?>"></script>
 <?= $this->endSection() ?>
