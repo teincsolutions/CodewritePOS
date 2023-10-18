@@ -150,14 +150,14 @@ $(".tr-items").on("click", ".inc.button", function () {
   var $this = $(this),
     $input = $this.prev("input"),
     newValue = parseFloat($input.val()) + 1;
-  if (newValue > 0) $input.val(newValue);
+  $input.val(newValue);
   updateItemRow(this);
 });
 $(".tr-items").on("click", ".dec.button", function () {
   var $this = $(this),
     $input = $this.next("input"),
     newValue = parseFloat($input.val()) - 1;
-  if (newValue > 0) $input.val(newValue);
+  $input.val(newValue);
   updateItemRow(this);
 });
 
@@ -256,7 +256,7 @@ function autocomplete(inp) {
                                               <input type="hidden" name="items[${prodIndex}][instock_qty]" value="${instock}" required>
                                                 <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
               item.unit_cost
-            }">
+            }" calss="runit_cost">
                                                 <input type="hidden" name="items[${prodIndex}][store_id]" value="${$(
               ".select2-store"
             ).val()}">
@@ -265,7 +265,7 @@ function autocomplete(inp) {
             ).toFixed(2)}">
             <input type="hidden" name="items[${prodIndex}][diff]" class="diff" value="0.00">
                                                 <input type="button" value="-" class="button-minus dec button">
-                                                <input onblur="updateItemRow(this)" min="1" type="text" name="items[${prodIndex}][qty]" value="${instock}" class="quantity-field" required>
+                                                <input onblur="updateItemRow(this)" min="0" type="text" name="items[${prodIndex}][qty]" value="${instock}" class="quantity-field rqty" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>
