@@ -19,15 +19,20 @@ class CreateProductUnitTransfersTable extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'from_unit_id' => [
-                'type'           => 'INT',
-                'constraint'     => 5,
-                'unsigned'       => true,
+            'invoice' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 15,
+                'unique' => true,
             ],
-            'to_unit_id' => [
-                'type'           => 'INT',
-                'constraint'     => 5,
-                'unsigned'       => true,
+            'transfer_date' => [
+                'type'       => 'DATE',
+                'default' => new RawSql('CURRENT_DATE')
+            ],
+            'store_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'  => true,
+                'null' => true,
             ],
             'user_id' => [
                 'type'       => 'INT',
@@ -51,10 +56,9 @@ class CreateProductUnitTransfersTable extends Migration
 
         $forge->addField($fields);
         $forge->addPrimaryKey('id');
-        $forge->addForeignKey('from_unit_id', 'units', 'id', 'CASCADE', 'CASCADE', 'fk_product_unit_transfer_from_unit_id');
-        $forge->addForeignKey('to_unit_id', 'units', 'id', 'CASCADE', 'CASCADE', 'fk_product_unit_transfer_to_unit_id');
         $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_product_unit_transfer_user_id');
-
+        $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_product_unit_transfer_store_id');
+      
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('product_unit_transfers', true, $attributes);
     }

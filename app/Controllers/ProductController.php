@@ -8,13 +8,7 @@ use App\Models\CategoryModel;
 use App\Models\ProductModel;
 use App\Models\TaxModel;
 use App\Models\UnitModel;
-use App\Models\UserModel;
-use CodeIgniter\Database\RawSql;
-use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
-use SebastianBergmann\CodeCoverage\Report\Xml\Unit;
 
 class ProductController extends BaseController
 {
@@ -58,7 +52,7 @@ class ProductController extends BaseController
         }
         return view('pages/products/edit_product', $data);
     }
-    
+
     public function save()
     {
         $model = new ProductModel();
@@ -137,17 +131,6 @@ class ProductController extends BaseController
     }
 
     /**
-     * return json for datatables
-     * @return Response - http response
-     */
-    public function datatable(): Response
-    {
-        $inputs = $this->request->getVar();
-        $model = new ProductModel();
-        return $this->response->setJSON(toDatatableResult($model, $inputs));
-    }
-
-    /**
      * return json for delete
      * @return Response - http response
      */
@@ -175,6 +158,16 @@ class ProductController extends BaseController
     }
 
     /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new ProductModel();
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+    /**
      * return json for search
      * @return Response - http response
      */
@@ -189,6 +182,27 @@ class ProductController extends BaseController
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
+    /**
+     * return json for search
+     * @return Response - http response
+     */
+    public function select2(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new ProductModel();
+        $builder = $model->builder();
+
+        $builder->join('units', 'units.id=products.unit_id');
+        $builder->join('brands', 'brands.id=products.brand_id');
+        if (isset($inputs['exclude']))
+            $builder->whereNotIn('products.id', $inputs['exclude']);
+        return $this->response->setJSON(toSelect2BuilderResult(
+            $builder,
+            ['products.sku', 'products.name', 'brands.name'],
+            $inputs,
+            'concat(ifnull(concat(products.sku," "),""),products.name," ",ifnull(brands.name,"")," (",units.label, ")"," ₵",products.unit_price) as text, products.*',
+        ));
+    }
     /**
      * return json for search
      * @return Response - http response

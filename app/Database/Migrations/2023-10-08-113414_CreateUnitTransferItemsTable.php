@@ -47,35 +47,6 @@ class CreateUnitTransferItemsTable extends Migration
                 'unsigned'  => true,
                 'null' => false,
             ],
-            'from_unit_price' => [
-                'type'       => 'DECIMAL',
-                'constraint' => "32,2",
-                'null' => false,
-                'default' => 0
-            ],
-            'from_unit_cost' => [
-                'type'       => 'DECIMAL',
-                'constraint' => "32,2",
-                'null' => false,
-                'default' => 0
-            ],
-            'to_unit_price' => [
-                'type'       => 'DECIMAL',
-                'constraint' => "32,2",
-                'null' => false,
-                'default' => 0
-            ],
-            'to_unit_cost' => [
-                'type'       => 'DECIMAL',
-                'constraint' => "32,2",
-                'null' => false,
-                'default' => 0
-            ],
-            'qty' => [
-                'type'       => 'DECIMAL',
-                'constraint' => "10,2",
-                'null' => false,
-            ]
         ];
 
         $forge->addField($fields);

@@ -176,7 +176,6 @@ class ProductTransferController extends BaseController
         return $this->response->setJSON($res);
     }
 
-
     /**
      * return json for datatables
      * @return Response - http response

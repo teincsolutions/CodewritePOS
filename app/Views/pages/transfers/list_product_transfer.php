@@ -84,7 +84,7 @@
             </div>
 
             <div class="table-responsive">
-                <table id="dt-transfers" class="table">
+                <table id="dt-transfers" class="table w-100">
                     <thead>
                         <tr>
                             <th>

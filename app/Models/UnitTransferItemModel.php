@@ -16,14 +16,7 @@ class UnitTransferItemModel extends Model
     protected $allowedFields    = [
         'from_product_id',
         'to_product_id',
-        'from_unit_price',
-        'to_unit_price',
-        'from_unit_cost',
-        'to_unit_cost',
         'unit_transfer_id',
-        'from_unit_id',
-        'to_unit_id',
-        'qty',
         'from_unit_qty',
         'to_unit_qty'
     ];
@@ -59,18 +52,12 @@ class UnitTransferItemModel extends Model
             $unitModel = new UnitModel();
 
             if ($model['singleton']) {
-                if (isset($model['data']->product_id))
-                    $model['data']->fromProduct = $prodModel->where('id', $model['data']->from_product_id)->first();
-                    $model['data']->toProduct = $prodModel->where('id', $model['data']->to_product_id)->first();
-                if (isset($model['data']->from_unit_id))
-                    $model['data']->formUnit = $unitModel->where('id', $model['data']->from_unit_id)->first();
-                    $model['data']->toUnit = $unitModel->where('id', $model['data']->to_unit_id)->first();
+                $model['data']->fromProduct = $prodModel->where('id', $model['data']->from_product_id)->first();
+                $model['data']->toProduct = $prodModel->where('id', $model['data']->to_product_id)->first();
             } else {
                 foreach ($model['data'] as $key => $row) {
                     $model['data'][$key]->fromProduct = $prodModel->where('id', $row->from_product_id)->first();
                     $model['data'][$key]->toProduct = $prodModel->where('id', $row->to_product_id)->first();
-                    $model['data'][$key]->fromUnit = $unitModel->where('id', $row->from_unit_id)->first();
-                    $model['data'][$key]->toUnit = $unitModel->where('id', $row->to_unit_id)->first();
                 }
             }
         }

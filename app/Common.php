@@ -170,9 +170,9 @@ if (!function_exists('toSelect2Result')) {
             foreach ($joins as $key => $join)
                 $model->join($join['table'], $join['cond'], $join['type'] ?? '', null);
 
-        $total = sizeof($model->findAll());
+        $total = $model->countAllResults(false);
 
-        $model->select($select);
+        $model->select($select,false);
         $model->groupStart();
         foreach ($columns as $row) $model->orLike($row, $term);
         $model->groupEnd();
@@ -182,10 +182,57 @@ if (!function_exists('toSelect2Result')) {
             foreach ($inputs['filter'] as $field => $val)
                 $model->where($field, $val);
 
+        $data = $model->findAll();
+
+        return  [
+            'results' => $data,
+            'pagination' => [
+                'more' => ($skip + $take < $total),
+                'page' => intval($page),
+                'totalRows' => $total,
+                'totalPages' => intval($total / $take + ($total % $take > 0 ? 1 : 0)),
+            ],
+            'inputs' => $inputs,
+        ];
+    }
+}
+
+if (!function_exists('toSelect2BuilderResult')) {
+
+    /**
+     * @param Model $model
+     * @param array $columns Columns to search for request
+     * @param array $inputs Request input data
+     * @param function $callback Callback to modify each result
+     */
+    function toSelect2BuilderResult(Builder $model, array $columns, array $inputs, $select = "*", $joins = null): array
+    {
+        $term = isset($inputs['term']) ? $inputs['term'] : '';
+        $take = 10;
+        $page = isset($inputs['page']) ? $inputs['page'] : 1;
+        $skip = ($page - 1) * $take;
+
+        if (isset($inputs['filter']) && is_array($inputs['filter']))
+            foreach ($inputs['filter'] as $field => $val)
+                $model->where($field, $val);
+
         if ($joins)
             foreach ($joins as $key => $join)
                 $model->join($join['table'], $join['cond'], $join['type'] ?? '', null);
-        $data = $model->findAll();
+
+        $total = $model->countAllResults(false);
+
+        $model->select($select,false);
+        $model->groupStart();
+        foreach ($columns as $row) $model->orLike($row, $term);
+        $model->groupEnd();
+        $model->limit($take, $skip);
+
+        if (isset($inputs['filter']) && is_array($inputs['filter']))
+            foreach ($inputs['filter'] as $field => $val)
+                $model->where($field, $val);
+
+        $data = $model->get()->getResult();
 
         return  [
             'results' => $data,

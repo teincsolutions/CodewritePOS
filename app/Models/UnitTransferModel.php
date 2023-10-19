@@ -14,9 +14,9 @@ class UnitTransferModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'from_unit_id',
-        'to_unit_id',
-        'discount',
+        'invoice',
+        'store_id',
+        'transfer_date',
         'user_id'
     ];
 
@@ -40,7 +40,29 @@ class UnitTransferModel extends Model
     protected $beforeUpdate   = [];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
-    protected $afterFind      = [];
+    protected $afterFind      = ['setRelation'];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    protected function setRelation($model)
+    {
+        if ($model && $model['data']) {
+            $storeModel = new StoreModel();
+            $itemModel = new UnitTransferItemModel();
+            $userModel = new  UserModel();
+
+            if ($model['singleton']) {
+                $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
+                $model['data']->store = $storeModel->where('id', $model['data']->store_id)->first();
+                $model['data']->items = $itemModel->where('unit_transfer_id', $model['data']->id)->findAll();
+            } else {
+                foreach ($model['data'] as $key => $row) {
+                    $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
+                    $model['data'][$key]->store = $storeModel->where('id', $row->store_id)->first();
+                    $model['data'][$key]->items = $itemModel->where('unit_transfer_id', $row->id)->findAll();
+                }
+            }
+        }
+        return $model;
+    }
 }

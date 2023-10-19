@@ -3,166 +3,105 @@
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h4>Edit Transfer</h4>
-            <h6>Transfer your stocks to one store another store.</h6>
+            <h4>Create Unit Transfer</h4>
+            <h6>Unit Transfer your stocks to one store another store.</h6>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Date </label>
-                        <div class="input-groupicon">
-                            <input type="text" value="10-03-2022" class="datetimepicker">
-                            <div class="addonset">
-                                <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/calendars.svg" alt="img">
+    <form class="post-form" action="<?= site_url('transfers/units') ?>" method="post">
+        <?= csrf_field() ?>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Date</label>
+                            <div class="input-groupicon">
+                                <input name="transfer_date" type="text" class="datetimepicker" value="<?= date('d-m-Y', time()) ?>" required>
+                                <div class="addonset">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>From</label>
-                        <select class="select">
-                            <option>Store 1</option>
-                            <option>Store 2</option>
-                        </select>
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Store</label>
+                            <select name="store_id" class="select2-store">
+                                <?php
+                                if (isset($stores))
+                                    foreach ($stores as $row) { ?>
+                                    <option value="<?= $row->id ?>">
+                                        <?= $row->name; ?><?= $row->location ? "($row->location)" : null; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>To</label>
-                        <select class="select">
-                            <option>Store 2</option>
-                            <option>Store 1</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-lg-12 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Product Name</label>
-                        <div class="input-groupicon">
-                            <input type="text" placeholder="Scan/Search Product by code and select...">
-                            <div class="addonset">
-                                <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/scanners.svg" alt="img">
-                            </div>
+                    <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Transac. ID</label>
+                            <input type="text" name="invoice" class="form-control" value="<?= $invoice ?>" readonly>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div style="max-height: 500px !important;overflow-y:scroll" class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Product Name</th>
-                                <th>QTY</th>
-                                <th>Price</th>
-                                <th>Stock </th>
-                                <th>Discount</th>
-                                <th>Tax </th>
-                                <th>Total Cost (GHS)</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="bor-b1">
-                                <td class="productimgname">
-                                    <a class="product-img">
-                                        <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/product/product7.jpg" alt="product">
-                                    </a>
-                                    <a href="javascript:void(0);">Apple Earpods</a>
-                                </td>
-                                <td>
-                                    <div class="input-group form-group mb-0">
-                                        <a class="scanner-set input-group-text">
-                                            <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus1.svg" alt="img">
-                                        </a>
-                                        <input type="text" value="1" class="calc-no">
-                                        <a class="scanner-set input-group-text">
-                                            <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/minus.svg" alt="img">
-                                        </a>
-                                    </div>
-                                </td>
-                                <td>1500.00</td>
-                                <td>50.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                                <td>1500.00</td>
-                                <td>
-                                    <a href="javascript:void(0);"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/delete.svg" alt="svg"></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12 float-md-right">
-                    <div class="total-order">
-                        <ul>
-                            <li>
-                                <h4>Order Tax</h4>
-                                <h5>$ 0.00 (0.00%)</h5>
-                            </li>
-                            <li>
-                                <h4>Discount </h4>
-                                <h5>$ 0.00</h5>
-                            </li>
-                            <li>
-                                <h4>Shipping</h4>
-                                <h5>$ 0.00</h5>
-                            </li>
-                            <li class="total">
-                                <h4>Grand Total</h4>
-                                <h5>$ 2000.00</h5>
-                            </li>
-                        </ul>
+                <div class="row">
+                    <div style="max-height: 500px !important;overflow-y:scroll" class="table-responsive mb-3">
+                        <table class="table tr-items">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th style="max-width: 35%;width: 35%;">From Product</th>
+                                    <th>From QTY</th>
+                                    <th style="max-width: 35%;width: 35%;">To Product</th>
+                                    <th>To QTY</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <select name="items[0][from_product_id]" class="select2-product from-product form-control">
+                                            <option value=""></option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="increment-decrement">
+                                            <div class="input-groups">
+                                                <input type="hidden" name="items[0][to_unit_qty]" value="0" class="to_unit_qty" required>
+                                                <input type="button" value="-" class="button-minus dec button">
+                                                <input onblur="updateItemRow(this)" min="1" type="text" name="items[0][from_unit_qty]" value="0" class="quantity-field" required>
+                                                <input type="button" value="+" class="button-plus inc button">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select name="items[0][to_product_id]" class="select2-product to-product form-control">
+                                            <option value=""></option>
+                                        </select>
+                                    </td>
+                                    <td>0.00</td>
+                                    <td>
+                                        <a href="javascript:void(0);" class="add-set btn btn-info text-white"><i class="fa fa-plus"></i></a>
+                                        <a href="javascript:void(0);" class="delete-set btn btn-danger text-white"><i class="fa fa-times"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Order Tax</label>
-                        <input type="text">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-submit me-2">Submit Unit Transfer</button>
                     </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Discount</label>
-                        <input type="text">
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Shipping</label>
-                        <input type="text">
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Status</label>
-                        <select class="select">
-                            <option>Sent</option>
-                            <option>Completed</option>
-                            <option>Inprogress</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea class="form-control"></textarea>
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <a href="javascript:void(0);" class="btn btn-submit me-2">Submit</a>
-                    <a href="https://dreamspos.dreamguystech.com/html/template/transferlist.html" class="btn btn-cancel">Cancel</a>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
+<?= $this->endSection() ?>
+
+<?= $this->section('script') ?>
+<script src="<?= base_url('assets/js/handle-unit-transfer.js?v=1') ?>"></script>
+<script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?= $this->endSection() ?>

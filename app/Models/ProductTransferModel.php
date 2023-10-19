@@ -63,13 +63,16 @@ class ProductTransferModel extends Model
         if ($model && $model['data']) {
             $storeModel = new StoreModel();
             $itemModel = new ProductTransferItemModel();
+            $userModel = new UserModel();
 
             if ($model['singleton']) {
                 $model['data']->fromStore = $storeModel->where('id', $model['data']->from_store_id)->first();
                 $model['data']->toStore = $storeModel->where('id', $model['data']->to_store_id)->first();
                 $model['data']->items = $itemModel->where('product_transfer_id', $model['data']->id)->findAll();
+                $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
             } else {
                 foreach ($model['data'] as $key => $row) {
+                    $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
                     $model['data'][$key]->fromStore = $storeModel->where('id', $row->from_store_id)->first();
                     $model['data'][$key]->toStore = $storeModel->where('id', $row->to_store_id)->first();
                     $model['data'][$key]->items = $itemModel->where('product_transfer_id', $row->id)->findAll();

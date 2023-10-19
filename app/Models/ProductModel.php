@@ -66,6 +66,9 @@ class ProductModel extends Model
         if (isset($data['data']['barcode']) && empty($data['data']['barcode']))
             $data['data']['barcode'] = NULL;
 
+        if (isset($data['data']['sku']) && empty($data['data']['sku']))
+            $data['data']['sku'] = NULL;
+
         if (isset($data['data']['tax_id']) && empty($data['data']['tax_id']))
             $data['data']['tax_id'] = NULL;
 
