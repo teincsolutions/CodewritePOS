@@ -150,9 +150,6 @@
                                         : '<a class="p-3"></a>' ?>
                                     <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
                                         <?= $row->product->name ?>
-                                        <?php if ($row->store) { ?>
-                                            <?= $row->store->name; ?><?= $row->store->location ? "(" . $row->store->location . ")" : null; ?></a>
-                                <?php } ?>
                                 </td>
                                 <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->qty ?></td>
                                 <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->unit_price ?></td>

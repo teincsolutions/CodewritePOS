@@ -66,7 +66,7 @@ class QuoteController extends BaseController
             'quote' => $model->find($id),
         ]);
 
-        return view('pages/quotes/show_quote', $data);
+        return view('pages/quotes/invoice', $data);
     }
 
     /**

@@ -118,9 +118,6 @@ function updateTotals() {
   taxAmtTotal += (orderTax / 100) * grandTotal;
   grandTotal += shipping;
   grandTotal -= discountAmtTotal;
-  dueTotal =
-    grandTotal - $("input[name='paid']").first().val() - customerBalance;
-
   $(".grandTotal").html("GHS " + grandTotal.toFixed(2));
   $("#sales-total").val(grandTotal);
   $(".shippingTotal").html("GHS " + shipping.toFixed(2));
@@ -128,12 +125,8 @@ function updateTotals() {
   $(".orderTaxes").html(
     "GHS " + taxAmtTotal.toFixed(2) + " (" + taxTotal.toFixed(2) + "%)"
   );
-  $(".dueTotal").html(
-    "GHS " +
-      (dueTotal < 0
-        ? "(" + Math.abs(dueTotal).toFixed(2) + ")"
-        : dueTotal.toFixed(2))
-  );
+  $(".grandTotal").html("GHS " + grandTotal.toFixed(2));
+  $("#quote-total").val(grandTotal);
 }
 function printInvoice(result) {
   Swal.fire({

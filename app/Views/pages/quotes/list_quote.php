@@ -7,7 +7,7 @@
             <h6>Manage your quotes</h6>
         </div>
         <div class="page-btn">
-            <a href="<?= site_url('quotes/pos') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add Quote</a>
+            <a href="<?= site_url('quotes/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add Quote</a>
         </div>
     </div>
 
