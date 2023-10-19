@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\AccountController;
 use App\Controllers\AdjustmentController;
 use App\Controllers\BrandController;
 use App\Controllers\CategoryController;
@@ -51,6 +52,8 @@ $routes->group('reports', static function (RouteCollection $routes) {
 
 //indexs
 $routes->get('users', [UserController::class, 'index'], ['filter' => 'permission:users.view']);
+$routes->get('account/profile', [AccountController::class, 'profile']);
+$routes->get('account/settings', [AccountController::class, 'settings']);
 $routes->get('adjustments', [AdjustmentController::class, 'index'], ['filter' => 'permission:adjustments.view']);
 $routes->get('brands', [BrandController::class, 'index'], ['filter' => 'permission:brands.view']);
 $routes->get('categories', [CategoryController::class, 'index'], ['filter' => 'permission:categories.view']);
@@ -181,6 +184,9 @@ $routes->get('units/select2', [UnitController::class, 'select2']);
 
 // post requests
 $routes->post('users', [UserController::class, 'save']);
+$routes->post('account', [AccountController::class, 'save']);
+$routes->post('account/update-password', [AccountController::class, 'update_password']);
+
 $routes->post('users/(:num)/permissions', [UserController::class, 'save_permissions/$1']);
 $routes->post('adjustments', [AdjustmentController::class, 'save']);
 $routes->post('brands', [BrandController::class, 'save']);

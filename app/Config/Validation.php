@@ -141,10 +141,11 @@ class Validation extends BaseConfig
         'username' => [
             'label' => 'UserName',
             'rules' => [
-                'required',
+                'if_exist',
                 'max_length[30]',
                 'min_length[3]',
                 'regex_match[/\A[a-zA-Z0-9\.]+\z/]',
+                'is_unique[users.username,id,{id}'
             ],
         ],
         'firstname' => [
@@ -176,13 +177,22 @@ class Validation extends BaseConfig
             'label' => 'Email',
             'rules' => [
                 'max_length[255]',
-                'valid_email'
+                'valid_email',
+                'is_unique[users.email,id,{id}'
             ],
         ],
         'address' => [
             'label' => 'Address',
             'rules' => [],
         ],
+    ];
+
+      /**
+     * Specifies the rules that are used to validate the registration
+     *
+     * @var array<string, string>
+     */
+    public array $updatePassword = [
         'password' => [
             'label'  => 'Password',
             'rules'  => 'required|max_length[255]',

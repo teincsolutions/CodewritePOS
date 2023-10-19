@@ -4,43 +4,12 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\UserModel;
-use CodeIgniter\Database\RawSql;
 use CodeIgniter\Events\Events;
-use CodeIgniter\Exceptions\ModelException;
-use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
-use CodeIgniter\Shield\Authentication\Passwords;
 use CodeIgniter\Shield\Entities\User;
-use CodeIgniter\Shield\Exceptions\ValidationException;
-use CodeIgniter\Shield\Models\DatabaseException;
-use CodeIgniter\Shield\Traits\Viewable;
-use Config\Services;
-use Psr\Log\LoggerInterface;
 
 class UserController extends BaseController
 {
-    use Viewable;
-    /**
-     * Auth Table names
-     */
-    private array $tables;
-
-    public function initController(
-        RequestInterface $request,
-        ResponseInterface $response,
-        LoggerInterface $logger
-    ): void {
-        parent::initController(
-            $request,
-            $response,
-            $logger
-        );
-
-        /** @var Auth $authConfig */
-        $authConfig   = config('Auth');
-        $this->tables = $authConfig->tables;
-    }
     /**
      * return view for list
      * @return Response - http response
@@ -147,7 +116,7 @@ class UserController extends BaseController
             $user = $model->findById($model->getInsertID());
             $user->syncGroups(...$inputs['groups']);
             Events::trigger('register', $user);
-            
+
             return $this->response->setJSON([
                 'status' => true,
                 'message' => "User created successfully!",
