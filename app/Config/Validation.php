@@ -145,7 +145,7 @@ class Validation extends BaseConfig
                 'max_length[30]',
                 'min_length[3]',
                 'regex_match[/\A[a-zA-Z0-9\.]+\z/]',
-                'is_unique[users.username,id,{id}'
+                'is_unique[users.username,id,{id}]'
             ],
         ],
         'firstname' => [
@@ -178,7 +178,7 @@ class Validation extends BaseConfig
             'rules' => [
                 'max_length[255]',
                 'valid_email',
-                'is_unique[users.email,id,{id}'
+                'is_unique[users.email,id,{id}]'
             ],
         ],
         'address' => [
