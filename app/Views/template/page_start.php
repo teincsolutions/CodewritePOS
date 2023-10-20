@@ -25,16 +25,19 @@
     <script>
         <?php
         $settings = [
+            'ProductDiffForStore',
             'AllowPriceChange', 
             'LimitPriceChange', 
             'AllowCostChange', 
             'LimitCostChange', 
+            'AllowWholeSalePrices',
             'AllowCustomerDiscountChange', 
             'AllowSupplierDiscountChange', 
             'AllowDeleteSales',
             'AllowDeleteSalesReturns',
             'AllowDeletePurchases',
             'AllowDeletePurchaseReturns',
+            'UseExpiration',
             'AllowDeleteQuotes',
             'companyName', 
             'companyContacts',

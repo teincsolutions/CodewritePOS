@@ -58,6 +58,11 @@ class CreateProductsTable extends Migration
                 'constraint' => "32,2",
                 'null' => false,
             ],
+            'unit_ws_price' => [
+                'type' => 'DECIMAL',
+                'constraint' => "32,2",
+                'null' => true,
+            ],
             'tax_id' => [
                 'type'       => 'INT',
                 'constraint' => 5,

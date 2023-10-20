@@ -16,11 +16,10 @@
                 <div class="card-body">
                     <ul class="nav nav-tabs nav-justified">
                         <li class="nav-item"><a class="nav-link active" href="#system-tab" data-bs-toggle="tab">System Information</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#pos-tab" data-bs-toggle="tab">POS</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#pos-tab" data-bs-toggle="tab">POS/Orders</a></li>
                         <li class="nav-item"><a class="nav-link" href="#reports-tab" data-bs-toggle="tab">Reports</a></li>
                         <li class="nav-item"><a class="nav-link" href="#receipt-tab" data-bs-toggle="tab">Receipt</a></li>
                         <li class="nav-item"><a class="nav-link" href="#invoice-tab" data-bs-toggle="tab">Invoice</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#tax-tab" data-bs-toggle="tab">Tax</a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane show active" id="system-tab">
@@ -102,60 +101,45 @@
                                                 <th>Value</th>
                                             </thead>
                                             <tr>
-                                                <td>Allow Price Change</td>
+                                                <td>Different For Each Store</td>
                                                 <td>
                                                     <div class="d-flex gap-5">
                                                         <label class="inputcheck text-capitalize">Yes
-                                                            <input type="radio" name="AllowPriceChange" value="yes" <?= setting('App.AllowPriceChange') === 'yes' ? 'checked' : '' ?>>
+                                                            <input type="radio" name="ProductDiffForStore" value="yes" <?= setting('App.ProductDiffForStore') === 'yes' ? 'checked' : '' ?>>
                                                             <span class="checkmark"></span>
                                                         </label>
                                                         <label class="inputcheck text-capitalize">No
-                                                            <input type="radio" name="AllowPriceChange" value="no" <?= setting('App.AllowPriceChange') === 'no' ? 'checked' : '' ?>>
+                                                            <input type="radio" name="ProductDiffForStore" value="no" <?= setting('App.ProductDiffForStore') === 'no' ? 'checked' : '' ?>>
                                                             <span class="checkmark"></span>
                                                         </label>
                                                     </div>
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>Allow Cost Change</td>
+                                                <td>Use Whole Sale Prices</td>
                                                 <td>
                                                     <div class="d-flex gap-5">
                                                         <label class="inputcheck text-capitalize">Yes
-                                                            <input type="radio" name="AllowCostChange" value="yes" <?= setting('App.AllowCostChange') === 'yes' ? 'checked' : '' ?>>
+                                                            <input type="radio" name="AllowWholeSalePrices" value="yes" <?= setting('App.AllowWholeSalePrices') === 'yes' ? 'checked' : '' ?>>
                                                             <span class="checkmark"></span>
                                                         </label>
                                                         <label class="inputcheck text-capitalize">No
-                                                            <input type="radio" name="AllowCostChange" value="no" <?= setting('App.AllowCostChange') === 'no' ? 'checked' : '' ?>>
+                                                            <input type="radio" name="AllowWholeSalePrices" value="no" <?= setting('App.AllowWholeSalePrices') === 'no' ? 'checked' : '' ?>>
                                                             <span class="checkmark"></span>
                                                         </label>
                                                     </div>
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>Allow Customer Discount Change</td>
+                                                <td>Use Expiration</td>
                                                 <td>
                                                     <div class="d-flex gap-5">
                                                         <label class="inputcheck text-capitalize">Yes
-                                                            <input type="radio" name="AllowCustomerDiscountChange" value="yes" <?= setting('App.AllowCustomerDiscountChange') === 'yes' ? 'checked' : '' ?>>
+                                                            <input type="radio" name="UseExpiration" value="yes" <?= setting('App.UseExpiration') === 'yes' ? 'checked' : '' ?>>
                                                             <span class="checkmark"></span>
                                                         </label>
                                                         <label class="inputcheck text-capitalize">No
-                                                            <input type="radio" name="AllowCustomerDiscountChange" value="no" <?= setting('App.AllowCustomerDiscountChange') === 'no' ? 'checked' : '' ?>>
-                                                            <span class="checkmark"></span>
-                                                        </label>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Allow Supplier Discount Change</td>
-                                                <td>
-                                                    <div class="d-flex gap-5">
-                                                        <label class="inputcheck text-capitalize">Yes
-                                                            <input type="radio" name="AllowSupplierDiscountChange" value="yes" <?= setting('App.AllowSupplierDiscountChange') === 'yes' ? 'checked' : '' ?>>
-                                                            <span class="checkmark"></span>
-                                                        </label>
-                                                        <label class="inputcheck text-capitalize">No
-                                                            <input type="radio" name="AllowSupplierDiscountChange" value="no" <?= setting('App.AllowSupplierDiscountChange') === 'no' ? 'checked' : '' ?>>
+                                                            <input type="radio" name="UseExpiration" value="no" <?= setting('App.UseExpiration') === 'no' ? 'checked' : '' ?>>
                                                             <span class="checkmark"></span>
                                                         </label>
                                                     </div>
@@ -180,12 +164,87 @@
                                                 <th style="width: 25%;">Sales</th>
                                                 <th>Value</th>
                                             </thead>
+
                                             <tr>
-                                                <td>Tax Rates(%)</td>
+                                                <td>Sales Tax Rates(%)</td>
                                                 <td>
                                                     <div class="input-group w-50">
-                                                        <input type="number" class="form-control" min="0" name="SalesTax" value="<?= setting('App.SalesTax') ?>" placeholder="Tax rate">
+                                                        <input type="number" class="form-control" min="0" name="SalesTax" value="<?= setting('App.SalesTax') ?>" placeholder="Sale Tax rate">
                                                         <div class="input-group-text text-info">%</div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Allow Price Change</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="AllowPriceChange" value="yes" <?= setting('App.AllowPriceChange') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="AllowPriceChange" value="no" <?= setting('App.AllowPriceChange') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Allow Customer Discount Change</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="AllowCustomerDiscountChange" value="yes" <?= setting('App.AllowCustomerDiscountChange') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="AllowCustomerDiscountChange" value="no" <?= setting('App.AllowCustomerDiscountChange') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <thead class="border-top-0">
+                                                <th style="width: 25%;">Purchases</th>
+                                                <th>Value</th>
+                                            </thead>
+
+                                            <tr>
+                                                <td>Purchase Tax Rates(%)</td>
+                                                <td>
+                                                    <div class="input-group w-50">
+                                                        <input type="number" class="form-control" min="0" name="PurchaseTax" value="<?= setting('App.PurchaseTax') ?>" placeholder="Purchase Tax rate">
+                                                        <div class="input-group-text text-info">%</div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Allow Cost Change</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="AllowCostChange" value="yes" <?= setting('App.AllowCostChange') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="AllowCostChange" value="no" <?= setting('App.AllowCostChange') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Allow Supplier Discount Change</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="AllowSupplierDiscountChange" value="yes" <?= setting('App.AllowSupplierDiscountChange') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="AllowSupplierDiscountChange" value="no" <?= setting('App.AllowSupplierDiscountChange') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -206,7 +265,7 @@
                                     <div class="table-responsive">
                                         <table class="table w-100">
                                             <thead>
-                                                <th style="width: 25%;">Sales</th>
+                                                <th style="width: 25%;">Sales & Returns</th>
                                                 <th>Value</th>
                                             </thead>
                                             <tr>
@@ -224,10 +283,6 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <thead class="border-top-0">
-                                                <th style="width: 25%;">Sales Returns</th>
-                                                <th>Value</th>
-                                            </thead>
                                             <tr>
                                                 <td>Allow Delete Sales Returns</td>
                                                 <td>
@@ -238,6 +293,40 @@
                                                         </label>
                                                         <label class="inputcheck text-capitalize">No
                                                             <input type="radio" name="AllowDeleteSalesReturns" value="no" <?= setting('App.AllowDeleteSalesReturns') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <thead class="border-top-0">
+                                                <th style="width: 25%;">Purchases & Returns</th>
+                                                <th>Value</th>
+                                            </thead>
+                                            <tr>
+                                                <td>Allow Delete Purchases</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="AllowDeletePurchases" value="yes" <?= setting('App.AllowDeletePurchases') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="AllowDeletePurchases" value="no" <?= setting('App.AllowDeletePurchases') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Allow Delete Purchase Returns</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="AllowDeletePurchaseReturns" value="yes" <?= setting('App.AllowDeletePurchaseReturns') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="AllowDeletePurchaseReturns" value="no" <?= setting('App.AllowDeletePurchaseReturns') === 'no' ? 'checked' : '' ?>>
                                                             <span class="checkmark"></span>
                                                         </label>
                                                     </div>
@@ -259,13 +348,6 @@
                             </div>
                         </div>
                         <div class="tab-pane" id="invoice-tab">
-                            <div class="row">
-                                <div class="col-lg-12">
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="tax-tab">
                             <div class="row">
                                 <div class="col-lg-12">
 

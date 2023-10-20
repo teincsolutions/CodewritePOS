@@ -40,9 +40,8 @@ const searchParams = {
   },
 };
 
-prodIndex = prodIndex ? prodIndex : 0;
-(dueTotal = 0),
-  (grandTotal = 0);
+let prodIndex = 0;
+(dueTotal = 0), (grandTotal = 0);
 
 let form = $(".post-form");
 
@@ -125,8 +124,7 @@ function updateTotals() {
   discountTotal += discountAmtTotal;
   grandTotal += shipping;
   grandTotal -= discountAmtTotal;
-  dueTotal =
-    grandTotal - $("input[name='paid']").first().val();
+  dueTotal = grandTotal - $("input[name='paid']").first().val();
 
   $(".grandTotal").html("GHS " + grandTotal.toFixed(2));
   $("#transfers-total").val(grandTotal);
@@ -175,8 +173,8 @@ function checkout() {
   const paidAmt = parseFloat($("input[name='paid']").val());
   orderStatus.val("completed");
 
-    if (grandTotal - paidAmt > 0) paymentStatus.val("due");
-    else paymentStatus.val("paid");
+  if (grandTotal - paidAmt > 0) paymentStatus.val("due");
+  else paymentStatus.val("paid");
   return true;
 }
 
@@ -221,6 +219,9 @@ function autocomplete(inp) {
     b = document.createElement("DIV");
     b.innerHTML = "<i>Searching...</i>";
     a.appendChild(b);
+
+    if (Settings.ProductDiffForStore === "yes")
+      searchParams.store_id = $(".select2-from-store").val();
 
     $.get(`${baseUrl}products/search`, searchParams, (d, s) => {
       a.innerHTML = "";

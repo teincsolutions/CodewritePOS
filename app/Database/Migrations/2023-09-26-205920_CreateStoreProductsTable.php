@@ -33,10 +33,9 @@ class CreateStoreProductsTable extends Migration
                 'constraint' => "32,2",
                 'null' => false,
             ],
-            'tax_id' => [
-                'type'       => 'INT',
-                'constraint' => 5,
-                'unsigned'   => true,
+            'unit_ws_price' => [
+                'type' => 'DECIMAL',
+                'constraint' => "32,2",
                 'null' => true,
             ],
             'discount' => [

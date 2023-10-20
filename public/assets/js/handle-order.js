@@ -353,6 +353,8 @@ function autocomplete(inp) {
     b = document.createElement("DIV");
     b.innerHTML = "<i>Searching...</i>";
     a.appendChild(b);
+    if (Settings.ProductDiffForStore === "yes")
+      searchParams.store_id = $(".select2-store").val();
 
     $.get(`${baseUrl}products/search`, searchParams, (d, s) => {
       a.innerHTML = "";

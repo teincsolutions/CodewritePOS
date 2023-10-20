@@ -16,6 +16,7 @@ class CustomerModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'name',
+        'type',
         'phone',
         'email',
         'status',

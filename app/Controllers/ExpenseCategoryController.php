@@ -47,8 +47,7 @@ class ExpenseCategoryController extends BaseController
     {
         $model = new ExpenseCategoryModel();
         $inputs = $this->request->getVar();
-        if (auth()->user())
-            $inputs['user_id'] = auth()->user()->id;
+
         $id = $this->request->getPost('id');
         $res = [
             'status' => false,
@@ -56,9 +55,9 @@ class ExpenseCategoryController extends BaseController
             'message' => null,
             'input' => $inputs,
         ];
-        $Category = $model->where('id', $id)->first();
+        $category = $model->where('id', $id)->first();
 
-        if ($Category) {
+        if ($category) {
             if (!auth()->user()->can('expense-categories.edit'))
                 return $this->response->setJSON([
                     'status' => false,
@@ -78,6 +77,9 @@ class ExpenseCategoryController extends BaseController
                 ]);
             }
         } else {
+            if (auth()->user())
+                $inputs['user_id'] = auth()->user()->id;
+
             if (!auth()->user()->can('expense-categories.create'))
                 return $this->response->setJSON([
                     'status' => false,

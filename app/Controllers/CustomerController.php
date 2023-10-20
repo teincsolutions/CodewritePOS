@@ -92,8 +92,6 @@ class CustomerController extends BaseController
     {
         $model = new CustomerModel();
         $inputs = $this->request->getVar();
-        if (auth()->user())
-            $inputs['user_id'] = auth()->user()->id;
         $id = $this->request->getPost('id');
         $res = [
             'status' => false,
@@ -123,6 +121,9 @@ class CustomerController extends BaseController
                 ]);
             }
         } else {
+            if (auth()->user())
+                $inputs['user_id'] = auth()->user()->id;
+
             if (!auth()->user()->can('customers.create'))
                 return $this->response->setJSON([
                     'status' => false,

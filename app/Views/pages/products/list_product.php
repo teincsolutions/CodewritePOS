@@ -7,7 +7,7 @@
             <h6>Manage your products</h6>
         </div>
         <div class="page-btn">
-            <a href="<?=site_url('products/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i> New Product</a>
+            <a href="<?= site_url('products/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i> New Product</a>
         </div>
     </div>
 
@@ -25,20 +25,36 @@
                         <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
                     </div>
                 </div>
+                <?php if (setting('App.ProductDiffForStore') === 'yes') : ?>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label for="store_id">Store</label>
+                            <select name="store_id" class="select2-store filter">
+                                <?php
+                                if (isset($stores))
+                                    foreach ($stores as $row) { ?>
+                                    <option value="<?= $row->id ?>">
+                                        <?= $row->name; ?> (<?= $row->location; ?>)
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                <?php endif ?>
                 <div class="wordset"></div>
             </div>
 
             <div class="card mb-0" id="filter_inputs">
                 <div class="card-body pb-0">
                     <div class="row">
-                       
-                        <div class="col-lg-2 col-sm-6 col-12">
+
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
                                 <input name="name" type="text" placeholder="Enter Product Name">
                             </div>
                         </div>
                         <div class="col-lg-2 col-sm-6 col-12">
-                            <div  class="form-group">
+                            <div class="form-group">
                                 <input name="barcode" type="text" placeholder="Enter Barcode">
                             </div>
                         </div>
@@ -49,7 +65,7 @@
                         </div>
                         <div class="col-lg-1 col-sm-6 col-12  ms-auto">
                             <div class="form-group">
-                                <a class="btn btn-filters filter ms-auto"><img src="<?=base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                <a class="btn btn-filters filter ms-auto"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
                             </div>
                         </div>
                     </div>

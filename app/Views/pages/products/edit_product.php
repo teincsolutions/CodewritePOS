@@ -7,7 +7,7 @@
             <h6>Create new product</h6>
         </div>
         <div class="page-btn">
-            <a href="<?= site_url('products') ?>" class="btn btn-added"><i  class="fa fa-arrow-left me-2"></i>List Product</a>
+            <a href="<?= site_url('products') ?>" class="btn btn-added"><i class="fa fa-arrow-left me-2"></i>List Product</a>
         </div>
     </div>
 
@@ -35,24 +35,35 @@
                         <input type="text" name="barcode" value="<?= isset($product) ? $product->barcode : null ?>" placeholder="Barcode">
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Unit Cost</label>
-                        <input type="text" name="unit_cost" value="<?= isset($product) ? $product->unit_cost : null ?>" placeholder="Unit Cost">
+                <?php if (setting('App.ProductDiffForStore') !== 'yes') : ?>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Unit Cost</label>
+                            <input type="text" name="unit_cost" value="<?= isset($product) ? $product->unit_cost : null ?>" placeholder="Unit Cost">
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Selling Price</label>
-                        <input type="text" name="unit_price" value="<?= isset($product) ? $product->unit_price : null ?>" placeholder="Unit Price" required>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Selling Price</label>
+                            <input type="text" name="unit_price" value="<?= isset($product) ? $product->unit_price : null ?>" placeholder="Unit Price" required>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Min. Quantity</label>
-                        <input type="number" name="min_qty" class="form-control" value="<?= isset($product) ? $product->min_qty : 10 ?>" placeholder="Minimum quantity">
+                    <?php if (setting('App.AllowWholeSalePrices') === 'yes') : ?>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Wholesale Price</label>
+                                <input type="text" name="unit_ws_price" value="<?= isset($product) ? $product->unit_ws_price : null ?>" placeholder="Wholesale Price">
+                            </div>
+                        </div>
+                    <?php endif ?>
+
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Min. Quantity</label>
+                            <input type="number" name="min_qty" class="form-control" value="<?= isset($product) ? $product->min_qty : 10 ?>" placeholder="Minimum quantity">
+                        </div>
                     </div>
-                </div>
+                <?php endif ?>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Category</label>
@@ -114,6 +125,73 @@
                         <input type="number" name="unit_qty" class="form-control" value="<?= isset($product) ? $product->unit_qty : 1 ?>" placeholder="Unit quantity">
                     </div>
                 </div>
+                <?php if (setting('App.UseExpiration') === 'yes') : ?>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Expiration Date</label>
+                            <input type="date" class="form-control" name="expiration" value="<?= isset($product) ? $product->expiration : null ?>">
+                        </div>
+                    </div>
+                <?php endif ?>
+                <?php if (setting('App.ProductDiffForStore') === 'yes') : ?>
+                    <div class="col-lg-12">
+                        <?php foreach ($stores as $key => $row) : ?>
+                            <input type="hidden" name="items[<?= $key ?>][store_id]" value="<?= $row->id; ?>">
+                            <div class="row mb-3 p-2 border border-bottom">
+                                <h6 class="mb-1">Set <span class="text-warning"><?= $row->name; ?></span> Details</h6>
+                                <div class="col-lg-3 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label>Unit Cost</label>
+                                        <input type="text" name="items[<?= $key ?>][unit_cost]" value="<?= isset($product) ? model('StoreProductModel')->getCost($product->id, $row->id) : null ?>" placeholder="Unit Cost">
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label>Selling Price</label>
+                                        <input type="text" name="items[<?= $key ?>][unit_price]" value="<?= isset($product) ? model('StoreProductModel')->getPrice($product->id, $row->id) : null ?>" placeholder="Unit Price" required>
+                                    </div>
+                                </div>
+                                <?php if (setting('App.AllowWholeSalePrices') === 'yes') : ?>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label>Wholesale Price</label>
+                                            <input type="text" name="items[<?= $key ?>][unit_ws_price]" value="<?= isset($product) ? model('StoreProductModel')->getWSPrice($product->id, $row->id) : null ?>" placeholder="Wholesale Price">
+                                        </div>
+                                    </div>
+                                <?php endif ?>
+
+                                <div class="col-lg-3 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label>Min. Quantity</label>
+                                        <input type="number" name="items[<?= $key ?>][min_qty]" class="form-control" value="<?= isset($product) ? model('StoreProductModel')->getUnitQty($product->id, $row->id) : 10 ?>" placeholder="Minimum quantity">
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label>Sales Discount</label>
+                                        <input type="number" name="discount" step="any" class="form-control" value="<?= isset($product) ? model('StoreProductModel')->getDiscount($product->id, $row->id) : "0.00" ?>" placeholder="Discount amount">
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label>Discontinued</label>
+                                        <div class="d-flex gap-5">
+                                            <label class="inputcheck text-capitalize">Yes
+                                                <input type="radio" name="items[<?= $key ?>][discontinued]" value="1" <?= isset($product) ? (model('StoreProductModel')->getDiscontinued($product->id, $row->id) == 1 ? 'checked' : '') : '' ?>>
+                                                <span class="checkmark"></span>
+                                            </label>
+                                            <label class="inputcheck text-capitalize">No
+                                                <input type="radio" name="items[<?= $key ?>][discontinued]" value="0" <?= isset($product) ? (model('StoreProductModel')->getDiscontinued($product->id, $row->id) == 0 ? 'checked' : '') : 'checked' ?>>
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach ?>
+                    </div>
+                <?php endif ?>
+
                 <div class="col-lg-12">
                     <div class="form-group">
                         <label>Description</label>
@@ -138,25 +216,43 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Sales Discount</label>
-                        <input type="number" name="discount" step="any" class="form-control" value="<?= isset($product) ? $product->discount : "0.00" ?>" placeholder="Discount amount">
+                <?php if (setting('App.ProductDiffForStore') !== 'yes') : ?>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Sales Discount</label>
+                            <input type="number" name="discount" step="any" class="form-control" value="<?= isset($product) ? $product->discount : "0.00" ?>" placeholder="Discount amount">
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Purchase Discount</label>
-                        <input type="number" name="pdiscount" step="any" class="form-control" value="<?= isset($product) ? $product->pdiscount : "0.00" ?>" placeholder="Discount amount">
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Purchase Discount</label>
+                            <input type="number" name="pdiscount" step="any" class="form-control" value="<?= isset($product) ? $product->pdiscount : "0.00" ?>" placeholder="Discount amount">
+                        </div>
                     </div>
-                </div>
+
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Discontinued</label>
+                            <div class="d-flex gap-5">
+                                <label class="inputcheck text-capitalize">Yes
+                                    <input type="radio" name="discontinued" value="1" <?= isset($product) ? ($product->discontinued == 1 ? 'checked' : '') : '' ?>>
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label class="inputcheck text-capitalize">No
+                                    <input type="radio" name="discontinued" value="0" <?= isset($product) ? ($product->discontinued == 0 ? 'checked' : '') : 'checked' ?>>
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif ?>
                 <div class="col-lg-12">
                     <div class="form-group">
                         <label> Product Image</label>
                         <div class="image-upload">
-                            <input type="file">
+                            <input name="images[]" type="file">
                             <div class="image-uploads">
-                                <img src="<?=base_url('assets/icons/upload.svg') ?>" alt="img">
+                                <img src="<?= base_url('assets/icons/upload.svg') ?>" alt="img">
                                 <h4>Drag and drop a file to upload</h4>
                             </div>
                         </div>

@@ -179,6 +179,9 @@ function autocomplete(inp) {
     this.parentNode.appendChild(a);
     searchParams.search.value = val;
 
+    if (Settings.ProductDiffForStore === "yes")
+      searchParams.store_id = $(".select2-store").val();
+
     $.get(`${baseUrl}products/search`, searchParams, (d, s) => {
       if (s !== "success") {
         // if fail

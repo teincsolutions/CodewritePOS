@@ -20,9 +20,7 @@ class ExpenseController extends BaseController
      */
     public function index()
     {
-
         $storeModel = new StoreModel();
-
         $data = [
             'title' => 'Expense List',
             'stores' => $storeModel->where('status', 'opened')->findAll(),

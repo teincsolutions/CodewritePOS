@@ -23,6 +23,7 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
+        params.store_id = $('.select2-store').val();
 
         params.fields = filter;
       },
@@ -209,5 +210,8 @@ $(function () {
   $(".filter-clear").on("click", function (params) {
     $("#date-from,#date-to").val("");
     table.ajax.reload();
+  });
+  $(".select2-store").select2({
+    placeholder: "Seach a store"
   });
 });

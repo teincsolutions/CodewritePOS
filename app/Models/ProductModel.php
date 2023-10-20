@@ -23,10 +23,13 @@ class ProductModel extends Model
         'category_id',
         'unit_cost',
         'unit_price',
+        'unit_ws_price',
+        'min_qty',
         'tax_id',
         'discount',
         'unit_id',
         'description',
+        'expiration',
         'image_uri',
         'discontinued',
         'inventory',
@@ -68,6 +71,18 @@ class ProductModel extends Model
 
         if (isset($data['data']['sku']) && empty($data['data']['sku']))
             $data['data']['sku'] = NULL;
+
+        if (isset($data['data']['min_qty']) && empty($data['data']['min_qty']))
+            $data['data']['min_qty'] = 10;
+
+        if (isset($data['data']['expiration']) && empty($data['data']['expiration']))
+            $data['data']['expiration'] = NULL;
+
+        if (isset($data['data']['unit_price']) && empty($data['data']['unit_price']))
+            $data['data']['unit_price'] = 0.00;
+        
+        if (isset($data['data']['unit_ws_price']) && empty($data['data']['unit_ws_price']))
+            $data['data']['unit_ws_price'] = $data['data']['unit_price'];
 
         if (isset($data['data']['tax_id']) && empty($data['data']['tax_id']))
             $data['data']['tax_id'] = NULL;

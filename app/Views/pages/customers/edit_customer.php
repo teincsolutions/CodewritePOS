@@ -16,6 +16,15 @@
             <div class="row">
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
+                        <label>Type</label>
+                        <select name="type" class="select">
+                            <option value="retailer" <?= isset($customer) ? ($customer->type === 'retailer' ? 'selected' : '') : null  ?>>Retailer</option>
+                            <option value="wholeseller" <?= isset($customer) ? ($customer->type === 'wholeseller' ? 'selected' : '') : null  ?>>Wholeseller</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
                         <label>Customer Name</label>
                         <input name="name" type="text" value="<?= isset($customer) ? $customer->name : null ?>" placeholder="Customer Name" required>
                     </div>

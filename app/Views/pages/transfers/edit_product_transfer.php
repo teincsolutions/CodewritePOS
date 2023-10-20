@@ -29,7 +29,7 @@
                     <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>From Store</label>
-                            <select name="from_store_id" class="select2-store">
+                            <select name="from_store_id" class="select2-store select2-from-store">
                                 <?php
                                 if (isset($stores))
                                     foreach ($stores as $row) { ?>

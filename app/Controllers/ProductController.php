@@ -6,9 +6,13 @@ use App\Controllers\BaseController;
 use App\Models\BrandModel;
 use App\Models\CategoryModel;
 use App\Models\ProductModel;
+use App\Models\StoreModel;
+use App\Models\StoreProductModel;
 use App\Models\TaxModel;
 use App\Models\UnitModel;
+use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\HTTP\Response;
+use Config\Database;
 
 class ProductController extends BaseController
 {
@@ -18,8 +22,10 @@ class ProductController extends BaseController
      */
     public function index()
     {
+        $storeModel = new StoreModel();
         $data = [
             'title' => 'Product List',
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
         ];
         return view('pages/products/list_product', $data);
     }
@@ -34,6 +40,7 @@ class ProductController extends BaseController
         $unitModel = new UnitModel();
         $brandModel = new BrandModel();
         $taxModel = new TaxModel();
+        $storeModel  = new StoreModel();
 
         $data = [
             'title' => 'Create Product',
@@ -41,6 +48,7 @@ class ProductController extends BaseController
             'units' => $unitModel->findAll(),
             'taxes' => $taxModel->findAll(),
             'brands' => $brandModel->findAll(),
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
         ];
 
         if ($id) {
@@ -56,11 +64,11 @@ class ProductController extends BaseController
     public function save()
     {
         $model = new ProductModel();
+        $storeProductModel = new StoreProductModel();
         $inputs = $this->request->getVar();
-        if (auth()->user())
-            $inputs['user_id'] = auth()->user()->id;
-
         $id = $this->request->getPost('id');
+        $items = $this->request->getVar('items') ?? [];
+
         $res = [
             'status' => false,
             'data' => null,
@@ -68,47 +76,74 @@ class ProductController extends BaseController
             'input' => $inputs,
         ];
         $product = $model->where('id', $id)->first();
+        $this->db = Database::connect();
+        $builder = $storeProductModel->builder();
 
-        if ($product) {
-            if (!auth()->user()->can('products.edit'))
-                return $this->response->setJSON([
-                    'status' => false,
-                    'message' => "Don't have permission to edit this record!"
-                ]);
+        try {
+            $this->db->transException(true)->transStart();
 
-            if ($model->save($inputs)) {
-                $res = array_merge($res, [
-                    'status' => true,
-                    'message' => "Product updated successfully!",
-                    'data' => $model->find($id),
-                ]);
+            if ($product) {
+                if (!auth()->user()->can('products.edit'))
+                    return $this->response->setJSON([
+                        'status' => false,
+                        'message' => "Don't have permission to edit this record!"
+                    ]);
+
+                if ($model->save($inputs)) {
+                    foreach ($items as $key => $item)
+                        $items[$key] = array_merge($item, ['product_id' => $id]);
+
+                    $res = array_merge($res, [
+                        'status' => true,
+                        'message' => "Product updated successfully!",
+                        'data' => $model->find($id),
+                    ]);
+                } else {
+                    $res = array_merge($res, [
+                        'status' => false,
+                        'message' => "Couldn't be updated!"
+                    ]);
+                }
             } else {
-                $res = array_merge($res, [
-                    'status' => false,
-                    'message' => "Couldn't be updated!"
-                ]);
-            }
-        } else {
-            if (!auth()->user()->can('products.create'))
-                return $this->response->setJSON([
-                    'status' => false,
-                    'message' => "Don't have permission to create this record!"
-                ]);
+                if (auth()->user())
+                    $inputs['user_id'] = auth()->user()->id;
 
-            if ($model->save($inputs)) {
-                $res = array_merge($res, [
-                    'status' => true,
-                    'message' => "Product created successfully!",
-                    'data' => $model->find($model->getInsertID()),
-                ]);
-            } else {
-                $res = array_merge($res, [
-                    'status' => false,
-                    'message' => "Couldn't be created!"
-                ]);
+                if (!auth()->user()->can('products.create'))
+                    return $this->response->setJSON([
+                        'status' => false,
+                        'message' => "Don't have permission to create this record!"
+                    ]);
+
+                if ($model->save($inputs)) {
+                    $id = $model->getInsertID();
+                    foreach ($items as $key => $item)
+                        $items[$key] = array_merge($item, ['product_id' => $id]);
+
+                    $res = array_merge($res, [
+                        'status' => true,
+                        'message' => "Product created successfully!",
+                        'data' => $model->find($id),
+                    ]);
+                } else {
+                    $res = array_merge($res, [
+                        'status' => false,
+                        'message' => "Couldn't be created!"
+                    ]);
+                }
             }
+            if (sizeof($items) > 0)
+                $builder->upsertBatch($items);
+
+            $this->db->transComplete();
+        } catch (DatabaseException $e) {
+            $res = array_merge($res, [
+                'message' => $e->getMessage(),
+            ]);
+            return $this->response->setJSON($res);
         }
-        return $this->response->setJSON($res);
+        if ($this->db->transStatus()) {
+            return $this->response->setJSON($res);
+        }
     }
     /**
      * return view for show
@@ -165,6 +200,17 @@ class ProductController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new ProductModel();
+        if (setting('App.ProductDiffForStore') === 'yes') {
+            $model->select('products.id,products.name,products.barcode,products.sku,products.description,' .
+                'products.category_id,products.brand_id,products.unit_id,products.unit_qty,products.tax_id,' .
+                'products.user_id,products.expiration,store_products.unit_price,store_products.unit_cost,' .
+                'store_products.unit_ws_price,store_products.discount,store_products.min_qty,' .
+                'store_products.discontinued');
+
+            $model->join('store_products', 'store_products.product_id=products.id');
+            $model->where('store_id', $inputs['store_id'] ?? 0);
+        } else $model->select('products.*');
+
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
     /**
@@ -175,9 +221,20 @@ class ProductController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new ProductModel();
-        $model->select('products.*');
+        if (setting('App.ProductDiffForStore') === 'yes') {
+            $model->select('products.id,products.name,products.barcode,products.sku,products.description,' .
+                'products.category_id,products.brand_id,products.unit_id,products.unit_qty,products.tax_id,' .
+                'products.user_id,products.expiration,store_products.unit_price,store_products.unit_cost,' .
+                'store_products.unit_ws_price,store_products.discount,store_products.min_qty,' .
+                'store_products.discontinued');
+
+            $model->join('store_products', 'store_products.product_id=products.id');
+            $model->where('store_id', $inputs['store_id'] ?? 0);
+        } else $model->select('products.*');
+
         $model->join('categories', 'categories.id=products.category_id');
         $model->join('brands', 'brands.id=products.brand_id', 'left');
+
 
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
