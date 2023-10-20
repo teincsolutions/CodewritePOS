@@ -200,6 +200,7 @@ class PurchaseController extends BaseController
                         'tdate' => $inputs['purchase_date'],
                         'supplier_id' => $inputs['supplier_id'],
                         'purchase_id' => $purchases->id,
+                        'store_id' => $inputs['store_id'],
                         'payment_type' => $inputs['payment_type'],
                         'ledger_type' => 'purchases',
                         'credit' => $inputs['total_amount'],

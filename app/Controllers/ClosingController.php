@@ -170,7 +170,7 @@ class ClosingController extends BaseController
             if ($model->save($inputs)) {
                 $id = $model->getInsertID();
                 $data = ['store_closing_id' => $id];
-                $where = ['store_closing_id' => null];
+                $where = ['store_closing_id' => null, 'store_id' => $inputs['store_id']];
                 $saleModel->where($where);
                 $saleModel->update(null, $data);
                 $purchaseModel->where($where);
@@ -187,7 +187,10 @@ class ClosingController extends BaseController
                 $supplierLedgerModel->update(null, $data);
                 $expenseModel->where($where);
                 $expenseModel->update(null, $data);
-                $transferModel->where($where);
+                $transferModel->where([
+                    'store_closing_id' => null,
+                    'from_store_id' => $inputs['store_id']
+                ]);
                 $transferModel->update(null, $data);
 
                 $res = array_merge($res, [

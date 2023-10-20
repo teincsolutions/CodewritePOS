@@ -199,6 +199,7 @@ class SalesController extends BaseController
                     $ledger->save([
                         'tdate' => $inputs['sales_date'],
                         'customer_id' => $inputs['customer_id'],
+                        'store_id' => $inputs['store_id'],
                         'sale_id' => $sales->id,
                         'ledger_type' => 'sales',
                         'payment_type' => $inputs['payment_type'],

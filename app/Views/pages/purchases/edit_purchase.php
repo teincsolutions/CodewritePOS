@@ -118,7 +118,7 @@
                                                 <td>
                                                     <div class="increment-decrement">
                                                         <div class="input-groups">
-                                                           
+
                                                             <input type='hidden' name="items[<?= $key ?>][purchase_id]" value="<?= $row->purchase_id ?>">
                                                             <input type='hidden' name="items[<?= $key ?>][product_id]" value="<?= $row->product_id ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][unit_cost]" value="<?= $row->unit_cost; ?>" class="runit_cost">
@@ -623,7 +623,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
-                <?php if (auth()->user()->can('products.edit')) : ?>
+                <?php if (setting('App.AllowCostChange') === 'yes' || setting('App.AllowSupplierDiscountChange') === 'yes') : ?>
                     <div class="row">
                         <div <?= setting('App.AllowCostChange') === 'yes' ? '' : 'hidden'  ?> class="col-lg-6 col-sm-12 col-12">
                             <div class="form-group">

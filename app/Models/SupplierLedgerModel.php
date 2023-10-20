@@ -23,6 +23,7 @@ class SupplierLedgerModel extends Model
         'user_id',
         'payment_type',
         'ledger_type',
+        'store_id',
         'store_closing_id',
     ];
 

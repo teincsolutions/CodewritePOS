@@ -615,7 +615,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
-                <?php if (auth()->user()->can('products.edit')) : ?>
+                <?php if (setting('App.AllowPriceChange') === 'yes' || setting('App.AllowCustomerDiscountChange') === 'yes') : ?>
                     <div class="row">
                         <div <?= setting('App.AllowPriceChange') === 'yes' ? '' : 'hidden' ?> class="col-lg-6 col-sm-12 col-12">
                             <div class="form-group">

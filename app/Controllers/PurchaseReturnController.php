@@ -167,6 +167,7 @@ class PurchaseReturnController extends BaseController
                         'supplier_id' => $inputs['supplier_id'],
                         'purchase_id' => $inputs['purchase_id'],
                         'purchase_return_id' => $id,
+                        'store_id' => $inputs['store_id'],
                         'payment_type' => 'cash',
                         'ledger_type' => 'returns',
                         'debit' => $inputs['total_amount'],

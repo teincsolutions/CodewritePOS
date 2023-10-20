@@ -40,6 +40,12 @@ class CreateCustomerLedgerTable extends Migration
                 'unsigned'       => true,
                 'null' => true,
             ],
+            'store_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
+                'null' => true,
+            ],
             'payment_type' => [
                 'type' => 'ENUM',
                 'constraint' => ['cash', 'debit','momo'],
@@ -93,6 +99,7 @@ class CreateCustomerLedgerTable extends Migration
         $forge->addForeignKey('sales_return_id', 'sales_returns', 'id', 'CASCADE', 'CASCADE', 'fk_customer_ledger_sales_return_id');
         $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_customer_ledger_user_id');
         $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'RESTRICT', 'RESTRICT', 'fk_customer_ledger_store_closing_id');
+        $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_customer_ledger_store_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('customer_ledgers', true, $attributes);

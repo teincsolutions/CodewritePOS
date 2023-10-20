@@ -159,6 +159,7 @@ class SalesReturnController extends BaseController
                         'tdate' => $inputs['return_date'],
                         'customer_id' => $inputs['customer_id'],
                         'sale_id' => $inputs['sale_id'],
+                        'store_id' => $inputs['store_id'],
                         'sales_return_id' => $id,
                         'payment_type' => 'cash',
                         'ledger_type' => 'returns',

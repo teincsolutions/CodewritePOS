@@ -83,6 +83,12 @@ class CreateSalesReturnsTable extends Migration
                 'null' => false,
                 'defaut' => 0.00
             ],
+            'store_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
+                'null' => true,
+            ],
             'user_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,
@@ -110,6 +116,7 @@ class CreateSalesReturnsTable extends Migration
         $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_sales_returns_user_id');
         $forge->addForeignKey('sale_id', 'sales', 'id', 'CASCADE', 'CASCADE', 'fk_sales_returns_sale_id');
         $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'RESTRICT', 'RESTRICT', 'fk_sales_returns_store_closing_id');
+        $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_sales_returns_store_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('sales_returns', true, $attributes);

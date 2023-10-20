@@ -16,6 +16,7 @@ class CustomerLedgerModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'tdate',
+        'store_id',
         'sale_id',
         'sales_return_id',
         'customer_id',
