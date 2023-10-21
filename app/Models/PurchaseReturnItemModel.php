@@ -18,6 +18,7 @@ class PurchaseReturnItemModel extends Model
         'unit_cost',
         'unit_price',
         'purchase_return_id',
+        'purchase_item_id',
         'store_id',
         'qty',
         'tax',
@@ -66,8 +67,7 @@ class PurchaseReturnItemModel extends Model
             if ($model['singleton']) {
                 if (isset($model['data']->product_id))
                     $model['data']->product = $prodModel->where('id', $model['data']->product_id)->first();
-                if (isset($model['data']->store_id))
-                    $model['data']->store = $storeModel->where('id', $model['data']->store_id)->first();
+                $model['data']->store = $storeModel->where('id', $model['data']->store_id)->first();
             } else {
                 foreach ($model['data'] as $key => $row) {
                     $model['data'][$key]->product = $prodModel->where('id', $row->product_id)->first();

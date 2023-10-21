@@ -29,7 +29,7 @@ const searchParams = {
 };
 
 prodIndex = prodIndex ? prodIndex : 0;
-  purchaseItemIds = [];
+purchaseItemIds = [];
 (dueTotal = 0), (grandTotal = 0), (supplierBalance = 0);
 
 let form = $(".post-form");
@@ -75,9 +75,9 @@ if (initCompleted) updateTotals();
 function updateItemRow(row) {
   let row1 = $(row).parents("tr").first();
   let data = tableItems.row(row1).data(),
-    qty = parseFloat(row1.find(".quantity-field").val()),
-    price = parseFloat(data[3]),
-    subtotal = qty * price;
+    qty = parseFloat(row1.find(".rqty").val()),
+    cost = parseFloat(row1.find(".runit_cost").val()),
+    subtotal = qty * cost;
   $(".rsubtotal", row1).val(subtotal);
   $("td:eq(4)", row1).html(subtotal.toFixed(2));
   tableItems.draw();
@@ -94,7 +94,7 @@ function updateTotals() {
   grandTotal = 0;
   for (let i = 0; i < tableItems.rows().data().length; i++) {
     const row = $(`tr:eq(${i + 1})`, ".tr-items");
-      (grandTotal += intVal($("td:eq(4)", row).html()));
+    grandTotal += intVal($("td:eq(4)", row).html());
   }
   $(".subTotal").html("GHS " + grandTotal.toFixed(2));
   discountAmtTotal = (orderDiscount / 100) * grandTotal;
@@ -219,7 +219,7 @@ function autocomplete(inp) {
           return;
         } else {
           d.data.forEach((item, i) => {
-            if (purchaseItemIds.includes(item.purchase_item_id)) return;
+            if (purchaseItemIds.includes(item.purchase_item_id) || item.max_qty <= 0) return;
 
             b = document.createElement("DIV");
             info = [];
@@ -263,15 +263,18 @@ function autocomplete(inp) {
                                         <td>
                                         <div class="increment-decrement">
                                             <div class="input-groups">
-                                                <input type='hidden' name="items[${prodIndex}][product_id]" value="${
+                                                <input type='hidden' name="items[${prodIndex}][purchase_item_id]" value="${
+                item.purchase_item_id
+              }">
+              <input type='hidden' name="items[${prodIndex}][product_id]" value="${
                 item.id
               }">
                                                 <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
                 item.unit_cost
-              }">
+              }" class="runit_cost">
               <input type="hidden" name="items[${prodIndex}][unit_price]" value="${
                 item.unit_price
-              }">
+              }" class="runit_price">
                       
                                                 <input type="hidden" name="items[${prodIndex}][store_id]" value="${
                 item.store_id
@@ -282,7 +285,9 @@ function autocomplete(inp) {
                                                 <input type="button" value="-" class="button-minus dec button">
                                                 <input onblur="updateItemRow(this)" min="1" max="${
                                                   item.max_qty
-                                                }" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field" required>
+                                                }" type="text" name="items[${prodIndex}][qty]" value="${
+                item.max_qty
+              }" class="quantity-field rqty" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>

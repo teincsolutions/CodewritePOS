@@ -12,6 +12,8 @@
         <input id="order-status" type="hidden" name="order_status" value="completed">
         <input id="payment-status" type="hidden" name="payment_status" value="paid">
         <input type="hidden" name="payment_type" value="cash">
+        <input type="hidden" name="supplier_id" value="<?= $purchase->supplier_id ?>">
+        <input type="hidden" name="store_id" value="<?= $purchase->store_id ?>">
         <input id="purchases-total" type="hidden" name="total_amount" value="<?= isset($purchase) ? $purchase->total_amount : 0.00 ?>">
         <div class="card">
             <div class="card-body">
@@ -35,7 +37,7 @@
                             </select>
                         </div>
                     </div>
-                   
+
                     <div class="col-lg-2 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Date</label>
@@ -84,7 +86,8 @@
                                     }, $purchase->items);
 
                                     foreach ($purchase->items as $key => $row) :
-                                        if ($row->qty <= 0) continue;
+                                        $row->max_qty  = $row->qty - $row->return_qty;
+                                        if ($row->max_qty <= 0) continue;
                                 ?>
                                         <tr>
                                             <td>
@@ -100,20 +103,20 @@
                                             <td>
                                                 <div class="increment-decrement">
                                                     <div class="input-groups">
-                                                        <input type="button" value="-" class="button-minus dec button">
                                                         <input type='hidden' name="items[<?= $key ?>][product_id]" value="<?= $row->product_id ?>">
-                                                        <input type="hidden" name="items[<?= $key ?>][unit_cost]" value="<?= $row->unit_cost; ?>">
-                                                        <input type="hidden" name="items[<?= $key ?>][unit_price]" value="<?= $row->unit_price; ?>">
-                                                        <input type="hidden" name="items[<?= $key ?>][tax_id]" value="<?= $row->tax_id ?>">
+                                                        <input type='hidden' name="items[<?= $key ?>][purchase_item_id]" value="<?= $row->id ?>">
+                                                        <input type="hidden" name="items[<?= $key ?>][unit_cost]" value="<?= $row->unit_cost; ?>" class="runit_cost">
+                                                        <input type="hidden" name="items[<?= $key ?>][unit_price]" value="<?= $row->unit_price; ?>" class="runit_price">
                                                         <input type="hidden" name="items[<?= $key ?>][store_id]" value="<?= $row->store_id; ?>">
-                                                        <input type="hidden" name="items[<?= $key ?>][subtotal]" class="rsubtotal" value="<?= $row->subtotal ?>">
-                                                        <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" max="<?= $row->qty ?>" value="<?= $row->qty ?>" class="quantity-field" required>
+                                                        <input type="hidden" name="items[<?= $key ?>][subtotal]" class="rsubtotal" value="<?= $row->max_qty * $row->unit_cost ?>">
+                                                        <input type="button" value="-" class="button-minus dec button">
+                                                        <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" max="<?= $row->max_qty ?>" value="<?= $row->max_qty ?>" class="quantity-field rqty" required>
                                                         <input type="button" value="+" class="button-plus inc button">
                                                     </div>
                                                 </div>
                                             </td>
                                             <td><?= $row->unit_cost ?></td>
-                                            <td><?= $row->subtotal ?></td>
+                                            <td><?= number_format($row->max_qty * $row->unit_cost,2,'.','') ?></td>
                                             <td><a href="javascript:void(0);" class="delete-set" data-item-id="<?= $row->id ?>"><i class="fa text-danger fa-trash"></i></a></td>
 
                                         </tr>
@@ -194,7 +197,7 @@
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-purchase-return.js?v=2') ?>"></script>
+<script src="<?= base_url('assets/js/handle-purchase-return.js?v=3') ?>"></script>
 <?php if (isset($purchase) && $purchase->supplier) {
     $supplier = $purchase->supplier;
     $supplier->text = $supplier->name . " (" . ($supplier->address ? $supplier->address : $supplier->phone) . ")";

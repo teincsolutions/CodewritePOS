@@ -80,7 +80,7 @@ class ProductModel extends Model
 
         if (isset($data['data']['unit_price']) && empty($data['data']['unit_price']))
             $data['data']['unit_price'] = 0.00;
-        
+
         if (isset($data['data']['unit_ws_price']) && empty($data['data']['unit_ws_price']))
             $data['data']['unit_ws_price'] = $data['data']['unit_price'];
 
@@ -96,28 +96,30 @@ class ProductModel extends Model
             $stockModel = new StockModel();
             $builder = $stockModel->builder();
             if ($model['singleton']) {
-                if (isset($model['data']->id)) {
-                    $model['data']->inventory = $stockModel->where('product_id',  $model['data']->id)->findAll();
-                    $instock = $builder->selectSum('instock', 'total')
-                        ->where('product_id',  $model['data']->id)
-                        ->get()
-                        ->getRowObject()
-                        ->total;
-                    $model['data']->instock = $instock ?? 0.00;
-                }
+                $model['data']->inventory = $stockModel->where('product_id',  $model['data']->id)->findAll();
+                $instock = $builder->selectSum('instock', 'total')
+                    ->where('product_id',  $model['data']->id)
+                    ->get()
+                    ->getRowObject()
+                    ->total;
+                $model['data']->instock = $instock ?? 0.00;
             } else {
                 $storeModel = new StoreModel();
                 foreach ($model['data'] as $key => $row) {
                     $model['data'][$key]->inventory = $stockModel->where('product_id', $row->id)->findAll();
+                    $where = ['product_id' => $row->id];
+                    if (setting('App.ProductDiffForStore') === 'yes') {
+                        $where = array_merge($where, ['store_id' => $row->store_id]);
+                    }
+                    if (isset($row->store_id))
+                        $model['data'][$key]->store = $storeModel->find($model['data'][$key]->store_id);
+
                     $instock = $builder->selectSum('instock', 'total')
-                        ->where('product_id',  $row->id)
+                        ->where($where)
                         ->get()
                         ->getRowObject()
                         ->total;
                     $model['data'][$key]->instock = $instock ?? 0.00;
-
-                    if (isset($model['data'][$key]->store_id))
-                        $model['data'][$key]->store = $storeModel->find($model['data'][$key]->store_id);
                 }
             }
         }

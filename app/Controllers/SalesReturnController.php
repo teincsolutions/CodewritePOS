@@ -27,7 +27,7 @@ class SalesReturnController extends BaseController
         $storeModel = new StoreModel();
         $data = [
             'title' => 'Sales Return List',
-            'stores' => $storeModel->where('status','opened')->findAll(),
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
         ];
         return view('pages/sales_returns/list_sales_return', $data);
     }
@@ -48,7 +48,7 @@ class SalesReturnController extends BaseController
         $data = [
             'title' => 'Create Sales Return',
             'invoice' => substr((time() + 1000000000) + $lastId, 0, 10),
-            'stores' => $storeModel->where('status','opened')->findAll(),
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
         ];
         $whereInvoice = [
             'invoice' => $invoice,
@@ -57,7 +57,7 @@ class SalesReturnController extends BaseController
         $sales = $saleModel->where($whereInvoice)->first();
         if ($invoice && $sales) {
             $data = array_merge($data, ['sales' => $sales]);
-        } else if($invoice) {
+        } else if ($invoice) {
             $data = array_merge($data, ['error' => "This invoice doesn't exist or not completed!",]);
         }
         return view('pages/sales_returns/edit_sales_return', $data);
@@ -87,10 +87,10 @@ class SalesReturnController extends BaseController
     public function save()
     {
         if (!auth()->user()->can('sales-returns.create'))
-        return $this->response->setJSON([
-            'status' => false,
-            'message' => "Don't have permission to create this record!"
-        ]);
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to create this record!"
+            ]);
 
         $model = new SalesReturnModel();
         $returnItemModel = new SalesReturnItemModel();
@@ -133,8 +133,9 @@ class SalesReturnController extends BaseController
                 $builder = $stockModel->builder();
                 foreach ($items as $k => $row) {
                     $items[$k]['sales_return_id'] = $id;
-                    if (empty($items[$k]['tax_id'])) $items[$k]['tax_id'] = null;
-                    if (is_null($items[$k]['store_id']) || empty($items[$k]['store_id'])) $items[$k]['store_id'] = $inputs['store_id'];
+                    
+                    if (is_null($items[$k]['tax_id']) || empty($items[$k]['tax_id']))
+                        $items[$k]['tax_id'] = null;
 
                     array_push($returnItems, $items[$k]);
                     $stockWhere = [
@@ -154,7 +155,7 @@ class SalesReturnController extends BaseController
                     }
                 }
                 $returnItemModel->insertBatch($returnItems);
-                if ($inputs['customer_id']){
+                if ($inputs['customer_id']) {
                     $ledger->save([
                         'tdate' => $inputs['return_date'],
                         'customer_id' => $inputs['customer_id'],

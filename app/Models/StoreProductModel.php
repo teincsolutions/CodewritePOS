@@ -102,14 +102,14 @@ class StoreProductModel extends Model
         return $result ?? 0.00;
     }
 
-    public function getUnitQty($productId, $storeId): float
+    public function getMinQty($productId, $storeId): float
     {
         $result = $this->where([
             'product_id' => $productId,
             'store_id' => $storeId
         ])
             ->first()
-            ->unit_qty;
+            ->min_qty;
 
         return $result ?? 0.00;
     }

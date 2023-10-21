@@ -133,6 +133,14 @@
                         </div>
                     </div>
                 <?php endif ?>
+                <?php if (setting('App.UsePurchaseDiscount') === 'yes') : ?>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Purchase Discount</label>
+                            <input type="number" name="pdiscount" step="any" class="form-control" value="<?= isset($product) ? $product->pdiscount : "0.00" ?>" placeholder="Purchase Discount">
+                        </div>
+                    </div>
+                <?php endif ?>
                 <?php if (setting('App.ProductDiffForStore') === 'yes') : ?>
                     <div class="col-lg-12">
                         <?php foreach ($stores as $key => $row) : ?>
@@ -163,13 +171,13 @@
                                 <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label>Min. Quantity</label>
-                                        <input type="number" name="items[<?= $key ?>][min_qty]" class="form-control" value="<?= isset($product) ? model('StoreProductModel')->getUnitQty($product->id, $row->id) : 10 ?>" placeholder="Minimum quantity">
+                                        <input type="number" name="items[<?= $key ?>][min_qty]" class="form-control" value="<?= isset($product) ? model('StoreProductModel')->getMinQty($product->id, $row->id) : 10 ?>" placeholder="Minimum quantity">
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label>Sales Discount</label>
-                                        <input type="number" name="discount" step="any" class="form-control" value="<?= isset($product) ? model('StoreProductModel')->getDiscount($product->id, $row->id) : "0.00" ?>" placeholder="Discount amount">
+                                        <input type="number" name="items[<?= $key ?>][discount]" step="any" class="form-control" value="<?= isset($product) ? model('StoreProductModel')->getDiscount($product->id, $row->id) : "0.00" ?>" placeholder="Discount amount">
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-sm-6 col-12">

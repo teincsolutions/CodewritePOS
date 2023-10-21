@@ -11,6 +11,7 @@
         <?= csrf_field() ?>
         <input id="order-status" type="hidden" name="order_status" value="completed">
         <input id="payment-status" type="hidden" name="payment_status" value="paid">
+        <input type="hidden" name="store_id" value="<?= isset($sales) ? $sales->store_id : '' ?>">
         <input id="sales-total" type="hidden" name="total_amount" value="<?= isset($sales) ? $sales->total_amount : 0.00 ?>">
         <div class="card">
             <div class="card-body">
@@ -37,12 +38,8 @@
                     <div class="col-lg-4 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Customer</label>
-                            <select name="customer_id" class="select">
-                                <?php if (isset($sales) && $sales->customer_id) : ?>
-                                    <option value="<?= $sales->customer_id ?>" selected><?= $sales->customer->name ?></option>
-                                <?php else : ?>
-                                    <option value="" selected>walk-in-customer</option>
-                                <?php endif ?>
+                            <select name="customer_id" class="select2-customer">
+                                <option value=""></option>
                             </select>
                         </div>
                     </div>
@@ -96,7 +93,8 @@
                                     }, $sales->items);
 
                                     foreach ($sales->items as $key => $row) :
-                                        if ($row->qty <= 0) continue;
+                                        $row->max_qty  = $row->qty - $row->return_qty;
+                                        if ($row->max_qty <= 0) continue;
                                 ?>
                                         <tr>
                                             <td>
@@ -113,15 +111,16 @@
                                                 <div class="increment-decrement">
                                                     <div class="input-groups">
                                                         <input type='hidden' name="items[<?= $key ?>][product_id]" value="<?= $row->product_id ?>">
+                                                        <input type='hidden' name="items[<?= $key ?>][sale_item_id]" value="<?= $row->id ?>">
                                                         <input type="hidden" name="items[<?= $key ?>][unit_price]" value="<?= $row->unit_price; ?>" class="runit_price">
                                                         <input type="hidden" name="items[<?= $key ?>][unit_cost]" value="<?= $row->unit_cost; ?>" class="runit_cost">
                                                         <input type="hidden" name="items[<?= $key ?>][tax_id]" value="<?= $row->tax_id ?>">
                                                         <input type="hidden" name="items[<?= $key ?>][store_id]" value="<?= $row->store_id; ?>">
                                                         <input type="hidden" name="items[<?= $key ?>][tax]" value="<?= $row->tax ?>" class="rtax">
                                                         <input type="hidden" name="items[<?= $key ?>][discount]" value="<?= $row->discount ?>" class="rdiscount">
-                                                        <input type="hidden" name="items[<?= $key ?>][subtotal]" value="<?= $row->subtotal ?>" class="rsubtotal">
+                                                        <input type="hidden" name="items[<?= $key ?>][subtotal]" value="<?= $row->unit_price * $row->max_qty + $row->unit_price * ($row->tax / 100) * $row->max_qty + $row->discount * $row->max_qty ?>" class="rsubtotal">
                                                         <input type="button" value="-" class="button-minus dec button">
-                                                        <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" max="<?= $row->qty ?>" value="<?= $row->qty ?>" class="quantity-field rqty" required>
+                                                        <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" max="<?= $row->max_qty ?>" value="<?= $row->max_qty ?>" class="quantity-field rqty" required>
                                                         <input type="button" value="+" class="button-plus inc button">
                                                     </div>
                                                 </div>
@@ -129,9 +128,8 @@
                                             <td><?= $row->unit_price ?></td>
                                             <td><?= $row->discount ?></td>
                                             <td class="suffix-percent"><?= number_format($row->tax, 2) ?></td>
-                                            <td><?= number_format($row->subtotal, 2) ?></td>
+                                            <td><?= number_format($row->unit_price * $row->max_qty + $row->unit_price * ($row->tax / 100) * $row->max_qty + $row->discount * $row->max_qty, 2, '.', '') ?></td>
                                             <td><a href="javascript:void(0);" class="delete-set" data-item-id="<?= $row->id ?>"><i class="fa text-danger fa-trash"></i></a></td>
-
                                         </tr>
                                 <?php endforeach;
                                 endif ?>

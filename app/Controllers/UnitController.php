@@ -4,10 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\UnitModel;
-use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
 
 class UnitController extends BaseController
 {

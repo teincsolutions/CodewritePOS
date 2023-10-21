@@ -24,6 +24,7 @@ use App\Controllers\StoreController;
 use App\Controllers\StoreLedgerController;
 use App\Controllers\SupplierController;
 use App\Controllers\SupplierLedgerController;
+use App\Controllers\TaxController;
 use App\Controllers\UnitController;
 use App\Controllers\UserController;
 use CodeIgniter\Router\RouteCollection;
@@ -76,6 +77,7 @@ $routes->get('stores', [StoreController::class, 'index'], ['filter' => 'permissi
 $routes->get('suppliers', [SupplierController::class, 'index'], ['filter' => 'permission:suppliers.view']);
 $routes->get('account-debts/suppliers', [SupplierLedgerController::class, 'supplier_debts'], ['filter' => 'permission:supplier-ledgers.view']);
 $routes->get('units', [UnitController::class, 'index'], ['filter' => 'permission:units.view']);
+$routes->get('taxes', [TaxController::class, 'index']);
 $routes->get('closing', [ClosingController::class, 'index'], ['filter' => 'permission:closing.view']);
 
 //shows
@@ -144,6 +146,7 @@ $routes->get('customers/debtors/datatable', [CustomerLedgerController::class, 'd
 $routes->get('expenses/categories/datatable', [ExpenseCategoryController::class, 'datatable']);
 $routes->get('expenses/datatable', [ExpenseController::class, 'datatable']);
 $routes->get('products/datatable', [ProductController::class, 'datatable']);
+$routes->get('products/expired/datatable', [ProductController::class, 'expired_datatable']);
 $routes->get('instock/datatable', [InventoryController::class, 'instock_datatable']);
 $routes->get('short-stock/datatable', [InventoryController::class, 'short_stock_datatable']);
 $routes->get('outofstock/datatable', [InventoryController::class, 'outofstock_datatable']);

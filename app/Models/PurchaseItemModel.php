@@ -63,16 +63,23 @@ class PurchaseItemModel extends Model
         if ($model && $model['data']) {
             $prodModel = new ProductModel();
             $storeModel = new StoreModel();
+            $returnItemModel = new PurchaseReturnItemModel();
 
             if ($model['singleton']) {
-                if (isset($model['data']->product_id))
-                    $model['data']->product = $prodModel->where('id', $model['data']->product_id)->first();
-                if (isset($model['data']->store_id))
-                    $model['data']->store = $storeModel->where('id', $model['data']->store_id)->first();
+                $model['data']->product = $prodModel->where('id', $model['data']->product_id)->first();
+                $model['data']->store = $storeModel->where('id', $model['data']->store_id)->first();
+                $model['data']->return_qty = $returnItemModel->builder()
+                    ->selectSum('qty', 'total')
+                    ->where('purchase_item_id',  $model['data']->id)
+                    ->get()->getFirstRow()->total;
             } else {
                 foreach ($model['data'] as $key => $row) {
                     $model['data'][$key]->product = $prodModel->where('id', $row->product_id)->first();
                     $model['data'][$key]->store = $storeModel->where('id', $row->store_id)->first();
+                    $model['data'][$key]->return_qty = $returnItemModel->builder()
+                        ->selectSum('qty', 'total')
+                        ->where('purchase_item_id', $row->id)
+                        ->get()->getFirstRow()->total;
                 }
             }
         }

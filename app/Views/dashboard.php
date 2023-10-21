@@ -222,7 +222,7 @@
                                             <a href="<?= site_url('products/' . $row->id) ?>" class="product-img">
                                                 <img src="<?= $row->image_uri ? base_url($row->image_uri) : base_url('assets/images/noimage.png') ?>" alt="product">
                                             </a>
-                                            <a href="<?= site_url('products/' . $row->id) ?>"><?= $row->name; ?> <?= $row->brand ? "(".$row->brand->name.")" : ''; ?></a>
+                                            <a href="<?= site_url('products/' . $row->id) ?>"><?= $row->name; ?> <?= $row->brand ? "(" . $row->brand->name . ")" : ''; ?></a>
                                         </td>
                                         <td>GHS <?= $row->unit_price; ?></td>
                                     </tr>
@@ -234,24 +234,30 @@
             </div>
         </div>
     </div>
-    <div class="card mb-0">
-        <div class="card-body">
-            <h4 class="card-title">Expired Products</h4>
-            <div class="table-responsive dataview">
-                <table class="table datatable ">
-                    <thead>
-                        <tr>
-                            <th>SNo</th>
-                            <th>Product Code</th>
-                            <th>Product Name</th>
-                            <th>Brand Name</th>
-                            <th>Category Name</th>
-                            <th>Expiry Date</th>
-                        </tr>
-                    </thead>
-                </table>
+    <?php if (setting('App.UseExpiration') === 'yes') : ?>
+        <div class="card mb-0">
+            <div class="card-body">
+                <h4 class="card-title">Expired Products</h4>
+                <div class="table-responsive dataview">
+                    <table id="dt-expired-products" class="table w-100">
+                        <thead>
+                            <tr>
+                                <th>SNo</th>
+                                <th>Product Code</th>
+                                <th>Product Name</th>
+                                <th>Brand Name</th>
+                                <th>Category Name</th>
+                                <th>Expiry Date</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    <?php endif ?>
 </div>
+<?= $this->endSection() ?>
+
+<?= $this->section('script') ?>
+<script src="<?= base_url('assets/js/datatables/expired-products.js') ?>"></script>
 <?= $this->endSection() ?>

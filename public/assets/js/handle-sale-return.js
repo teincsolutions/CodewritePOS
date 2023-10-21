@@ -29,7 +29,7 @@ const searchParams = {
 };
 
 prodIndex = prodIndex ? prodIndex : 0;
-  saleItemIds = [];
+saleItemIds = [];
 (dueTotal = 0), (grandTotal = 0), (customerBalance = 0);
 
 let form = $(".post-form");
@@ -74,18 +74,15 @@ if (initCompleted) updateTotals();
 
 function updateItemRow(row) {
   let row1 = $(row).parents("tr").first();
-  let data = tableItems.row(row1).data(),
-    qty = parseFloat(row1.find(".quantity-field").val()),
-    price = parseFloat(data[3]),
-    discount = parseFloat($("td:eq(4)", row1).data("discount")),
-    tax = parseFloat($("td:eq(5)", row1).data("tax")),
-    subtotal = qty * price + (tax / 100) * price * qty - qty * discount;
-
-  $(".rtax", row1).val((tax / 100) * qty * price);
+  (qty = parseFloat(row1.find(".rqty").val())),
+    (price = parseFloat(row1.find(".runit_price").val())),
+    (discount = parseFloat(row1.find(".rdiscount").val())),
+    (tax = parseFloat(row1.find(".rtax").val())),
+    (subtotal = qty * price + (tax / 100) * price * qty - qty * discount);
   $(".rsubtotal", row1).val(subtotal);
-  $(".rdiscount", row1).val(qty * discount);
-  $("td:eq(5)", row1).html(((tax / 100) * qty * price).toFixed(2));
-  $("td:eq(4)", row1).html((qty * discount).toFixed(2));
+  $("td:eq(3)", row1).html(price.toFixed(2));
+  $("td:eq(4)", row1).html(discount.toFixed(2));
+  $("td:eq(5)", row1).html(tax.toFixed(2));
   $("td:eq(6)", row1).html(subtotal.toFixed(2));
   tableItems.draw();
 }
@@ -95,23 +92,29 @@ function updateTotals() {
     discountAmtTotal = 0;
   (taxTotal = 0),
     (taxAmtTotal = 0),
+    (amountTotal = 0),
     (shipping = intVal($("[name='shipping']").val())),
     (orderDiscount = intVal($("[name='discount']").val())),
     (orderTax = intVal($("[name='tax']").val()));
   grandTotal = 0;
   for (let i = 0; i < tableItems.rows().data().length; i++) {
     const row = $(`tr:eq(${i + 1})`, ".tr-items");
-    (discountTotal += intVal($("td:eq(4)", row).html())),
-      (taxTotal += intVal($("td:eq(5)", row).html())),
+    (qty = intVal($(".rqty", row).val())),
+      (amountTotal += intVal($(".runit_price", row).val()) * qty),
+      (discountTotal += intVal($(".rdiscount", row).val()) * qty),
+      (taxTotal += intVal($(".rtax", row).val())),
       (taxAmtTotal +=
-        intVal($("td:eq(5)", row).html()) * intVal($("td:eq(3)", row).html())),
-      (grandTotal += intVal($("td:eq(6)", row).html()));
+        (intVal($(".rtax", row).val()) / 100) *
+        intVal($(".runit_price", row).val()) *
+        qty),
+      (grandTotal += intVal($(".rsubtotal", row).val()));
   }
   $(".subTotal").html("GHS " + grandTotal.toFixed(2));
-  discountAmtTotal = (orderDiscount / 100) * grandTotal;
+  orderDiscountAmt = (orderDiscount / 100) * grandTotal;
   taxTotal += orderTax;
-  discountTotal += discountAmtTotal;
+  discountTotal += orderDiscountAmt;
   grandTotal += (orderTax / 100) * grandTotal;
+  taxAmtTotal += (orderTax / 100) * grandTotal;
   grandTotal += shipping;
   grandTotal -= discountAmtTotal;
   dueTotal = grandTotal + customerBalance;
@@ -123,7 +126,6 @@ function updateTotals() {
   $(".orderTaxes").html(
     "GHS " + taxAmtTotal.toFixed(2) + " (" + taxTotal.toFixed(2) + "%)"
   );
-
   $(".dueTotal").html(
     "GHS " +
       (dueTotal < 0
@@ -131,8 +133,9 @@ function updateTotals() {
         : dueTotal.toFixed(2))
   );
   if (dueTotal > 0) $("#paid").val(dueTotal);
-  else $("#paid").val(0.0);
+  else $("#paid").val(0);
 }
+
 function printInvoice(result) {
   Swal.fire({
     html: result.receipt,
@@ -168,6 +171,7 @@ function checkout() {
     type.val("walk-in-customer");
   } else {
     type.val("customer");
+    customerBalance = dueTotal;
   }
   return true;
 }
@@ -236,7 +240,8 @@ function autocomplete(inp) {
           return;
         } else {
           d.data.forEach((item, i) => {
-            if (saleItemIds.includes(item.sale_item_id)) return;
+            if (saleItemIds.includes(item.sale_item_id) || item.max_qty <= 0)
+              return;
 
             b = document.createElement("DIV");
             info = [];
@@ -283,12 +288,15 @@ function autocomplete(inp) {
                                                 <input type='hidden' name="items[${prodIndex}][product_id]" value="${
                 item.id
               }">
+              <input type='hidden' name="items[${prodIndex}][sale_item_id]" value="${
+                item.sale_item_id
+              }">
                                                 <input type="hidden" name="items[${prodIndex}][unit_price]" value="${
                 item.unit_price
-              }">
+              }" class="runit_price">
               <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
                 item.unit_cost
-              }">
+              }" class="runit_cost">
                                                 <input type="hidden" name="items[${prodIndex}][tax_id]" value="${
                 item.tax_id ? item.tax_id : ""
               }">
@@ -309,7 +317,7 @@ function autocomplete(inp) {
                                                 <input type="button" value="-" class="button-minus dec button">
                                                 <input onblur="updateItemRow(this)" min="1" max="${
                                                   item.max_qty
-                                                }" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field" required>
+                                                }" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field rqty" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>
@@ -446,7 +454,8 @@ form.on("submit", function (e) {
             $("#order-id").html(parseInt(d.data.invoice) + 1);
             tableItems.clear().draw();
             saleItemIds = [];
-            $(".select2-customer").val(null).trigger("select2:unselect");
+            $(".select2-customer").val("");
+            $(".select2-customer").trigger("select2:unselect change");
             $("select").trigger("change");
             updateTotals();
           }
@@ -468,10 +477,6 @@ form.on("submit", function (e) {
 });
 let select2Customer = $(".select2-customer")
   .select2({
-    ajax: {
-      url: `${baseUrl}customers/select2`,
-      dataType: "json",
-    },
     placeholder: "walk-in-customer",
     templateResult: formatCustomer,
     templateSelection: formatCustomer,

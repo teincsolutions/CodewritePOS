@@ -18,6 +18,7 @@ class SalesReturnItemModel extends Model
         'unit_price',
         'unit_cost',
         'sales_return_id',
+        'sale_item_id',
         'store_id',
         'qty',
         'tax',
@@ -64,10 +65,8 @@ class SalesReturnItemModel extends Model
             $storeModel = new StoreModel();
 
             if ($model['singleton']) {
-                if (isset($model['data']->product_id))
-                    $model['data']->product = $prodModel->where('id', $model['data']->product_id)->first();
-                if (isset($model['data']->store_id))
-                    $model['data']->store = $storeModel->where('id', $model['data']->store_id)->first();
+                $model['data']->product = $prodModel->where('id', $model['data']->product_id)->first();
+                $model['data']->store = $storeModel->where('id', $model['data']->store_id)->first();
             } else {
                 foreach ($model['data'] as $key => $row) {
                     $model['data'][$key]->product = $prodModel->where('id', $row->product_id)->first();

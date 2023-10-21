@@ -23,7 +23,7 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-        params.store_id = $('.select2-store').val();
+        params.store_id = $(".select2-store").val();
 
         params.fields = filter;
       },
@@ -112,14 +112,20 @@ $(function () {
         name: "products.discontinued",
         render: function (data, type, row) {
           if (type === "display") {
-            return `<label class="checkboxs"><input type="checkbox"
+            if (Settings.ProductDiffForStore === "yes") {
+              return `<label class="checkboxs"><input disabled type="checkbox" ${
+                ["", "checked"][data]
+              }><span class="checkmarks"></span></label>`;
+            } else {
+              return `<label class="checkboxs"><input type="checkbox"
                         ${
                           ["", "checked"][data]
                         }><span onclick="updateRow(table,{id:${
-              row.id
-            },discontinued:${
-              data == 0 ? 1 : 0
-            }},'${baseUrl}products')" class="checkmarks"></span></label>`;
+                row.id
+              },discontinued:${
+                data == 0 ? 1 : 0
+              }},'${baseUrl}products')" class="checkmarks"></span></label>`;
+            }
           }
           return data;
         },
@@ -212,6 +218,6 @@ $(function () {
     table.ajax.reload();
   });
   $(".select2-store").select2({
-    placeholder: "Seach a store"
+    placeholder: "Seach a store",
   });
 });

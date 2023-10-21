@@ -35,6 +35,12 @@ class CreatePurchaseReturnItemsTable extends Migration
                 'unsigned'  => true,
                 'null' => true,
             ],
+            'purchase_item_id' => [
+                'type'       => 'BIGINT',
+                'constraint' => 18,
+                'unsigned'  => true,
+                'null' => true,
+            ],
             'unit_cost' => [
                 'type'       => 'DECIMAL',
                 'constraint' => "32,2",
@@ -82,6 +88,7 @@ class CreatePurchaseReturnItemsTable extends Migration
         $forge->addPrimaryKey('id');
         $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_purchase_returns_items_store_id');
         $forge->addForeignKey('purchase_return_id', 'purchase_returns', 'id', 'CASCADE', 'CASCADE', 'fk_purchase_returns_items_purchase_return_id');
+        $forge->addForeignKey('purchase_item_id', 'purchase_items', 'id', 'CASCADE', 'CASCADE', 'fk_purchase_returns_items_purchase_item_id');
         $forge->addForeignKey('product_id', 'products', 'id', 'RESTRICT', 'RESTRICT', 'fk_purchase_returns_items_product_id');
         $forge->addForeignKey('tax_id', 'taxes', 'id', 'RESTRICT', 'RESTRICT', 'fk_purchase_return_item_tax_id');
 
