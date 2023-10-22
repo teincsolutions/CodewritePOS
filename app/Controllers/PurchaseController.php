@@ -384,7 +384,7 @@ class PurchaseController extends BaseController
             ->groupBy('purchases.id');
 
         return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) {
-            $item->customer = model('SupplierModel')->where('id', $item->supplier_id)->first();
+            $item->supplier = model('SupplierModel')->where('id', $item->supplier_id)->first();
             $item->store = model('StoreModel')->where('id', $item->store_id)->first();
             return $item;
         }));
