@@ -167,6 +167,30 @@ class AdjustmentController extends BaseController
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
+       /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function stock_report_datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new StockAdjustmentModel();
+        $builder = $model->builder();
+        $builder->select('stock_adjustments.*')
+            ->selectSum('adjustments_items.qty', 'qty')
+            ->selectSum('adjustments_items.instock_qty', 'instockQty')
+            ->selectSum('(adjustments_items.qty - adjustments_items.instock_qty)', 'diffQty')
+            ->join('adjustments_items', 'adjustments_items.adjustment_id=stock_adjustments.id')
+            ->where('product_id', $inputs['product_id'] ?? '')
+            ->groupBy('stock_adjustments.id');
+
+        return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) {
+            $item->store = model('StoreModel')->where('id', $item->store_id)->first();
+            return $item;
+        }));
+    }
+
+
     /**
      * return json for delete
      * @return Response - http response

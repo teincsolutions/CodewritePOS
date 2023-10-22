@@ -375,6 +375,18 @@ $(document).ready(function () {
   $(document).on("click", "#filter_search2", function () {
     $("#filter_inputs2").slideToggle("slow");
   });
+  $(document).on("click", "#filter_search3", function () {
+    $("#filter_inputs3").slideToggle("slow");
+  });
+  $(document).on("click", "#filter_search4", function () {
+    $("#filter_inputs4").slideToggle("slow");
+  });
+  $(document).on("click", "#filter_search5", function () {
+    $("#filter_inputs5").slideToggle("slow");
+  });
+  $(document).on("click", "#filter_search6", function () {
+    $("#filter_inputs6").slideToggle("slow");
+  });
   $(document).on("click", "#filter_search", function () {
     $("#filter_search").toggleClass("setclose");
   });

@@ -367,6 +367,29 @@ class PurchaseController extends BaseController
         return $this->response->setJSON(toBuilderDatatableResult($model->getDailyWalkinReport(), $inputs));
     }
 
+     /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function stock_report_datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new PurchaseModel();
+        $builder = $model->builder();
+        $builder->select('purchases.*')
+            ->selectSum('purchase_items.qty', 'qty')
+            ->join('purchase_items', 'purchase_items.purchase_id=purchases.id')
+            ->where('product_id', $inputs['product_id'] ?? '')
+                 ->where('order_status', 'completed')
+            ->groupBy('purchases.id');
+
+        return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) {
+            $item->customer = model('SupplierModel')->where('id', $item->supplier_id)->first();
+            $item->store = model('StoreModel')->where('id', $item->store_id)->first();
+            return $item;
+        }));
+    }
+
     /**
      * return json for delete
      * @return Response - http response

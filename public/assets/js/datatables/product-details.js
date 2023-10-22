@@ -4,7 +4,7 @@ $(function () {
   table = $("#dt-stocks,#dt-store-products").DataTable({
     bFilter: true,
     pageLegth:25,
-    dom: "fBti",
+    dom: "Bti",
     buttons: [
       {
         extend: "print",

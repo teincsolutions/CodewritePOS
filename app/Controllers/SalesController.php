@@ -35,7 +35,7 @@ class SalesController extends BaseController
         return view('pages/sales/list_sales', $data);
     }
 
-     /**
+    /**
      * return view for list
      * @return Response - http response
      */
@@ -368,6 +368,29 @@ class SalesController extends BaseController
         $model = new SalesModel();
 
         return $this->response->setJSON(toBuilderDatatableResult($model->getDailyWalkinReport(), $inputs));
+    }
+
+    /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function stock_report_datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new SalesModel();
+        $builder = $model->builder();
+        $builder->select('sales.*')
+            ->selectSum('sales_items.qty', 'qty')
+            ->join('sales_items', 'sales_items.sale_id=sales.id')
+            ->where('product_id', $inputs['product_id'] ?? '')
+                 ->where('order_status', 'completed')
+            ->groupBy('sales.id');
+
+        return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) {
+            $item->customer = model('CustomerModel')->where('id', $item->customer_id)->first();
+            $item->store = model('StoreModel')->where('id', $item->store_id)->first();
+            return $item;
+        }));
     }
 
 

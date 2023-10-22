@@ -211,6 +211,31 @@ class PurchaseReturnController extends BaseController
         return $this->response->setJSON(toDatatableResult($model, $inputs, ));
     }
 
+       /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function stock_report_datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new PurchaseReturnModel();
+        $builder = $model->builder();
+        $builder->select('purchase_returns.*')
+            ->selectSum('purchase_returns_items.qty', 'qty')
+            ->join('purchase_returns_items', 'purchase_returns_items.purchase_return_id=purchase_returns.id')
+            ->join('purchases', 'purchases.id=purchase_returns.purchase_id')
+            ->where('product_id', $inputs['product_id'] ?? '')
+            ->where('purchase_returns.order_status', 'completed')
+            ->groupBy('purchase_returns.id');
+
+        return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) {
+            $item->supplier = model('SupplierModel')->where('id', $item->supplier_id)->first();
+            $item->store = model('StoreModel')->where('id', $item->store_id)->first();
+            return $item;
+        }));
+    }
+
+
     /**
      * return json for delete
      * @return Response - http response

@@ -133,7 +133,7 @@ class SalesReturnController extends BaseController
                 $builder = $stockModel->builder();
                 foreach ($items as $k => $row) {
                     $items[$k]['sales_return_id'] = $id;
-                    
+
                     if (is_null($items[$k]['tax_id']) || empty($items[$k]['tax_id']))
                         $items[$k]['tax_id'] = null;
 
@@ -203,6 +203,30 @@ class SalesReturnController extends BaseController
         $model->select('sales_returns.*');
         $model->join('sales', 'sales.id=sales_returns.sale_id');
         return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+    /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function stock_report_datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new SalesReturnModel();
+        $builder = $model->builder();
+        $builder->select('sales_returns.*')
+            ->selectSum('sales_returns_items.qty', 'qty')
+            ->join('sales_returns_items', 'sales_returns_items.sales_return_id=sales_returns.id')
+            ->join('sales', 'sales.id=sales_returns.sale_id')
+            ->where('product_id', $inputs['product_id'] ?? '')
+            ->where('sales_returns.order_status', 'completed')
+            ->groupBy('sales_returns.id');
+
+        return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) {
+            $item->customer = model('CustomerModel')->where('id', $item->customer_id)->first();
+            $item->store = model('StoreModel')->where('id', $item->store_id)->first();
+            return $item;
+        }));
     }
 
     /**

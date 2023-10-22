@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="<?= base_url('assets/css/plugins/datatables.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/plugins/owl.carousel.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/plugins/font-awesome/all.min.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/style.css?v=1') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/search.css') ?>">
     <?= $this->renderSection('link') ?>
     <script>

@@ -187,6 +187,29 @@ class ProductTransferController extends BaseController
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
+        /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function stock_report_datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new ProductTransferModel();
+        $builder = $model->builder();
+        $builder->select('product_transfers.*')
+            ->selectSum('product_transfer_items.qty', 'qty')
+            ->join('product_transfer_items', 'product_transfer_items.product_transfer_id=product_transfers.id')
+            ->where('product_id', $inputs['product_id'] ?? '')
+                 ->where('order_status', 'completed')
+            ->groupBy('product_transfers.id');
+
+        return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) {
+            $item->toStore = model('StoreModel')->where('id', $item->to_store_id)->first();
+            $item->fromStore = model('StoreModel')->where('id', $item->from_store_id)->first();
+            return $item;
+        }));
+    }
+
     /**
      * return json for delete
      * @return Response - http response

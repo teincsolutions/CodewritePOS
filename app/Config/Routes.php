@@ -49,6 +49,9 @@ $routes->group('settings', static function (RouteCollection $routes) {
 $routes->group('reports', static function (RouteCollection $routes) {
     $routes->get('sales', [SalesController::class, 'daily_report']);
     $routes->get('purchases', [PurchaseController::class, 'daily_report']);
+    $routes->get('stocks', [InventoryController::class, 'stock_report']);
+    $routes->get('stocks/product/(:num)', [InventoryController::class, 'view_stock_report']);
+    $routes->get('stocks/datatable', [InventoryController::class, 'stock_report_datatable']);
 });
 
 //indexs
@@ -138,6 +141,7 @@ $routes->get('cashup', [StoreLedgerController::class, 'edit'],['filter'=>'permis
 //datatables
 $routes->get('users/datatable', [UserController::class, 'datatable']);
 $routes->get('adjustments/datatable', [AdjustmentController::class, 'datatable']);
+$routes->get('adjustments/reports/datatable', [AdjustmentController::class, 'stock_report_datatable']);
 $routes->get('brands/datatable', [BrandController::class, 'datatable']);
 $routes->get('categories/datatable', [CategoryController::class, 'datatable']);
 $routes->get('customers/datatable', [CustomerController::class, 'datatable']);
@@ -151,14 +155,20 @@ $routes->get('instock/datatable', [InventoryController::class, 'instock_datatabl
 $routes->get('short-stock/datatable', [InventoryController::class, 'short_stock_datatable']);
 $routes->get('outofstock/datatable', [InventoryController::class, 'outofstock_datatable']);
 $routes->get('transfers/products/datatable', [ProductTransferController::class, 'datatable']);
+$routes->get('transfers/products/reports/datatable', [ProductTransferController::class, 'stock_report_datatable']);
 $routes->get('transfers/units/datatable', [ProductUnitTransferController::class, 'datatable']);
 $routes->get('purchases/datatable', [PurchaseController::class, 'datatable']);
 $routes->get('purchases/returns/datatable', [PurchaseReturnController::class, 'datatable']);
+$routes->get('purchases/stocks/datatable', [PurchaseController::class, 'stock_report_datatable']);
+$routes->get('purchases/returns/stocks/datatable', [PurchaseReturnController::class, 'stock_report_datatable']);
 $routes->get('quotes/datatable', [QuoteController::class, 'datatable']);
+$routes->get('quotes/stocks/datatable', [QuoteController::class, 'stock_report_datatable']);
 $routes->get('sales/datatable', [SalesController::class, 'datatable']);
 $routes->get('daily-sales/datatable', [SalesController::class, 'daily_datatable']);
 $routes->get('daily-purchases/datatable', [PurchaseController::class, 'daily_datatable']);
 $routes->get('sales/returns/datatable', [SalesReturnController::class, 'datatable']);
+$routes->get('sales/stocks/datatable', [SalesController::class, 'stock_report_datatable']);
+$routes->get('sales/returns/stocks/datatable', [SalesReturnController::class, 'stock_report_datatable']);
 $routes->get('stores/datatable', [StoreController::class, 'datatable']);
 $routes->get('suppliers/datatable', [SupplierController::class, 'datatable']);
 $routes->get('suppliers/ledger/datatable', [SupplierLedgerController::class, 'datatable']);

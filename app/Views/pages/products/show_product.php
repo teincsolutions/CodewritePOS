@@ -21,9 +21,9 @@
                 <div class="card-body">
                     <?php if ($product->barcode) : ?>
                         <div class="bar-code-view">
-                            <img src="" alt="barcode">
+                            <div id="barcode"><svg id="code128"></svg></div>
                             <a class="printimg">
-                                <img src="" alt="print">
+                                <i class="fa fa-print fa-lg"></i>
                             </a>
                         </div>
                     <?php endif; ?>
@@ -185,4 +185,23 @@
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/product-details.js?v=1') ?>"></script>
+<?php if ($product->barcode && !empty($product->barcode)) : ?>
+    <script src="<?= base_url('assets/js/plugins/barcode.js') ?>"></script>
+    <script>
+        JsBarcode("#code128", "<?= $product->barcode ?>");
+
+        $(() => {
+            $('.printimg').on('click', () => {
+                const newWin = window.open("", "<?= $product->barcode ?> <?= $product->name ?>",
+                    "left=0,top=0,toolbar=0,scrollbars=0,status=0");
+                newWin.document.write($('#barcode').html());
+                newWin.focus();
+                setTimeout(() => {
+                    newWin.print();
+                    newWin.close();
+                }, 300);
+            });
+        })
+    </script>
+<?php endif ?>
 <?= $this->endSection() ?>
