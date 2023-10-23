@@ -14,7 +14,7 @@ class AuthGroups extends ShieldAuthGroups
      * --------------------------------------------------------------------
      * The group that a newly registered user is added to.
      */
-    public string $defaultGroup = 'developer';
+    public string $defaultGroup = '';
 
     /**
      * --------------------------------------------------------------------
@@ -97,6 +97,12 @@ class AuthGroups extends ShieldAuthGroups
         'products.delete'        => 'Can delete existing products',
         'products.import'        => 'Can import new products',
 
+        'containers.view'        => 'Can view containers',
+        'containers.create'        => 'Can add new containers',
+        'containers.edit'          => 'Can edit containers',
+        'containers.delete'        => 'Can delete existing containers',
+        'containers.import'        => 'Can import new containers',
+
         'product-transfers.view'        => 'Can view product transfers',
         'product-transfers.create'        => 'Can add new product transfers',
         'product-transfers.edit'          => 'Can edit product transfers',
@@ -178,11 +184,23 @@ class AuthGroups extends ShieldAuthGroups
         'adjustments.delete'        => 'Can delete existing adjustments',
         'adjustments.report'        => 'Can access adjustments reports',
 
+        'container-adjustments.view'        => 'Can view container adjustments',
+        'container-adjustments.create'        => 'Can add new container adjustments',
+        'container-adjustments.edit'          => 'Can edit container adjustments',
+        'container-adjustments.delete'        => 'Can delete existing container adjustments',
+        'container-adjustments.report'        => 'Can access container adjustments reports',
+
         'stocks.view'        => 'Can view stocks',
         'stocks.create'        => 'Can add new stocks',
         'stocks.edit'          => 'Can edit stocks',
         'stocks.delete'        => 'Can delete existing stocks',
         'stocks.report'        => 'Can access stocks reports',
+
+        'container-stocks.view'        => 'Can view container stocks',
+        'container-stocks.create'        => 'Can add new container stocks',
+        'container-stocks.edit'          => 'Can edit container stocks',
+        'container-stocks.delete'        => 'Can delete existing container stocks',
+        'container-stocks.report'        => 'Can access container stocks reports',
 
         'closing.view'        => 'Can view closings',
         'closing.create'        => 'Can create closing report',
@@ -205,6 +223,7 @@ class AuthGroups extends ShieldAuthGroups
         'suppliers.*' => 'Has full control',
         'stores.*' => 'Has full control',
         'products.*' => 'Has full control',
+        'containers.*' => 'Has full control',
         'brands.*' => 'Has full control',
         'categories.*' => 'Has full control',
         'units.*' => 'Has full control',
@@ -220,14 +239,17 @@ class AuthGroups extends ShieldAuthGroups
         'sales-returns.*' => 'Has full control',
         'quotes.*' => 'Has full control',
         'stocks.*' => 'Has full control',
+        'container-stocks.*' => 'Has full control',
         'adjustments.*' => 'Has full control',
+        'container-adjustments.*' => 'Has full control',
         'closing.*' => 'Has full control',
         'cashup.*' => 'Has full control',
         'general-settings.*' => 'Has full control',
         'email-settings.*' => 'Has full control',
         'payment-settings.*' => 'Has full control',
         'permission-settings.*' => 'Has full control',
-        'sms-settings.*' => 'Has full control'
+        'sms-settings.*' => 'Has full control',
+        'updates.*' => 'Has full control',
     ];
 
     /**
@@ -244,6 +266,7 @@ class AuthGroups extends ShieldAuthGroups
         'suppliers'        => 'Suppliers Management',
         'stores'        => 'Stores Management',
         'products'        => 'Products Management',
+        'containers'        => 'Containers Management',
         'product-transfers'        => 'Product Transfers Management',
         'unit-transfers'        => 'Unit transfers Management',
         'categories'        => 'Categories Management',
@@ -260,6 +283,8 @@ class AuthGroups extends ShieldAuthGroups
         'quotes'        => 'Quotes Management',
         'adjustments'        => 'Adjustments Management',
         'stocks'        => 'Stocks Management',
+        'container-adjustments'        => 'Container Adjustments Management',
+        'container-stocks'        => 'Container Stocks Management',
         'closing'        => 'Store Closing Management',
         'cashup'            => 'Cashup Management',
         'general-settings'      => 'General Settings',
@@ -284,13 +309,13 @@ class AuthGroups extends ShieldAuthGroups
             'expenses.*', 'customer-ledgers.*', 'supplier-ledgers.*', 'purchases.*', 'sales.*',
             'purchase-returns.*', 'sales-returns.*', 'quotes.*', 'adjustments.*', 'closing.*',
             'general-settings.*', 'email-settings.*', 'payment-settings.*', 'permission-settings.*',
-            'sms-settings.*', 'cashup.*'
+            'sms-settings.*', 'cashup.*','container-adjustments.*',
         ],
         'developer' => [
             'users.*', 'customers.*', 'suppliers.*', 'stores.*', 'products.*', 'brands.*',
-            'categories.*', 'units.*', 'product-transfers.*', 'unit-transfers.*', 'expense-categories.*',
+            'categories.*', 'units.*', 'product-transfers.*', 'unit-transfers.*', 'expense-categories.*','container-stocks.*',
             'expenses.*', 'customer-ledgers.*', 'supplier-ledgers.*', 'purchases.*', 'sales.*', 'cashup.*','closing.*',
-            'purchase-returns.*', 'sales-returns.*', 'quotes.*', 'adjustments.*', 'stocks.*', 'account-debts.*',
+            'purchase-returns.*', 'sales-returns.*', 'quotes.*', 'adjustments.*','container-adjustments.*', 'stocks.*', 'account-debts.*',
             'general-settings.*', 'email-settings.*', 'payment-settings.*', 'permission-settings.*', 'updates.*',
         ],
         'guest' => [

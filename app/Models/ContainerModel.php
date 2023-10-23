@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-use CodeIgniter\Database\RawSql;
 use CodeIgniter\Model;
 
-
-class ProductModel extends Model
+class ContainerModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'products';
+    protected $table            = 'containers';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';
@@ -17,6 +15,7 @@ class ProductModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'name',
+        'type',
         'barcode',
         'sku',
         'brand_id',
@@ -29,7 +28,6 @@ class ProductModel extends Model
         'discount',
         'unit_id',
         'description',
-        'expiration',
         'image_uri',
         'discontinued',
         'user_id'
@@ -74,14 +72,8 @@ class ProductModel extends Model
         if (isset($data['data']['min_qty']) && empty($data['data']['min_qty']))
             $data['data']['min_qty'] = 10;
 
-        if (isset($data['data']['expiration']) && empty($data['data']['expiration']))
-            $data['data']['expiration'] = NULL;
-
         if (isset($data['data']['unit_price']) && empty($data['data']['unit_price']))
             $data['data']['unit_price'] = 0.00;
-
-        if (isset($data['data']['unit_ws_price']) && empty($data['data']['unit_ws_price']))
-            $data['data']['unit_ws_price'] = $data['data']['unit_price'];
 
         if (isset($data['data']['tax_id']) && empty($data['data']['tax_id']))
             $data['data']['tax_id'] = NULL;
@@ -92,12 +84,12 @@ class ProductModel extends Model
     protected function setInstock($model)
     {
         if (isset($model['data']) && $model['data']) {
-            $stockModel = new StockModel();
+            $stockModel = new ContainerStockModel();
             $builder = $stockModel->builder();
             if ($model['singleton']) {
-                $model['data']->inventory = $stockModel->where('product_id',  $model['data']->id)->findAll();
+                $model['data']->inventory = $stockModel->where('container_id',  $model['data']->id)->findAll();
                 $instock = $builder->selectSum('instock', 'total')
-                    ->where('product_id',  $model['data']->id)
+                    ->where('container_id',  $model['data']->id)
                     ->get()
                     ->getRowObject()
                     ->total;
@@ -105,8 +97,8 @@ class ProductModel extends Model
             } else {
                 $storeModel = new StoreModel();
                 foreach ($model['data'] as $key => $row) {
-                    $model['data'][$key]->inventory = $stockModel->where('product_id', $row->id)->findAll();
-                    $where = ['product_id' => $row->id];
+                    $model['data'][$key]->inventory = $stockModel->where('container_id', $row->id)->findAll();
+                    $where = ['container_id' => $row->id];
                     if (setting('App.ProductDiffForStore') === 'yes') {
                         $where = array_merge($where, ['store_id' => $row->store_id]);
                     }

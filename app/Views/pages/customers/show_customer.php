@@ -21,6 +21,7 @@
                         <li class="nav-item"><a class="nav-link active" href="#customer-tab" data-bs-toggle="tab">Customer</a></li>
                         <li class="nav-item"><a class="nav-link" href="#ledger-tab" data-bs-toggle="tab">Account Book</a></li>
                         <li class="nav-item"><a class="nav-link" href="#bills-tab" data-bs-toggle="tab">Sales</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#containers-tab" data-bs-toggle="tab">Containers</a></li>
                         <li class="nav-item"><a class="nav-link" href="#returns-tab" data-bs-toggle="tab">Returns</a></li>
                     </ul>
                     <div class="tab-content">
@@ -231,6 +232,34 @@
                                                     <th>Paid</th>
                                                     <th>Biller</th>
                                                     <th class="text-center">Action</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="containers-tab">
+                            <div class="row mt-5">
+                                <div class="col-md-12">
+                                    <div class="card" id="filter_inputs4">
+                                        <div class="card-body pb-0">
+                                            <div class="row">
+                                                <input type="hidden" name="sales.customer_id" value="<?= $customer->id; ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table id="dt-containers" class="table w-100">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Container</th>
+                                                    <th>Unit Price</th>
+                                                    <th>Qty Taken</th>
+                                                    <th>Qty Returned</th>
+                                                    <th>Qty Bal.</th>
+                                                    <th>Total Amount</th>
                                                 </tr>
                                             </thead>
                                         </table>

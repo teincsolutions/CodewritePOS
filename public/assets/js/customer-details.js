@@ -1,4 +1,4 @@
-let table1, table2, table3;
+let table1, table2, table4, table3;
 
 $(function () {
   // table1
@@ -139,7 +139,7 @@ $(function () {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
                         <a target="_blank" href="${baseUrl}sales/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table1, ${row.id}, '${baseUrl}sales',table2,table3)"><i class="fa fa-trash fa-lg"></i></a>
+                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table1, ${row.id}, '${baseUrl}sales',table4,table3)"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;
@@ -205,7 +205,6 @@ $(function () {
       table1.ajax.reload();
     }
   );
-
   // table2
   table2 = $("#dt-ledger").DataTable({
     ajax: {
@@ -401,7 +400,6 @@ $(function () {
       table2.ajax.reload();
     }
   );
-
   // table3
   table3 = $("#dt-returns").DataTable({
     ajax: {
@@ -536,7 +534,7 @@ $(function () {
                               : ""
                           }
                           <a target="_blank" href="${baseUrl}sales/returns/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                          <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table3, ${data}, '${baseUrl}sales/returns',table2,table1)"><i class="fa fa-trash fa-lg"></i></a>
+                          <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table3, ${data}, '${baseUrl}sales/returns',table4,table1)"><i class="fa fa-trash fa-lg"></i></a>
                       </div>`;
           }
           return data;
@@ -607,6 +605,160 @@ $(function () {
     }
   );
 
+
+  // table4
+  table4 = $("#dt-containers").DataTable({
+    ajax: {
+      url: baseUrl + "reports/customers/containers/datatable",
+      dataType: "json",
+      contentType: "application/json",
+      data: function (params) {
+        let filter = {};
+        let filterForm = $(
+          "#containers-tab #filter_inputs4 input, #containers-tab #filter_inputs4 select"
+        );
+        filterForm.each((i, item) => {
+          field = $(item);
+
+          if (field.prop("tagName") === "SELECT") {
+            if (
+              typeof field.children("option:selected").val() !== "undefined" &&
+              field.children("option:selected").val() != ""
+            )
+              filter[field.attr("name")] = field
+                .children("option:selected")
+                .val();
+          } else {
+            filter[field.attr("name")] = field.val();
+          }
+        });
+
+        params.fields = filter;
+      },
+    },
+    processing: true,
+    serverSide: true,
+    bFilter: true,
+    dom: "fBtlpi",
+    buttons: [
+      {
+        extend: "print",
+        text: '<a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><i class="fa text-secondary fa-print"></i></a>',
+        className: "btn btn-light",
+      },
+      "spacer",
+      {
+        extend: "excel",
+        text: '<a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><i class="fa text-success fa-file-excel"></i></a>',
+        className: "btn btn-light",
+      },
+      "spacer",
+      {
+        extend: "pdf",
+        text: '<a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><i class="fa text-danger fa-file-pdf"></i></a>',
+        className: "btn btn-light",
+      },
+    ],
+    pagingType: "numbers",
+    ordering: true,
+    language: {
+      search: " ",
+      sLengthMenu: "_MENU_",
+      searchPlaceholder: "Search...",
+      info: "_START_ - _END_ of _TOTAL_ items",
+    },
+    columns: [
+      {
+        data: null,
+        render: function (data, type, row) {
+          return null;
+        },
+      },
+      {
+        data: "container",
+        name: "container_id",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return data
+              ? `<a target="_blank" href="${baseUrl}containers/${data.id}" class="btn btn-link btn-sm"><span class="text-warning">${data.sku??''}</span> ${data.name}</a>`
+              : "";
+          }
+          return data ? data.id : null;
+        },
+      },
+      { data: "unit_price"},
+      { data: "qty_in"},
+      { data: "qty_out"},
+      { data: "qty_bal"},
+      {
+        data: "total_bal",
+        render: function (data) {
+          return data < 0
+            ? `(GHS ${Math.abs(parseFloat(data)).toFixed(2)})`
+            : `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
+    ],
+    initComplete: (settings, json) => {
+      $("#containers-tab .dataTables_filter").appendTo("#containers-tab #tableSearch");
+      $("#containers-tab .dataTables_filter").appendTo("#containers-tab .search-input");
+      if ($('#containers-tab [data-bs-toggle="tooltip"]').length > 0) {
+        var tooltipTriggerList = [].slice.call(
+          document.querySelectorAll('#containers-tab [data-bs-toggle="tooltip"]')
+        );
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+      }
+
+      var selectAllItems = "#containers-tab #select-all";
+      var checkboxItem = ":checkbox";
+
+      $(selectAllItems).click(function () {
+        if (this.checked) {
+          $(checkboxItem).each(function () {
+            this.checked = true;
+          });
+        } else {
+          $(checkboxItem).each(function () {
+            this.checked = false;
+          });
+        }
+      });
+    },
+    footerCallback: function (row, data, start, end, display) {
+      var api = this.api();
+      // Remove the formatting to get integer data for summation
+      var intVal = function (i) {
+        return typeof i === "string"
+          ? i.replace(/[\$,]/g, "") * 1
+          : typeof i === "number"
+          ? i
+          : 0;
+      };
+    },
+    order: [[1, "desc"]],
+    columnDefs: [
+      {
+        orderable: false,
+        className: "select-checkbox",
+        targets: 0,
+      },
+    ],
+    select: {
+      style: "multi",
+      selector: "td:first-child",
+    },
+  });
+  table4.buttons().container().appendTo("#containers-tab .wordset");
+
+  $("#containers-tab .filter").on(
+    "click select2:select select2:unselect",
+    function (params) {
+      table4.ajax.reload();
+    }
+  );
+
   let form3 = $("#add-payment");
   form3.validate({
     rules: {},
@@ -659,7 +811,7 @@ $(function () {
             form3.trigger("reset");
             $("select").val("").trigger("change.select2");
             form3.modal("hide");
-            table2.ajax.reload();
+            table4.ajax.reload();
             table1.ajax.reload();
             table3.ajax.reload();
             Swal.fire({
@@ -734,7 +886,7 @@ $(function () {
           if (d.status === true) {
             $("select").val("").trigger("change.select2");
             form4.modal("hide");
-            table2.ajax.reload();
+            table4.ajax.reload();
             table1.ajax.reload();
             table3.ajax.reload();
             Swal.fire({

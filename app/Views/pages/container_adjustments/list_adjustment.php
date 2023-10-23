@@ -7,7 +7,7 @@
             <h6>Manage your adjustments</h6>
         </div>
         <div class="page-btn">
-            <a href="<?= site_url('adjustments/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add Adjustments</a>
+            <a href="<?= site_url('container-adjustments/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add Adjustments</a>
         </div>
     </div>
 
@@ -100,5 +100,5 @@
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/adjustments.js') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/container-adjustments.js') ?>"></script>
 <?= $this->endSection() ?>
