@@ -649,7 +649,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-pos.js?v=9') ?>"></script>
+<script src="<?= base_url('assets/js/handle-pos.js?v=10') ?>"></script>
 <script src="<?= base_url('assets/js/datatables/pos.modal.js?v=3') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?php if (isset($sales) && $sales->customer) {

@@ -31,7 +31,8 @@ const searchParams = {
 prodIndex = prodIndex ? prodIndex : 0;
 (dueTotal = 0),
   (grandTotal = 0),
-  (customerBalance = $(".customer-balance").data("balance"));
+  (customerBalance = $(".customer-balance").data("balance")),
+  (customerType = $(".customer-balance").data("type"));
 
 let form = $(".post-form");
 
@@ -255,8 +256,8 @@ function autocomplete(inp) {
 
           b.innerHTML =
             item.discontinued == 1
-              ? `<span class="d-flex justify-content-between" style="z-index:1000"><del><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></del>GHS ${item.unit_price}</span>`
-              : `<span class="d-flex justify-content-between" style="z-index:1000"><span><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></span>GHS ${item.unit_price}</span>`;
+              ? `<span class="d-flex justify-content-between" style="z-index:1000"><del><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></del>GHS ${unitPrice}</span>`
+              : `<span class="d-flex justify-content-between" style="z-index:1000"><span><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></span>GHS ${unitPrice}</span>`;
 
           b.addEventListener("click", function (e) {
             if (instock <= item.min_qty) {
@@ -271,6 +272,11 @@ function autocomplete(inp) {
               store = "(" + $(".select2-store option:selected").text() + ")";
             }
             inp.value = "";
+            let unitPrice =
+              customerType === "wholeseller"
+                ? item.unit_ws_price
+                : item.unit_price;
+
             let row = ` <tr>
                                         <td>
                                         </td>
@@ -289,9 +295,7 @@ function autocomplete(inp) {
                                                 <input type='hidden' name="items[${prodIndex}][product_id]" value="${
               item.id
             }">
-                                                <input type="hidden" name="items[${prodIndex}][unit_price]" value="${
-              item.unit_price
-            }" class="runit_price">
+                                                <input type="hidden" name="items[${prodIndex}][unit_price]" value="${unitPrice}" class="runit_price">
             <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
               item.unit_cost
             }" class="runit_cost">
@@ -308,9 +312,9 @@ function autocomplete(inp) {
               item?.discount
             }">
                                                 <input type="hidden" name="items[${prodIndex}][subtotal]" class="rsubtotal" value="${
-              item.unit_price -
+              unitPrice -
               item?.discount +
-              (item.unit_price * (item.tax ? item.tax.rate : 0.0)) / 100
+              (unitPrice * (item.tax ? item.tax.rate : 0.0)) / 100
             }">
                                                 <input type="button" value="-" class="button-minus dec button">
                                                 <input onblur="updateItemRow(this)" min="1" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field rqty" required>
@@ -318,15 +322,15 @@ function autocomplete(inp) {
                                             </div>
                                         </div>
                                         </td>
-                                        <td>${item.unit_price}</td>
+                                        <td>${unitPrice}</td>
                                         <td>${item.discount}</td>
                                         <td class="suffix-percent">${
                                           item.tax ? item.tax.rate : "0.00"
                                         }</td>
                                         <td>${(
-                                          item.unit_price -
+                                          unitPrice -
                                           item?.discount +
-                                          (item.unit_price *
+                                          (unitPrice *
                                             (item.tax ? item.tax.rate : 0.0)) /
                                             100
                                         ).toFixed(2)}</td>
@@ -473,6 +477,8 @@ let select2Customer = $(".select2-customer")
   .on("select2:select", function (e) {
     const data = e.params.data;
     customerBalance = parseFloat(data.balance);
+    customerType = data.type;
+
     $(".customer-balance").html(
       customerBalance < 0
         ? `(GHS ${Math.abs(customerBalance).toFixed(2)})`
@@ -485,6 +491,7 @@ let select2Customer = $(".select2-customer")
   })
   .on("select2:unselect", function (e) {
     customerBalance = 0;
+    customerType = "";
     $(".customer-balance").html(
       customerBalance < 0
         ? `(GHS ${Math.abs(customerBalance).toFixed(2)})`
