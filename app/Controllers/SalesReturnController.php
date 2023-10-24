@@ -74,10 +74,10 @@ class SalesReturnController extends BaseController
         ];
         $model = new SalesReturnModel();
         $data = array_merge($data, [
-            'sales_return' => $model->find($id),
+            'return' => $model->find($id),
         ]);
 
-        return view('pages/sales_returns/show_sales_return', $data);
+        return view('pages/sales_returns/invoice', $data);
     }
 
     /**
