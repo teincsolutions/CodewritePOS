@@ -449,6 +449,17 @@ function autocomplete(inp) {
           info.push(`instock<strong>(${instock})</strong>`);
 
           info = info.join(",");
+          let unitPrice = "0.00";
+          if (Settings.AllowWholeSalePrices === "yes") {
+            unitPrice =
+              customerType === "wholeseller"
+                ? item.unit_ws_price
+                  ? item.unit_ws_price
+                  : "0.00"
+                : item.unit_price;
+          } else {
+            unitPrice = item.unit_price;
+          }
 
           b.innerHTML =
             item.discontinued == 1
@@ -468,10 +479,6 @@ function autocomplete(inp) {
               store = "(" + $(".select2-store option:selected").text() + ")";
             }
             inp.value = "";
-            let unitPrice =
-              customerType === "wholeseller"
-                ? item.unit_ws_price
-                : item.unit_price;
 
             let row = `<tr>
                                         <td>
