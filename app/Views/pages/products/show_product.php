@@ -143,6 +143,7 @@
             </div>
         </div>
     </div>
+    <?php if (setting('App.ProductDiffForStore') === 'yes') : ?>
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -181,6 +182,7 @@
             </div>
         </div>
     </div>
+    <?php endif ?>
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
