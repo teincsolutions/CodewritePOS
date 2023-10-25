@@ -73,7 +73,7 @@
             </div>
 
             <div class="table-responsive">
-                <table class="table" id="containerstable">
+                <table class="table" id="dt-containers">
                     <thead>
                         <tr>
                             <th>

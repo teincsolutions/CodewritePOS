@@ -27,7 +27,7 @@
                             </a>
                         </div>
                     <?php endif; ?>
-                    <div class="containerdetails">
+                    <div class="productdetails">
                         <ul class="container-bar">
                             <li>
                                 <h4>Container</h4>
@@ -106,9 +106,9 @@
         <div class="col-lg-4 col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="slider-container-details">
+                    <div class="slider-product-details">
                         <div class="owl-carousel owl-theme container-slide">
-                            <div class="slider-container">
+                            <div class="slider-product">
                                 <img src="<?= $container->image_uri ? base_url($container->image_uri) : base_url('assets/images/noimage.png') ?>" alt="img">
                                 <h4></h4>
                                 <h6></h6>
@@ -129,7 +129,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach (model('StockModel')->where('container_id', $container->id)->findAll() as $key => $row) : ?>
+                                <?php foreach (model('ContainerStockModel')->where('container_id', $container->id)->findAll() as $key => $row) : ?>
                                     <tr>
                                         <th><?= $key + 1 ?></th>
                                         <td><?= $row->store->name ?></td>
@@ -143,44 +143,46 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table w-100" id="dt-store-containers">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Store</th>
-                                    <th>Unit Price</th>
-                                    <th>Wholesale Price</th>
-                                    <th>Unit Cost</th>
-                                    <th>Min Qty</th>
-                                    <th>Sales Discount(GHS)</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach (model('StoreContainerModel')->where('container_id', $container->id)->findAll() as $key => $row) : ?>
+    <?php if (setting('App.ContainerDiffForStore') === 'yes') : ?>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table w-100" id="dt-store-containers">
+                                <thead>
                                     <tr>
-                                        <th><?= $key + 1 ?></th>
-                                        <td><?= $row->store->name ?></td>
-                                        <td><?= $row->unit_price ?></td>
-                                        <td><?= $row->unit_ws_price ?></td>
-                                        <td><?= $row->unit_cost ?></td>
-                                        <td><?= $row->min_qty ?></td>
-                                        <td><?= $row->discount ?></td>
-                                        <td><?= ['Active', 'Discontinued'][$row->discontinued] ?></td>
+                                        <th>#</th>
+                                        <th>Store</th>
+                                        <th>Unit Price</th>
+                                        <th>Wholesale Price</th>
+                                        <th>Unit Cost</th>
+                                        <th>Min Qty</th>
+                                        <th>Sales Discount(GHS)</th>
+                                        <th>Status</th>
                                     </tr>
-                                <?php endforeach ?>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <?php foreach (model('StoreContainerModel')->where('container_id', $container->id)->findAll() as $key => $row) : ?>
+                                        <tr>
+                                            <th><?= $key + 1 ?></th>
+                                            <td><?= $row->store->name ?></td>
+                                            <td><?= $row->unit_price ?></td>
+                                            <td><?= $row->unit_ws_price ?></td>
+                                            <td><?= $row->unit_cost ?></td>
+                                            <td><?= $row->min_qty ?></td>
+                                            <td><?= $row->discount ?></td>
+                                            <td><?= ['Active', 'Discontinued'][$row->discontinued] ?></td>
+                                        </tr>
+                                    <?php endforeach ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    <?php endif ?>
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
