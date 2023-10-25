@@ -164,11 +164,38 @@
                     'containers.view',
                     'containers.create',
                     'container-adjustments.view',
-                    'container-adjustments.create'
+                    'container-adjustments.create',
+                    'containers-receivings.create',
+                    'containers-receivings.view'
                 )) : ?>
                     <li class="submenu-open">
                         <h6 class="submenu-hdr">Containers</h6>
                         <ul>
+                            <?php if (auth()->user()->can('container-adjustments.create', 'adjustments.view')) : ?>
+                                <li class="submenu">
+                                    <a class="<?= getActiveUrl("containers/receivings*", "subdrop active") ?>" href="javascript:void(0);">
+                                        <i data-feather="align-justify"></i>
+                                        <span>Receivings</span><span class="menu-arrow"></span>
+                                    </a>
+                                    <ul>
+                                        <li><a class="<?= getActiveUrl("containers/receivings/create"); ?>" href="<?= site_url('containers/receivings/create') ?>">Receive Containers</a></li>
+                                        <li><a class="<?= getActiveUrl("containers/receivings"); ?>" href="<?= site_url("containers/receivings") ?>">List Receivings</a></li>
+                                    </ul>
+                                </li>
+                            <?php endif ?>
+
+                            <?php if (auth()->user()->can('container-adjustments.create', 'adjustments.view')) : ?>
+                                <li class="submenu">
+                                    <a class="<?= getActiveUrl("containers/receivings*", "subdrop active") ?>" href="javascript:void(0);">
+                                        <i data-feather="align-justify"></i>
+                                        <span>Container Returns</span><span class="menu-arrow"></span>
+                                    </a>
+                                    <ul>
+                                        <li><a class="<?= getActiveUrl("containers/returns/create"); ?>" href="<?= site_url('containers/returns/create') ?>">Return Containers</a></li>
+                                        <li><a class="<?= getActiveUrl("containers/returns"); ?>" href="<?= site_url("containers/returns") ?>">List Returns</a></li>
+                                    </ul>
+                                </li>
+                            <?php endif ?>
                             <?php if (auth()->user()->can('containers.view')) : ?>
                                 <li class="<?= getActiveUrl("containers", "active"); ?>"><a href="<?= site_url('containers') ?>"><i data-feather="box"></i><span>Containers</span></a></li>
                             <?php endif ?>
