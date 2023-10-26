@@ -81,6 +81,7 @@ class CustomerController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new CustomerModel();
+        $model->groupBy('customers.id');
         return $this->response->setJSON(toSelect2Result($model, ['name', 'phone', 'address'], $inputs, 'concat(name," (",ifnull(address,ifnull(phone,"")), ")") as text,customers.*'));
     }
 

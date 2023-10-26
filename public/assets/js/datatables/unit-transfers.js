@@ -105,7 +105,7 @@ $(function () {
                               })"><i class="fa fa-money-bill fa-lg"></i></a>`
                             : ""
                         }
-                        <a target="_blank" href="${baseUrl}transfers/products/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
+                        <a target="_blank" href="${baseUrl}transfers/units/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
                         <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}transfers/products')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }

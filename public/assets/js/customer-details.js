@@ -9,9 +9,7 @@ $(function () {
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $(
-          "#bills-tab #filter_inputs input, #bills-tab #filter_inputs select"
-        );
+        let filterForm = $("#filter_inputs input, #filter_inputs select");
         filterForm.each((i, item) => {
           field = $(item);
 
@@ -139,7 +137,14 @@ $(function () {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
                         <a target="_blank" href="${baseUrl}sales/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table1, ${row.id}, '${baseUrl}sales',table2,table3)"><i class="fa fa-trash fa-lg"></i></a>
+                        ${
+                          row.order_status === "completed"
+                            ? `<a href="${baseUrl}sales/returns/create?invoice=${row.invoice}" class="me-3"><i class="fa fa-reply fa-lg"></i></a>`
+                            : ""
+                        }
+                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table1, ${
+                          row.id
+                        }, '${baseUrl}sales',table2,table3)"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;
@@ -215,7 +220,7 @@ $(function () {
       data: function (params) {
         let filter = {};
         let filterForm = $(
-          "#ledger-tab #filter_inputs input, #ledger-tab #filter_inputs select"
+          "#ledger-tab #filter_inputs3 input, #ledger-tab #filter_inputs3 select"
         );
         filterForm.each((i, item) => {
           field = $(item);
@@ -411,7 +416,7 @@ $(function () {
       data: function (params) {
         let filter = {};
         let filterForm = $(
-          "#returns-tab #filter_inputs input, #returns-tab #filter_inputs select"
+          "#returns-tab #filter_inputs1 input, #returns-tab #filter_inputs1 select"
         );
         filterForm.each((i, item) => {
           field = $(item);
@@ -757,6 +762,83 @@ $(function () {
       });
     }
   });
+
+
+  let form5 = $("#add-bulk-payment");
+  form5.validate({
+    rules: {},
+    messages: {},
+    errorElement: "em",
+    errorPlacement: function (t, e) {
+      t.addClass("invalid-feedback"),
+        "checkbox" === e.prop("type")
+          ? t.insertAfter(e.nex$("label"))
+          : t.insertAfter(e);
+    },
+    highlight: function (e, i, n) {
+      $(e).addClass("is-invalid").removeClass("is-valid");
+    },
+    unhighlight: function (e, i, n) {
+      $(e).addClass("is-valid").removeClass("is-invalid");
+    },
+  });
+
+  form5.on("submit", function (e) {
+    e.preventDefault();
+
+    if ($(this).valid() === true) {
+      $.ajax({
+        method: "POST",
+        url: this.getAttribute("action"),
+        data: new FormData(this),
+        enctype: "multipart/form-data",
+        dataType: "json",
+        contentType: false,
+        processData: false,
+        cache: false,
+        success: function (d, r) {
+          if (!d || r === "nocontent") {
+            Swal.fire({
+              icon: "error",
+              text: "Malformed form data sumbitted! Please try agian.",
+            });
+            return;
+          }
+          if (typeof d.status !== "boolean" || typeof d.message !== "string") {
+            Swal.fire({
+              icon: "error",
+              text: "Malformed data response! Please try agian.",
+            });
+            return;
+          }
+
+          if (d.status === true) {
+            form5.trigger("reset");
+            form5.modal("hide");
+            table2.ajax.reload();
+            table1.ajax.reload();
+            table3.ajax.reload();
+            Swal.fire({
+              icon: "success",
+              text: d.message,
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              text: d.message,
+            });
+          }
+        },
+        error: function (r) {
+          Swal.fire({
+            icon: "error",
+            text: "Unable to submit form! Please try agian.",
+          });
+        },
+      });
+    }
+  });
+
   let select2Invoices = $(".select2-invoices")
     .select2({
       ajax: {

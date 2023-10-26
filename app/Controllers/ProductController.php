@@ -257,7 +257,7 @@ class ProductController extends BaseController
         $builder = $model->builder();
 
         $builder->join('units', 'units.id=products.unit_id');
-        $builder->join('brands', 'brands.id=products.brand_id');
+        $builder->join('brands', 'brands.id=products.brand_id', 'left');
         if (isset($inputs['exclude']))
             $builder->whereNotIn('products.id', $inputs['exclude']);
         return $this->response->setJSON(toSelect2BuilderResult(

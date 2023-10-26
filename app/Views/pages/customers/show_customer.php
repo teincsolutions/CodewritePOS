@@ -77,9 +77,23 @@
                         <div class="tab-pane" id="ledger-tab">
                             <div class="row mt-5">
                                 <div class="col-md-12 mb-3 d-flex justify-content-end">
-                                    <button type="button" data-bs-toggle="modal" data-bs-target="#add-payment" class="btn btn-primary btn-sm"><i class="fa fa-plus me-2"></i>Add Payment</button>
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#add-payment" class="btn btn-primary btn-sm me-3"><i class="fa fa-plus me-2"></i>Add Payment</button>
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#add-bulk-payment" class="btn btn-secondary btn-sm"><i class="fa fa-plus me-2"></i>Bulk Payment</button>
                                 </div>
                                 <div class="col-md-12">
+                                    <div class="card" id="filter_inputs3">
+                                        <div class="card-body pb-0">
+                                            <div class="row">
+                                                <input type="hidden" name="customer_id" value="<?= $customer->id; ?>">
+
+                                                <div class="col-lg-3 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <a class="btn btn-filters ms-auto filter"><i class="fa fa-search"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="table-responsive">
                                         <table id="dt-ledger" class="table" style="width: 100%;">
                                             <thead>
@@ -368,6 +382,54 @@
         </div>
     </div>
 </form>
+
+<form action="<?= site_url('customers/ledgers/bulk') ?>" class="modal fade" id="add-bulk-payment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Payment Date</label>
+                            <div class="input-groupicon">
+                                <input type="text" name="tdate" value="<?= date('d-m-Y', time()) ?>" class="datetimepicker" required>
+                                <div class="addonset">
+                                    <i class="fa fa-calendar fa-lg"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="customer_id"  value="<?=$customer->id ?>">
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Paying Amount</label>
+                            <input type="text" name="credit" min="0" value="" placeholder="Enter Amount" required>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Payment type</label>
+                            <select name="payment_type" class="select" required>
+                                <option value="cash">Cash</option>
+                                <option value="momo">MoMo</option>
+                                <option value="credit">Credit Card</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-submit">Submit</button>
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</form>
+
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>

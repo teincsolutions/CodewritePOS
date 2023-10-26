@@ -25,6 +25,7 @@ class ProductModel extends Model
         'unit_price',
         'unit_ws_price',
         'min_qty',
+        'unit_qty',
         'tax_id',
         'discount',
         'unit_id',

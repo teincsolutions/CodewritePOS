@@ -210,6 +210,7 @@ $routes->post('expenses', [ExpenseController::class, 'save']);
 $routes->post('products', [ProductController::class, 'save']);
 $routes->post('suppliers/ledgers', [SupplierLedgerController::class, 'save']);
 $routes->post('customers/ledgers', [CustomerLedgerController::class, 'save']);
+$routes->post('customers/ledgers/bulk', [CustomerLedgerController::class, 'bulk_payment']);
 $routes->post('transfers/products', [ProductTransferController::class, 'save']);
 $routes->post('transfers/units', [ProductUnitTransferController::class, 'save']);
 $routes->post('purchases', [PurchaseController::class, 'save']);

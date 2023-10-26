@@ -92,7 +92,7 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
-                        <button type="submit" class="btn btn-submit me-2">Submit Unit Transfer</button>
+                        <button onclick="$('.post-form').submit()" type="button" class="btn btn-submit me-2">Submit Unit Transfer</button>
                     </div>
                 </div>
             </div>

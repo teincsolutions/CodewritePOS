@@ -182,7 +182,7 @@ if (!function_exists('toSelect2Result')) {
             foreach ($inputs['filter'] as $field => $val)
                 $model->where($field, $val);
 
-        $data = $model->findAll();
+        $data = $model->findAll($take, $skip);
 
         return  [
             'results' => $data,

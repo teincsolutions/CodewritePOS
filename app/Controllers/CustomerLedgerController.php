@@ -6,12 +6,8 @@ use App\Controllers\BaseController;
 use App\Models\CustomerLedgerModel;
 use App\Models\CustomerModel;
 use App\Models\SalesModel;
-use App\Models\SupplierModel;
 use CodeIgniter\Database\RawSql;
-use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
 
 class CustomerLedgerController extends BaseController
 {
@@ -112,6 +108,81 @@ class CustomerLedgerController extends BaseController
                     'message' => "Couldn't be created!"
                 ]);
             }
+        }
+        return $this->response->setJSON($res);
+    }
+
+    public function bulk_payment()
+    {
+        $model = new CustomerLedgerModel();
+        $salesModel = new SalesModel();
+        $inputs = $this->request->getVar();
+
+        if (auth()->user())
+            $inputs['user_id'] = auth()->user()->id;
+
+
+        if (!auth()->user()->can('customer-ledgers.create'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to create this record!"
+            ]);
+
+        $inputs['tdate'] = date('Y-m-d', strtotime($inputs['tdate']));
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => null,
+            'input' => $inputs,
+        ];
+
+        $where = [
+            'payment_status' => 'due',
+            'customer_id' => $inputs['customer_id']
+        ];
+        $sales = $salesModel->where($where)
+            ->orderBy('sales_date', 'desc')
+            ->findAll();
+
+        $data = [];
+        $amount = $inputs['credit'];
+        foreach ($sales as $row) {
+            $due = $row->total_amount - $row->paid;
+            if ($due >= $amount) {
+                array_push($data, array_merge($inputs, [
+                    'sale_id' => $row->id,
+                    'ledger_type' => 'sales',
+                    'credit' => $amount,
+                    'store_id' => $row->store_id,
+                    ''
+                ]));
+                break;
+            } else {
+                array_push($data, array_merge($inputs, [
+                    'sale_id' => $row->id,
+                    'ledger_type' => 'sales',
+                    'credit' => $due,
+                    'store_id' => $row->store_id,
+                    ''
+                ]));
+            }
+            $amount -= $due;
+        }
+
+        if ($model->insertBatch($data)) {
+            foreach ($sales as $row)
+                $salesModel->updatePaymentStatus($row->id);
+
+            $bal = $amount > 0 ? " Change of GHS " . number_format($amount, 2) : "";
+            $res = array_merge($res, [
+                'status' => true,
+                'message' => "Payment(s) added successfully!$bal",
+            ]);
+        } else {
+            $res = array_merge($res, [
+                'status' => false,
+                'message' => "Payment couldn't be created!"
+            ]);
         }
         return $this->response->setJSON($res);
     }

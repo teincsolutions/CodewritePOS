@@ -82,6 +82,7 @@ class ClosingController extends BaseController
                 'sales.store_id' => $store->id,
             ];
             $customer_payment =  $customerLedgerModel->builder()->where($where)
+            ->where('ledger_type', 'sales')
                 ->join('sales', 'sales.id=customer_ledgers.sale_id')
                 ->selectSum('credit', 'total')->get()->getFirstRow()->total;
 
@@ -92,6 +93,7 @@ class ClosingController extends BaseController
 
             $sale_return_total = $saleReturnModel->builder()->where($where)
                 ->join('sales', 'sales.id=sales_returns.sale_id')
+                ->where('sales_returns.order_status', 'completed')
                 ->selectSum('sales_returns.paid', 'total')->get()->getFirstRow()->total;
             $where = [
                 'purchases.store_closing_id' => null,

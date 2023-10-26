@@ -57,9 +57,8 @@ class ProductUnitTransferController extends BaseController
         ];
         $model = new UnitTransferModel();
         $data = array_merge($data, [
-            'product' => $model->find($id),
+            'transfer' => $model->find($id),
         ]);
-
         return view('pages/transfers/show_product_unit_transfer', $data);
     }
 
