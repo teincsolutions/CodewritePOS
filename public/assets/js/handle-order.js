@@ -24,6 +24,10 @@ const searchParams = {
       searchable: "true",
     },
     {
+      name: "concat(products.name,' ',units.label)",
+      searchable: "true",
+    },
+    {
       name: "products.barcode",
       searchable: "true",
     },

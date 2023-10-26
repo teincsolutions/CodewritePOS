@@ -241,7 +241,7 @@ class ProductController extends BaseController
 
         $model->join('categories', 'categories.id=products.category_id');
         $model->join('brands', 'brands.id=products.brand_id', 'left');
-
+        $model->join('units', 'units.id=products.unit_id');
 
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }

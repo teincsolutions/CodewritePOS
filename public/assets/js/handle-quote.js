@@ -4,6 +4,18 @@
 const searchParams = {
   columns: [
     {
+      name: "concat(products.name,' ',categories.name)",
+      searchable: "true",
+    },
+    {
+      name: "concat(products.name,' ',brands.name)",
+      searchable: "true",
+    },
+    {
+      name: "concat(products.name,' ',units.label)",
+      searchable: "true",
+    },
+    {
       name: "products.name",
       searchable: "true",
     },
