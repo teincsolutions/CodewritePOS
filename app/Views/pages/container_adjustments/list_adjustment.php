@@ -7,7 +7,7 @@
             <h6>Manage your adjustments</h6>
         </div>
         <div class="page-btn">
-            <a href="<?= site_url('adjustments/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add Adjustments</a>
+            <a href="<?= site_url('container-adjustments/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add Adjustments</a>
         </div>
     </div>
 
@@ -22,7 +22,7 @@
                         </a>
                     </div>
                     <div class="search-input">
-                        <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
+                        <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
                     </div>
                 </div>
                 <div class="wordset">
@@ -51,7 +51,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-sm-6 col-12" style="overflow-x: auto;">
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
                                 <select name="store_id" class="select2-store">
                                     <option value=""></option>
@@ -92,17 +92,6 @@
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th></th>
-                            <th>Total</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th class="text-center"></th>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
         </div>
@@ -111,5 +100,5 @@
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/adjustments.js') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/container-adjustments.js') ?>"></script>
 <?= $this->endSection() ?>

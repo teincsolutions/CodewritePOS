@@ -161,6 +161,36 @@
                     </li>
                 <?php endif ?>
                 <?php if (auth()->user()->can(
+                    'containers.view',
+                    'containers.create',
+                    'container-adjustments.view',
+                    'container-adjustments.create'
+                )) : ?>
+                    <li class="submenu-open">
+                        <h6 class="submenu-hdr">Containers</h6>
+                        <ul>
+                            <?php if (auth()->user()->can('containers.view')) : ?>
+                                <li class="<?= getActiveUrl("containers", "active"); ?>"><a href="<?= site_url('containers') ?>"><i data-feather="box"></i><span>Containers</span></a></li>
+                            <?php endif ?>
+                            <?php if (auth()->user()->can('containers.create')) : ?>
+                                <li class="<?= getActiveUrl("containers/create", "active"); ?>"><a href="<?= site_url('containers/create') ?>"><i data-feather="plus-square"></i><span>Create Container</span></a></li>
+                            <?php endif ?>
+                            <?php if (auth()->user()->can('container-adjustments.create', 'adjustments.view')) : ?>
+                                <li class="submenu">
+                                    <a class="<?= getActiveUrl("container-adjustments*", "subdrop active") ?>" href="javascript:void(0);">
+                                        <i data-feather="align-justify"></i>
+                                        <span>Container Adjust.</span><span class="menu-arrow"></span>
+                                    </a>
+                                    <ul>
+                                        <li><a class="<?= getActiveUrl("container-adjustments/create"); ?>" href="<?= site_url('container-adjustments/create') ?>">Create Adjustment</a></li>
+                                        <li><a class="<?= getActiveUrl("container-adjustments"); ?>" href="<?= site_url("container-adjustments") ?>">List Adjustment</a></li>
+                                    </ul>
+                                </li>
+                            <?php endif ?>
+                        </ul>
+                    </li>
+                <?php endif ?>
+                <?php if (auth()->user()->can(
                     'expenses.create',
                     'expenses.view',
                     'expense-categories.create',
