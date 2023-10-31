@@ -75,7 +75,6 @@ $routes->group('reports/overdue', static function (RouteCollection $routes) {
     $routes->get('purchases', [PurchaseController::class, 'overdue_report']);
 });
 
-
 $routes->group('print', static function (RouteCollection $routes) {
     $routes->get('sales/(:num)', [SalesController::class, 'print/$1']);
     $routes->get('purchases/(:num)', [PurchaseController::class, 'print/$1']);
