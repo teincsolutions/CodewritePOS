@@ -18,6 +18,7 @@ class StoreModel extends Model
         'name',
         'description',
         'location',
+        'phone',
         'status',
         'user_id'
     ];

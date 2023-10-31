@@ -90,8 +90,14 @@
                                     </ul>
                                 </div>
                             </div>
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>Note</label>
+                                    <textarea class="form-control" name="note" placeholder="What is this adjustment for?"></textarea>
+                                </div>
+                            </div>
                             <div class="col-lg-12 d-flex justify-content-end">
-                                <button type="submit" class="btn btn-success text-uppercase">Submit Adjustments</button>
+                                <button onclick="$('.post-form').submit()" type="button" class="btn btn-success text-uppercase">Submit Adjustments</button>
                             </div>
                         </div>
                     </div>

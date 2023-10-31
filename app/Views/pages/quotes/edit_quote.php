@@ -109,9 +109,7 @@
                                                         : '<a class="p-3"></a>' ?>
                                                     <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
                                                         <?= $row->product->name ?>
-                                                        <?php if ($row->store) { ?>
-                                                            <?= $row->store->name; ?><?= $row->store->location ? "(" . $row->store->location . ")" : null; ?></a>
-                                                <?php } ?>
+                                                        (<?= $row->product->unit->label; ?>)
                                                 </td>
                                                 <td>
                                                     <div class="increment-decrement">
@@ -125,7 +123,7 @@
                                                             <input type="hidden" name="items[<?= $key ?>][tax]" class="rtax" value="<?= ($row->unit_cost * $row->qty * $row->tax) / 100 ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][discount]" class="rdiscount" value="<?= $row->discount ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][subtotal]" class="rsubtotal" value="<?= $row->unit_cost * $row->qty - $row->discount + ($row->unit_cost * $row->qty * $row->tax) / 100 ?>">
-                                                            <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" value="<?= $row->qty ?>" class="quantity-field" required>
+                                                            <input onblur="updateItemRow(this)" min=".1" type="text" name="items[<?= $key ?>][qty]" value="<?= $row->qty ?>" class="quantity-field" required>
                                                             <input type="button" value="+" class="button-plus inc button">
                                                         </div>
                                                     </div>

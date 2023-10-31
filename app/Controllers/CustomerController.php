@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\CustomerModel;
+use App\Models\StoreModel;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\Shield\Models\UserModel;
 use CodeIgniter\HTTP\Response;
@@ -51,12 +52,16 @@ class CustomerController extends BaseController
      */
     public function show($id)
     {
+        $storeModel = new StoreModel();
         $data = [
-            'title' => 'Customer Details'
+            'title' => 'Customer Details',
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
         ];
         $model = new CustomerModel();
+        $customer =  $model->where('id', $id)->first();
+
         $data = array_merge($data, [
-            'customer' => $model->find($id),
+            'customer' => $customer,
         ]);
 
         return view('pages/customers/show_customer', $data);

@@ -7,7 +7,7 @@
             <h6>View adjustment details</h6>
         </div>
     </div>
-    <div class="card">
+    <div id="invoice" class="card">
         <div class="card-body">
             <div class="card-adjustments-split">
                 <h2>Adjustment Detail : INV<?= $adjustment->invoice; ?></h2>
@@ -104,7 +104,7 @@
                                 <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->unit_cost ?></td>
                                 <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->instock_qty ?></td>
                                 <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->qty ?></td>
-                                <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->qty - $row->instock_qty  ?></td>
+                                <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= number_format($row->qty - $row->instock_qty, 2, '.', '') ?></td>
                                 <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= number_format($row->subtotal, 2) ?></td>
                             </tr>
                         <?php endforeach ?>
@@ -123,10 +123,22 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <a href="javascript:void(0);" class="btn btn-submit me-2">Print Invoice</a>
+                    <a id="invoice-print" href="javascript:void(0);" class="btn btn-submit me-2">Print Invoice</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <?= $this->endSection() ?>
+<script>
+    $('#invoice-print').on('click', function(e) {
+        let receipt = $('#invoice').html();
+        let data = json_encode($adjustment);
+        let result = {
+            status: true,
+            data: data,
+            receipt: receipt,
+        };
+        printInvoice(result);
+    })
+</script>

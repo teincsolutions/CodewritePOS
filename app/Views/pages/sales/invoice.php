@@ -115,6 +115,12 @@
                     </tbody>
                 </table>
                 <table cellpadding="0" cellspacing="0" style="width: 100%;line-height: inherit;text-align: left;display:table !important;">
+                    <?php
+                    $salesItems = $sales->items;
+                    $return = model('SalesReturnModel')->where('sale_id', $sales->id)->first();
+
+                    if ($return) $salesItems = model('SalesModel')->getItemsWithReturnItems($sales->id);;
+                    ?>
                     <tbody>
                         <tr class="heading" style="background: #F3F2F7;">
                             <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
@@ -126,6 +132,11 @@
                             <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
                                 QTY
                             </td>
+                            <?php if ($return) : ?>
+                                <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
+                                    Rtn QTY
+                                </td>
+                            <?php endif ?>
                             <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
                                 Price
                             </td>
@@ -138,26 +149,46 @@
                             <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
                                 Subtotal
                             </td>
+                            <?php if ($return) : ?>
+                                <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
+                                    Rtn subTl
+                                </td>
+                            <?php endif ?>
                         </tr>
                         <?php
-                        if (isset($sales))
-                            foreach ($sales->items as $key => $row) : ?>
-                            <tr class="details" style="border-bottom:1px solid #E9ECEF;">
-                                <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $key + 1 ?></td>
-                                <td class="productimgname" style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
-                                    <?= $row->product->image_uri
-                                        ? '<a class="product-img"><img src="' . base_url($row->product->image_uri) . '" alt="product"></a>'
-                                        : '<a class="p-3"></a>' ?>
-                                    <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
-                                        <?= $row->product->name ?>
-                                </td>
-                                <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->qty ?></td>
-                                <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->unit_price ?></td>
-                                <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->discount ?></td>
-                                <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= number_format(($row->unit_price * $row->qty * $row->tax) / 100, 2) ?></td>
-                                <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= number_format($row->unit_price * $row->qty - $row->discount + (($row->unit_price * $row->qty * $row->tax) / 100), 2) ?></td>
-                            </tr>
-                        <?php endforeach ?>
+                        if (isset($sales)) {
+                        ?>
+                            <?php
+                            $totalReturns = 0;
+                            $totalReturnDiscount = 0;
+                            foreach ($salesItems as $key => $row) :
+                            ?>
+                                <tr class="details" style="border-bottom:1px solid #E9ECEF;">
+                                    <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $key + 1 ?></td>
+                                    <td class="productimgname" style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
+                                        <?= $row->product->image_uri
+                                            ? '<a class="product-img"><img src="' . base_url($row->product->image_uri) . '" alt="product"></a>'
+                                            : '<a class="p-3"></a>' ?>
+                                        <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
+                                            <?= $row->product->name ?>(<?= $row->product->unit->label ?>)
+                                    </td>
+                                    <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->qty ?></td>
+                                    <?php if ($return) : ?>
+                                        <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->rtn_qty ?></td>
+                                    <?php endif ?>
+                                    <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->unit_price ?></td>
+                                    <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->discount ?></td>
+                                    <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= number_format(($row->unit_price * $row->qty * $row->tax) / 100, 2) ?></td>
+                                    <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= number_format($row->unit_price * $row->qty - $row->discount + (($row->unit_price * $row->qty * $row->tax) / 100), 2) ?></td>
+                                    <?php if ($return) :
+                                        $totalReturns += $row->rtn_subtotal;
+                                        $totalReturnDiscount += $row->rtn_discount;
+                                    ?>
+                                        <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= number_format($row->rtn_subtotal, 2) ?></td>
+                                    <?php endif ?>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -181,19 +212,34 @@
                         <div class="total-order w-100 max-widthauto m-auto mb-4">
                             <ul>
                                 <li>
-                                    <h4>Shipping</h4>
-                                    <h5 class="shippingTotal"><?= number_format($sales->shipping, 2); ?></h5>
+                                    <h4>Total Discount</h4>
+                                    <h5 class="shippingTotal"><?= number_format($sales->discount, 2); ?></h5>
                                 </li>
                                 <li class="total">
-                                    <h4>Grand Total</h4>
+                                    <h4>Sales Total</h4>
                                     <h5 class="grandTotal"><?= number_format($sales->total_amount, 2) ?></h5>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 offset-lg-6">
+                        <div class="total-order w-100 max-widthauto m-auto mb-4">
+                            <ul>
+                                <li>
+                                    <h4>Total Return Discount</h4>
+                                    <h5 class="shippingTotal"><?= number_format($totalReturnDiscount, 2); ?></h5>
+                                </li>
+                                <li class="total">
+                                    <h4>Returns Total</h4>
+                                    <h5 class="grandTotal"><?= number_format($totalReturns, 2) ?></h5>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <a href="javascript:void(0);" class="btn btn-submit me-2">Print Invoice</a>
+                    <a onclick="rePrintInvoice('<?= site_url('print/sales/' . $sales->id) ?>')" href="javascript:void(0);" class="btn btn-submit me-2">Print Invoice</a>
                     <a href="<?= site_url('sales/returns/create?invoice=' . $sales->invoice) ?>" class="btn btn-submit me-2">Return</a>
                 </div>
             </div>

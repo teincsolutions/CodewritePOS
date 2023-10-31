@@ -109,6 +109,22 @@ class SalesModel extends Model
         return $model;
     }
 
+    public function getItemsWithReturnItems($saleId)
+    {
+        $itemModel = new SalesItemModel();
+        $itemModel->select('sales_items.*, sum(sales_returns_items.unit_price) as rtn_unit_price,sum(sales_returns_items.discount) as rtn_discount,  sum(sales_returns_items.qty) as rtn_qty,  sum(sales_returns_items.subtotal) as rtn_subtotal');
+        $itemModel->join('sales_returns_items', 'sales_returns_items.sale_item_id=sales_items.id', 'left');
+        $itemModel->where('sales_items.sale_id', $saleId);
+        $itemModel->groupBy('sales_items.id');
+        return $itemModel->findAll();
+    }
+
+    public function hasReturns($saleId): bool
+    {
+        $returnModel = new SalesReturnModel();
+        return  $returnModel->where('sale_id', $saleId)->countAllResults() > 0;
+    }
+
     public function getTotalAmount(): float
     {
         $total = $this->builder()->selectSum('total_amount', 'total')

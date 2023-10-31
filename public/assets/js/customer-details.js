@@ -25,7 +25,7 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-
+        filter['store_id'] =$('.select2-store').val();
         params.fields = filter;
       },
     },
@@ -188,6 +188,39 @@ $(function () {
           ? i
           : 0;
       };
+
+      // Total over this page
+      pageTotal = api
+        .column(5, { page: "current" })
+        .data()
+        .reduce(function (a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);
+
+      // Update footer
+      $(api.column(5).footer()).html("GHS " + pageTotal.toFixed(2));
+
+
+      // Total over this page
+      pageTotal = api
+        .column(6, { page: "current" })
+        .data()
+        .reduce(function (a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);
+
+      // Update footer
+      $(api.column(6).footer()).html("GHS " + pageTotal.toFixed(2));
+      // Total over this page
+      pageTotal = api
+        .column(7, { page: "current" })
+        .data()
+        .reduce(function (a, b) {
+          return intVal(a) + intVal(b.total_amount-b.paid);
+        }, 0);
+
+      // Update footer
+      $(api.column(7).footer()).html("GHS " + pageTotal.toFixed(2));
     },
     order: [[2, "desc"]],
     columnDefs: [
@@ -214,7 +247,7 @@ $(function () {
   // table2
   table2 = $("#dt-ledger").DataTable({
     ajax: {
-      url: baseUrl + "/customers/ledger/datatable",
+      url: baseUrl + "customers/ledger/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
@@ -237,12 +270,11 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-
+        filter['store_id'] =$('.select2-store').val();
         params.fields = filter;
       },
     },
     processing: true,
-    serverSide: true,
     bFilter: true,
     dom: "fBtlpi",
     buttons: [
@@ -433,7 +465,7 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-
+        filter['sales.store_id'] =$('.select2-store').val();
         params.fields = filter;
       },
     },
@@ -484,7 +516,7 @@ $(function () {
           if (type === "display") {
             const badges = {
               completed: "bg-lightgreen",
-              pending: "lightred",
+              pending: "bg-lightred",
             };
             return `<span class="badges ${badges[data]}">${data}</span>`;
           }
@@ -589,6 +621,29 @@ $(function () {
           ? i
           : 0;
       };
+
+      // Total over this page
+      pageTotal = api
+        .column(5, { page: "current" })
+        .data()
+        .reduce(function (a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);
+
+      // Update footer
+      $(api.column(5).footer()).html("GHS " + pageTotal.toFixed(2));
+
+
+      // Total over this page
+      pageTotal = api
+        .column(6, { page: "current" })
+        .data()
+        .reduce(function (a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);
+
+      // Update footer
+      $(api.column(6).footer()).html("GHS " + pageTotal.toFixed(2));
     },
     order: [[2, "desc"]],
     columnDefs: [
@@ -662,7 +717,7 @@ $(function () {
 
           if (d.status === true) {
             form3.trigger("reset");
-            $("select").val("").trigger("change.select2");
+            form3.find("select").val("").trigger("change.select2");
             form3.modal("hide");
             table2.ajax.reload();
             table1.ajax.reload();
@@ -737,7 +792,7 @@ $(function () {
           }
 
           if (d.status === true) {
-            $("select").val("").trigger("change.select2");
+            form4.find("select").val("").trigger("change.select2");
             form4.modal("hide");
             table2.ajax.reload();
             table1.ajax.reload();
@@ -762,7 +817,6 @@ $(function () {
       });
     }
   });
-
 
   let form5 = $("#add-bulk-payment");
   form5.validate({
@@ -867,4 +921,20 @@ $(function () {
       $("#inv-bal").val((0).toFixed(2));
       $("#inv-due").val((0).toFixed(2));
     });
+
+    $(".select2-store").select2({
+      placeholder: "Seach a store",
+    });
+
+    $(".select2-store").on(
+      "select2:select select2:unselect",
+      function (params) {
+        table1.ajax.reload();
+        table2.ajax.reload();
+        table3.ajax.reload();
+        table.ajax.reload();
+        $("input[name='store_id']").val($(this).val());
+      }
+    );
+    $("input[name='store_id']").val($(".select2-store").val());
 });

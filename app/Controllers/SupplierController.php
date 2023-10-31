@@ -3,11 +3,9 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\StoreModel;
 use App\Models\SupplierModel;
-use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
 
 class SupplierController extends BaseController
 {
@@ -104,12 +102,15 @@ class SupplierController extends BaseController
      */
     public function show($id)
     {
+        $storeModel = new StoreModel();
         $data = [
-            'title' => 'Supplier Details'
+            'title' => 'Supplier Details',
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
         ];
         $model = new SupplierModel();
+        $supplier = $model->where('id', $id)->first();
         $data = array_merge($data, [
-            'supplier' => $model->find($id),
+            'supplier' => $supplier,
         ]);
 
         return view('pages/suppliers/show_supplier', $data);

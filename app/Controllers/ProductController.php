@@ -199,6 +199,9 @@ class ProductController extends BaseController
     public function datatable(): Response
     {
         $inputs = $this->request->getVar();
+        $inputs['length'] = 1000;
+        $inputs['start'] = 0;
+        
         $model = new ProductModel();
         if (setting('App.ProductDiffForStore') === 'yes') {
             $model->select('products.id,products.name,products.barcode,products.sku,products.pdiscount,products.description,' .
@@ -218,6 +221,9 @@ class ProductController extends BaseController
     public function expired_datatable(): Response
     {
         $inputs = $this->request->getVar();
+        $inputs['length'] = 1000;
+        $inputs['start'] = 0;
+        
         $model = new ProductModel();
         $model->where('expiration <=', date('Y-m-d', time()));
         return $this->response->setJSON(toDatatableResult($model, $inputs));

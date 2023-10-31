@@ -37,10 +37,12 @@
             'AllowDeleteSalesReturns',
             'AllowDeletePurchases',
             'AllowDeletePurchaseReturns',
+            'AllowDeleteClosing',
             'UseExpiration',
             'AllowDeleteQuotes',
             'companyName', 
             'companyContacts',
+            'ShowMainBranchAddress',
         ];
         $data = [];
         foreach ($settings as  $key)

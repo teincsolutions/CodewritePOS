@@ -76,6 +76,20 @@ class AccountController extends BaseController
         $model = new UserModel();
         $inputs = $this->request->getVar();
 
+
+        $credentials = [
+            'email'    => auth()->user()->email,
+            'password' => $this->request->getPost('old_password')
+        ];
+        $validCreds = auth()->check($credentials);
+
+        if (!$validCreds->isOK()) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' =>  "Invalid Old Password"
+            ]);
+        }
+
         $user = auth()->user();
         $user->fill($inputs);
 
@@ -88,20 +102,6 @@ class AccountController extends BaseController
                     'message' => join(" and ", array_map(function ($error) {
                         return $error;
                     }, $this->validator->getErrors()))
-                ]);
-            }
-
-            $credentials = [
-                'email'    => auth()->user()->email,
-                'password' => $this->request->getPost('old_password')
-            ];
-
-            $validCreds = auth()->check($credentials);
-
-            if (!$validCreds->isOK()) {
-                return $this->response->setJSON([
-                    'status' => false,
-                    'message' =>  "Invalid Old Password"
                 ]);
             }
 

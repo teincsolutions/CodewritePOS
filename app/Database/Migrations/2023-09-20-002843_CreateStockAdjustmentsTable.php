@@ -39,6 +39,10 @@ class CreateStockAdjustmentsTable extends Migration
                 'null' => false,
                 'defaut' => 0.00
             ],
+            'note' => [
+                'type' => 'TEXT',
+                'null' => true,
+            ],
             'user_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,

@@ -60,7 +60,7 @@ form.validate({
 let initCompleted = false;
 
 let tableItems = $(".tr-items").DataTable({
-  dom: "fti",
+  dom: "f<'toolbar'>ti",
   pageLength: 100,
   rowCallback: function (row, data, dispNum) {
     $("td:eq(0)", row).html(dispNum + 1);
@@ -71,6 +71,12 @@ let tableItems = $(".tr-items").DataTable({
   },
 });
 if (initCompleted) updateTotals();
+$("div.toolbar").html(
+  "<span class='btn btn-danger clear-all'>Clear all</span>"
+).on("click",".clear-all", function (e) {
+  tableItems.rows().remove().draw();
+  purchaseItemIds = [];
+});
 
 function updateItemRow(row) {
   let row1 = $(row).parents("tr").first();
@@ -122,33 +128,7 @@ function updateTotals() {
   if (dueTotal > 0) $("#paid").val(dueTotal);
   else $("#paid").val(0.0);
 }
-function printInvoice(result) {
-  Swal.fire({
-    html: result.receipt,
-    showDenyButton: true,
-    showCancelButton: false,
-    confirmButtonText: "Print Receipt",
-    denyButtonText: `Don't Print`,
-    width: "38em",
-  }).then((result2) => {
-    if (result2.isConfirmed) {
-      const newWin = window.open(
-        "",
-        "Purchase Return Receipt - INV" + result.data.invoice,
-        "left=0,top=0,toolbar=0,scrollbars=0,status=0"
-      );
-      newWin.document.write(result.receipt);
-      newWin.focus();
-      setTimeout(() => {
-        newWin.print();
-        newWin.close();
-      }, 300);
-    } else if (result2.isDenied) {
-      Swal.close();
-    }
-  });
-  return true;
-}
+
 function checkout() {
   return true;
 }
@@ -259,7 +239,7 @@ function autocomplete(inp) {
                                         }
                                             <a target="_blank" href="${baseUrl}products/${
                 item.id
-              }">${item.name}${store}</a></td>
+              }">${item.name}(${item.unit.label})</a></td>
                                         <td>
                                         <div class="increment-decrement">
                                             <div class="input-groups">
@@ -283,7 +263,7 @@ function autocomplete(inp) {
                 item.unit_cost
               }">
                                                 <input type="button" value="-" class="button-minus dec button">
-                                                <input onblur="updateItemRow(this)" min="1" max="${
+                                                <input onblur="updateItemRow(this)" min=".1" max="${
                                                   item.max_qty
                                                 }" type="text" name="items[${prodIndex}][qty]" value="${
                 item.max_qty
@@ -436,7 +416,7 @@ let select2Supplier = $(".select2-supplier")
       url: `${baseUrl}suppliers/select2`,
       dataType: "json",
     },
-    placeholder: "walk-in-supplier",
+    placeholder: "Search supplier",
     templateResult: formatCustomer,
     templateSelection: formatCustomer,
   })
@@ -460,7 +440,7 @@ let select2Supplier = $(".select2-supplier")
         ? `(GHS ${Math.abs(supplierBalance).toFixed(2)})`
         : `GHS ${supplierBalance.toFixed(2)}`
     );
-    $(".supplier").html("walk-in-supplier");
+    $(".supplier").html("");
     $("input[name='discount']").val("");
     $("#acc-bal").addClass("d-none");
     updateTotals();

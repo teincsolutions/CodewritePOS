@@ -198,6 +198,28 @@ class PurchaseReturnController extends BaseController
         return $this->response->setJSON($res);
     }
 
+           /**
+     * return json for receipt
+     */
+    public function print($id) : Response {
+        $model = new PurchaseReturnModel();
+        $return =$model->where('id', $id)->first();
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => "Invoice not found!",
+        ];
+        if ($return) {
+            $res = array_merge($res, [
+                'status' => true,
+                'data' => $return,
+                'receipt' =>  view('pages/purchase_returns/pos_receipt', ['return' => $return]),
+                 'message' => "Invoice found!",
+            ]);
+        }
+        return $this->response->setJSON($res);
+    }
+
     /**
      * return json for datatables
      * @return Response - http response

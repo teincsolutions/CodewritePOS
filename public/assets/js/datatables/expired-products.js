@@ -27,7 +27,6 @@ $(function () {
       },
     },
     processing: true,
-    serverSide: true,
     bFilter: true,
     dom: "fBtlpi",
     buttons: [

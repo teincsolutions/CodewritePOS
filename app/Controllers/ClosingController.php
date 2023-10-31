@@ -78,33 +78,40 @@ class ClosingController extends BaseController
                 ->getRowObject()->total;
 
             $where = [
-                'sales.store_closing_id' => null,
-                'sales.store_id' => $store->id,
+                'store_closing_id' => null,
+                'store_id' => $store->id,
             ];
-            $customer_payment =  $customerLedgerModel->builder()->where($where)
-            ->where('ledger_type', 'sales')
+            $customer_payment =  $customerLedgerModel->builder()
                 ->join('sales', 'sales.id=customer_ledgers.sale_id')
+                ->where('customer_ledgers.store_closing_id', null)
+                ->where('sales.store_closing_id !=', null)
+                ->where('ledger_type', 'sales')
                 ->selectSum('credit', 'total')->get()->getFirstRow()->total;
 
-            $sale_total = $saleModel->builder()->where($where)
-                ->where('type', 'walk-in-customer')
+            $walkin = $saleModel->builder()->where($where)
                 ->where('order_status', 'completed')
-                ->selectSum('total_amount', 'total')->get()->getFirstRow()->total;
+                ->where('type', 'walk-in-customer')
+                ->selectSum('paid', 'total')->get()->getFirstRow()->total;
+            $cust = $customerLedgerModel->builder()
+            ->join('sales', 'sales.id=customer_ledgers.sale_id')
+            ->where('customer_ledgers.store_closing_id', null)
+            ->where('sales.store_closing_id', null)
+            ->where('ledger_type', 'sales')
+            ->selectSum('credit', 'total')->get()->getFirstRow()->total;
+
+            $sale_total = $walkin + $cust;
 
             $sale_return_total = $saleReturnModel->builder()->where($where)
-                ->join('sales', 'sales.id=sales_returns.sale_id')
                 ->where('sales_returns.order_status', 'completed')
                 ->selectSum('sales_returns.paid', 'total')->get()->getFirstRow()->total;
             $where = [
-                'purchases.store_closing_id' => null,
-                'purchases.store_id' => $store->id,
+                'store_closing_id' => null,
+                'store_id' => $store->id,
             ];
             $supplier_payment =  $supplierLedgerModel->builder()->where($where)
-                ->join('purchases', 'purchases.id=supplier_ledgers.purchase_id')
                 ->selectSum('debit', 'total')->get()->getFirstRow()->total;
 
             $purchase_return_total = $purchaseReturnModel->builder()->where($where)
-                ->join('purchases', 'purchases.id=purchase_returns.purchase_id')
                 ->selectSum('purchase_returns.paid', 'total')->get()->getFirstRow()->total;
             $where = [
                 'store_closing_id' => null,

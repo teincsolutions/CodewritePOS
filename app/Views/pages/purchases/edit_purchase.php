@@ -111,10 +111,7 @@
                                                         : '<a class="p-3"></a>' ?>
                                                     <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
                                                         <?= $row->product->name ?>
-                                                        <?php if ($row->store) { ?>
-                                                            <?= $row->store->name; ?><?= $row->store->location ? "(" . $row->store->location . ")" : null; ?></a>
-                                                <?php } ?>
-                                                </td>
+                                                        (<?= $row->product->unit->label; ?>)</td>
                                                 <td>
                                                     <div class="increment-decrement">
                                                         <div class="input-groups">
@@ -127,7 +124,7 @@
                                                             <input type="hidden" name="items[<?= $key ?>][store_id]" value="<?= $row->store_id; ?>">
                                                             <input type="hidden" name="items[<?= $key ?>][subtotal]" class="rsubtotal" value="<?= $row->subtotal ?>">
                                                             <input type="button" value="-" class="button-minus dec button">
-                                                            <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" value="<?= $row->qty ?>" class="quantity-field rqty" required>
+                                                            <input onblur="updateItemRow(this)" min=".1" type="text" name="items[<?= $key ?>][qty]" value="<?= $row->qty ?>" class="quantity-field rqty" required>
                                                             <input type="button" value="+" class="button-plus inc button">
                                                         </div>
                                                     </div>

@@ -105,7 +105,7 @@
                                                     : '<a class="p-3"></a>' ?>
                                                 <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
                                                     <?= $row->product->name ?>
-                                                    (<?= $sales->store->name; ?><?= $sales->store->location ? "(" . $sales->store->location . ")" : null; ?>)</a>
+                                                    (<?= $row->product->unit->label; ?>)</a>
                                             </td>
                                             <td>
                                                 <div class="increment-decrement">
@@ -120,7 +120,7 @@
                                                         <input type="hidden" name="items[<?= $key ?>][discount]" value="<?= $row->discount ?>" class="rdiscount">
                                                         <input type="hidden" name="items[<?= $key ?>][subtotal]" value="<?= $row->unit_price * $row->max_qty + $row->unit_price * ($row->tax / 100) * $row->max_qty + $row->discount * $row->max_qty ?>" class="rsubtotal">
                                                         <input type="button" value="-" class="button-minus dec button">
-                                                        <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" max="<?= $row->max_qty ?>" value="<?= $row->max_qty ?>" class="quantity-field rqty" required>
+                                                        <input onblur="updateItemRow(this)" min="0.1" type="text" name="items[<?= $key ?>][qty]" max="<?= $row->max_qty ?>" value="<?= $row->max_qty ?>" class="quantity-field rqty" required>
                                                         <input type="button" value="+" class="button-plus inc button">
                                                     </div>
                                                 </div>
@@ -199,7 +199,7 @@
                         </div>
                     </div>
                     <div class="col-lg-12">
-                        <button type="submit" class="btn btn-submit me-2">Submit Return</button>
+                        <button onclick="$('.post-form').submit()"  type="button" class="btn btn-submit me-2">Submit Return</button>
                     </div>
                 </div>
             </div>

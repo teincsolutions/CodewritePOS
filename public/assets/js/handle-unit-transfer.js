@@ -63,33 +63,7 @@ let tableItems = $(".tr-items").DataTable({
   },
 });
 
-function printInvoice(result) {
-  Swal.fire({
-    html: result.receipt,
-    showDenyButton: true,
-    showCancelButton: false,
-    confirmButtonText: "Print Receipt",
-    denyButtonText: `Don't Print`,
-    width: "38em",
-  }).then((result2) => {
-    if (result2.isConfirmed) {
-      const newWin = window.open(
-        "",
-        "POS Receipt - INV" + result.data.invoice,
-        "left=0,top=0,toolbar=0,scrollbars=0,status=0"
-      );
-      newWin.document.write(result.receipt);
-      newWin.focus();
-      setTimeout(() => {
-        newWin.print();
-        newWin.close();
-      }, 300);
-    } else if (result2.isDenied) {
-      Swal.close();
-    }
-  });
-  return true;
-}
+
 function checkout() {
   return true;
 }
@@ -132,7 +106,7 @@ $(".tr-items").on("click", ".add-set", function () {
           <div class="input-groups">
               <input type="hidden" name="items[${prodIndex}][to_unit_qty]" value="0" class="to_unit_qty" required>
               <input type="button" value="-" class="button-minus dec button">
-              <input onblur="updateItemRow(this)" min="1" type="text" name="items[${prodIndex}][from_unit_qty]" value="0" class="quantity-field" required>
+              <input onblur="updateItemRow(this)" min=".1" type="text" name="items[${prodIndex}][from_unit_qty]" value="0" class="quantity-field" required>
               <input type="button" value="+" class="button-plus inc button">
           </div>
       </div>

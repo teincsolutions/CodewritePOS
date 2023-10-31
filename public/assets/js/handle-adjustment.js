@@ -108,33 +108,7 @@ function updateTotals() {
   $(".grandTotal").html("GHS " + grandTotal.toFixed(2));
   $("#adjustment-total").val(grandTotal);
 }
-function printInvoice(result) {
-  Swal.fire({
-    html: result.receipt,
-    showDenyButton: true,
-    showCancelButton: false,
-    confirmButtonText: "Print Receipt",
-    denyButtonText: `Don't Print`,
-    width: "38em",
-  }).then((result2) => {
-    if (result2.isConfirmed) {
-      const newWin = window.open(
-        "",
-        "POS Receipt - INV" + result.data.invoice,
-        "left=0,top=0,toolbar=0,scrollbars=0,status=0"
-      );
-      newWin.document.write(result.receipt);
-      newWin.focus();
-      setTimeout(() => {
-        newWin.print();
-        newWin.close();
-      }, 300);
-    } else if (result2.isDenied) {
-      Swal.close();
-    }
-  });
-  return true;
-}
+
 function checkout() {
   return true;
 }
@@ -246,7 +220,7 @@ function autocomplete(inp) {
                                         }
                                             <a target="_blank" href="${baseUrl}products/${
               item.id
-            }">${item.name}</a></td>
+            }">${item.name}(${item.unit.label})</a></td>
             <td>${parseFloat(item.unit_cost).toFixed(2)}</td>
             <td>${parseFloat(instock).toFixed(2)}</td>
                                         <td>

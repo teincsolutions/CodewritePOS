@@ -14,7 +14,24 @@
         <div class="col-md-12">
             <div class="card bg-white">
                 <div class="card-header">
-                    <h5 class="card-title">Details of <?= $customer->name; ?></h5>
+                    <div class="row">
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <select name="store_id" class="select2-store">
+                                    <?php
+                                    if (isset($stores))
+                                        foreach ($stores as $row) { ?>
+                                        <option value="<?= $row->id ?>">
+                                            <?= $row->name; ?> (<?= $row->location; ?>)
+                                        </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <h5 class="card-title">
+                        Details of <?= $customer->name; ?>
+                    </h5>
                 </div>
                 <div class="card-body">
                     <ul class="nav nav-tabs nav-justified">
@@ -179,6 +196,20 @@
                                                     <th class="text-center">Action</th>
                                                 </tr>
                                             </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>Total</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -247,6 +278,19 @@
                                                     <th class="text-center">Action</th>
                                                 </tr>
                                             </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>Total</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -403,7 +447,8 @@
                             </div>
                         </div>
                     </div>
-                    <input type="hidden" name="customer_id"  value="<?=$customer->id ?>">
+                    <input type="hidden" name="customer_id" value="<?= $customer->id ?>">
+                    <input type="hidden" name="store_id">
                     <div class="col-lg-6 col-sm-12 col-12">
                         <div class="form-group">
                             <label>Paying Amount</label>
@@ -434,5 +479,5 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js?v=2') ?>"></script>
-<script src="<?= base_url('assets/js/customer-details.js?v=5') ?>"></script>
+<script src="<?= base_url('assets/js/customer-details.js?v=11') ?>"></script>
 <?= $this->endSection() ?>

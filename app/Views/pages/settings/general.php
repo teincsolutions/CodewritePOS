@@ -332,6 +332,25 @@
                                                     </div>
                                                 </td>
                                             </tr>
+                                            <thead class="border-top-0">
+                                                <th style="width: 25%;">Store Closing</th>
+                                                <th>Value</th>
+                                            </thead>
+                                            <tr>
+                                                <td>Allow Delete Closing</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="AllowDeleteClosing" value="yes" <?= setting('App.AllowDeleteClosing') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="AllowDeleteClosing" value="no" <?= setting('App.AllowDeleteClosing') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         </table>
                                     </div>
                                 </div>
@@ -341,11 +360,39 @@
                             </form>
                         </div>
                         <div class="tab-pane" id="receipt-tab">
-                            <div class="row">
+                        <form action="<?= site_url('settings') ?>" class="row post-form" method="post">
+                                <p class="text-muted mt-5 mb-5">
+                                    Edit the configuration of your Receipt. Click on "Save Changes" button at the bottom of the page when done.
+                                </p>
                                 <div class="col-lg-12">
-
+                                    <div class="table-responsive">
+                                        <table class="table w-100">
+                                            <thead>
+                                                <th style="width: 25%;">General Information</th>
+                                                <th>Value</th>
+                                            </thead>
+                                            <tr>
+                                                <td>Show Main Branch Address</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="ShowMainBranchAddress" value="yes" <?= setting('App.ShowMainBranchAddress') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="ShowMainBranchAddress" value="no" <?= setting('App.ShowMainBranchAddress') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="col-lg-12 mt-3">
+                                    <button class="btn btn-primary">Save Changes</button>
+                                </div>
+                            </form>
                         </div>
                         <div class="tab-pane" id="invoice-tab">
                             <div class="row">

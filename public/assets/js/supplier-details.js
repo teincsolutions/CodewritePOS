@@ -27,7 +27,7 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-
+        filter['store_id'] =$('.select2-store').val();
         params.fields = filter;
       },
     },
@@ -234,12 +234,11 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-
+        filter['store_id'] =$('.select2-store').val();
         params.fields = filter;
       },
     },
     processing: true,
-    serverSide: true,
     bFilter: true,
     dom: "fBtlpi",
     buttons: [
@@ -430,7 +429,7 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-
+        filter['purchases.store_id'] =$('.select2-store').val();
         params.fields = filter;
       },
     },
@@ -661,7 +660,7 @@ $(function () {
 
           if (d.status === true) {
             form3.trigger("reset");
-            $("select").val("").trigger("change.select2");
+            form3.find("select").val("").trigger("change.select2");
             form3.modal("hide");
             table1.ajax.reload();
             table2.ajax.reload();
@@ -736,7 +735,7 @@ $(function () {
           }
 
           if (d.status === true) {
-            $("select").val("").trigger("change.select2");
+            form4.find("select").val("").trigger("change.select2");
             form4.modal("hide");
             table2.ajax.reload();
             table1.ajax.reload();
@@ -761,6 +760,82 @@ $(function () {
       });
     }
   });
+
+  let form5 = $("#add-bulk-payment");
+  form5.validate({
+    rules: {},
+    messages: {},
+    errorElement: "em",
+    errorPlacement: function (t, e) {
+      t.addClass("invalid-feedback"),
+        "checkbox" === e.prop("type")
+          ? t.insertAfter(e.nex$("label"))
+          : t.insertAfter(e);
+    },
+    highlight: function (e, i, n) {
+      $(e).addClass("is-invalid").removeClass("is-valid");
+    },
+    unhighlight: function (e, i, n) {
+      $(e).addClass("is-valid").removeClass("is-invalid");
+    },
+  });
+
+  form5.on("submit", function (e) {
+    e.preventDefault();
+
+    if ($(this).valid() === true) {
+      $.ajax({
+        method: "POST",
+        url: this.getAttribute("action"),
+        data: new FormData(this),
+        enctype: "multipart/form-data",
+        dataType: "json",
+        contentType: false,
+        processData: false,
+        cache: false,
+        success: function (d, r) {
+          if (!d || r === "nocontent") {
+            Swal.fire({
+              icon: "error",
+              text: "Malformed form data sumbitted! Please try agian.",
+            });
+            return;
+          }
+          if (typeof d.status !== "boolean" || typeof d.message !== "string") {
+            Swal.fire({
+              icon: "error",
+              text: "Malformed data response! Please try agian.",
+            });
+            return;
+          }
+
+          if (d.status === true) {
+            form5.trigger("reset");
+            form5.modal("hide");
+            table2.ajax.reload();
+            table1.ajax.reload();
+            table3.ajax.reload();
+            Swal.fire({
+              icon: "success",
+              text: d.message,
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              text: d.message,
+            });
+          }
+        },
+        error: function (r) {
+          Swal.fire({
+            icon: "error",
+            text: "Unable to submit form! Please try agian.",
+          });
+        },
+      });
+    }
+  });
+
   let select2Invoices = $(".select2-invoices")
     .select2({
       ajax: {
@@ -789,4 +864,20 @@ $(function () {
       $("#inv-bal").val((0).toFixed(2));
       $("#inv-due").val((0).toFixed(2));
     });
+
+    $(".select2-store").select2({
+      placeholder: "Seach a store",
+    });
+
+    $(".select2-store").on(
+      "select2:select select2:unselect",
+      function (params) {
+        table1.ajax.reload();
+        table2.ajax.reload();
+        table3.ajax.reload();
+        table.ajax.reload();
+        $("input[name='store_id']").val($(this).val());
+      }
+    );
+    $("input[name='store_id']").val($(".select2-store").val());
 });

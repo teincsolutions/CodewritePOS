@@ -147,9 +147,9 @@
                                         <span>Inventory</span><span class="menu-arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a class="<?= getActiveUrl("inventory/short-stocks"); ?>" href="<?= site_url('inventory/short-stocks') ?>">Short Stocks <span class="badge bg-warning ms-1"><?=model('StockModel')->getShortTotal() ?></span></a></li>
-                                        <li><a class="<?= getActiveUrl("inventory/outofstocks"); ?>" href="<?= site_url('inventory/outofstocks') ?>">Out of Stocks <span class="badge bg-danger ms-1"><?=model('StockModel')->getOutOfStockTotal() ?></span></a></a></li>
-                                        <li><a class="<?= getActiveUrl("inventory/instocks"); ?>" href="<?= site_url('inventory/instocks') ?>">In Stocks <span class="badge bg-info ms-1"><?=model('StockModel')->getInstockTotal() ?></span></a></a></li>
+                                        <li><a class="<?= getActiveUrl("inventory/short-stocks"); ?>" href="<?= site_url('inventory/short-stocks') ?>">Short Stocks <span class="badge bg-warning ms-1"><?= model('StockModel')->getShortTotal() ?></span></a></li>
+                                        <li><a class="<?= getActiveUrl("inventory/outofstocks"); ?>" href="<?= site_url('inventory/outofstocks') ?>">Out of Stocks <span class="badge bg-danger ms-1"><?= model('StockModel')->getOutOfStockTotal() ?></span></a></a></li>
+                                        <li><a class="<?= getActiveUrl("inventory/instocks"); ?>" href="<?= site_url('inventory/instocks') ?>">In Stocks <span class="badge bg-info ms-1"><?= model('StockModel')->getInstockTotal() ?></span></a></a></li>
                                     </ul>
                                 </li>
                             <?php endif ?>
@@ -244,6 +244,7 @@
                     </li>
                 <?php endif ?>
                 <?php if (auth()->user()->can('sales.report', 'purchases.report', 'stocks.report')) : ?>
+
                     <li class="submenu-open">
                         <h6 class="submenu-hdr">Reports</h6>
                         <ul>
@@ -255,6 +256,12 @@
                             <?php endif ?>
                             <?php if (auth()->user()->can('stocks.report')) : ?>
                                 <li class="<?= getActiveUrl("reports/stocks", "active"); ?>"><a href="<?= site_url('reports/stocks') ?>"><i data-feather="credit-card"></i><span>Inventory Report</span></a></li>
+                            <?php endif ?>
+                            <?php if (auth()->user()->can('customer-ledgers.report')) : ?>
+                                <li class="<?= getActiveUrl("reports/ledgers/customers", "active"); ?>">
+                                    <a href="<?= site_url('reports/ledgers/customers') ?>">
+                                        <i data-feather="calendar"></i><span>Customer Ledgers</span></a>
+                                </li>
                             <?php endif ?>
                         </ul>
                     </li>

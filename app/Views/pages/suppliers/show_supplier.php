@@ -14,6 +14,21 @@
         <div class="col-md-12">
             <div class="card bg-white">
                 <div class="card-header">
+                    <div class="row">
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <select name="store_id" class="select2-store">
+                                    <?php
+                                    if (isset($stores))
+                                        foreach ($stores as $row) { ?>
+                                        <option value="<?= $row->id ?>">
+                                            <?= $row->name; ?> (<?= $row->location; ?>)
+                                        </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <h5 class="card-title">Details of <?= $supplier->name; ?></h5>
                 </div>
                 <div class="card-body">
@@ -73,9 +88,37 @@
                         <div class="tab-pane" id="ledger-tab">
                             <div class="row mt-5">
                                 <div class="col-md-12 mb-3 d-flex justify-content-end">
-                                    <button type="button" data-bs-toggle="modal" data-bs-target="#add-payment" class="btn btn-primary btn-sm"><i class="fa fa-plus me-2"></i>Add Payment</button>
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#add-payment" class="btn btn-primary btn-sm  me-3"><i class="fa fa-plus me-2"></i>Add Payment</button>
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#add-bulk-payment" class="btn btn-secondary btn-sm"><i class="fa fa-plus me-2"></i>Bulk Payment</button>
                                 </div>
                                 <div class="col-md-12">
+                                    <div class="card" id="filter_inputs">
+                                        <div class="card-body pb-0">
+                                            <div class="row">
+                                                <input type="hidden" name="supplier_id" value="<?= $supplier->id; ?>">
+                                                <div class="col-lg-2 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <input type="text" name="invoice" placeholder="Enter Reference No" value="">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-2 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <select name="payment_status" class="select">
+                                                            <option value="">Select a status</option>
+                                                            <option value="due">Due</option>
+                                                            <option value="paid">Paid</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <a class="btn btn-filters ms-auto filter"><i class="fa fa-search"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="table-responsive">
                                         <table id="dt-ledger" class="table" style="width: 100%;">
                                             <thead>
@@ -364,9 +407,57 @@
         </div>
     </div>
 </form>
+
+<form action="<?= site_url('suppliers/ledgers/bulk') ?>" class="modal fade" id="add-bulk-payment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Payment Date</label>
+                            <div class="input-groupicon">
+                                <input type="text" name="tdate" value="<?= date('d-m-Y', time()) ?>" class="datetimepicker" required>
+                                <div class="addonset">
+                                    <i class="fa fa-calendar fa-lg"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="supplier_id" value="<?= $supplier->id ?>">
+                    <input type="hidden" name="store_id">
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Paying Amount</label>
+                            <input type="text" name="debit" min="0" value="" placeholder="Enter Amount" required>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Payment type</label>
+                            <select name="payment_type" class="select" required>
+                                <option value="cash">Cash</option>
+                                <option value="momo">MoMo</option>
+                                <option value="credit">Credit Card</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-submit">Submit</button>
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</form>
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js?v=1') ?>"></script>
-<script src="<?= base_url('assets/js/supplier-details.js?v=5') ?>"></script>
+<script src="<?= base_url('assets/js/supplier-details.js?v=12') ?>"></script>
 <?= $this->endSection() ?>

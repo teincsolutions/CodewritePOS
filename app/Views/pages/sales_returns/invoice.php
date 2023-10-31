@@ -47,19 +47,19 @@
                                     </font><br>
                                     <font style="vertical-align: inherit;">
                                         <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
-                                            <?= $return->sale->customer? $return->sale->customer->name : 'walk-in-customer' ?></font>
+                                            <?= $return->sale->customer ? $return->sale->customer->name : 'walk-in-customer' ?></font>
                                     </font><br>
                                     <font style="vertical-align: inherit;">
                                         <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
-                                            <a href="<?= $return->sale->customer? $return->sale->customer->email : null ?>" class="__cf_email__"><?= $return->sale->customer? $return->sale->customer->email : null ?></a>
+                                            <a href="<?= $return->sale->customer ? $return->sale->customer->email : null ?>" class="__cf_email__"><?= $return->sale->customer ? $return->sale->customer->email : null ?></a>
                                         </font>
                                     </font><br>
                                     <font style="vertical-align: inherit;">
                                         <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
-                                            <?= $return->sale->customer? $return->sale->customer->phone : null ?></font>
+                                            <?= $return->sale->customer ? $return->sale->customer->phone : null ?></font>
                                     </font><br>
                                     <font style="vertical-align: inherit;">
-                                        <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;"><?= $return->sale->customer? $return->sale->customer->address : null ?></font>
+                                        <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;"><?= $return->sale->customer ? $return->sale->customer->address : null ?></font>
                                     </font>
                                 </div>
                             </td>
@@ -72,6 +72,10 @@
                                     <font style="vertical-align: inherit;">
                                         <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
                                             Reference:</font>
+                                    </font><br>
+                                    <font style="vertical-align: inherit;">
+                                        <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
+                                            Sales Reference:</font>
                                     </font><br>
                                     <font style="vertical-align: inherit;">
                                         <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
@@ -96,6 +100,10 @@
                                     <font style="vertical-align: inherit;">
                                         <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
                                             INV<?= $return->invoice; ?> </font>
+                                    </font><br>
+                                    <font style="vertical-align: inherit;">
+                                        <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
+                                            INV<?= $return->sale->invoice; ?> </font>
                                     </font><br>
                                     <font style="vertical-align: inherit;">
                                         <font class="text-capitalize" style="vertical-align: inherit;font-size: 14px;color:#2E7D32;font-weight: 400;">
@@ -149,7 +157,7 @@
                                         ? '<a class="product-img"><img src="' . base_url($row->product->image_uri) . '" alt="product"></a>'
                                         : '<a class="p-3"></a>' ?>
                                     <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
-                                        <?= $row->product->name ?>
+                                        <?= $row->product->name ?>(<?= $row->product->unit->label; ?>)
                                 </td>
                                 <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->qty ?></td>
                                 <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->unit_price ?></td>
@@ -193,7 +201,7 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <a href="javascript:void(0);" class="btn btn-submit me-2">Print Invoice</a>
+                    <a onclick="rePrintInvoice('<?= site_url('print/sales/returns/' . $return->id) ?>')" href="javascript:void(0);" class="btn btn-submit me-2">Print Invoice</a>
                 </div>
             </div>
         </div>

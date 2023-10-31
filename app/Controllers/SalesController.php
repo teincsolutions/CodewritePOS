@@ -116,6 +116,29 @@ class SalesController extends BaseController
     }
 
     /**
+     * return json for receipt
+     */
+    public function print($id) : Response {
+        $model = new SalesModel();
+        $sale =$model->where('id', $id)->first();
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => "Invoice not found!",
+        ];
+        
+        if ($sale) {
+            $res = array_merge($res, [
+                'status' => true,
+                'data' => $sale,
+                'receipt' => view('pages/sales/pos_receipt', ['sales' => $sale]),
+                'message' => "Invoice found!",
+            ]);
+        }
+        return $this->response->setJSON($res);
+    }
+    
+    /**
      * return json for save
      * @return Response - http response
      */

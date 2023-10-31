@@ -152,33 +152,7 @@ function updateTotals() {
         : dueTotal.toFixed(2))
   );
 }
-function printInvoice(result) {
-  Swal.fire({
-    html: result.receipt,
-    showDenyButton: true,
-    showCancelButton: false,
-    confirmButtonText: "Print Receipt",
-    denyButtonText: `Don't Print`,
-    width: "38em",
-  }).then((result2) => {
-    if (result2.isConfirmed) {
-      const newWin = window.open(
-        "",
-        "POS Receipt - INV" + result.data.invoice,
-        "left=0,top=0,toolbar=0,scrollbars=0,status=0"
-      );
-      newWin.document.write(result.receipt);
-      newWin.focus();
-      setTimeout(() => {
-        newWin.print();
-        newWin.close();
-      }, 300);
-    } else if (result2.isDenied) {
-      Swal.close();
-    }
-  });
-  return true;
-}
+
 function checkout() {
   const type = $("#sales-type"),
     customer = $(".select2-customer");
@@ -495,7 +469,7 @@ function autocomplete(inp) {
                                         }
                                             <a target="_blank" href="${baseUrl}products/${
               item.id
-            }">${item.name}${store}</a></td>
+            }">${item.name}(${item.unit.label})</a></td>
                                         <td>
                                         <div class="increment-decrement">
                                             <div class="input-groups">
@@ -524,7 +498,7 @@ function autocomplete(inp) {
               (unitPrice * (item.tax ? item.tax.rate : 0.0)) / 100
             }">
                                                 <input type="button" value="-" class="button-minus dec button">
-                                                <input onblur="updateItemRow(this)" min="1" type="text" name="items[${prodIndex}][qty]" value="1" class="rqty quantity-field" required>
+                                                <input onblur="updateItemRow(this)" min="0.1" type="text" name="items[${prodIndex}][qty]" value="1" class="rqty quantity-field" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>

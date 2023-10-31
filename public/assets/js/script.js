@@ -933,3 +933,80 @@ function toggleFullscreen(elem) {
 document.getElementById("btnFullscreen").addEventListener("click", function () {
   toggleFullscreen();
 });
+
+function printInvoice(result) {
+  Swal.fire({
+    html: result.receipt,
+    showDenyButton: true,
+    showCancelButton: false,
+    confirmButtonText: "Print Receipt",
+    denyButtonText: `Don't Print`,
+    width: "38em",
+  }).then((result2) => {
+    if (result2.isConfirmed) {
+      const newWin = window.open(
+        "",
+        "POS Receipt - INV" + result.data.invoice,
+        "left=0,top=0,toolbar=0,scrollbars=0,status=0"
+      );
+      newWin.document.write(result.receipt);
+      newWin.focus();
+      setTimeout(() => {
+        newWin.print();
+        newWin.close();
+      }, 300);
+    } else if (result2.isDenied) {
+      Swal.close();
+    }
+  });
+  return true;
+}
+
+function rePrintInvoice(path) {
+  Swal.fire({
+    title: "Please wait !",
+    allowOutsideClick: false,
+    willOpen: () => {
+      Swal.showLoading();
+    },
+  });
+  $.ajax({
+    method: "GET",
+    url: path,
+    dataType: "json",
+    contentType: false,
+    processData: false,
+    cache: false,
+    success: function (d, r) {
+      if (!d || r === "nocontent") {
+        Swal.fire({
+          icon: "error",
+          text: "Malformed form data sumbitted! Please try agian.",
+        });
+        return;
+      }
+      if (typeof d.status !== "boolean" || typeof d.message !== "string") {
+        Swal.fire({
+          icon: "error",
+          text: "Malformed data response! Please try agian.",
+        });
+        return;
+      }
+
+      if (d.status === true) {
+        printInvoice(d);
+      } else {
+        Swal.fire({
+          icon: "error",
+          text: d.message,
+        });
+      }
+    },
+    error: function (r) {
+      Swal.fire({
+        icon: "error",
+        text: "Unable to submit form! Please try agian.",
+      });
+    },
+  });
+}

@@ -18,6 +18,7 @@ class StockAdjustmentModel extends Model
         'invoice',
         'store_id',
         'total_amount',
+        'note',
         'user_id',
         'store_closing_id',
     ];

@@ -7,7 +7,7 @@
             <h6>Manage your Closings</h6>
         </div>
         <div class="page-btn">
-            <a href="<?= site_url("closings/create"); ?>" class="btn btn-added"><i class="fa fa-plus me-2"></i> Add New Closing</a>
+            <a href="<?= site_url("closing/store"); ?>" class="btn btn-added"><i class="fa fa-plus me-2"></i> Add New Closing</a>
         </div>
     </div>
 
@@ -83,11 +83,12 @@
                             <th></th>
                             <th>Closing Time</th>
                             <th>Store</th>
+                            <th>Status</th>
                             <th>Opening Bal</th>
                             <th>Cash up</th>
-                            <th>Cust. Paymt</th>
+                            <th>Cust. Dbt Paymt</th>
                             <th>Sup. Paymt</th>
-                            <th>Tlt Walk-in Sales</th>
+                            <th>Tlt Sales</th>
                             <th>Sales Rtn</th>
                             <th>Purchase Rtn</th>
                             <th>Transfers Bal</th>

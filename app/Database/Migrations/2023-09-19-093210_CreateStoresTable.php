@@ -24,6 +24,11 @@ class CreateStoresTable extends Migration
                 'constraint' => 200,
                 'null' => false
             ],
+            'phone' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 45,
+                'null' => true
+            ],
             'description' => [
                 'type' => 'TEXT',
                 'null' => true,

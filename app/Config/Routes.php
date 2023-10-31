@@ -52,6 +52,18 @@ $routes->group('reports', static function (RouteCollection $routes) {
     $routes->get('stocks', [InventoryController::class, 'stock_report']);
     $routes->get('stocks/product/(:num)', [InventoryController::class, 'view_stock_report']);
     $routes->get('stocks/datatable', [InventoryController::class, 'stock_report_datatable']);
+    $routes->get('ledgers/customers', [CustomerLedgerController::class, 'customer_reports']);
+    $routes->get('ledgers/customers/datatable', [CustomerLedgerController::class, 'report_datatable']);
+});
+
+
+$routes->group('print', static function (RouteCollection $routes) {
+    $routes->get('sales/(:num)', [SalesController::class, 'print/$1']);
+    $routes->get('purchases/(:num)', [PurchaseController::class, 'print/$1']);
+    $routes->get('sales/returns/(:num)', [SalesReturnController::class, 'print/$1']);
+    $routes->get('purchases/returns/(:num)', [PurchaseReturnController::class, 'print/$1']);
+    $routes->get('adjustments/(:num)', [SalesController::class, 'print/$1']);
+    $routes->get('transfers/products/(:num)', [ProductTransferController::class, 'print/$1']);
 });
 
 //indexs
@@ -209,6 +221,7 @@ $routes->post('expenses/categories', [ExpenseCategoryController::class, 'save'])
 $routes->post('expenses', [ExpenseController::class, 'save']);
 $routes->post('products', [ProductController::class, 'save']);
 $routes->post('suppliers/ledgers', [SupplierLedgerController::class, 'save']);
+$routes->post('suppliers/ledgers/bulk', [SupplierLedgerController::class, 'bulk_payment']);
 $routes->post('customers/ledgers', [CustomerLedgerController::class, 'save']);
 $routes->post('customers/ledgers/bulk', [CustomerLedgerController::class, 'bulk_payment']);
 $routes->post('transfers/products', [ProductTransferController::class, 'save']);
@@ -273,5 +286,6 @@ $routes->delete('suppliers/ledger/(:num)', [SupplierLedgerController::class, 'de
 $routes->delete('units/(:num)', [UnitController::class, 'delete']);
 $routes->delete('cashup/(:num)', [StoreLedgerController::class, 'delete']);
 $routes->delete('users/(:num)', [UserController::class, 'delete']);
+$routes->delete('closing/(:num)', [ClosingController::class, 'delete']);
 
 service('auth')->routes($routes);

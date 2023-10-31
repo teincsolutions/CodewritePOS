@@ -58,13 +58,13 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="customer_payment">Customer Payments</label>
+                                    <label for="customer_payment">Cus. Debt Payments</label>
                                     <input type="number" name="customer_payment" value="<?= isset($closing) ? $closing->customer_payment : number_format($customer_payment ?? 0, 2, '.', '') ?>" class="form-control" readonly required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="sale_total">Total Walk in Sales</label>
+                                    <label for="sale_total">Total Sales</label>
                                     <input type="number" name="sale_total" value="<?= isset($closing) ? $closing->sale_total : number_format($sale_total ?? 0, 2, '.', '') ?>" class="form-control" readonly required>
                                 </div>
                             </div>

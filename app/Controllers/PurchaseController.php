@@ -54,6 +54,26 @@ class PurchaseController extends BaseController
         return view('pages/reports/daily_purchases', $data);
     }
 
+    public function print($id) : Response {
+        $model = new PurchaseModel();
+        $purchase =$model->where('id', $id)->first();
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => "Invoice not found!",
+        ];
+        
+        if ($purchase) {
+            $res = array_merge($res, [
+                'status' => true,
+                'data' => $purchase,
+                'receipt' => view('pages/purchases/pos_receipt', ['purchase' => $purchase]),
+                'message' => "Invoice found!",
+            ]);
+        }
+        return $this->response->setJSON($res);
+    }
+    
     /**
      * return view for edit
      * @return Response - http response

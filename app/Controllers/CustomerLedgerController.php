@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\CustomerLedgerModel;
 use App\Models\CustomerModel;
 use App\Models\SalesModel;
+use App\Models\StoreModel;
 use CodeIgniter\Database\RawSql;
 use CodeIgniter\HTTP\Response;
 
@@ -24,6 +25,19 @@ class CustomerLedgerController extends BaseController
         return view('pages/account_debts/customers', $data);
     }
 
+    /**
+     * return view for list
+     * @return Response - http response
+     */
+    public function customer_reports()
+    {
+        $storeModel = new StoreModel();
+        $data = [
+            'title' => 'Customer Payment Reports',
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
+        ];
+        return view('pages/reports/customer_payments', $data);
+    }
     /**
      * return view for edit
      * @return Response - http response
@@ -95,6 +109,7 @@ class CustomerLedgerController extends BaseController
 
             $sales = $salesModel->where('id', $inputs['sale_id'])->first();
             $inputs['customer_id'] = $sales->customer_id;
+            $inputs['store_id'] = $sales->store_id;
             if ($model->save($inputs)) {
                 $salesModel->updatePaymentStatus($inputs['sale_id']);
                 $res = array_merge($res, [
@@ -138,10 +153,11 @@ class CustomerLedgerController extends BaseController
 
         $where = [
             'payment_status' => 'due',
-            'customer_id' => $inputs['customer_id']
+            'customer_id' => $inputs['customer_id'],
+            'store_id' =>  $inputs['store_id'],
         ];
         $sales = $salesModel->where($where)
-            ->orderBy('sales_date', 'desc')
+            ->orderBy('sales_date', 'asc')
             ->findAll();
 
         $data = [];
@@ -156,6 +172,7 @@ class CustomerLedgerController extends BaseController
                     'store_id' => $row->store_id,
                     ''
                 ]));
+                $amount = 0;
                 break;
             } else {
                 array_push($data, array_merge($inputs, [
@@ -192,8 +209,10 @@ class CustomerLedgerController extends BaseController
      */
     public function show($id)
     {
+        $storeModel = new StoreModel();
         $data = [
-            'title' => 'Customer Ledger Details'
+            'title' => 'Customer Ledger Details',
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
         ];
         $model = new CustomerLedgerModel();
         $data = array_merge($data, [
@@ -210,10 +229,43 @@ class CustomerLedgerController extends BaseController
     public function datatable(): Response
     {
         $inputs = $this->request->getVar();
+        $inputs['length'] = 1000;
+        $inputs['start'] = 0;
         $model = new CustomerLedgerModel();
+        $model->orderBy('id', 'desc');
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
+    /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function report_datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new CustomerLedgerModel();
+        $builder = $model->builder();
+        $db = db_connect();
+        $builder->select('id,tdate,sale_id,sales_return_id,ledger_type, customer_id', false)
+            ->selectSum('credit', 'total_credit')
+            ->selectSum('debit', 'total_debit')
+            ->groupBy(['sale_id', 'tdate', 'customer_id', 'sales_return_id'])
+            ->orderBy('id','desc');
+        return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) use ($db) {
+            $item->sale = model('SalesModel')->where('id', $item->sale_id)->first();
+            $item->sales_return = model('SalesReturnModel')->where('id', $item->sales_return_id)->first();
+            $item->customer = model('CustomerModel')->where('id', $item->customer_id)->first();
+            $totals = $db->table('customer_ledgers')
+            ->select('SUM((debit-credit)) as total_due')
+            ->where('id <', $item->id)
+            ->get()->getFirstRow();
+
+            $item->total_due = $totals->total_due??'0.00';
+            $item->total_balance = ($totals->total_due??0) + $item->total_debit - $item->total_credit;
+
+            return $item;
+        }));
+    }
     /**
      * return json for datatables
      * @return Response - http response

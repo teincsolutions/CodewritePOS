@@ -27,6 +27,12 @@
                         <input type="text" name="location" required placeholder="Store location" value="<?=isset($store)?$store->location:null ?>">
                     </div>
                 </div>
+                <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" name="phone" required placeholder="Store phone number" value="<?=isset($store)?$store->phone:null ?>">
+                    </div>
+                </div>
                 <div class="col-lg-12">
                     <div class="form-group">
                         <label>Description</label>

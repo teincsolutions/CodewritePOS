@@ -29,11 +29,11 @@
                                         <h6>GHS <?= number_format($closing->cashup, 2) ?></h6>
                                     </li>
                                     <li>
-                                        <h4>Customer Payments</h4>
+                                        <h4>Customer Debt Payments</h4>
                                         <h6>GHS <?= number_format($closing->customer_payment, 2) ?></h6>
                                     </li>
                                     <li>
-                                        <h4>Walk in Sales</h4>
+                                        <h4>Total Sales</h4>
                                         <h6>GHS <?= number_format($closing->sale_total, 2) ?></h6>
                                     </li>
                                     <li>
@@ -105,7 +105,7 @@
                                 <ul class="product-bar">
                                     <li>
                                         <h4>Closing Time</h4>
-                                        <h6><?= date('d/m/Y H:i A', strtotime($closing->approved_at)) ?></h6>
+                                        <h6><?= date('d/m/Y H:i A', strtotime($closing->created_at)) ?></h6>
                                     </li>
                                     <li>
                                         <h4>Closing By</h4>

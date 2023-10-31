@@ -53,7 +53,6 @@
                                 <div class="form-group">
                                     <label>Store</label>
                                     <select name="store_id" class="select2-store">
-                                        <option value=""></option>
                                         <?php
                                         if (isset($stores))
                                             foreach ($stores as $row) { ?>
@@ -112,10 +111,7 @@
                                                         : '<a class="p-3"></a>' ?>
                                                     <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
                                                         <?= $row->product->name ?>
-                                                        <?php if ($row->store) { ?>
-                                                            <?= $row->store->name; ?><?= $row->store->location ? "(" . $row->store->location . ")" : null; ?></a>
-                                                <?php } ?>
-                                                </td>
+                                                        (<?= $row->product->unit->label; ?>)</td>
                                                 <td>
                                                     <div class="increment-decrement">
                                                         <div class="input-groups">
@@ -129,7 +125,7 @@
                                                             <input type="hidden" name="items[<?= $key ?>][discount]" value="<?= $row->discount ?>" class="rdiscount">
                                                             <input type="hidden" name="items[<?= $key ?>][subtotal]" value="<?= $row->subtotal ?>" class="rsubtotal">
                                                             <input type="button" value="-" class="button-minus dec button">
-                                                            <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" value="<?= $row->qty ?>" class="rqty quantity-field" required>
+                                                            <input onblur="updateItemRow(this)" min=".1" type="text" name="items[<?= $key ?>][qty]" value="<?= $row->qty ?>" class="rqty quantity-field" required>
                                                             <input type="button" value="+" class="button-plus inc button">
                                                         </div>
                                                     </div>

@@ -54,7 +54,8 @@
                     <?php $total_discount += $row->discount; ?>
                     <tr class="service">
                         <td class="tableitem">
-                            <p class="itemtext"><?= $row->product->name; ?></p>
+                            <p class="itemtext"><?= $row->product->name; ?>
+                            (<?= $row->product->unit->label; ?>)</p>
                         </td>
                         <td class="tableitem">
                             <p class="itemtext"><?= number_format($row->unit_cost, 2); ?></p>

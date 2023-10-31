@@ -49,6 +49,12 @@
                         <div class="row mt-3">
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
+                                    <label>User Name<sup class="text-danger">*</sup></label>
+                                    <input name="username" type="text" class="form-control" autocomplete="username" placeholder="User Name" value="<?= isset($user) ? $user->username : null ?>" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
                                     <label>Role(s)<sup class="text-danger">*</sup></label>
                                     <select name="groups[]" id="select2-groups" multiple>
                                         <option value=""></option>

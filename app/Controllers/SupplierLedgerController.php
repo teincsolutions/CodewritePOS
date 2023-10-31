@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\PurchaseModel;
+use App\Models\StoreModel;
 use App\Models\SupplierLedgerModel;
 use App\Models\SupplierModel;
 use CodeIgniter\HTTP\RequestInterface;
@@ -90,6 +91,7 @@ class SupplierLedgerController extends BaseController
                 ]);
             $purchases = $purchasesModel->where('id', $inputs['purchase_id'])->first();
             $inputs['supplier_id'] = $purchases->supplier_id;
+            $inputs['store_id'] = $purchases->store_id;
 
             if ($model->save($inputs)) {
                 $purchasesModel->updatePaymentStatus($inputs['purchase_id']);
@@ -107,6 +109,84 @@ class SupplierLedgerController extends BaseController
         }
         return $this->response->setJSON($res);
     }
+
+    public function bulk_payment()
+    {
+        $model = new SupplierLedgerModel();
+        $purchaseModel = new PurchaseModel();
+        $inputs = $this->request->getVar();
+
+        if (auth()->user())
+            $inputs['user_id'] = auth()->user()->id;
+
+
+        if (!auth()->user()->can('supplier-ledgers.create'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to create this record!"
+            ]);
+
+        $inputs['tdate'] = date('Y-m-d', strtotime($inputs['tdate']));
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => null,
+            'input' => $inputs,
+        ];
+
+        $where = [
+            'payment_status' => 'due',
+            'supplier_id' => $inputs['supplier_id'],
+            'store_id' =>  $inputs['store_id'],
+        ];
+        $purchases = $purchaseModel->where($where)
+            ->orderBy('purchase_date', 'asc')
+            ->findAll();
+
+        $data = [];
+        $amount = $inputs['debit'];
+        foreach ($purchases as $row) {
+            $due = $row->total_amount - $row->paid;
+            if ($due >= $amount) {
+                array_push($data, array_merge($inputs, [
+                    'purchase_id' => $row->id,
+                    'ledger_type' => 'purchases',
+                    'debit' => $amount,
+                    'store_id' => $row->store_id,
+                    ''
+                ]));
+                $amount = 0;
+                break;
+            } else {
+                array_push($data, array_merge($inputs, [
+                    'purchase_id' => $row->id,
+                    'ledger_type' => 'purchases',
+                    'debit' => $due,
+                    'store_id' => $row->store_id,
+                    ''
+                ]));
+            }
+            $amount -= $due;
+        }
+
+        if ($model->insertBatch($data)) {
+            foreach ($purchases as $row)
+                $purchaseModel->updatePaymentStatus($row->id);
+
+            $bal = $amount > 0 ? " Change of GHS " . number_format($amount, 2) : "";
+            $res = array_merge($res, [
+                'status' => true,
+                'message' => "Payment(s) added successfully!$bal",
+            ]);
+        } else {
+            $res = array_merge($res, [
+                'status' => false,
+                'message' => "Payment couldn't be created!"
+            ]);
+        }
+        return $this->response->setJSON($res);
+    }
+
     /**
      * return view for show
      * @return Response - http response
@@ -124,6 +204,20 @@ class SupplierLedgerController extends BaseController
         return view('pages/ledgers/show_ledger', $data);
     }
 
+        /**
+     * return view for list
+     * @return Response - http response
+     */
+    public function supplier_reports()
+    {
+        $storeModel = new StoreModel();
+        $data = [
+            'title' => 'Customer Payment Reports',
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
+        ];
+        return view('pages/reports/customer_payments', $data);
+    }
+
     /**
      * return json for datatables
      * @return Response - http response
@@ -131,7 +225,10 @@ class SupplierLedgerController extends BaseController
     public function datatable(): Response
     {
         $inputs = $this->request->getVar();
+        $inputs['length'] = 1000;
+        $inputs['start'] = 0;
         $model = new SupplierLedgerModel();
+        $model->orderBy('id', 'desc');
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
