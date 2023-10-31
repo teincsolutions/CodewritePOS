@@ -222,21 +222,22 @@
                             </ul>
                         </div>
                     </div>
-
-                    <div class="col-lg-6 offset-lg-6">
-                        <div class="total-order w-100 max-widthauto m-auto mb-4">
-                            <ul>
-                                <li>
-                                    <h4>Total Return Discount</h4>
-                                    <h5 class="shippingTotal"><?= number_format($totalReturnDiscount, 2); ?></h5>
-                                </li>
-                                <li class="total">
-                                    <h4>Returns Total</h4>
-                                    <h5 class="grandTotal"><?= number_format($totalReturns, 2) ?></h5>
-                                </li>
-                            </ul>
+                    <?php if ($return) : ?>
+                        <div class="col-lg-6 offset-lg-6">
+                            <div class="total-order w-100 max-widthauto m-auto mb-4">
+                                <ul>
+                                    <li>
+                                        <h4>Total Return Discount</h4>
+                                        <h5 class="shippingTotal"><?= number_format($totalReturnDiscount, 2); ?></h5>
+                                    </li>
+                                    <li class="total">
+                                        <h4>Returns Total</h4>
+                                        <h5 class="grandTotal"><?= number_format($totalReturns, 2) ?></h5>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
+                    <?php endif ?>
                 </div>
                 <div class="col-lg-12">
                     <a onclick="rePrintInvoice('<?= site_url('print/sales/' . $sales->id) ?>')" href="javascript:void(0);" class="btn btn-submit me-2">Print Invoice</a>
