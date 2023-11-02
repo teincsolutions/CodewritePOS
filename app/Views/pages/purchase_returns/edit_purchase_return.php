@@ -180,7 +180,7 @@
                                     <h5 class="grandTotal">GHS 0.00</h5>
                                 </li>
                                 <li class="total-value">
-                                    <h4>Change/Due</h4>
+                                    <h4>Change</h4>
                                     <h5 class="dueTotal">GHS 0.00</h5>
                                     <input type="hidden" name="paid" id="paid">
                                 </li>

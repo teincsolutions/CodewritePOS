@@ -23,13 +23,12 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-       params.store_id = $('.select2-store').val();
+        params.store_id = $(".select2-store").val();
 
         params.fields = filter;
       },
     },
     processing: true,
-    serverSide: true,
     bFilter: true,
     dom: "fBtlpi",
     buttons: [
@@ -66,30 +65,26 @@ $(function () {
           return null;
         },
       },
-      { data: "name", name: "products.name" },
-      { data: "sku", name: "products.sku" },
+      {
+        data: null,
+        render: function (data, type, row) {
+          return data ? `${data.sku} ${data.name} (${data.unit.label})` : "";
+        },
+      },
       {
         data: "brand",
-        name: "products.brand_id",
         render: function (data, type, row) {
-          if (type === "display") {
-            return data
-              ? `<a target="_blank" href="${baseUrl}brands/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
-              : "";
-          }
-          return data ? data.id : null;
+          return data
+            ? `<a target="_blank" href="${baseUrl}brands/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+            : "";
         },
       },
       {
         data: "category",
-        name: "products.category_id",
         render: function (data, type, row) {
-          if (type === "display") {
-            return data
-              ? `<a target="_blank" href="${baseUrl}categories/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
-              : "";
-          }
-          return data ? data.id : null;
+          return data
+            ? `<a target="_blank" href="${baseUrl}categories/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+            : "";
         },
       },
       { data: "instock" },
@@ -171,6 +166,6 @@ $(function () {
   });
 
   $(".select2-store").select2({
-    placeholder: "Seach a store"
+    placeholder: "Seach a store",
   });
 });

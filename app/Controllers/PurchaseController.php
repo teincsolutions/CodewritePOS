@@ -32,13 +32,13 @@ class PurchaseController extends BaseController
         $data = [
             'title' => 'Purchase List',
             'suppliers' => $supModel->findAll(),
-            'stores' => $storeModel->where('status','opened')->findAll(),
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
         ];
 
         return view('pages/purchases/list_purchase', $data);
     }
 
-        /**
+    /**
      * return view for list
      * @return Response - http response
      */
@@ -54,26 +54,27 @@ class PurchaseController extends BaseController
         return view('pages/reports/daily_purchases', $data);
     }
 
-    public function print($id) : Response {
+    public function print($id): Response
+    {
         $model = new PurchaseModel();
-        $purchase =$model->where('id', $id)->first();
+        $purchase = $model->where('id', $id)->first();
         $res = [
             'status' => false,
             'data' => null,
             'message' => "Invoice not found!",
         ];
-        
+
         if ($purchase) {
             $res = array_merge($res, [
                 'status' => true,
                 'data' => $purchase,
-                'receipt' => view('pages/purchases/pos_receipt', ['purchase' => $purchase]),
+                'receipt' => view('pages/purchases/pos_receipt', ['purchases' => $purchase]),
                 'message' => "Invoice found!",
             ]);
         }
         return $this->response->setJSON($res);
     }
-    
+
     /**
      * return view for edit
      * @return Response - http response
@@ -96,7 +97,7 @@ class PurchaseController extends BaseController
         $data = [
             'title' => 'Purchase Order',
             'invoice' => substr(time() + $lastId, 0, 10),
-            'stores' => $storeModel->where('status','opened')->findAll(),
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
             'suppliers' => $supModel->findAll(),
             'purchaseList' => $model->where($purchaseWhere)->findAll(),
             'returnList' => $returnModel->where($returnWhere)->findAll(),
@@ -147,10 +148,10 @@ class PurchaseController extends BaseController
         $ledger = new SupplierLedgerModel();
 
         if (!auth()->user()->can('purchases.create'))
-        return $this->response->setJSON([
-            'status' => false,
-            'message' => "Don't have permission to create this record!"
-        ]);
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to create this record!"
+            ]);
 
         $inputs = $this->request->getVar();
         if (auth()->user())
@@ -180,14 +181,17 @@ class PurchaseController extends BaseController
         $purchases = $model->where('id', $id)->first();
         $this->db = Database::connect();
 
-        if ($purchases) $res = array_merge($res, ['message' => "Purchase updated successfully!"]);
-        else $res = array_merge($res, ['message' => "Purchase created successfully!"]);
+        $res = array_merge($res, ['message' => "Purchase created successfully!"]);
+        if ($purchases) {
+            $model->delete($id);
+            unset($inputs['id']);
+        }
 
         try {
             $this->db->transException(true)->transStart();
             $saved = $model->save($inputs, true);
 
-            if ($saved && !$purchases) {
+            if ($saved) {
                 $id = $model->getInsertID();
                 $purchasesItems = [];
                 $builder = $stockModel->builder();
@@ -255,11 +259,11 @@ class PurchaseController extends BaseController
     public function hold()
     {
         if (!auth()->user()->can('purchases.create'))
-        return $this->response->setJSON([
-            'status' => false,
-            'message' => "Don't have permission to create this record!"
-        ]);
-        
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to create this record!"
+            ]);
+
         $model = new PurchaseModel();
         $purchasesItemModel = new PurchaseItemModel();
 
@@ -363,7 +367,7 @@ class PurchaseController extends BaseController
         ));
     }
 
-        /**
+    /**
      * return json for datatables
      * @return Response - http response
      */
@@ -375,7 +379,7 @@ class PurchaseController extends BaseController
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
-        /**
+    /**
      * return json for datatables
      * @return Response - http response
      */
@@ -387,7 +391,7 @@ class PurchaseController extends BaseController
         return $this->response->setJSON(toBuilderDatatableResult($model->getDailyWalkinReport(), $inputs));
     }
 
-     /**
+    /**
      * return json for datatables
      * @return Response - http response
      */
@@ -400,7 +404,7 @@ class PurchaseController extends BaseController
             ->selectSum('purchase_items.qty', 'qty')
             ->join('purchase_items', 'purchase_items.purchase_id=purchases.id')
             ->where('product_id', $inputs['product_id'] ?? '')
-                 ->where('order_status', 'completed')
+            ->where('order_status', 'completed')
             ->groupBy('purchases.id');
 
         return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) {

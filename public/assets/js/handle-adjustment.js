@@ -242,7 +242,7 @@ function autocomplete(inp) {
             ).toFixed(2)}">
             <input type="hidden" name="items[${prodIndex}][diff]" class="diff" value="0.00">
                                                 <input type="button" value="-" class="button-minus dec button">
-                                                <input onblur="updateItemRow(this)" min="0" type="text" name="items[${prodIndex}][qty]" value="${instock}" class="quantity-field rqty" required>
+                                                <input onblur="updateItemRow(this)" type="text" name="items[${prodIndex}][qty]" value="${instock}" class="quantity-field rqty" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>

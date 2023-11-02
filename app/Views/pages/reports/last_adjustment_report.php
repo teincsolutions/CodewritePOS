@@ -3,11 +3,8 @@
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h4>Short Stock List</h4>
-            <h6>View your stock list</h6>
-        </div>
-        <div class="page-btn">
-            <a href="<?= site_url('products/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i> New Product</a>
+            <h4><?= $title ?? "Product Last Adjustment Report" ?></h4>
+            <h6>Adjustment reporting for products</h6>
         </div>
     </div>
 
@@ -25,8 +22,9 @@
                         <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 pt-3 col-12">
+                <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
+                        <label for="store_id">Store</label>
                         <select name="store_id" class="select2-store filter">
                             <?php
                             if (isset($stores))
@@ -44,6 +42,11 @@
             <div class="card mb-0" id="filter_inputs">
                 <div class="card-body pb-0">
                     <div class="row">
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <input name="adj_date" type="text" placeholder="DD/MM/YY">
+                            </div>
+                        </div>
                         <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
                                 <input name="name" type="text" placeholder="Enter Product Name">
@@ -69,15 +72,19 @@
             </div>
 
             <div class="table-responsive">
-                <table class="table w-100" id="dt-short-stocks">
+                <table class="table" id="dt-adjustment-report">
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Product</th>
-                            <th>Category</th>
+                            <th>Product Name</th>
+                            <th>Unit</th>
+                            <th>SKU</th>
                             <th>Brand</th>
-                            <th>Stock Qty</th>
-                            <th>Action</th>
+                            <th>Category </th>
+                            <th>Cost</th>
+                            <th>Price</th>
+                            <th>Instock</th>
+                            <th>Adjusted By</th>
                         </tr>
                     </thead>
                 </table>
@@ -89,5 +96,5 @@
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/short-stocks.js?v=1') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/last-adjustment-report.js?v=1') ?>"></script>
 <?= $this->endSection() ?>

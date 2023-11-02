@@ -74,7 +74,6 @@
                         <tr>
                             <th></th>
                             <th>Product</th>
-                            <th>Sku/Code</th>
                             <th>Category</th>
                             <th>Brand</th>
                             <th>Stock Qty</th>
@@ -90,5 +89,5 @@
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/outofstocks.js') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/outofstocks.js?v=1') ?>"></script>
 <?= $this->endSection() ?>

@@ -1,9 +1,9 @@
 let table;
 
 $(function () {
-  table = $("#dt-stock-report").DataTable({
+  table = $("#dt-adjustment-report").DataTable({
     ajax: {
-      url: baseUrl + "reports/stocks/datatable",
+      url: baseUrl + "reports/last-adjustments/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
@@ -23,8 +23,9 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-        params.fields = filter;
         params.store_id = $(".select2-store").val();
+
+        params.fields = filter;
       },
     },
     processing: true,
@@ -64,52 +65,54 @@ $(function () {
           return null;
         },
       },
+      { data: "name", name: "products.name" },
       {
-        data: "name",
+        data: "unit",
+        name: "products.unit_id",
         render: function (data, type, row) {
           if (type === "display") {
-            return `<a target="_blank" href="${baseUrl}products/${row.id}" class="btn btn-link btn-sm"><span class="text-warning">${row.sku}</span> ${row.name} (${row.unit_label})</a>`;
+            return data ? data.label : "";
           }
-          return data;
+          return data ? data.id : null;
         },
       },
+      { data: "sku", name: "products.sku" },
       {
-        data: "qtyOrdered",
-        render: function (data) {
-          return data ? data : "0.00";
-        },
-      },
-      {
-        data: "qtyOrderReturned",
-        render: function (data) {
-          return data ? data : "0.00";
-        },
-      },
-      {
-        data: "qtySold",
-        render: function (data) {
-          return data ? data : "0.00";
-        },
-      },
-      {
-        data: "qtysaleReturned",
-        render: function (data) {
-          return data ? data : "0.00";
-        },
-      },
-      {
-        data: "qtyQuoted",
-        render: function (data) {
-          return data ? data : "0.00";
-        },
-      },
-      {
-        data: "id",
+        data: "brand",
+        name: "products.brand_id",
         render: function (data, type, row) {
           if (type === "display") {
-            return `<a class="me-3" href="${baseUrl}reports/stocks/product/${data}"><i class="fa fa-print fa-lg"></i> View Report</a>`;
+            return data
+              ? `<a target="_blank" href="${baseUrl}brands/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+              : "";
           }
-          return data;
+          return data ? data.id : null;
+        },
+      },
+      {
+        data: "category",
+        name: "products.category_id",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return data
+              ? `<a target="_blank" href="${baseUrl}categories/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+              : "";
+          }
+          return data ? data.id : null;
+        },
+      },
+      { data: "unit_cost", name: "products.unit_cost" },
+      { data: "unit_price", name: "products.unit_price" },
+      { data: "instock" },
+      {
+        data: "user",
+        name: "products.user_id",
+        render: function (data, type, row) {
+          if (type === "display")
+            return data
+              ? `<a target="_blank" href="${baseUrl}users/${data.id}" class="btn btn-link btn-sm">${data.firstname} ${data.lastname}</a>`
+              : null;
+          return data ? data.id : null;
         },
       },
     ],
@@ -174,7 +177,6 @@ $(function () {
     $("#date-from,#date-to").val("");
     table.ajax.reload();
   });
-
   $(".select2-store").select2({
     placeholder: "Seach a store",
   });

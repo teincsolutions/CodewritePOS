@@ -89,5 +89,5 @@
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/instocks.js') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/instocks.js?v=1') ?>"></script>
 <?= $this->endSection() ?>

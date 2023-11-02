@@ -65,8 +65,12 @@ $(function () {
           return null;
         },
       },
-      { data: "name", name: "products.name" },
-      { data: "description", name: "products.description" },
+      {
+        data: null,
+        render: function (data, type, row) {
+          return `${data.name} (${data.unit.label})`;
+        },
+      },
       { data: "barcode", name: "products.barcode" },
       { data: "sku", name: "products.sku" },
       {
@@ -95,16 +99,6 @@ $(function () {
       },
       { data: "unit_cost", name: "products.unit_cost" },
       { data: "unit_price", name: "products.unit_price" },
-      {
-        data: "unit",
-        name: "products.unit_id",
-        render: function (data, type, row) {
-          if (type === "display") {
-            return data ? data.label : "";
-          }
-          return data ? data.id : null;
-        },
-      },
       { data: "instock" },
       {
         data: "discontinued",

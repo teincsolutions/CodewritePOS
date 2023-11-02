@@ -139,6 +139,11 @@ $(function () {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
                         <a target="_blank" href="${baseUrl}purchases/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
+                        ${
+                          row.order_status === "completed"
+                            ? `<a href="${baseUrl}purchases/returns/create?invoice=${row.invoice}" class="me-3"><i class="fa fa-reply fa-lg"></i></a>`
+                            : ""
+                        }
                         <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table1, ${
                           row.id
                         }, '${baseUrl}purchases',table2,table3)"><i class="fa fa-trash fa-lg"></i></a>
@@ -329,7 +334,7 @@ $(function () {
               row.id
             },tdate:'${moment(row.tdate).format("DD-MM-YYYY")}',purchase_id:${
               row.purchase_id
-            },payment_type:'${row.payment_type}',credit:${row.credit}},{text:'${
+            },payment_type:'${row.payment_type}',debit:${row.debit}},{text:'${
               row.purchase.invoice
             } (${row.supplier.name} - GHS ${row.purchase.total_amount})',id:${
               row.purchase.id

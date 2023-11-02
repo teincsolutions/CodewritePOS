@@ -121,12 +121,13 @@ class InventoryController extends BaseController
 
         $model = new ProductModel();
         $builder = $model->builder();
-        $builder->select('products.*')
+        $builder->select('products.*,units.label as unit_label')
             ->selectSubquery($saleQuery, 'qtySold')
             ->selectSubquery($purchaseQuery, 'qtyOrdered')
             ->selectSubquery($sReturnQuery, 'qtysaleReturned')
             ->selectSubquery($pReturnQuery, 'qtyOrderReturned')
-            ->selectSubquery($quoteQuery, 'qtyQuoted');
+            ->selectSubquery($quoteQuery, 'qtyQuoted')
+            ->join("units", "units.id=products.unit_id");
 
         return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs));
     }

@@ -27,7 +27,7 @@ const searchParams = {
     regex: "false",
   },
 };
-
+let supplierBalance = 0;
 prodIndex = prodIndex ? prodIndex : 0;
 purchaseItemIds = [];
 (dueTotal = 0), (grandTotal = 0), (supplierBalance = 0);
@@ -125,8 +125,6 @@ function updateTotals() {
         ? "(" + Math.abs(dueTotal).toFixed(2) + ")"
         : dueTotal.toFixed(2))
   );
-  if (dueTotal > 0) $("#paid").val(dueTotal);
-  else $("#paid").val(0.0);
 }
 
 function checkout() {

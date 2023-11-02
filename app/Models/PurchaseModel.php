@@ -103,6 +103,22 @@ class PurchaseModel extends Model
         return $model;
     }
 
+    public function getItemsWithReturnItems($purchaseId)
+    {
+        $itemModel = new PurchaseItemModel();
+        $itemModel->select('purchase_items.*, sum(purchase_returns_items.unit_price) as rtn_unit_price,sum(purchase_returns_items.discount) as rtn_discount,  sum(purchase_returns_items.qty) as rtn_qty,  sum(purchase_returns_items.subtotal) as rtn_subtotal');
+        $itemModel->join('purchase_returns_items', 'purchase_returns_items.purchase_item_id=purchase_items.id', 'left');
+        $itemModel->where('purchase_items.purchase_id', $purchaseId);
+        $itemModel->groupBy('purchase_items.id');
+        return $itemModel->findAll();
+    }
+
+    public function hasReturns($purchaseId): bool
+    {
+        $returnModel = new PurchaseReturnModel();
+        return  $returnModel->where('purchase_id', $purchaseId)->countAllResults() > 0;
+    }
+
     public function getTotalAmount(): float
     {
         $total = $this->builder()->selectSum('total_amount', 'total')

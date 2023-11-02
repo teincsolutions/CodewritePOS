@@ -79,14 +79,12 @@
                             <th>
                             </th>
                             <th>Product Name</th>
-                            <th>Desc</th>
                             <th>Barcode</th>
                             <th>SKU</th>
                             <th>Brand</th>
                             <th>Category </th>
                             <th>Cost</th>
                             <th>price</th>
-                            <th>Unit</th>
                             <th>Instock</th>
                             <th>Discontinued</th>
                             <th>Added By</th>

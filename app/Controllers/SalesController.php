@@ -118,15 +118,16 @@ class SalesController extends BaseController
     /**
      * return json for receipt
      */
-    public function print($id) : Response {
+    public function print($id): Response
+    {
         $model = new SalesModel();
-        $sale =$model->where('id', $id)->first();
+        $sale = $model->where('id', $id)->first();
         $res = [
             'status' => false,
             'data' => null,
             'message' => "Invoice not found!",
         ];
-        
+
         if ($sale) {
             $res = array_merge($res, [
                 'status' => true,
@@ -137,7 +138,7 @@ class SalesController extends BaseController
         }
         return $this->response->setJSON($res);
     }
-    
+
     /**
      * return json for save
      * @return Response - http response
@@ -182,15 +183,17 @@ class SalesController extends BaseController
         ];
         $sales = $model->where('id', $id)->first();
         $this->db = Database::connect();
-
-        if ($sales) $res = array_merge($res, ['message' => "Sales updated successfully!"]);
-        else $res = array_merge($res, ['message' => "Sales created successfully!"]);
+        $res = array_merge($res, ['message' => "Sales created successfully!"]);
+        if ($sales) {
+            $model->delete($id);
+            unset($inputs['id']);
+        }
 
         try {
             $this->db->transException(true)->transStart();
             $saved = $model->save($inputs, true);
 
-            if ($saved && !$sales) {
+            if ($saved) {
                 $id = $model->getInsertID();
                 $salesItems = [];
                 $builder = $stockModel->builder();
@@ -406,7 +409,7 @@ class SalesController extends BaseController
             ->selectSum('sales_items.qty', 'qty')
             ->join('sales_items', 'sales_items.sale_id=sales.id')
             ->where('product_id', $inputs['product_id'] ?? '')
-                 ->where('order_status', 'completed')
+            ->where('order_status', 'completed')
             ->groupBy('sales.id');
 
         return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) {

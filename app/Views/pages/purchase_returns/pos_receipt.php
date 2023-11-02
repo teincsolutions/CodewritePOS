@@ -5,10 +5,16 @@
         <div class="info">
             <h1 class="text-uppercase"><?= $title ?? "Purchase Return Receipt" ?></h1>
         </div>
-        <div class="logo" style="background: url(<?= base_url('assets/images/logo.png') ?>) no-repeat;"></div>
+        <?php if (setting('App.Logo')) : ?>
+            <div class="logo" style="background: url(<?= base_url(setting('App.Logo')) ?>) no-repeat;"></div>
+        <?php endif ?>
         <div class="info">
-        <h2 class="text-uppercase"><?= setting('App.companyName') ?></h2>
-            <small> <?= setting('App.companyAddress') ?> | tel:<?= setting('App.companyContacts') ?></small>
+            <?php if (setting('App.companyName')) : ?>
+                <h3 class="text-uppercase"><?= setting('App.companyName') ?></h3>
+            <?php endif ?>
+            <?php if (setting('App.ShowMainBranchAddress') === 'yes') : ?>
+                <small><?= setting('App.companyAddress') ? 'Main Branch: ' : '' ?> <?= setting('App.companyAddress') ?> | tel:<?= setting('App.companyContacts') ?></small>
+            <?php endif ?>
             <p class="text-uppercase">Branch: <?= $returns->purchase->store->name; ?> at <?= $returns->purchase->store->location; ?></p>
         </div><!--End Info-->
     </center>
@@ -59,7 +65,7 @@
                     <tr class="service">
                         <td class="tableitem">
                             <p class="itemtext"><?= $row->product->name; ?>
-                        (<?= $row->product->unit->label; ?>)</p>
+                                (<?= $row->product->unit->label; ?>)</p>
                         </td>
                         <td class="tableitem">
                             <p class="itemtext"><?= number_format($row->unit_cost, 2); ?></p>

@@ -78,8 +78,10 @@
                 foreach ($items as $k => $row) : ?>
                     <?php
                     $total_discount += $row->discount;
-                    $rtntotalDiscount += $row->rtn_discount;
-                    $rtnTotalAmount += $row->rtn_subtotal;
+                    if (model('SalesModel')->hasReturns($sales->id)) {
+                        $rtntotalDiscount += $row->rtn_discount;
+                        $rtnTotalAmount += $row->rtn_subtotal;
+                    }
                     ?>
                     <tr class="service">
                         <td class="tableitem text-left">

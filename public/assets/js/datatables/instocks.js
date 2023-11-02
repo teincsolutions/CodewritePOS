@@ -23,12 +23,11 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-        filter['store_id'] = $('.select2-store').val();
+        filter["store_id"] = $(".select2-store").val();
         params.fields = filter;
       },
     },
     processing: true,
-    serverSide: true,
     bFilter: true,
     dom: "fBtlpi",
     buttons: [
@@ -67,36 +66,24 @@ $(function () {
       },
       {
         data: "product",
-        name: "product_id",
         render: function (data, type, row) {
-          if (type === "display") {
-            return data
-              ? `<a target="_blank" href="${baseUrl}products/${data.id}" class="btn btn-link btn-sm"><span class="text-warning">${data.sku}</span> ${data.name}</a>`
-              : "";
-          }
-          return data ? data.id : null;
+          return `<a target="_blank" href="${baseUrl}products/${data.id}" class="btn btn-link btn-sm"><span class="text-warning">${data.sku}</span> ${data.name} (${row.unit.label})</a>`;
         },
       },
       {
         data: "category",
         render: function (data, type, row) {
-          if (type === "display") {
-            return data
-              ? `<a target="_blank" href="${baseUrl}categories/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
-              : "";
-          }
-          return data ? data.id : null;
+          return data
+            ? `<a target="_blank" href="${baseUrl}categories/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+            : "";
         },
       },
       {
         data: "brand",
         render: function (data, type, row) {
-          if (type === "display") {
-            return data
-              ? `<a target="_blank" href="${baseUrl}brands/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
-              : "";
-          }
-          return data ? data.id : null;
+          return data
+            ? `<a target="_blank" href="${baseUrl}brands/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+            : "";
         },
       },
       { data: "instock" },
@@ -178,6 +165,6 @@ $(function () {
   });
 
   $(".select2-store").select2({
-    placeholder: "Seach a store"
+    placeholder: "Seach a store",
   });
 });

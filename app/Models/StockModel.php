@@ -48,6 +48,7 @@ class StockModel extends Model
         if ($model && $model['data']) {
             $storeModel = new StoreModel();
             $productModel = new ProductModel();
+            $unitModel = new UnitModel();
             $brandModel = new BrandModel();
             $categoryModel = new CategoryModel();
 
@@ -57,6 +58,7 @@ class StockModel extends Model
                 foreach ($model['data'] as $key => $row) {
                     $model['data'][$key]->store = $storeModel->where('id', $row->store_id)->first();
                     $model['data'][$key]->product = $productModel->builder()->where('id', $row->product_id)->get()->getRowObject();
+                    $model['data'][$key]->unit = $unitModel->builder()->where('id', $model['data'][$key]->product->unit_id)->get()->getRowObject();
                     $model['data'][$key]->brand = $brandModel->builder()->where('id', $model['data'][$key]->product->brand_id)->get()->getRowObject();
                     $model['data'][$key]->category = $categoryModel->builder()->where('id', $model['data'][$key]->product->category_id)->get()->getRowObject();
                 }
