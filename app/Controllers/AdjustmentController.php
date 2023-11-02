@@ -178,7 +178,7 @@ class AdjustmentController extends BaseController
         $builder = $model->builder();
         $builder->select('stock_adjustments.*')
             ->selectSum('adjustments_items.qty', 'qty')
-            ->selectSum('adjustments_items.instock_qty', 'instockQty')
+            ->selectSum('adjustments_items.instock_qty', 'qtyInstock')
             ->selectSum('(adjustments_items.qty - adjustments_items.instock_qty)', 'diffQty')
             ->join('adjustments_items', 'adjustments_items.adjustment_id=stock_adjustments.id')
             ->where('product_id', $inputs['product_id'] ?? '')

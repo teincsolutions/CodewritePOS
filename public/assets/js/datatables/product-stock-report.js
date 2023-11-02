@@ -30,6 +30,7 @@ $(function () {
         params.date_to = $("#date-to").val();
 
         params.fields = filter;
+        params.product_id = $("input[name='product_id']").val();
       },
     },
     processing: true,
@@ -184,6 +185,7 @@ $(function () {
         });
 
         params.fields = filter;
+        params.product_id = $("input[name='product_id']").val();
       },
     },
     processing: true,
@@ -339,6 +341,7 @@ $(function () {
         });
 
         params.fields = filter;
+        params.product_id = $("input[name='product_id']").val();
       },
     },
     processing: true,
@@ -502,6 +505,7 @@ $(function () {
         });
 
         params.fields = filter;
+        params.product_id = $("input[name='product_id']").val();
       },
     },
     processing: true,

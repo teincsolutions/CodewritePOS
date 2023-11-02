@@ -237,7 +237,7 @@ class SalesReturnController extends BaseController
         $inputs = $this->request->getVar();
         $model = new SalesReturnModel();
         $builder = $model->builder();
-        $builder->select('sales_returns.*')
+        $builder->select('sales_returns.*, sales.customer_id')
             ->selectSum('sales_returns_items.qty', 'qty')
             ->join('sales_returns_items', 'sales_returns_items.sales_return_id=sales_returns.id')
             ->join('sales', 'sales.id=sales_returns.sale_id')

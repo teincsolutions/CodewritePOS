@@ -386,6 +386,22 @@
                                                     </div>
                                                 </td>
                                             </tr>
+
+                                               <tr>
+                                                <td>Show Store Contact</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="ShowStoreContact" value="yes" <?= setting('App.ShowStoreContact') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="ShowStoreContact" value="no" <?= setting('App.ShowStoreContact') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         </table>
                                     </div>
                                 </div>

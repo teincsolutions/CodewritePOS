@@ -242,7 +242,7 @@ class PurchaseReturnController extends BaseController
         $inputs = $this->request->getVar();
         $model = new PurchaseReturnModel();
         $builder = $model->builder();
-        $builder->select('purchase_returns.*')
+        $builder->select('purchase_returns.*,purchases.supplier_id')
             ->selectSum('purchase_returns_items.qty', 'qty')
             ->join('purchase_returns_items', 'purchase_returns_items.purchase_return_id=purchase_returns.id')
             ->join('purchases', 'purchases.id=purchase_returns.purchase_id')
@@ -256,7 +256,6 @@ class PurchaseReturnController extends BaseController
             return $item;
         }));
     }
-
 
     /**
      * return json for delete
