@@ -1,6 +1,162 @@
-let tableSale, tablePurchase,table3, table4,table5,table6;
+let tableSale, tablePurchase, table3, table4, table5, table6, table8;
 
 $(function () {
+  table8 = $("#dt-unit-transfers").DataTable({
+    ajax: {
+      url: baseUrl + "transfers/units/reports/datatable",
+      dataType: "json",
+      contentType: "application/json",
+      data: function (params) {
+        let filter = {};
+        let filterForm = $("#unit-transfer-tabs #filter_inputs6 input,#unit-transfer-tabs #filter_inputs6 select");
+        filterForm.each((i, item) => {
+          field = $(item);
+
+          if (field.prop("tagName") === "SELECT") {
+            if (
+              typeof field.children("option:selected").val() !== "undefined" &&
+              field.children("option:selected").val() != ""
+            )
+              filter[field.attr("name")] = field
+                .children("option:selected")
+                .val();
+          } else {
+            filter[field.attr("name")] = field.val();
+          }
+        });
+
+        params.fields = filter;
+        params.product_id = $("input[name='product_id']").val();
+      },
+    },
+    processing: true,
+    serverSide: true,
+    bFilter: true,
+    dom: "fBtlpi",
+    buttons: [
+      {
+        extend: "print",
+        text: '<a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><i class="fa text-secondary fa-print"></i></a>',
+        className: "btn btn-light",
+      },
+      "spacer",
+      {
+        extend: "excel",
+        text: '<a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><i class="fa text-success fa-file-excel"></i></a>',
+        className: "btn btn-light",
+      },
+      "spacer",
+      {
+        extend: "pdf",
+        text: '<a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><i class="fa text-danger fa-file-pdf"></i></a>',
+        className: "btn btn-light",
+      },
+    ],
+    pagingType: "numbers",
+    ordering: true,
+    language: {
+      search: " ",
+      sLengthMenu: "_MENU_",
+      searchPlaceholder: "Search...",
+      info: "_START_ - _END_ of _TOTAL_ items",
+    },
+    columns: [
+      {
+        data: null,
+        render: function (data, type, row) {
+          return null;
+        },
+      },
+      { data: "transfer_date", name: "product_unit_transfers.transfer_date" },
+      { data: "invoice", name: "product_unit_transfers.invoice" },
+      {
+        data: "store",
+        name: "product_unit_transfers.store_id",
+        render: function (data, type, row) {
+          if (type === "display")
+            return data
+              ? `<a target="_blank" href="${baseUrl}stores/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+              : "";
+          return data ? data.id : null;
+        },
+      },
+      {
+        data: "fromUnitQty",
+        render: function (data) {
+          return data ? data : "0.00";
+        },
+      },
+      {
+        data: "id",
+        name: "product_unit_transfers.id",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return `<div class="d-flex align-items-center">
+                        <a target="_blank" href="${baseUrl}transfers/units/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
+                        <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table8, ${data}, '${baseUrl}transfers/products')"><i class="fa fa-trash fa-lg"></i></a>
+                    </div>`;
+          }
+          return data;
+        },
+      },
+    ],
+    initComplete: (settings, json) => {
+      $("#unit-transfer-tabs .dataTables_filter").appendTo("#unit-transfer-tabs #tableSearch");
+      $("#unit-transfer-tabs .dataTables_filter").appendTo("#unit-transfer-tabs .search-input");
+      if ($('[data-bs-toggle="tooltip"]').length > 0) {
+        var tooltipTriggerList = [].slice.call(
+          document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        );
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+      }
+
+      var selectAllItems = "#select-all";
+      var checkboxItem = ":checkbox";
+
+      $(selectAllItems).click(function () {
+        if (this.checked) {
+          $(checkboxItem).each(function () {
+            this.checked = true;
+          });
+        } else {
+          $(checkboxItem).each(function () {
+            this.checked = false;
+          });
+        }
+      });
+    },
+    footerCallback: function (row, data, start, end, display) {
+      var api = this.api();
+      // Remove the formatting to get integer data for summation
+      var intVal = function (i) {
+        return typeof i === "string"
+          ? i.replace(/[\$,]/g, "") * 1
+          : typeof i === "number"
+          ? i
+          : 0;
+      };
+    },
+    order: [[2, "desc"]],
+    columnDefs: [
+      {
+        orderable: false,
+        className: "select-checkbox",
+        targets: 0,
+      },
+    ],
+    select: {
+      style: "multi",
+      selector: "td:first-child",
+    },
+  });
+  table8.buttons().container().appendTo("#unit-transfer-tabs .wordset");
+
+  $("#unit-transfer-tabs .filter").on("click select2:select select2:unselect", function (params) {
+    table8.ajax.reload();
+  });
+
   table6 = $("#dt-adjustments").DataTable({
     ajax: {
       url: baseUrl + "adjustments/reports/datatable",
@@ -104,8 +260,12 @@ $(function () {
       },
     ],
     initComplete: (settings, json) => {
-      $("#adjustments-tabs .dataTables_filter").appendTo("#adjustments-tabs #tableSearch");
-      $("#adjustments-tabs .dataTables_filter").appendTo("#adjustments-tabs .search-input");
+      $("#adjustments-tabs .dataTables_filter").appendTo(
+        "#adjustments-tabs #tableSearch"
+      );
+      $("#adjustments-tabs .dataTables_filter").appendTo(
+        "#adjustments-tabs .search-input"
+      );
       if ($('[data-bs-toggle="tooltip"]').length > 0) {
         var tooltipTriggerList = [].slice.call(
           document.querySelectorAll('[data-bs-toggle="tooltip"]')
@@ -141,7 +301,7 @@ $(function () {
           : 0;
       };
     },
-    order: [[0, "desc"]],
+    order: [[2, "desc"]],
     columnDefs: [
       {
         orderable: false,
@@ -156,13 +316,16 @@ $(function () {
   });
   table6.buttons().container().appendTo("#adjustments-tabs .wordset");
 
-  $("#adjustments-tabs .filter").on("click select2:select select2:unselect", function (params) {
-    table6.ajax.reload();
-  });
+  $("#adjustments-tabs .filter").on(
+    "click select2:select select2:unselect",
+    function (params) {
+      table6.ajax.reload();
+    }
+  );
 
   table5 = $("#dt-transfers").DataTable({
     ajax: {
-      url: baseUrl + "/transfers/products/reports/datatable",
+      url: baseUrl + "transfers/products/reports/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
@@ -258,8 +421,12 @@ $(function () {
       },
     ],
     initComplete: (settings, json) => {
-      $("#transfers-tab .dataTables_filter").appendTo("#transfers-tab #tableSearch");
-      $("#transfers-tab .dataTables_filter").appendTo("#transfers-tab .search-input");
+      $("#transfers-tab .dataTables_filter").appendTo(
+        "#transfers-tab #tableSearch"
+      );
+      $("#transfers-tab .dataTables_filter").appendTo(
+        "#transfers-tab .search-input"
+      );
       if ($('[data-bs-toggle="tooltip"]').length > 0) {
         var tooltipTriggerList = [].slice.call(
           document.querySelectorAll('[data-bs-toggle="tooltip"]')
@@ -310,10 +477,13 @@ $(function () {
   });
   table5.buttons().container().appendTo("#transfers-tab .wordset");
 
-  $("#transfers-tab .filter").on("click select2:select select2:unselect", function (params) {
-    table5.ajax.reload();
-  });
-  
+  $("#transfers-tab .filter").on(
+    "click select2:select select2:unselect",
+    function (params) {
+      table5.ajax.reload();
+    }
+  );
+
   table3 = $("#dt-sales-returns").DataTable({
     ajax: {
       url: baseUrl + "sales/returns/stocks/datatable",
@@ -395,7 +565,7 @@ $(function () {
           return data ? data.id : null;
         },
       },
-       {
+      {
         data: "store",
         name: "sales.store_id",
         render: function (data, type, row) {
@@ -423,7 +593,9 @@ $(function () {
       );
       if ($('#sales-returns-tab [data-bs-toggle="tooltip"]').length > 0) {
         var tooltipTriggerList = [].slice.call(
-          document.querySelectorAll('#sales-returns-tab [data-bs-toggle="tooltip"]')
+          document.querySelectorAll(
+            '#sales-returns-tab [data-bs-toggle="tooltip"]'
+          )
         );
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
           return new bootstrap.Tooltip(tooltipTriggerEl);
@@ -557,7 +729,7 @@ $(function () {
           return data ? data.id : null;
         },
       },
-       {
+      {
         data: "store",
         name: "purchases.store_id",
         render: function (data, type, row) {
@@ -585,7 +757,9 @@ $(function () {
       );
       if ($('#purchase-returns-tab [data-bs-toggle="tooltip"]').length > 0) {
         var tooltipTriggerList = [].slice.call(
-          document.querySelectorAll('#purchase-returns-tab [data-bs-toggle="tooltip"]')
+          document.querySelectorAll(
+            '#purchase-returns-tab [data-bs-toggle="tooltip"]'
+          )
         );
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
           return new bootstrap.Tooltip(tooltipTriggerEl);
@@ -647,7 +821,9 @@ $(function () {
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $("#sales-tab #filter_inputs input, #sales-tab #filter_inputs select");
+        let filterForm = $(
+          "#sales-tab #filter_inputs input, #sales-tab #filter_inputs select"
+        );
         filterForm.each((i, item) => {
           field = $(item);
           if (field.prop("tagName") === "SELECT") {
@@ -720,7 +896,7 @@ $(function () {
           return data ? data.id : null;
         },
       },
-       {
+      {
         data: "store",
         name: "sales.store_id",
         render: function (data, type, row) {
@@ -792,9 +968,12 @@ $(function () {
   });
   tableSale.buttons().container().appendTo("#sales-tab .wordset");
 
-  $("#sales-tab .filter").on("click select2:select select2:unselect", function (params) {
-    tableSale.ajax.reload();
-  });
+  $("#sales-tab .filter").on(
+    "click select2:select select2:unselect",
+    function (params) {
+      tableSale.ajax.reload();
+    }
+  );
 
   tablePurchase = $("#dt-purchases").DataTable({
     ajax: {
@@ -874,7 +1053,7 @@ $(function () {
           return data ? data.id : null;
         },
       },
-       {
+      {
         data: "store",
         name: "purchases.store_id",
         render: function (data, type, row) {
@@ -894,8 +1073,12 @@ $(function () {
       },
     ],
     initComplete: (settings, json) => {
-      $("#purchases-tab .dataTables_filter").appendTo("#purchases-tab #tableSearch");
-      $("#purchases-tab .dataTables_filter").appendTo("#purchases-tab .search-input");
+      $("#purchases-tab .dataTables_filter").appendTo(
+        "#purchases-tab #tableSearch"
+      );
+      $("#purchases-tab .dataTables_filter").appendTo(
+        "#purchases-tab .search-input"
+      );
       if ($('[data-bs-toggle="tooltip"]').length > 0) {
         var tooltipTriggerList = [].slice.call(
           document.querySelectorAll('[data-bs-toggle="tooltip"]')
@@ -946,11 +1129,12 @@ $(function () {
   });
   tablePurchase.buttons().container().appendTo("#purchases-tab .wordset");
 
-  $("#purchases-tab .filter").on("click select2:select select2:unselect", function (params) {
-    tablePurchase.ajax.reload();
-  });
-
-
+  $("#purchases-tab .filter").on(
+    "click select2:select select2:unselect",
+    function (params) {
+      tablePurchase.ajax.reload();
+    }
+  );
 
   $(".select2-store").select2({
     placeholder: "Seach a store",

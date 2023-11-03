@@ -169,6 +169,7 @@ $routes->get('outofstock/datatable', [InventoryController::class, 'outofstock_da
 $routes->get('transfers/products/datatable', [ProductTransferController::class, 'datatable']);
 $routes->get('transfers/products/reports/datatable', [ProductTransferController::class, 'stock_report_datatable']);
 $routes->get('transfers/units/datatable', [ProductUnitTransferController::class, 'datatable']);
+$routes->get('transfers/units/reports/datatable', [ProductUnitTransferController::class, 'stock_report_datatable']);
 $routes->get('purchases/datatable', [PurchaseController::class, 'datatable']);
 $routes->get('purchases/returns/datatable', [PurchaseReturnController::class, 'datatable']);
 $routes->get('purchases/stocks/datatable', [PurchaseController::class, 'stock_report_datatable']);

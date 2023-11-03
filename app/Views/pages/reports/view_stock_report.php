@@ -20,7 +20,8 @@
                         <li class="nav-item"><a class="nav-link" href="#purchase-returns-tab" data-bs-toggle="tab">Purchase Returns</a></li>
                         <li class="nav-item"><a class="nav-link" href="#sales-tab" data-bs-toggle="tab">Sales</a></li>
                         <li class="nav-item"><a class="nav-link" href="#sales-returns-tab" data-bs-toggle="tab">Sales Returns</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#transfers-tab" data-bs-toggle="tab">Transfers</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#transfers-tab" data-bs-toggle="tab">Product Transfers</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#unit-transfers-tab" data-bs-toggle="tab">Unit Transfers</a></li>
                         <li class="nav-item"><a class="nav-link" href="#adjustments-tab" data-bs-toggle="tab">Adjustments</a></li>
                     </ul>
                     <div class="tab-content">
@@ -285,7 +286,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="tab-pane" id="sales-returns-tab">
                             <div class="row mt-5">
                                 <div class="col-md-12">
@@ -449,6 +449,58 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="tab-pane" id="unit-transfers-tab">
+                            <div class="row mt-5">
+                                <div class="col-md-12">
+                                    <div class="table-top">
+                                        <div class="search-set">
+                                            <div class="search-path">
+                                                <a class="btn btn-filter" id="filter_search">
+                                                    <img src="<?= base_url('assets/icons/filter.svg') ?>" alt="img">
+                                                    <span><img src="<?= base_url('assets/icons/closes.svg') ?>" alt="img"></span>
+                                                </a>
+                                            </div>
+                                            <div class="search-input">
+                                                <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                            </div>
+                                        </div>
+                                        <div class="wordset">
+                                        </div>
+                                    </div>
+                                    <div class="card" id="filter_inputs6">
+                                        <div class="card-body pb-0">
+                                            <div class="row">
+                                                <div class="col-lg-2 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <input type="text" name="invoice" placeholder="Enter Reference No" value="">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-3 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <a class="btn btn-filters ms-auto filter"><i class="fa fa-search"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table id="dt-unit-transfers" class="table w-100">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Date</th>
+                                                    <th>Reference</th>
+                                                    <th>Store</th>
+                                                    <th>Qty</th>
+                                                    <th class="text-center">Action</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -459,5 +511,5 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/product-details.js?v=1') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/product-stock-report.js?v=1') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/product-stock-report.js?v=3') ?>"></script>
 <?= $this->endSection() ?>

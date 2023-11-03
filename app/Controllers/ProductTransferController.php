@@ -79,10 +79,10 @@ class ProductTransferController extends BaseController
         $stockModel = new StockModel();
 
         if (!auth()->user()->can('product-transfers.create'))
-        return $this->response->setJSON([
-            'status' => false,
-            'message' => "Don't have permission to create this record!"
-        ]);
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to create this record!"
+            ]);
 
         $inputs = $this->request->getVar();
         if (auth()->user())
@@ -187,7 +187,7 @@ class ProductTransferController extends BaseController
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
-        /**
+    /**
      * return json for datatables
      * @return Response - http response
      */
@@ -200,7 +200,7 @@ class ProductTransferController extends BaseController
             ->selectSum('product_transfer_items.qty', 'qty')
             ->join('product_transfer_items', 'product_transfer_items.product_transfer_id=product_transfers.id')
             ->where('product_id', $inputs['product_id'] ?? '')
-                 ->where('order_status', 'completed')
+            ->where('order_status', 'completed')
             ->groupBy('product_transfers.id');
 
         return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) {

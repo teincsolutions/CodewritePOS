@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\ProductUnitTransferModel;
 use App\Models\StockModel;
 use App\Models\StoreModel;
 use App\Models\UnitTransferItemModel;
@@ -62,7 +61,7 @@ class ProductUnitTransferController extends BaseController
         return view('pages/transfers/show_product_unit_transfer', $data);
     }
 
-        /**
+    /**
      * return json for save
      * @return Response - http response
      */
@@ -73,10 +72,10 @@ class ProductUnitTransferController extends BaseController
         $stockModel = new StockModel();
 
         if (!auth()->user()->can('unit-transfers.create'))
-        return $this->response->setJSON([
-            'status' => false,
-            'message' => "Don't have permission to create this record!"
-        ]);
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to create this record!"
+            ]);
 
         $inputs = $this->request->getVar();
         if (auth()->user())
@@ -167,7 +166,7 @@ class ProductUnitTransferController extends BaseController
         return $this->response->setJSON($res);
     }
 
-     /**
+    /**
      * return json for datatables
      * @return Response - http response
      */
@@ -175,10 +174,36 @@ class ProductUnitTransferController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new UnitTransferModel();
-        return $this->response->setJSON(toDatatableResult($model,$inputs));
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
-     /**
+    /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function stock_report_datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new UnitTransferModel();
+        $builder = $model->builder();
+        $builder->select('product_unit_transfers.*')
+            ->selectSum('unit_transfer_items.from_unit_qty', 'fromUnitQty')
+            ->selectSum('unit_transfer_items.to_unit_qty', 'toUnitQty')
+            ->join('unit_transfer_items', 'unit_transfer_items.unit_transfer_id=product_unit_transfers.id')
+            ->groupStart()
+            ->where('from_product_id', $inputs['product_id'] ?? '')
+            ->orWhere('to_product_id', $inputs['product_id'] ?? '')
+            ->groupEnd()
+            ->groupBy('product_unit_transfers.id');
+
+        return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) {
+            $item->store = model('StoreModel')->where('id', $item->store_id)->first();
+            return $item;
+        }));
+    }
+
+
+    /**
      * return json for delete
      * @return Response - http response
      */

@@ -123,6 +123,12 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
+                    <div class="total-order w-100 max-widthauto m-auto mb-4">
+                        <h4>Note</h4>
+                        <p><?= $adjustment->note ?></p>
+                    </div>
+                </div>
+                <div class="col-lg-12">
                     <a id="invoice-print" href="javascript:void(0);" class="btn btn-submit me-2">Print Invoice</a>
                 </div>
             </div>
