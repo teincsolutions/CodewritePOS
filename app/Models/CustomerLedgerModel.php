@@ -89,11 +89,14 @@ class CustomerLedgerModel extends Model
         return $model;
     }
 
-    public function getTodayTotalCredit(): float
+    public function getTodayTotalCredit($storeId = null): float
     {
-        $total = $this->builder()
-            ->selectSum('credit', 'total')
-            ->where('tdate', date('Y-m-d', time()))
+        $builder = $this->builder();
+        $builder->selectSum('credit', 'total')
+            ->where('tdate', date('Y-m-d', time()));
+
+        if ($storeId) $builder->where('store_id', $storeId);
+        $total = $builder
             ->get()
             ->getFirstRow()
             ->total;

@@ -8,7 +8,7 @@ $(function () {
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $("#filter_inputs input, #filter_inputs select");
+        let filterForm = $("#filter_inputs9 input, #filter_inputs9 select");
         filterForm.each((i, item) => {
           field = $(item);
 
@@ -169,7 +169,11 @@ $(function () {
                             : ""
                         }
                         <a target="_blank" href="${baseUrl}transfers/products/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}transfers/products')"><i class="fa fa-trash fa-lg"></i></a>
+                        <a ${
+                          Settings.AllowDeleteTransfers === "yes"
+                            ? ""
+                            : "hidden"
+                        } class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}transfers/products')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;

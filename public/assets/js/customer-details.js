@@ -1,15 +1,15 @@
-let table1, table2, table3;
+let table1, table2, table3, paymentTable;
 
 $(function () {
   // table1
   table1 = $("#dt-sales").DataTable({
     ajax: {
-      url: baseUrl + "/sales/datatable",
+      url: baseUrl + "sales/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $("#filter_inputs input, #filter_inputs select");
+        let filterForm = $("#filter_inputs9 input, #filter_inputs select");
         filterForm.each((i, item) => {
           field = $(item);
 
@@ -25,7 +25,7 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-        filter['store_id'] =$('.select2-store').val();
+        filter["store_id"] = $(".select2-store").val();
         params.fields = filter;
       },
     },
@@ -76,7 +76,7 @@ $(function () {
           if (type === "display") {
             const badges = {
               completed: "bg-lightgreen",
-              pending: "lightred",
+              pending: "bg-lightred",
             };
             return `<span class="badges ${badges[data]}">${data}</span>`;
           }
@@ -142,9 +142,11 @@ $(function () {
                             ? `<a href="${baseUrl}sales/returns/create?invoice=${row.invoice}" class="me-3"><i class="fa fa-reply fa-lg"></i></a>`
                             : ""
                         }
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table1, ${
-                          row.id
-                        }, '${baseUrl}sales',table2,table3)"><i class="fa fa-trash fa-lg"></i></a>
+                        <a ${
+                          Settings.AllowDeleteSales === "yes" ? "" : "hidden"
+                        } class="text-danger" href="javascript:void(0);" onclick="deleteRow(table1, ${
+              row.id
+            }, '${baseUrl}sales',table2,table3)"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;
@@ -200,7 +202,6 @@ $(function () {
       // Update footer
       $(api.column(5).footer()).html("GHS " + pageTotal.toFixed(2));
 
-
       // Total over this page
       pageTotal = api
         .column(6, { page: "current" })
@@ -216,7 +217,7 @@ $(function () {
         .column(7, { page: "current" })
         .data()
         .reduce(function (a, b) {
-          return intVal(a) + intVal(b.total_amount-b.paid);
+          return intVal(a) + intVal(b.total_amount - b.paid);
         }, 0);
 
       // Update footer
@@ -247,7 +248,7 @@ $(function () {
   // table2
   table2 = $("#dt-ledger").DataTable({
     ajax: {
-      url: baseUrl + "customers/ledger/datatable",
+      url: baseUrl + "reports/ledgers/customers/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
@@ -270,7 +271,7 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-        filter['store_id'] =$('.select2-store').val();
+        filter["store_id"] = $(".select2-store").val();
         params.fields = filter;
       },
     },
@@ -311,47 +312,39 @@ $(function () {
           return null;
         },
       },
-      { data: "id", name: "customer_ledgers.id" },
       { data: "tdate", name: "customer_ledgers.tdate" },
       {
         data: null,
         render: function (data, type, row) {
-          if (type === "display")
-            return data.sale
-              ? `INV${data.sale.invoice}`
-              : `INV${data.sales_return.invoice}`;
-          return null;
+          return `<a target="_blank" href="${baseUrl}sales/${data.sale_id}" class="btn btn-link btn-sm">${data.sale.invoice}</a>`;
         },
       },
-      { data: "ledger_type", name: "customer_ledgers.ledger_type" },
       {
-        data: "debit",
+        data: "total_due",
+        render: function (data) {
+          return data < 0
+            ? `GHS (${parseFloat(Math.abs(data)).toFixed(2)})`
+            : `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
+      {
+        data: "total_debit",
         render: function (data) {
           return `GHS ${parseFloat(data).toFixed(2)}`;
         },
       },
       {
-        data: "credit",
+        data: "total_credit",
         render: function (data) {
           return `GHS ${parseFloat(data).toFixed(2)}`;
         },
       },
       {
-        data: "balance",
+        data: "total_balance",
         render: function (data) {
           return data < 0
             ? `(GHS ${Math.abs(data).toFixed(2)})`
             : `GHS ${data.toFixed(2)}`;
-        },
-      },
-      { data: "payment_type", name: "customer_ledgers.payment_type" },
-      {
-        data: "user",
-        name: "customer_ledgers.user_id",
-        render: function (data, type, row) {
-          if (type === "display")
-            return data ? `${data.firstname} ${data.lastname}` : null;
-          return data ? data.id : null;
         },
       },
       {
@@ -361,19 +354,8 @@ $(function () {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
             <a  href="javascript:void(0);" class="me-3" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
-            <a  href="javascript:void(0);" class="me-3" onclick="editRow('#edit-payment',{id:${data},tdate:'${moment(
-              row.tdate
-            ).format("DD-MM-YYYY")}',sale_id:${row.sale_id},payment_type:'${
-              row.payment_type
-            }',credit:${row.credit}},{text:'${row.sale.invoice} (${
-              row.customer.name
-            } - GHS ${row.sale.total_amount})',id:${
-              row.sale.id
-            },name:'sale_id'})"><i class="fa fa-edit fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table2, ${
-                          row.id
-                        }, '${baseUrl}customers/ledger',table3,table1)"><i class="fa fa-trash fa-lg"></i></a>
-                    </div>`;
+            <a  href="javascript:void(0);" class="me-3" onclick="viewCusPayments(table2,this,paymentTable)"><i class="fa fa-eye fa-lg"></i></a>
+           </div>`;
           }
           return data;
         },
@@ -417,7 +399,7 @@ $(function () {
           : 0;
       };
     },
-    order: [[1, "desc"]],
+    order: [],
     columnDefs: [
       {
         orderable: false,
@@ -465,7 +447,7 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-        filter['sales.store_id'] =$('.select2-store').val();
+        filter["sales.store_id"] = $(".select2-store").val();
         params.fields = filter;
       },
     },
@@ -567,13 +549,12 @@ $(function () {
         render: function (data, type, row) {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
-                          ${
-                            row.payment_status === "due"
-                              ? `<a class="me-3" data-bs-toggle="modal" data-bs-target="#add-payment" href="javascript:void(0)"><i class="fa fa-money-bill fa-lg"></i></a>`
-                              : ""
-                          }
                           <a target="_blank" href="${baseUrl}sales/returns/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                          <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table3, ${data}, '${baseUrl}sales/returns',table2,table1)"><i class="fa fa-trash fa-lg"></i></a>
+                          <a  ${
+                            Settings.AllowDeleteSalesReturns === "yes"
+                              ? ""
+                              : "hidden"
+                          } class="text-danger" href="javascript:void(0);" onclick="deleteRow(table3, ${data}, '${baseUrl}sales/returns',table2,table1)"><i class="fa fa-trash fa-lg"></i></a>
                       </div>`;
           }
           return data;
@@ -633,7 +614,6 @@ $(function () {
       // Update footer
       $(api.column(5).footer()).html("GHS " + pageTotal.toFixed(2));
 
-
       // Total over this page
       pageTotal = api
         .column(6, { page: "current" })
@@ -664,6 +644,195 @@ $(function () {
     "click select2:select select2:unselect",
     function (params) {
       table3.ajax.reload();
+    }
+  );
+
+  // paymentTable
+  paymentTable = $("#dt-customer-payments").DataTable({
+    ajax: {
+      url: baseUrl + "customers/ledger/datatable",
+      dataType: "json",
+      contentType: "application/json",
+      data: function (params) {
+        let filter = {};
+        let filterForm = $("#input_filter input");
+        filterForm.each((i, item) => {
+          field = $(item);
+
+          if (field.prop("tagName") === "SELECT") {
+            if (
+              typeof field.children("option:selected").val() !== "undefined" &&
+              field.children("option:selected").val() != ""
+            )
+              filter[field.attr("name")] = field
+                .children("option:selected")
+                .val();
+          } else {
+            filter[field.attr("name")] = field.val();
+          }
+        });
+        filter["store_id"] = $(".select2-store").val();
+        params.fields = filter;
+      },
+    },
+    processing: true,
+    bFilter: true,
+    dom: "fBtlpi",
+    buttons: [
+      {
+        extend: "print",
+        text: '<a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><i class="fa text-secondary fa-print"></i></a>',
+        className: "btn btn-light",
+      },
+      "spacer",
+      {
+        extend: "excel",
+        text: '<a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><i class="fa text-success fa-file-excel"></i></a>',
+        className: "btn btn-light",
+      },
+      "spacer",
+      {
+        extend: "pdf",
+        text: '<a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><i class="fa text-danger fa-file-pdf"></i></a>',
+        className: "btn btn-light",
+      },
+    ],
+    pagingType: "numbers",
+    ordering: true,
+    language: {
+      search: " ",
+      sLengthMenu: "_MENU_",
+      searchPlaceholder: "Search...",
+      info: "_START_ - _END_ of _TOTAL_ items",
+    },
+    columns: [
+      {
+        data: null,
+        render: function (data, type, row) {
+          return null;
+        },
+      },
+      { data: "id", name: "customer_ledgers.id" },
+      { data: "tdate", name: "customer_ledgers.tdate" },
+      {
+        data: null,
+        render: function (data, type, row) {
+          return data.ledger_type === "sales"
+            ? `<a target="_blank" href="${baseUrl}sales/${data.sale_id}" class="btn btn-link btn-sm">${data.sale.invoice}</a>`
+            : `<a target="_blank" href="${baseUrl}sales/returns/${data.sales_return_id}" class="btn btn-link btn-sm">${data.sales_return.invoice}(RF: ${data.sale.invoice})</a>`;
+        },
+      },
+      { data: "ledger_type", name: "customer_ledgers.ledger_type" },
+      {
+        data: "debit",
+        render: function (data) {
+          return `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
+      {
+        data: "credit",
+        render: function (data) {
+          return `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
+      {
+        data: "balance",
+        render: function (data) {
+          return data < 0
+            ? `(GHS ${Math.abs(data).toFixed(2)})`
+            : `GHS ${data.toFixed(2)}`;
+        },
+      },
+      { data: "payment_type", name: "customer_ledgers.payment_type" },
+      {
+        data: "user",
+        name: "customer_ledgers.user_id",
+        render: function (data, type, row) {
+          return data ? `${data.firstname} ${data.lastname}` : "";
+        },
+      },
+      {
+        data: "id",
+        name: "customer_ledgers.id",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return `<div class="d-flex align-items-center">
+              <a  href="javascript:void(0);" class="me-3" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
+              <a  href="javascript:void(0);" class="me-3" onclick="editRow('#edit-payment',{id:${
+                row.id
+              },tdate:'${moment(row.tdate).format("DD-MM-YYYY")}',sale_id:${
+              row.sale_id
+            },payment_type:'${row.payment_type}',debit:${row.debit}},{text:'${
+              row.sale.invoice
+            } (${row.customer.name} - GHS ${row.sale.total_amount})',id:${
+              row.sale.id
+            },name:'sale_id'})"><i class="fa fa-edit fa-lg"></i></a>
+                          <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(paymentTable, ${
+                            row.id
+                          }, '${baseUrl}customers/ledger', table1,table3)"><i class="fa fa-trash fa-lg"></i></a>
+                      </div>`;
+          }
+          return data;
+        },
+      },
+    ],
+    initComplete: (settings, json) => {
+      $("#ledger-tab .dataTables_filter").appendTo("#ledger-tab #tableSearch");
+      $("#ledger-tab .dataTables_filter").appendTo("#ledger-tab .search-input");
+      if ($('#ledger-tab [data-bs-toggle="tooltip"]').length > 0) {
+        var tooltipTriggerList = [].slice.call(
+          document.querySelectorAll('#ledger-tab [data-bs-toggle="tooltip"]')
+        );
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+      }
+
+      var selectAllItems = "#ledger-tab #select-all";
+      var checkboxItem = ":checkbox";
+
+      $(selectAllItems).click(function () {
+        if (this.checked) {
+          $(checkboxItem).each(function () {
+            this.checked = true;
+          });
+        } else {
+          $(checkboxItem).each(function () {
+            this.checked = false;
+          });
+        }
+      });
+    },
+    footerCallback: function (row, data, start, end, display) {
+      var api = this.api();
+      // Remove the formatting to get integer data for summation
+      var intVal = function (i) {
+        return typeof i === "string"
+          ? i.replace(/[\$,]/g, "") * 1
+          : typeof i === "number"
+          ? i
+          : 0;
+      };
+    },
+    order: [[1, "desc"]],
+    columnDefs: [
+      {
+        orderable: false,
+        className: "select-checkbox",
+        targets: 0,
+      },
+    ],
+    select: {
+      style: "multi",
+      selector: "td:first-child",
+    },
+  });
+  paymentTable.buttons().container().appendTo("#ledger-tab .wordset");
+
+  $("#view-payments .filter").on(
+    "click select2:select select2:unselect",
+    function (params) {
+      paymentTable.ajax.reload();
     }
   );
 
@@ -922,19 +1091,16 @@ $(function () {
       $("#inv-due").val((0).toFixed(2));
     });
 
-    $(".select2-store").select2({
-      placeholder: "Seach a store",
-    });
+  $(".select2-store").select2({
+    placeholder: "Seach a store",
+  });
 
-    $(".select2-store").on(
-      "select2:select select2:unselect",
-      function (params) {
-        table1.ajax.reload();
-        table2.ajax.reload();
-        table3.ajax.reload();
-        table.ajax.reload();
-        $("input[name='store_id']").val($(this).val());
-      }
-    );
-    $("input[name='store_id']").val($(".select2-store").val());
+  $(".select2-store").on("select2:select select2:unselect", function (params) {
+    table1.ajax.reload();
+    table2.ajax.reload();
+    table3.ajax.reload();
+    table.ajax.reload();
+    $("input[name='store_id']").val($(this).val());
+  });
+  $("input[name='store_id']").val($(".select2-store").val());
 });

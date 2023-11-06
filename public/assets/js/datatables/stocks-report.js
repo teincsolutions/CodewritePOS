@@ -8,7 +8,7 @@ $(function () {
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $("#filter_inputs input, #filter_inputs select");
+        let filterForm = $("#filter_inputs9 input, #filter_inputs9 select");
         filterForm.each((i, item) => {
           field = $(item);
           if (field.prop("tagName") === "SELECT") {
@@ -74,6 +74,12 @@ $(function () {
         },
       },
       {
+        data: "qtyInstock",
+        render: function (data) {
+          return data ? data : "0.00";
+        },
+      },
+      {
         data: "qtyOrdered",
         render: function (data) {
           return data ? data : "0.00";
@@ -107,7 +113,7 @@ $(function () {
         data: "id",
         render: function (data, type, row) {
           if (type === "display") {
-            return `<a class="me-3" href="${baseUrl}reports/stocks/product/${data}"><i class="fa fa-print fa-lg"></i> View Report</a>`;
+            return `<a target="_blank" class="me-3" href="${baseUrl}reports/stocks/product/${data}"><i class="fa fa-print fa-lg"></i> View Report</a>`;
           }
           return data;
         },

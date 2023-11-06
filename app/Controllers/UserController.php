@@ -3,7 +3,9 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\StoreModel;
 use App\Models\UserModel;
+use App\Models\UserStoreModel;
 use CodeIgniter\Events\Events;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\Shield\Entities\User;
@@ -28,8 +30,11 @@ class UserController extends BaseController
      */
     public function edit($id = null)
     {
+        $stores = (new UserModel())->getMyStores();
+
         $data = [
-            'title' => 'Create User'
+            'title' => 'Create User',
+            'stores' => $stores
         ];
 
         if ($id) {
@@ -84,6 +89,18 @@ class UserController extends BaseController
             if ($model->save($inputs)) {
                 if (isset($inputs['groups']))
                     $user->syncGroups(...$inputs['groups']);
+
+                if ($user && isset($inputs['stores'])) {
+                    (new UserStoreModel())->where('user_id', $id)->delete();
+
+                    if (sizeof($inputs['stores']) > 0) (new UserStoreModel())->builder()->upsert(array_map(function ($item) use ($id) {
+                        return [
+                            'user_id' => $id,
+                            'store_id' => $item
+                        ];
+                    }, $inputs['stores']));
+                }
+
                 return $this->response->setJSON([
                     'status' => true,
                     'message' => "User updated successfully!",
@@ -113,7 +130,16 @@ class UserController extends BaseController
             $user->fill($this->request->getPost(array_keys($rules)));
 
             $model->save($user);
-            $user = $model->findById($model->getInsertID());
+            $id = $model->getInsertID();
+            $user = $model->findById($id);
+            if ($user && isset($inputs['stores']) && sizeof($inputs['stores']) > 0) {
+                (new UserStoreModel())->builder()->upsert(array_map(function ($store_id) use ($id) {
+                    return [
+                        'user_id' => $id,
+                        'store_id' => $store_id
+                    ];
+                }, $inputs['stores']));
+            }
             $user->syncGroups(...$inputs['groups']);
             Events::trigger('register', $user);
 

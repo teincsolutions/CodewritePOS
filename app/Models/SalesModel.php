@@ -125,29 +125,38 @@ class SalesModel extends Model
         return  $returnModel->where('sale_id', $saleId)->countAllResults() > 0;
     }
 
-    public function getTotalAmount(): float
+    public function getTotalAmount($storeId = null): float
     {
-        $total = $this->builder()->selectSum('total_amount', 'total')
-            ->where('order_status', 'completed')->get()->getFirstRow()->total;
+        $builder = $this->builder();
+        $builder->selectSum('total_amount', 'total')
+            ->where('order_status', 'completed');
+        if ($storeId) $builder->where('store_id', $storeId);
+
+        $total =  $builder->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
 
-    public function getTodayTotalAmount(): float
+    public function getTodayTotalAmount($storeId = null): float
     {
-        $total = 0;
+        $builder =  (new CustomerLedgerModel())->builder();
         // total paid by customers
-        $total += (new CustomerLedgerModel())
-            ->join('sales', 'sales.id=customer_ledgers.sale_id')
+        $builder->join('sales', 'sales.id=customer_ledgers.sale_id')
             ->selectSum('debit', 'total')
-            ->where('sales.sales_date', date('Y-m-d', time()))
-            ->get()->getFirstRow()->total;
+            ->where('sales.sales_date', date('Y-m-d', time()));
+        if ($storeId) $builder->where('sales.store_id', $storeId);
+
+        $total = $builder->get()->getFirstRow()->total;
+
+        $builder =  $this->builder();
 
         // total paid by walk-in-customers
-        $total += $this->builder()->selectSum('total_amount', 'total')
+        $builder->selectSum('total_amount', 'total')
             ->where('sales_date', date('Y-m-d', time()))
             ->where('type', 'walk-in-customer')
-            ->where('order_status', 'completed')
-            ->get()->getFirstRow()->total;
+            ->where('order_status', 'completed');
+        if ($storeId) $builder->where('store_id', $storeId);
+
+        $total += $builder->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
 
@@ -173,13 +182,16 @@ class SalesModel extends Model
         return $total ? $total : 0.00;
     }
 
-    public function getDueAmount(): float
+    public function getDueAmount($storeId = null): float
     {
-        $total = $this->builder()
-            ->selectSum(new RawSql('(total_amount - paid)'), 'total')
+        $builder = $this->builder();
+        $builder->selectSum(new RawSql('(total_amount - paid)'), 'total')
             ->where('order_status', 'completed')
-            ->where('payment_status', 'due')
-            ->get()->getFirstRow()->total;
+            ->where('payment_status', 'due');
+
+        if ($storeId) $builder->where('store_id', $storeId);
+
+        $total =  $builder->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
 

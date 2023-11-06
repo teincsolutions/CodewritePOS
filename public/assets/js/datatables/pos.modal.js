@@ -3,12 +3,14 @@ let table, table2, table3;
 $(function () {
   table = $("#dt-sales").DataTable({
     ajax: {
-      url: baseUrl + "/sales/datatable",
+      url: baseUrl + "sales/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $("#sales #input-filter input, #sales #input-filter select");
+        let filterForm = $(
+          "#sales #input-filter input, #sales #input-filter select"
+        );
         filterForm.each((i, item) => {
           field = $(item);
 
@@ -24,9 +26,13 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
+        filter["sales.store_id"] = $(".select2-store").val();
+        filter["sales.user_id"] = $("input[name='user_id']").val();
+
         params.date_range_column = "sales_date";
         params.date_from = moment().format("YYYY-MM-DD");
         params.date_to = moment().format("YYYY-MM-DD");
+
         params.fields = filter;
       },
     },
@@ -176,11 +182,49 @@ $(function () {
   });
   table.buttons().container().appendTo(".sales-wordset");
 
-  $("#sales .filter").on("click select2:select select2:unselect", function (params) {
-    table.ajax.reload();
-  });
+  $("#sales .filter").on(
+    "click select2:select select2:unselect",
+    function (params) {
+      table.ajax.reload();
+    }
+  );
+  // table2
+  table2 = $("#dt-ledger").DataTable({
+    ajax: {
+      url: baseUrl + "customers/ledger/datatable",
+      dataType: "json",
+      contentType: "application/json",
+      data: function (params) {
+        let filter = {};
+        let filterForm = $(
+          "#ledger-tab #filter_inputs3 input, #ledger-tab #filter_inputs3 select"
+        );
+        filterForm.each((i, item) => {
+          field = $(item);
 
-  table2 = $("#dt-payments").DataTable({
+          if (field.prop("tagName") === "SELECT") {
+            if (
+              typeof field.children("option:selected").val() !== "undefined" &&
+              field.children("option:selected").val() != ""
+            )
+              filter[field.attr("name")] = field
+                .children("option:selected")
+                .val();
+          } else {
+            filter[field.attr("name")] = field.val();
+          }
+        });
+        filter["customer_ledgers.store_id"] = $(".select2-store").val();
+        filter["customer_ledgers.user_id"] = $("input[name='user_id']").val();
+
+        params.date_range_column = "tdate";
+        params.date_from = moment().format("YYYY-MM-DD");
+        params.date_to = moment().format("YYYY-MM-DD");
+
+        params.fields = filter;
+      },
+    },
+    processing: true,
     bFilter: true,
     dom: "fBtlpi",
     buttons: [
@@ -210,12 +254,149 @@ $(function () {
       searchPlaceholder: "Search...",
       info: "_START_ - _END_ of _TOTAL_ items",
     },
-    initComplete: (settings, json) => {},
-    order: [[1, "desc"]],
-  });
-  table2.buttons().container().appendTo(".payment-wordset");
+    columns: [
+      { data: "id", name: "customer_ledgers.id" },
+      { data: "tdate", name: "customer_ledgers.tdate" },
+      {
+        data: null,
+        render: function (data, type, row) {
+          return data.sale
+            ? `${data.sale.invoice}`
+            : `${data.sales_return.invoice}`;
+        },
+      },
+      {
+        data: "customer",
+        name: "customer_ledgers.customer_id",
+        render: function (data, type, row) {
+          if (type === "display")
+            return data
+              ? `<a target="_blank" href="${baseUrl}customers/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+              : "walk-in-customer";
+          return data ? data.name : "walk-in-customer";
+        },
+      },
+      {
+        data: "debit",
+        render: function (data) {
+          return `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
+      {
+        data: "credit",
+        render: function (data) {
+          return `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
+      {
+        data: "balance",
+        render: function (data) {
+          return data < 0
+            ? `(GHS ${Math.abs(data).toFixed(2)})`
+            : `GHS ${data.toFixed(2)}`;
+        },
+      },
+      {
+        data: "id",
+        name: "customer_ledgers.id",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return `<div class="d-flex align-items-center">
+            <a  href="javascript:void(0);" class="me-3" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
+            <a  href="javascript:void(0);" class="me-3" onclick="editRow('#edit-payment',{id:${data},tdate:'${moment(
+              row.tdate
+            ).format("DD-MM-YYYY")}',sale_id:${row.sale_id},payment_type:'${
+              row.payment_type
+            }',credit:${row.credit}},{text:'${row.sale.invoice} (${
+              row.customer.name
+            } - GHS ${row.sale.total_amount})',id:${
+              row.sale.id
+            },name:'sale_id'})"><i class="fa fa-edit fa-lg"></i></a>
+                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table2, ${
+                          row.id
+                        }, '${baseUrl}customers/ledger',table3,table1)"><i class="fa fa-trash fa-lg"></i></a>
+                    </div>`;
+          }
+          return data;
+        },
+      },
+    ],
+    initComplete: (settings, json) => {
+      $("#ledger-tab .dataTables_filter").appendTo("#ledger-tab #tableSearch");
+      $("#ledger-tab .dataTables_filter").appendTo("#ledger-tab .search-input");
+      if ($('#ledger-tab [data-bs-toggle="tooltip"]').length > 0) {
+        var tooltipTriggerList = [].slice.call(
+          document.querySelectorAll('#ledger-tab [data-bs-toggle="tooltip"]')
+        );
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+      }
 
+      var selectAllItems = "#ledger-tab #select-all";
+      var checkboxItem = ":checkbox";
+
+      $(selectAllItems).click(function () {
+        if (this.checked) {
+          $(checkboxItem).each(function () {
+            this.checked = true;
+          });
+        } else {
+          $(checkboxItem).each(function () {
+            this.checked = false;
+          });
+        }
+      });
+    },
+    order: [[0, "desc"]],
+  });
+  table2.buttons().container().appendTo("#ledger-tab .wordset");
+
+  $("#ledger-tab .filter").on(
+    "click select2:select select2:unselect",
+    function (params) {
+      table2.ajax.reload();
+    }
+  );
+
+  // table3
   table3 = $("#dt-returns").DataTable({
+    ajax: {
+      url: baseUrl + "sales/returns/datatable",
+      dataType: "json",
+      contentType: "application/json",
+      data: function (params) {
+        let filter = {};
+        let filterForm = $(
+          "#returns-tab #filter_inputs1 input, #returns-tab #filter_inputs1 select"
+        );
+        filterForm.each((i, item) => {
+          field = $(item);
+
+          if (field.prop("tagName") === "SELECT") {
+            if (
+              typeof field.children("option:selected").val() !== "undefined" &&
+              field.children("option:selected").val() != ""
+            )
+              filter[field.attr("name")] = field
+                .children("option:selected")
+                .val();
+          } else {
+            filter[field.attr("name")] = field.val();
+          }
+        });
+        filter["sales_returns.store_id"] = $(".select2-store").val();
+        filter["sales_returns.user_id"] = $("input[name='user_id']").val();
+
+        params.date_range_column = "return_date";
+        params.date_from = moment().format("YYYY-MM-DD");
+        params.date_to = moment().format("YYYY-MM-DD");
+
+        params.fields = filter;
+      },
+    },
+    processing: true,
+    serverSide: true,
     bFilter: true,
     dom: "fBtlpi",
     buttons: [
@@ -245,11 +426,111 @@ $(function () {
       searchPlaceholder: "Search...",
       info: "_START_ - _END_ of _TOTAL_ items",
     },
-    initComplete: (settings, json) => {},
-    order: [[1, "desc"]],
-  });
-  table3.buttons().container().appendTo(".returns-wordset");
+    columns: [
+      { data: "return_date", name: "sales_returns.return_date" },
+      { data: "invoice", name: "sales_returns.invoice" },
+      {
+        data: "customer",
+        name: "sales.customer_id",
+        render: function (data, type, row) {
+          if (type === "display")
+            return data
+              ? `<a target="_blank" href="${baseUrl}customers/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+              : "walk-in-customer";
+          return data ? data.id : null;
+        },
+      },
+      {
+        data: "payment_status",
+        name: "sales_returns.payment_status",
+        render: function (data, type) {
+          if (type === "display") {
+            const badges = {
+              paid: "bg-lightgreen",
+              due: "bg-lightred",
+            };
+            return `<span class="badges ${badges[data]}">${data}</span>`;
+          }
 
+          return data;
+        },
+      },
+      {
+        data: "total_amount",
+        render: function (data) {
+          return `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
+      {
+        data: "id",
+        name: "sales_returns.id",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return `<div class="d-flex align-items-center">
+                          <a target="_blank" href="${baseUrl}sales/returns/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
+                          <a  ${
+                            Settings.AllowDeleteSalesReturns === "yes"
+                              ? ""
+                              : "hidden"
+                          } class="text-danger" href="javascript:void(0);" onclick="deleteRow(table3, ${data}, '${baseUrl}sales/returns',table2,table1)"><i class="fa fa-trash fa-lg"></i></a>
+                      </div>`;
+          }
+          return data;
+        },
+      },
+    ],
+    initComplete: (settings, json) => {
+      $("#returns-tab .dataTables_filter").appendTo(
+        "#returns-tab #tableSearch"
+      );
+      $("#returns-tab .dataTables_filter").appendTo(
+        "#returns-tab .search-input"
+      );
+      if ($('#returns-tab [data-bs-toggle="tooltip"]').length > 0) {
+        var tooltipTriggerList = [].slice.call(
+          document.querySelectorAll('#returns-tab [data-bs-toggle="tooltip"]')
+        );
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+      }
+
+      var selectAllItems = "#returns-tab #select-all";
+      var checkboxItem = ":checkbox";
+
+      $(selectAllItems).click(function () {
+        if (this.checked) {
+          $(checkboxItem).each(function () {
+            this.checked = true;
+          });
+        } else {
+          $(checkboxItem).each(function () {
+            this.checked = false;
+          });
+        }
+      });
+    },
+    order: [[1, "desc"]],
+    columnDefs: [
+      {
+        orderable: false,
+        className: "select-checkbox",
+        targets: 0,
+      },
+    ],
+    select: {
+      style: "multi",
+      selector: "td:first-child",
+    },
+  });
+  table3.buttons().container().appendTo("#returns-tab .wordset");
+
+  $("#returns-tab .filter").on(
+    "click select2:select select2:unselect",
+    function (params) {
+      table3.ajax.reload();
+    }
+  );
   let form2 = $("#add-customer");
 
   form2.validate({
@@ -301,7 +582,6 @@ $(function () {
 
           if (d.status === true) {
             form2.trigger("reset");
-            $("select").val("").trigger("change.select2");
             form2.modal("hide");
             Swal.fire({
               icon: "success",
@@ -384,8 +664,11 @@ $(function () {
 
           if (d.status === true) {
             form3.trigger("reset");
-            $("select").val("").trigger("change.select2");
             form3.modal("hide");
+            table.ajax.reload();
+            table2.ajax.reload();
+            table3.ajax.reload();
+
             Swal.fire({
               icon: "success",
               text: d.message,
@@ -412,6 +695,12 @@ $(function () {
       ajax: {
         url: `${baseUrl}sales/select2`,
         dataType: "json",
+        data: function (params) {
+          let filter = {};
+          filter["sales.type"] = "customer";
+          params.filter = filter;
+          return params;
+        },
       },
       allowClear: true,
       minimumInputLength: 3,

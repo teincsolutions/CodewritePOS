@@ -27,7 +27,7 @@
                                         <?php
                                         if (isset($stores))
                                             foreach ($stores as $row) { ?>
-                                            <option value="<?= $row->id ?>" <?= isset($adjustment) ? ($row->id === $adjustment->store_id ? 'selected' : '') : null ?>>
+                                            <option value="<?= $row->id ?>" <?= isset($adjustment) ? ($row->id === $adjustment->store_id ? 'selected' : '') : ($row->id === $settings->get('App.DefaultStore', $context) ? 'selected' : '') ?>>
                                                 <?= $row->name; ?><?= $row->location ? "($row->location)" : null; ?>
                                             </option>
                                         <?php } ?>
@@ -93,7 +93,7 @@
                             <div class="col-lg-12">
                                 <div class="form-group">
                                     <label>Note</label>
-                                    <textarea class="form-control" name="note" placeholder="What is this adjustment for?"></textarea>
+                                    <textarea class="form-control" name="note" placeholder="What is this adjustment for?" required></textarea>
                                 </div>
                             </div>
                             <div class="col-lg-12 d-flex justify-content-end">

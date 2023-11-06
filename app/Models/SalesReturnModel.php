@@ -86,30 +86,30 @@ class SalesReturnModel extends Model
         return $model;
     }
 
-    public function getTotalAmount(): float
+    public function getTotalAmount($storeId = null): float
     {
-        return (new SalesReturnItemModel())
-            ->where('order_status', 'completed')
-            ->getTotalAmount();
+        $builder = $this->builder();
+        $builder->selectSum('total_amount', 'total')
+            ->where('order_status', 'completed');
+        if ($storeId) $builder->where('store_id', $storeId);
+
+
+        $total = $builder->get()->getFirstRow()->total;
+        return $total ? $total : 0.00;
     }
 
-    public function getTodayTotalAmount(): float
+    public function getTodayTotalAmount($storeId = null): float
     {
-        $total = 0;
-        // total paid by customers
-        $total += (new CustomerLedgerModel())
-            ->join('sales_returns', 'sales_returns.id=customer_ledgers.sales_return_id')
-            ->selectSum('credit', 'total')
-            ->where('sales_returns.return_date', date('Y-m-d', time()))
-            ->get()->getFirstRow()->total;
+        $today  = date('Y-m-d', time());
 
-        // total paid by walk-in-customers
-        $total += $this->builder()->selectSum('sales_returns.total_amount', 'total')
-            ->join('sales', 'sales.id=sales_returns.sale_id')
-            ->where('return_date', date('Y-m-d', time()))
-            ->where('sales.type', 'walk-in-customer')
-            ->where('sales_returns.order_status', 'completed')
-            ->get()->getFirstRow()->total;
+        $builder = $this->builder();
+        $builder->selectSum('total_amount', 'total')
+            ->where('order_status', 'completed')
+            ->where('return_date', $today);
+            
+        if ($storeId) $builder->where('store_id', $storeId);
+
+        $total = $builder->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
 

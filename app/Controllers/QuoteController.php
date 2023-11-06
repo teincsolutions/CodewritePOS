@@ -6,12 +6,10 @@ use App\Controllers\BaseController;
 use App\Models\QuoteItemModel;
 use App\Models\QuoteModel;
 use App\Models\StoreModel;
+use App\Models\UserModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
-use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
 use Config\Database;
-use Psr\Log\LoggerInterface;
 
 class QuoteController extends BaseController
 {
@@ -21,11 +19,13 @@ class QuoteController extends BaseController
      */
     public function index()
     {
-        $storeModel = new StoreModel();
-        
+        $stores =(new UserModel())->getMyStores();
+
         $data = [
             'title' => 'Quote List',
-            'stores' => $storeModel->where('status','opened')->findAll(),
+            'stores' => $stores,
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
         ];
         return view('pages/quotes/list_quote', $data);
     }
@@ -39,13 +39,16 @@ class QuoteController extends BaseController
         $model = new QuoteModel();
         $lastItem = $model->orderBy('id', 'desc')->first();
         $lastId = $lastItem ? $lastItem->id : 1;
-        $storeModel = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
+
 
         $quoteWhere = ['quote_date' => date('Y-m-d', time()), 'user_id' => (auth()->user()->id ?? 0)];
         $data = [
             'title' => 'Create a Quote',
             'invoice' => substr(time() + $lastId, 0, 10),
-            'stores' => $storeModel->where('status','opened')->findAll(),
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
+            'stores' => $stores,
             'quoteList' => $model->where($quoteWhere)->findAll(),
         ];
 
@@ -76,10 +79,10 @@ class QuoteController extends BaseController
     public function save()
     {
         if (!auth()->user()->can('quotes.create'))
-        return $this->response->setJSON([
-            'status' => false,
-            'message' => "Don't have permission to create this record!"
-        ]);
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to create this record!"
+            ]);
 
         $model = new QuoteModel();
         $quoteItemModel = new QuoteItemModel();

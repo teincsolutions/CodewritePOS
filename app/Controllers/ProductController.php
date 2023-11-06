@@ -10,6 +10,7 @@ use App\Models\StoreModel;
 use App\Models\StoreProductModel;
 use App\Models\TaxModel;
 use App\Models\UnitModel;
+use App\Models\UserModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\HTTP\Response;
 use Config\Database;
@@ -22,9 +23,17 @@ class ProductController extends BaseController
      */
     public function index()
     {
+        $catModel = new CategoryModel();
+        $unitModel = new UnitModel();
+        $brandModel = new BrandModel();
+        $taxModel = new TaxModel();
         $storeModel = new StoreModel();
         $data = [
             'title' => 'Product List',
+            'categories' => $catModel->findAll(),
+            'units' => $unitModel->findAll(),
+            'taxes' => $taxModel->findAll(),
+            'brands' => $brandModel->findAll(),
             'stores' => $storeModel->where('status', 'opened')->findAll(),
         ];
         return view('pages/products/list_product', $data);
@@ -40,7 +49,7 @@ class ProductController extends BaseController
         $unitModel = new UnitModel();
         $brandModel = new BrandModel();
         $taxModel = new TaxModel();
-        $storeModel  = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Create Product',
@@ -48,7 +57,7 @@ class ProductController extends BaseController
             'units' => $unitModel->findAll(),
             'taxes' => $taxModel->findAll(),
             'brands' => $brandModel->findAll(),
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'stores' => $stores,
         ];
 
         if ($id) {

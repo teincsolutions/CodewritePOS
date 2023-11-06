@@ -75,10 +75,10 @@ class SettingController extends BaseController
     public function save_settings()
     {
         if (!auth()->user()->can('general-settings.access'))
-        return $this->response->setJSON([
-            'status' => false,
-            'message' => "Don't have permission to manage this record!"
-        ]);
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to manage this record!"
+            ]);
 
         $inputs = $this->request->getVar();
         foreach ($inputs as $key => $val)
@@ -87,7 +87,35 @@ class SettingController extends BaseController
 
         return $this->response->setJSON([
             'status' => true,
-            'message' => "Permission Saved Successfully!",
+            'message' => "Settings Saved Successfully!",
+            'input' => $inputs,
+        ]);
+    }
+
+
+    /**
+     * return json for savePermissions
+     * @return Response - http response
+     */
+    public function save_context_settings()
+    {
+        $settings = service('settings');
+
+        if (!auth()->user()->can('preference-settings.access'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to manage this record!"
+            ]);
+
+        $inputs = $this->request->getVar();
+        $context = $inputs['context'];
+        unset($inputs['context']);
+        foreach ($inputs as $key => $val)
+            $settings->set("App.$key", $val, $context);
+
+        return $this->response->setJSON([
+            'status' => true,
+            'message' => "Setting Saved Successfully!",
             'input' => $inputs,
         ]);
     }
@@ -99,10 +127,10 @@ class SettingController extends BaseController
     public function save_group()
     {
         if (!auth()->user()->can('permission-settings.access'))
-        return $this->response->setJSON([
-            'status' => false,
-            'message' => "Don't have permission to manage this record!"
-        ]);
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to manage this record!"
+            ]);
 
         $inputs = $this->request->getVar();
         $alias = strtolower(str_replace(' ', '-', $inputs['title']));

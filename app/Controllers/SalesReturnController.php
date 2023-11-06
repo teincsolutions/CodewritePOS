@@ -9,12 +9,10 @@ use App\Models\SalesReturnItemModel;
 use App\Models\SalesReturnModel;
 use App\Models\StockModel;
 use App\Models\StoreModel;
+use App\Models\UserModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
-use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
 use Config\Database;
-use Psr\Log\LoggerInterface;
 
 class SalesReturnController extends BaseController
 {
@@ -24,10 +22,13 @@ class SalesReturnController extends BaseController
      */
     public function index()
     {
-        $storeModel = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
+
         $data = [
             'title' => 'Sales Return List',
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
+            'stores' => $stores,
         ];
         return view('pages/sales_returns/list_sales_return', $data);
     }
@@ -43,12 +44,12 @@ class SalesReturnController extends BaseController
         $saleModel = new SalesModel();
         $lastItem = $model->orderBy('id', 'desc')->first();
         $lastId = $lastItem ? $lastItem->id : 1;
-        $storeModel = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Create Sales Return',
             'invoice' => substr((time() + 1000000000) + $lastId, 0, 10),
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'stores' => $stores,
         ];
         $whereInvoice = [
             'invoice' => $invoice,

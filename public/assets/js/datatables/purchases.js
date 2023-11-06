@@ -8,7 +8,7 @@ $(function () {
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $("#filter_inputs input, #filter_inputs select");
+        let filterForm = $("#filter_inputs9 input, #filter_inputs9 select");
         filterForm.each((i, item) => {
           field = $(item);
 
@@ -252,11 +252,6 @@ $(function () {
     allowClear: true,
     placeholder: "Seach a supplier",
   });
-  $(".select2-store").select2({
-    placeholder: "Seach a store",
-    allowClear: true,
-  });
-
   $(".select2-store").select2({
     placeholder: "Seach a store",
     allowClear: true,

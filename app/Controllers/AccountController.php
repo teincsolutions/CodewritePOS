@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\StoreModel;
 use App\Models\UserModel;
 use CodeIgniter\Events\Events;
 use CodeIgniter\HTTP\Response;
@@ -32,11 +33,23 @@ class AccountController extends BaseController
      */
     public function settings()
     {
+        $user = auth()->user();
+        $storeIds = model('UserModel')->getStoreIds($user->id);
+        $storeModel = new StoreModel();
+        $storeModel->where('status', 'opened');
+        $skipGroups = array_merge(setting('AuthGroups.disabledGroup'), [setting('AuthGroups.defaultGroup')]);
+        
+        if (!$user->inGroup(...$skipGroups))
+        $storeModel->whereIn('id', array_merge($storeIds, ['']));
+        $stores =  $storeModel->findAll();
         $data = [
-            'title' => 'My Profile'
+            'title' => 'My Profile',
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
+            'stores' => $stores,
         ];
         $data = array_merge($data, [
-            'user' => auth()->user(),
+            'user' => $user,
         ]);
 
         return view('pages/users/settings', $data);

@@ -36,7 +36,7 @@
                                 <div class="form-group">
                                     <label>Customer</label>
                                     <div class="row">
-                                        <div class="col-lg-10 col-sm-10 col-10">
+                                        <div class="col-lg-10 col-sm-10 col-10" style="overflow-x: auto;">
                                             <select name="customer_id" class="select2-customer">
                                                 <option value="">walk-in-customer</option>
                                             </select>
@@ -49,14 +49,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5 col-sm-6 col-12">
+                            <div class="col-lg-5 col-sm-6 col-12" style="overflow-x: auto;">
                                 <div class="form-group">
                                     <label>Store</label>
                                     <select name="store_id" class="select2-store">
                                         <?php
                                         if (isset($stores))
                                             foreach ($stores as $row) { ?>
-                                            <option value="<?= $row->id ?>" <?= isset($sales) ? ($row->id === $sales->store_id ? 'selected' : '') : null ?>>
+                                            <option value="<?= $row->id ?>" <?= isset($sales) ? ($row->id === $sales->store_id ? 'selected' : '') : ($row->id === $settings->get('App.DefaultStore', $context) ? 'selected' : '') ?>>
                                                 <?= $row->name; ?><?= $row->location ? "($row->location)" : null; ?>
                                             </option>
                                         <?php } ?>
@@ -111,7 +111,8 @@
                                                         : '<a class="p-3"></a>' ?>
                                                     <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
                                                         <?= $row->product->name ?>
-                                                        (<?= $row->product->unit->label; ?>)</td>
+                                                        (<?= $row->product->unit->label; ?>)
+                                                </td>
                                                 <td>
                                                     <div class="increment-decrement">
                                                         <div class="input-groups">
@@ -271,7 +272,7 @@
                             </ul>
                         </div>
                         <div class="setvalue">
-                            <input onkeyup="updateTotals()" onchange="updateTotals()" type="number" name="paid" value="<?= isset($sales) ? $sales->paid : null ?>" step="any" min="0" class="form-control" placeholder="Enter paid amount">
+                            <input onkeyup="updateTotals()" onchange="updateTotals()" type="number" name="paid" value="" step="any" min="0" class="form-control" placeholder="Enter paid amount">
                         </div>
                         <div class="setvaluecash">
                             <ul>
@@ -391,16 +392,17 @@
                 </button>
             </div>
             <div class="modal-body">
+                <input type="hidden" name="user_id" value="<?= user_id() ?>">
                 <div class="tabs-sets">
                     <ul class="nav nav-tabs" id="myTabs" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="sales-tab" data-bs-toggle="tab" data-bs-target="#sales" type="button" aria-controls="sales" aria-selected="true" role="tab">Sales</button>
+                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#sales" type="button" aria-controls="sales" aria-selected="true" role="tab">Sales</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" aria-controls="payment" aria-selected="false" role="tab">Payment</button>
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#ledger-tab" type="button" aria-controls="ledger-tab" aria-selected="false" role="tab">Payment</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="return-tab" data-bs-toggle="tab" data-bs-target="#return" type="button" aria-controls="return" aria-selected="false" role="tab">Return</button>
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#returns-tab" type="button" aria-controls="return" aria-selected="false" role="tab">Return</button>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -410,7 +412,7 @@
                                 </div>
                             </div>
                             <div id="input-filter" class="row">
-                                <input type="hidden" name="user_id" value="<?= user_id() ?>">
+
                             </div>
 
                             <div class="table-responsive">
@@ -429,15 +431,16 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="payment" role="tabpanel">
+                        <div class="tab-pane fade" id="ledger-tab" role="tabpanel">
                             <div class="table-top">
-                                <div class="payments-wordset">
+                                <div class="wordset">
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table id="dt-payments" class="table">
+                                <table id="dt-ledger" class="table w-100">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Date</th>
                                             <th>Invoice No.</th>
                                             <th>Customer</th>
@@ -447,45 +450,16 @@
                                             <th class="text-end">Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <?php
-                                        $badges =  [
-                                            'completed' => "bg-lightgreen",
-                                            'pending' => "bg-lightred",
-                                        ];
-                                        if (isset($ledgerList))
-                                            foreach ($ledgerList as $key => $row) {
-                                                $row->balance = $row->customer->balance;
-                                        ?>
-                                            <tr>
-                                                <td><?= $row->tdate; ?></td>
-                                                <td><a target="_blank" href="<?= site_url('sales/' . $row->sale_id) ?>" class="btn btn-link btn-sm"><?= $row->sale->invoice; ?></a></td>
-                                                <td>
-                                                    <a target="_blank" href="<?= site_url('customers/' . $row->customer_id) ?>" class="btn btn-link btn-sm"><?= $row->customer->name ?></a>
-                                                </td>
-                                                <td><?= number_format($row->debit, 2); ?></td>
-                                                <td><?= number_format($row->credit, 2); ?></td>
-                                                <td><?= $row->balance < 0 ? "(" . number_format(abs($row->balance), 2) . ")" : number_format($row->balance, 2); ?></td>
-                                                <td>
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <a class="me-3 text-secondary" href="<?= site_url('customers/ledgers/edit/' . $row->id) ?>"><i class="fa fa-edit fa-lg"></i></a>
-                                                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('customers/ledgers') ?>', '<?= site_url('sales/pos') ?>')"><i class="fa fa-trash fa-lg"></i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php
-                                            } ?>
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="return" role="tabpanel">
+                        <div class="tab-pane fade" id="returns-tab" role="tabpanel">
                             <div class="table-top">
-                                <div class="returns-wordset">
+                                <div class="wordset">
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table id="dt-returns" class="table">
+                                <table id="dt-returns" class="table w-100">
                                     <thead>
                                         <tr>
                                             <th>Date</th>
@@ -496,36 +470,6 @@
                                             <th class="text-end">Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <?php
-                                        $badges =  [
-                                            'completed' => "bg-lightgreen",
-                                            'pending' => "bg-lightred",
-                                        ];
-                                        if (isset($returnList))
-                                            foreach ($returnList as $key => $row) {
-                                        ?>
-                                            <tr>
-                                                <td><?= $row->return_date; ?></td>
-                                                <td><a target="_blank" href="<?= site_url('returns/sales/' . $row->id) ?>" class="btn btn-link btn-sm"><?= $row->invoice; ?></a></td>
-                                                <td>
-                                                    <?php if ($row->sale->customer) : ?>
-                                                        <a target="_blank" href="<?= site_url('customers/' . $row->sale->customer_id) ?>" class="btn btn-link btn-sm"><?= $row->sale->customer->name ?></a>
-                                                    <?php else : ?>
-                                                        walk-in-customer
-                                                    <?php endif ?>
-                                                </td>
-                                                <td><span class="badges <?= $badges[$row->order_status]; ?>"><?= $row->order_status; ?></span></td>
-                                                <td>GHS <?= $row->total_amount < 0 ? "(" . number_format(abs($row->total_amount), 2) . ")" : number_format($row->total_amount, 2); ?></td>
-                                                <td>
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('sales') ?>', '<?= site_url('sales/returns') ?>')"><i class="fa fa-trash fa-lg"></i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php
-                                            } ?>
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -646,7 +590,7 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/handle-pos.js?v=10') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/pos.modal.js?v=3') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/pos.modal.js?v=4') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?php if (isset($sales) && $sales->customer) {
     $customer = $sales->customer;

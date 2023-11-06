@@ -31,7 +31,7 @@
                                 if (isset($stores))
                                     foreach ($stores as $row) { ?>
                                     <option value="<?= $row->id ?>">
-                                        <?= $row->name; ?><?= $row->location ? "($row->location)" : null; ?>
+                                        <?= $row->name; ?><?= $row->location ? "($row->location)" : ($row->id === $settings->get('App.DefaultStore', $context) ? 'selected' : ''); ?>
                                     </option>
                                 <?php } ?>
                             </select>

@@ -5,11 +5,8 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\ExpenseCategoryModel;
 use App\Models\ExpenseModel;
-use App\Models\StoreModel;
-use CodeIgniter\HTTP\RequestInterface;
+use App\Models\UserModel;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
 
 class ExpenseController extends BaseController
 {
@@ -20,10 +17,12 @@ class ExpenseController extends BaseController
      */
     public function index()
     {
-        $storeModel = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
         $data = [
             'title' => 'Expense List',
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
+            'stores' => $stores,
         ];
         return view('pages/expenses/list_expense', $data);
     }
@@ -35,11 +34,11 @@ class ExpenseController extends BaseController
     public function edit($id = null)
     {
         $eCatModel = new ExpenseCategoryModel();
-        $storeModel = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
         $data = [
             'title' => 'Create Expense',
-            'categories' => $eCatModel->where('status', 'opened')->findAll(),
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'categories' => $eCatModel->findAll(),
+            'stores' => $stores,
         ];
 
         if ($id) {
@@ -68,9 +67,9 @@ class ExpenseController extends BaseController
             'message' => null,
             'input' => $inputs,
         ];
-        $Expense = $model->where('id', $id)->first();
+        $expense = $model->where('id', $id)->first();
 
-        if ($Expense) {
+        if ($expense) {
             if (!auth()->user()->can('expenses.edit'))
                 return $this->response->setJSON([
                     'status' => false,

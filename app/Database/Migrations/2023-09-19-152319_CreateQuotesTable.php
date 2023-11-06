@@ -39,9 +39,9 @@ class CreateQuotesTable extends Migration
                 'unsigned'  => true,
                 'null' => true,
             ],
-            'type' =>[
+            'type' => [
                 'type' => 'ENUM',
-                'constraint' => ['walk-in-customer','customer'],
+                'constraint' => ['walk-in-customer', 'customer'],
                 'default' => 'walk-in-customer'
             ],
             'tax_id' => [
@@ -86,6 +86,10 @@ class CreateQuotesTable extends Migration
             'updated_at' => [
                 'type' => 'TIMESTAMP',
                 'default' => new RawSql('CURRENT_TIMESTAMP'),
+            ],
+            'deleted_at' => [
+                'type' => 'TIMESTAMP',
+                'null' => true,
             ]
         ];
 

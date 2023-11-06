@@ -22,7 +22,7 @@
                         </a>
                     </div>
                     <div class="search-input">
-                        <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                        <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                     </div>
                 </div>
                 <?php if (setting('App.ProductDiffForStore') === 'yes') : ?>
@@ -53,19 +53,59 @@
                                 <input name="name" type="text" placeholder="Enter Product Name">
                             </div>
                         </div>
-                        <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
                                 <input name="barcode" type="text" placeholder="Enter Barcode">
                             </div>
                         </div>
-                        <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
                                 <input name="sku" type="text" placeholder="Enter sku">
                             </div>
                         </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <select class="select2-category" name="category_id" required>
+                                    <option value=""></option>
+                                    <?php
+                                    if (isset($categories)) : ?>
+                                        <?php foreach ($categories as $row) : ?>
+                                            <option value="<?= $row->id ?>"><?= $row->name; ?></option>
+                                        <?php endforeach ?>
+                                    <?php endif ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <select name="brand_id" class="select2-brand">
+                                    <option value=""></option>
+                                    <?php
+                                    if (isset($brands)) : ?>
+                                        <?php foreach ($brands as $row) : ?>
+                                            <option value="<?= $row->id ?>"><?= $row->name; ?></option>
+                                        <?php endforeach ?>
+                                    <?php endif ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <select name="unit_id" class="select2-unit" required>
+                                    <option value=""></option>
+                                    <?php
+                                    if (isset($units)) : ?>
+                                        <?php foreach ($units as $row) : ?>
+                                            <option value="<?= $row->id ?>"><?= $row->label; ?></option>
+                                        <?php endforeach; ?>
+                                    <?php endif ?>
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-lg-1 col-sm-6 col-12  ms-auto">
                             <div class="form-group">
-                                <a class="btn btn-filters filter ms-auto"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                <a class="btn btn-filters filter ms-auto"><i class="fa fa-search"></i></a>
                             </div>
                         </div>
                     </div>

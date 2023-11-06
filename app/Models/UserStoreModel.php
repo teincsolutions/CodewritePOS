@@ -4,20 +4,17 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class CategoryModel extends Model
+class UserStoreModel extends Model
 {
-    protected $DBGroup          = 'default';
-    protected $table            = 'categories';
+    protected $table            = 'user_stores';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';
-    protected $useSoftDeletes   = true;
+    protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'name',
-        'description',
-        'status',
-        'user_id'
+        'user_id',
+        'store_id',
     ];
 
     // Dates
@@ -40,23 +37,7 @@ class CategoryModel extends Model
     protected $beforeUpdate   = [];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
-    protected $afterFind      = ['setRelation'];
+    protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
-
-    protected function setRelation($model)
-    {
-        if ($model && $model['data']) {
-            $userModel = new UserModel();
-            
-            if ($model['singleton']) {
-                $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
-            } else {
-                foreach ($model['data'] as $key => $row) {
-                    $model['data'][$key]->user = $userModel->where('id', $row->user_id)->first();
-                }
-            }
-        }
-        return $model;
-    }
 }

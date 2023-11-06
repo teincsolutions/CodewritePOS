@@ -82,7 +82,7 @@
                     <div class="col-lg-6 col-sm-6 col-12">
                         <div class="form-group">
                             <label>User Name<sup class="text-danger">*</sup></label>
-                            <input name="username" type="text" class="form-control" autocomplete="username" placeholder="User Name" required>
+                            <input name="username" type="text" class="form-control" autocomplete="username" placeholder="User Name" value="<?= isset($user) ? $user->username : ''; ?>" required>
                         </div>
                     </div>
                     <div class="col-lg-6 col-sm-6 col-12">
@@ -97,6 +97,21 @@
                         </div>
                     </div>
                 <?php endif ?>
+                <div class="col-md-6 col-12">
+                    <div class="form-group">
+                        <label>Assigned Store(s)</label>
+                        <select class="select2-store" name="stores[]" multiple required>
+                            <option value=""></option>
+                            <?php
+                            if (isset($stores))
+                                foreach ($stores as $row) { ?>
+                                <option value="<?= $row->id ?>" <?= isset($user) ? (in_array($row->id, model('UserModel')->getStoreIds($user->id)) ? 'selected' : '') : null ?>>
+                                    <?= $row->name; ?><?= $row->location ? "($row->location)" : null; ?>
+                                </option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
                 <div class="col-lg-12">
                     <button type="submit" class="btn btn-submit me-2">Save</button>
                     <a href="<?= site_url('users') ?>" class="btn btn-cancel">Cancel</a>

@@ -163,3 +163,52 @@ window.editRow = function (target = "#form", data = {}, selectOption = {}) {
       }
     }
 };
+
+/**
+ * Edit a row from a table
+ * @param {object} table
+ * @param {object} e
+ * @param {object} paymentTable
+ * @param {string} target
+ */
+window.viewCusPayments = function (
+  table,
+  e,
+  paymentTable,
+  target = "#view-payments"
+) {
+  $(target).modal("show");
+
+  let row = $(e).parents("tr").first();
+  let row1 = table.rows(row).data()[0];
+
+  $(target).find("input[name='customer_id']").val(row1.customer_id);
+  $(target).find("input[name='sale_id']").val(row1.sale_id);
+  $(target).find("input[name='tdate']").val(row1.tdate);
+  
+  if (paymentTable) paymentTable.ajax.reload();
+};
+
+/**
+ * Edit a row from a table
+ * @param {object} table
+ * @param {object} e
+ * @param {object} paymentTable
+ * @param {string} target
+ */
+window.viewSupPayments = function (
+  table,
+  e,
+  paymentTable,
+  target = "#view-payments"
+) {
+  $(target).modal("show");
+
+  let row = $(e).parents("tr").first();
+  let row1 = table.rows(row).data()[0];
+  $(target).find("[name='supplier_id']").val(row1.supplier_id);
+  $(target).find("[name='purchase_id']").val(row1.purchase_id);
+  $(target).find("[name='tdate']").val(row1.tdate);
+
+  if (paymentTable) paymentTable.ajax.reload();
+};

@@ -20,8 +20,12 @@ class AdjustmentController extends BaseController
      */
     public function index()
     {
+        $storeModel = new StoreModel();
         $data = [
             'title' => 'Adjustment List',
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
+            'stores' => $storeModel->where('status', 'opened')->findAll(),
         ];
         return view('pages/adjustments/list_adjustment', $data);
     }

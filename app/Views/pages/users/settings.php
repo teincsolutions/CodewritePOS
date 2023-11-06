@@ -1,4 +1,3 @@
-
 <?= $this->extend('template/default') ?>
 <?= $this->section('content') ?>
 <div class="content">
@@ -12,7 +11,7 @@
     <div class="card">
         <div class="card-body">
             <div class="profile-set">
-                <form action="<?=site_url('account') ?>" class="profile-top post-form" method="post">
+                <form action="<?= site_url('account') ?>" class="profile-top post-form" method="post">
                     <div class="profile-content">
                         <div class="profile-contentimg">
                             <img src="<?= $user->photo_uri ? base_url('photos/users/' . $user->photo_uri) : base_url('assets/icons/user.png') ?>" alt="img" id="blah">
@@ -39,7 +38,7 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane show active" id="user-tab">
-                    <form action="<?=site_url('account') ?>" class="row post-form mt-5">
+                    <form action="<?= site_url('account') ?>" class="row post-form mt-5">
                         <div class="col-lg-6 col-sm-12">
                             <div class="form-group">
                                 <label>First Name</label>
@@ -77,7 +76,7 @@
                     </form>
                 </div>
                 <div class="tab-pane" id="password-tab">
-                    <form action="<?=site_url('account/update-password') ?>" class="row post-form mt-5">
+                    <form action="<?= site_url('account/update-password') ?>" class="row post-form mt-5">
                         <div class="col-lg-4 col-sm-6 col-12">
                             <div class="form-group">
                                 <label>Old Password<sup class="text-danger">*</sup></label>
@@ -102,7 +101,42 @@
                     </form>
                 </div>
                 <div class="tab-pane" id="preference-tab">
-
+                    <form action="<?= site_url('settings/context') ?>" class="row post-form" method="post">
+                        <input type="hidden" name="context" value="<?= $context ?>">
+                        <p class="text-muted mt-5 mb-5">
+                            Update your preferences and Click on "Save Changes" button at the bottom of the page when done.
+                        </p>
+                        <div class="col-lg-12">
+                            <div class="table-responsive">
+                                <table class="table w-100">
+                                    <thead>
+                                        <th style="width: 25%;">Enteries</th>
+                                        <th>Value</th>
+                                    </thead>
+                                    <tr>
+                                        <td>Default Store</td>
+                                        <td>
+                                            <div class="form-group col-md-6">
+                                                <select class="select2-store" name="DefaultStore" required>
+                                                    <option value=""></option>
+                                                    <?php
+                                                    if (isset($stores))
+                                                        foreach ($stores as $row) { ?>
+                                                        <option value="<?= $row->id ?>" <?= ($row->id === $settings->get('App.DefaultStore', $context) ? 'selected' : '') ?>>
+                                                            <?= $row->name; ?><?= $row->location ? "($row->location)" : null; ?>
+                                                        </option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <button class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
                 </div>
             </div>
 

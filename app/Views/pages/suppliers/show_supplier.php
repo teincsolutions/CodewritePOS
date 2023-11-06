@@ -120,19 +120,15 @@
                                     </div>
 
                                     <div class="table-responsive">
-                                        <table id="dt-ledger" class="table" style="width: 100%;">
+                                        <table id="dt-ledger" class="table w-100">
                                             <thead>
                                                 <tr>
                                                     <th></th>
-                                                    <th>#Code</th>
                                                     <th>Date</th>
-                                                    <th>Reference</th>
-                                                    <th>Type</th>
+                                                    <th>Due</th>
                                                     <th>Credit</th>
                                                     <th>Debit</th>
                                                     <th>A/c Balance</th>
-                                                    <th>Method</th>
-                                                    <th>Added By</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -153,7 +149,7 @@
                                                 </a>
                                             </div>
                                             <div class="search-input">
-                                                <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                                <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                                             </div>
                                         </div>
                                         <div class="wordset">
@@ -188,7 +184,7 @@
                                     </div>
 
                                     <div class="table-responsive">
-                                        <table id="dt-purchases" class="table" style="width: 100%;">
+                                        <table id="dt-purchases" class="table w-100">
                                             <thead>
                                                 <tr>
                                                     <th>
@@ -222,7 +218,7 @@
                                                 </a>
                                             </div>
                                             <div class="search-input">
-                                                <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                                <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                                             </div>
                                         </div>
                                         <div class="wordset">
@@ -257,7 +253,7 @@
                                     </div>
 
                                     <div class="table-responsive">
-                                        <table id="dt-returns" class="table" style="width: 100%;">
+                                        <table id="dt-returns" class="table w-100">
                                             <thead>
                                                 <tr>
                                                     <th>
@@ -455,9 +451,50 @@
         </div>
     </div>
 </form>
+
+<div class="modal fade" id="view-payments" tabindex="-1" aria-labelledby="viewpayments" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Payment Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div id="input_filter">
+                    <input type="hidden" name="supplier_id" value="0">
+                    <input type="hidden" name="purchase_id" value="0">
+                    <input type="hidden" name="tdate" value="000-00-00">
+                </div>
+                <div class="table-responsive">
+                    <table id="dt-supplier-payments" class="table w-100">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>#Code</th>
+                                <th>Date</th>
+                                <th>Reference</th>
+                                <th>Type</th>
+                                <th>Due</th>
+                                <th>Credit</th>
+                                <th>Debit</th>
+                                <th>A/c Balance</th>
+                                <th>Method</th>
+                                <th>Added By</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/datatables/actions.js?v=1') ?>"></script>
-<script src="<?= base_url('assets/js/supplier-details.js?v=12') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/actions.js?v=3') ?>"></script>
+<script src="<?= base_url('assets/js/supplier-details.js?v=13') ?>"></script>
 <?= $this->endSection() ?>

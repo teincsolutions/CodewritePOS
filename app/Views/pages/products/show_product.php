@@ -16,7 +16,9 @@
             <div class="card">
                 <div class="card-header">
                     Details of <?= $product->name; ?>
-                    <a href="<?= site_url('products/edit/' . $product->id) ?>"><i class="fa fa-edit"></i> </a>
+                    <a  class="btn btn-primary btn-sm me-3" href="<?= site_url('products/edit/' . $product->id) ?>"><i class="fa fa-edit"></i> Edit </a>
+
+                    <a target="_blank" class="btn btn-secondary btn-sm" href="<?= site_url('reports/stocks/product/' . $product->id) ?>"><i class="fa fa-print"></i> View Report</a>
                 </div>
                 <div class="card-body">
                     <?php if ($product->barcode) : ?>
@@ -144,44 +146,44 @@
         </div>
     </div>
     <?php if (setting('App.ProductDiffForStore') === 'yes') : ?>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table w-100" id="dt-store-products">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Store</th>
-                                    <th>Unit Price</th>
-                                    <th>Wholesale Price</th>
-                                    <th>Unit Cost</th>
-                                    <th>Min Qty</th>
-                                    <th>Sales Discount(GHS)</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach (model('StoreProductModel')->where('product_id', $product->id)->findAll() as $key => $row) : ?>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table w-100" id="dt-store-products">
+                                <thead>
                                     <tr>
-                                        <th><?= $key + 1 ?></th>
-                                        <td><?= $row->store->name ?></td>
-                                        <td><?= $row->unit_price ?></td>
-                                        <td><?= $row->unit_ws_price ?></td>
-                                        <td><?= $row->unit_cost ?></td>
-                                        <td><?= $row->min_qty ?></td>
-                                        <td><?= $row->discount ?></td>
-                                        <td><?= ['Active', 'Discontinued'][$row->discontinued] ?></td>
+                                        <th>#</th>
+                                        <th>Store</th>
+                                        <th>Unit Price</th>
+                                        <th>Wholesale Price</th>
+                                        <th>Unit Cost</th>
+                                        <th>Min Qty</th>
+                                        <th>Sales Discount(GHS)</th>
+                                        <th>Status</th>
                                     </tr>
-                                <?php endforeach ?>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <?php foreach (model('StoreProductModel')->where('product_id', $product->id)->findAll() as $key => $row) : ?>
+                                        <tr>
+                                            <th><?= $key + 1 ?></th>
+                                            <td><?= $row->store->name ?></td>
+                                            <td><?= $row->unit_price ?></td>
+                                            <td><?= $row->unit_ws_price ?></td>
+                                            <td><?= $row->unit_cost ?></td>
+                                            <td><?= $row->min_qty ?></td>
+                                            <td><?= $row->discount ?></td>
+                                            <td><?= ['Active', 'Discontinued'][$row->discontinued] ?></td>
+                                        </tr>
+                                    <?php endforeach ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     <?php endif ?>
 </div>
 <?= $this->endSection() ?>

@@ -119,22 +119,30 @@ class PurchaseModel extends Model
         return  $returnModel->where('purchase_id', $purchaseId)->countAllResults() > 0;
     }
 
-    public function getTotalAmount(): float
+    public function getTotalAmount($storeId = null): float
     {
-        $total = $this->builder()->selectSum('total_amount', 'total')
-            ->where('order_status', 'completed')->get()->getFirstRow()->total;
+        $builder = $this->builder();
+        $builder->selectSum('total_amount', 'total')
+            ->where('order_status', 'completed');
+        if ($storeId) $builder->where('store_id', $storeId);
+
+
+        $total = $builder->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
 
-    public function getTodayTotalAmount(): float
+    public function getTodayTotalAmount($storeId = null): float
     {
-        $total = $this->builder()
-            ->selectSum('total_amount', 'total')
-            ->where('order_status', 'completed')
-            ->where('purchase_date', date('Y-m-d', time()))
-            ->get()
-            ->getFirstRow()
-            ->total;
+        $today = date('Y-m-d', time());
+
+        $builder = $this->builder();
+        $builder->selectSum('total_amount', 'total')
+            ->where('purchase_date', $today)
+            ->where('order_status', 'completed');
+        if ($storeId) $builder->where('store_id', $storeId);
+
+
+        $total = $builder->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
 
@@ -145,13 +153,16 @@ class PurchaseModel extends Model
         return $total ? $total : 0.00;
     }
 
-    public function getDueAmount(): float
+    public function getDueAmount($storeId = null): float
     {
-        $total = $this->builder()
-            ->selectSum(new RawSql('(total_amount - paid)'), 'total')
+        $builder = $this->builder();
+
+        $builder->selectSum(new RawSql('(total_amount - paid)'), 'total')
             ->where('payment_status', 'due')
-            ->where('order_status', 'completed')
-            ->get()->getFirstRow()->total;
+            ->where('order_status', 'completed');
+        if ($storeId) $builder->where('store_id', $storeId);
+
+        $total = $builder->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
 

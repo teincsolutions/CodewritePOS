@@ -333,6 +333,55 @@
                                                 </td>
                                             </tr>
                                             <thead class="border-top-0">
+                                                <th style="width: 25%;">Transfers</th>
+                                                <th>Value</th>
+                                            </thead>
+                                            <tr>
+                                                <td>Allow Delete Product Transfers</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="AllowDeleteTransfers" value="yes" <?= setting('App.AllowDeleteTransfers') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="AllowDeleteTransfers" value="no" <?= setting('App.AllowDeleteTransfers') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Allow Delete Unit Transfers</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="AllowDeleteUnitTransfers" value="yes" <?= setting('App.AllowDeleteUnitTransfers') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="AllowDeleteUnitTransfers" value="no" <?= setting('App.AllowDeleteUnitTransfers') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Allow Delete Stock Adjustments</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="AllowDeleteAdjustments" value="yes" <?= setting('App.AllowDeleteAdjustments') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="AllowDeleteAdjustments" value="no" <?= setting('App.AllowDeleteAdjustments') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <thead class="border-top-0">
                                                 <th style="width: 25%;">Store Closing</th>
                                                 <th>Value</th>
                                             </thead>
@@ -360,7 +409,7 @@
                             </form>
                         </div>
                         <div class="tab-pane" id="receipt-tab">
-                        <form action="<?= site_url('settings') ?>" class="row post-form" method="post">
+                            <form action="<?= site_url('settings') ?>" class="row post-form" method="post">
                                 <p class="text-muted mt-5 mb-5">
                                     Edit the configuration of your Receipt. Click on "Save Changes" button at the bottom of the page when done.
                                 </p>
@@ -387,7 +436,7 @@
                                                 </td>
                                             </tr>
 
-                                               <tr>
+                                            <tr>
                                                 <td>Show Store Contact</td>
                                                 <td>
                                                     <div class="d-flex gap-5">

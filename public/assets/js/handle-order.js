@@ -549,8 +549,7 @@ form.on("submit", function (e) {
             $("input[name='invoice']").val(parseInt(d.data.invoice) + 1);
             $("#order-id").html(parseInt(d.data.invoice) + 1);
             tableItems.clear().draw();
-            $(".select2-supplier").val(null).trigger("select2:unselect");
-            $("select").trigger("change");
+            $(".select2-supplier").val('').trigger("select2:unselect");
             updateTotals();
           }
         } else {

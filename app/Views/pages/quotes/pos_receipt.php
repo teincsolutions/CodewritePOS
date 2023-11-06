@@ -3,16 +3,22 @@
 <div id="invoice-POS">
     <center id="top">
         <div class="info">
-            <h1 class="text-uppercase"><?= $title ?? "Quotation" ?></h1>
+            <h2 class="text-uppercase"><?= $title ?? "Quotation Receipt" ?></h2>
         </div>
-        <div class="logo" style="background: url(<?= base_url('assets/images/logo.png') ?>) no-repeat;"></div>
+        <?php if (setting('App.Logo')) : ?>
+            <div class="logo" style="background: url(<?= base_url(setting('App.Logo')) ?>) no-repeat;"></div>
+        <?php endif ?>
         <div class="info">
-            <h2 class="text-uppercase"><?= setting('App.companyName') ?></h2>
-            <small> <?= setting('App.companyAddress') ?> | tel:<?= setting('App.companyContacts') ?></small>
-            <p class="text-uppercase"><?= $quote->store->name; ?> at <?= $quote->store->location; ?></p>
+            <?php if (setting('App.companyName')) : ?>
+                <h3 class="text-uppercase"><?= setting('App.companyName') ?></h3>
+            <?php endif ?>
+            <?php if (setting('App.ShowMainBranchAddress') === 'yes') : ?>
+                <small><?= setting('App.companyAddress') ? 'Main Branch: ' : '' ?> <?= setting('App.companyAddress') ?> | tel:<?= setting('App.companyContacts') ?></small>
+            <?php endif ?>
+            <p class="text-uppercase">Branch: <?= $quote->store->name; ?> at <?= $quote->store->location; ?></p>
         </div><!--End Info-->
     </center>
-    <div class="d-flex flex-row justify-content-between gap-1">
+    <div class="d-flex flex-row justify-content-between gap-1" style="margin-top:3px">
         <div class="info">
             <?php if ($quote->customer) : ?>
                 <p class="sec">
@@ -29,9 +35,11 @@
         <div class="info">
             <p class="sec">
                 <strong>Time : </strong><span><?= date('d/m/y  h:i a', strtotime($quote->created_at)); ?></span></br>
-                <strong>Reference : </strong><span>QT<?= $quote->invoice; ?></span></br>
+                <strong>Reference : </strong><span>INV<?= $quote->invoice; ?></span></br>
                 <strong>Sales Person : </strong><span><?= $quote->user->firstname; ?> <?= $quote->user->lastname; ?></span><br>
-                <strong>Contact Store : </strong><span><?= $quote->store->phone ?? '0246092155'; ?></span>
+                <?php if (setting('App.ShowStoreContact') === 'yes') : ?>
+                    <strong>Contact Store : </strong><span><?= $quote->store->phone ?? '0246092155'; ?></span>
+                <?php endif ?>
             </p>
         </div>
     </div>
@@ -39,58 +47,58 @@
         <div id="table">
             <table>
                 <tr class="tabletitle">
-                    <td class="item">
-                        <h2>Item</h2>
-                    </td>
-                    <td class="Hours">
-                        <h2>Price</h2>
-                    </td>
-                    <td class="Hours">
-                        <h2>Qty</h2>
-                    </td>
-                    <td class="Rate">
-                        <h2>Sub Total</h2>
-                    </td>
+                    <th style="width:50%">
+                        <strong>Item</strong>
+                    </th>
+                    <th style="width:10%">
+                        <strong>Price</strong>
+                    </th>
+                    <th style="width:15%">
+                        <strong>Qty
+                        </strong>
+                    </th>
+                    <th style="width:25%">
+                        <strong>Sub Ttl
+                        </strong>
+                    </th>
                 </tr>
                 <?php
-                $total_discount = 0;
-                foreach ($quote->items as $k => $row) : ?>
-                    <?php $total_discount += $row->discount; ?>
+                $total_discount = ($quote->discount ?? 0);
+                $items = $quote->items;
+
+                foreach ($items as $k => $row) : ?>
+                    <?php
+                    $total_discount += $row->discount;
+                    ?>
                     <tr class="service">
-                        <td class="tableitem">
-                            <p class="itemtext"><?= $row->product->name; ?></p>
+                        <td class="tableitem text-left">
+                            <p class="itemtext"><?= $row->product->name; ?>
+                                (<?= $row->product->unit->label; ?>)</p>
                         </td>
-                        <td class="tableitem">
+                        <td class="tableitem border-end">
                             <p class="itemtext"><?= number_format($row->unit_price, 2); ?></p>
                         </td>
-                        <td class="tableitem">
-                            <p class="itemtext"><?= $row->qty; ?> <?= $row->product->unit->label; ?></p>
+                        <td class="tableitem border-end">
+                            <p class="itemtext"><?= floatval($row->qty); ?>
                         </td>
                         <td class="tableitem">
-                            <p class="itemtext"><?= number_format($row->subtotal, 2); ?></p>
+                            <p class="itemtext"><?= number_format($row->subtotal, 2); ?>
                         </td>
                     </tr>
                 <?php endforeach ?>
 
-                <tr class="tabletitle">
+                <tr class="foottitle">
+                    <td>Total Discount</td>
                     <td></td>
-                    <td></td>
-                    <td class="Rate">
-                        <h3>Total Discount</h3>
-                    </td>
-                    <td class="payment">
-                        <h3>GHS <?= number_format($total_discount, 2) ?></h3>
+                    <td colspan="2">
+                        GHS <?= number_format($total_discount, 2) ?>
                     </td>
                 </tr>
-
-                <tr class="tabletitle">
+                <tr class="foottitle">
+                    <td>Grand Total</td>
                     <td></td>
-                    <td></td>
-                    <td class="Rate">
-                        <h2>Total</h2>
-                    </td>
-                    <td class="payment">
-                        <h2>GHS <?= number_format($quote->total_amount, 2) ?></h2>
+                    <td colspan="2">
+                        GHS <?= number_format($quote->total_amount, 2) ?>
                     </td>
                 </tr>
             </table>
@@ -98,6 +106,7 @@
 
         <div id="legalcopy">
             <p class="legal"><strong>Thank you for your business!</strong></p>
+            <p class="developer"><small>Codewrite Technology Ltd. Copyright &copy; 2023 version <?= env('app.version') ?> Mobile: 0246092155/0553035684</small></p>
         </div>
 
     </div><!--End InvoiceBot-->

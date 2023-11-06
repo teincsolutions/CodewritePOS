@@ -3,17 +3,14 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\AdjustmentItemModel;
 use App\Models\ProductModel;
-use App\Models\ProductTransferItemModel;
 use App\Models\PurchaseItemModel;
 use App\Models\PurchaseReturnItemModel;
 use App\Models\QuoteItemModel;
 use App\Models\SalesItemModel;
-use App\Models\SalesModel;
 use App\Models\SalesReturnItemModel;
 use App\Models\StockModel;
-use App\Models\StoreModel;
+use App\Models\UserModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\Response;
 
@@ -25,11 +22,13 @@ class InventoryController extends BaseController
      */
     public function stock_report()
     {
-        $storeModel = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Inventory Report',
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'stores' => $stores,
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
         ];
         return view('pages/reports/stocks', $data);
     }
@@ -40,7 +39,7 @@ class InventoryController extends BaseController
      */
     public function view_stock_report($id = null)
     {
-        $storeModel = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
         $productModel = new ProductModel();
 
         $product = $productModel->where('id', $id)->first();
@@ -48,7 +47,9 @@ class InventoryController extends BaseController
 
         $data = [
             'title' => $product->name . ' - Inventory Report',
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'stores' => $stores,
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
             'product' => $product,
         ];
         return view('pages/reports/view_stock_report', $data);
@@ -60,10 +61,12 @@ class InventoryController extends BaseController
      */
     public function short_stocks()
     {
-        $storeModel = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
         $data = [
             'title' => 'Short Stock List',
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'stores' => $stores,
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
         ];
         return view('pages/inventory/short_stocks', $data);
     }
@@ -74,10 +77,12 @@ class InventoryController extends BaseController
      */
     public function outofstocks()
     {
-        $storeModel = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
         $data = [
             'title' => 'Out of Stock List',
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'stores' => $stores,
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
         ];
         return view('pages/inventory/outofstocks', $data);
     }
@@ -88,10 +93,13 @@ class InventoryController extends BaseController
      */
     public function instocks()
     {
-        $storeModel = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
+
         $data = [
             'title' => 'Instock List',
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'stores' => $stores,
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
         ];
         return view('pages/inventory/instocks', $data);
     }
@@ -108,7 +116,7 @@ class InventoryController extends BaseController
         $saleReturnItemModel = new SalesReturnItemModel();
         $purchaseReturnItemModel = new PurchaseReturnItemModel();
         $quoteItemModel = new QuoteItemModel();
-
+        $stockModel = new StockModel();
         $where = [];
         if (isset($inputs['store_id'])  && !empty($inputs['store_id']))
             $where = ['store_id' => $inputs['store_id']];
@@ -118,6 +126,7 @@ class InventoryController extends BaseController
         $sReturnQuery = $saleReturnItemModel->builder()->selectSum('qty')->where('product_id', 'products.id', false)->where($where);
         $pReturnQuery = $purchaseReturnItemModel->builder()->selectSum('qty')->where('product_id', 'products.id', false)->where($where);
         $quoteQuery = $quoteItemModel->builder()->selectSum('qty')->where('product_id', 'products.id', false)->where($where);
+        $inStockQuery = $stockModel->builder()->selectSum('instock')->where('product_id', 'products.id', false)->where($where);
 
         $model = new ProductModel();
         $builder = $model->builder();
@@ -127,6 +136,7 @@ class InventoryController extends BaseController
             ->selectSubquery($sReturnQuery, 'qtysaleReturned')
             ->selectSubquery($pReturnQuery, 'qtyOrderReturned')
             ->selectSubquery($quoteQuery, 'qtyQuoted')
+            ->selectSubquery($inStockQuery, 'qtyInstock')
             ->join("units", "units.id=products.unit_id");
 
         return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs));

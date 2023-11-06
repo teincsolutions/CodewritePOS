@@ -19,7 +19,7 @@
                         </a>
                     </div>
                     <div class="search-input">
-                        <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                        <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 pt-3 col-12">
@@ -58,7 +58,7 @@
                         </div>
                         <div class="col-lg-1 col-sm-6 col-12  ms-auto">
                             <div class="form-group">
-                                <a class="btn btn-filters filter ms-auto"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                <a class="btn btn-filters filter ms-auto"><i class="fa fa-search"></i></a>
                             </div>
                         </div>
                     </div>
@@ -71,6 +71,7 @@
                         <tr>
                             <th></th>
                             <th>Product</th>
+                            <th>Qty Instock</th>
                             <th>Qty Ordered</th>
                             <th>Qty P. Returns</th>
                             <th>Qty Sold</th>
@@ -87,5 +88,5 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/datatables/stocks-report.js?v=8') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/stocks-report.js?v=11') ?>"></script>
 <?= $this->endSection() ?>

@@ -1,16 +1,17 @@
 let table;
 
 $(function () {
-  table = $("#dt-short-stocks").DataTable({
+  table = $("#dt-supplier-payment-report").DataTable({
     ajax: {
-      url: baseUrl + "short-stock/datatable",
+      url: baseUrl + "reports/ledgers/suppliers/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $("#filter_inputs9 input, #filter_inputs9 select");
+        let filterForm = $("#filter_inputsx input, #filter_inputsx select");
         filterForm.each((i, item) => {
           field = $(item);
+
           if (field.prop("tagName") === "SELECT") {
             if (
               typeof field.children("option:selected").val() !== "undefined" &&
@@ -19,12 +20,16 @@ $(function () {
               filter[field.attr("name")] = field
                 .children("option:selected")
                 .val();
-          } else {
+          } else if (typeof field.attr("name") !== "undefined") {
             filter[field.attr("name")] = field.val();
           }
         });
-        filter['store_id'] = $('.select2-store').val();
+        params.date_range_column = "tdate";
+        params.date_from = $("#date-from").val();
+        params.date_to = $("#date-to").val();
         params.fields = filter;
+
+        return params;
       },
     },
     processing: true,
@@ -64,36 +69,62 @@ $(function () {
           return null;
         },
       },
+      { data: "tdate", name: "supplier_ledgers.tdate" },
       {
-        data: "product",
+        data: "supplier",
+        name: "supplier_ledgers.supplier_id",
         render: function (data, type, row) {
-          return `<a target="_blank" href="${baseUrl}products/${data.id}" class="btn btn-link btn-sm"><span class="text-warning">${data.sku}</span> ${data.name} (${row.unit.label})</a>`
+          if (type === "display")
+            return data
+              ? `<a target="_blank" href="${baseUrl}suppliers/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+              : "";
+          return data ? data.name : null;
         },
       },
       {
-        data: "category",
+        data: null,
         render: function (data, type, row) {
-            return  data? `<a target="_blank" href="${baseUrl}categories/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`:''; 
+          return `<a target="_blank" href="${baseUrl}purchases/${data.purchase_id}" class="btn btn-link btn-sm">${data.purchase.invoice}</a>`;
         },
       },
       {
-        data: "brand",
-        render: function (data, type, row) {
-            return data?`<a target="_blank" href="${baseUrl}brands/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`:'';
+        data: "total_due",
+        render: function (data) {
+          return data < 0
+            ? `GHS (${parseFloat(Math.abs(data)).toFixed(2)})`
+            : `GHS ${parseFloat(data).toFixed(2)}`;
         },
       },
-      { data: "instock" },
       {
-        data: "product_id",
+        data: "total_credit",
+        render: function (data) {
+          return `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
+      {
+        data: "total_debit",
+        render: function (data) {
+          return `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
+      {
+        data: "total_balance",
+        render: function (data) {
+          return data < 0
+            ? `GHS (${parseFloat(Math.abs(data)).toFixed(2)})`
+            : `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
+      {
+        data: null,
+        name: "supplier_ledgers.id",
         render: function (data, type, row) {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
-                        <a class="me-3" href="${baseUrl}products/${data}"><i class="fa fa-eye fa-lg"></i></a>
-                        <a class="me-3" href="${baseUrl}products/edit/${data}"><i class="fa fa-edit fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}products')"><i class="fa fa-trash fa-lg"></i></a>
-                    </div>`;
+            <a  href="javascript:void(0);" class="me-3" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
+          </div>`;
           }
-          return '';
+          return data;
         },
       },
     ],
@@ -135,7 +166,7 @@ $(function () {
           : 0;
       };
     },
-    order: [[0, "desc"]],
+    order: [[1, "desc"]],
     columnDefs: [
       {
         orderable: false,
@@ -160,6 +191,16 @@ $(function () {
   });
 
   $(".select2-store").select2({
-    placeholder: "Seach a store"
+    placeholder: "Seach a store",
+    allowClear: true,
+  });
+
+  $(".select2-supplier").select2({
+    ajax: {
+      url: `${baseUrl}suppliers/select2`,
+      dataType: "json",
+    },
+    allowClear: true,
+    placeholder: "Seach a supplier",
   });
 });

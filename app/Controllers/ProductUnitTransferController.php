@@ -7,6 +7,7 @@ use App\Models\StockModel;
 use App\Models\StoreModel;
 use App\Models\UnitTransferItemModel;
 use App\Models\UnitTransferModel;
+use App\Models\UserModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\HTTP\Response;
 use Config\Database;
@@ -20,8 +21,12 @@ class ProductUnitTransferController extends BaseController
      */
     public function index()
     {
+        $stores = (new UserModel())->getMyStores();
         $data = [
             'title' => 'Product Unit Transfer List',
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
+            'stores' => $stores,
         ];
         return view('pages/transfers/list_product_unit_transfer', $data);
     }
@@ -32,14 +37,15 @@ class ProductUnitTransferController extends BaseController
      */
     public function edit($id = null)
     {
-        $storeModel = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
+
         $model = new UnitTransferModel();
         $lastItem = $model->orderBy('id', 'desc')->first();
         $lastId = $lastItem ? $lastItem->id : 1;
 
         $data = [
             'title' => 'Transfer Units',
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'stores' => $stores,
             'invoice' => substr(time() + 1100000000 + $lastId, 0, 10),
         ];
         return view('pages/transfers/edit_product_unit_transfer', $data);

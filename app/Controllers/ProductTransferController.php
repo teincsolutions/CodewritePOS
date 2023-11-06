@@ -7,12 +7,10 @@ use App\Models\ProductTransferItemModel;
 use App\Models\ProductTransferModel;
 use App\Models\StockModel;
 use App\Models\StoreModel;
+use App\Models\UserModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
-use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
 use Config\Database;
-use Psr\Log\LoggerInterface;
 
 class ProductTransferController extends BaseController
 {
@@ -23,11 +21,11 @@ class ProductTransferController extends BaseController
      */
     public function index()
     {
-        $storeModel = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Product Transfer List',
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'stores' => $stores,
         ];
         return view('pages/transfers/list_product_transfer', $data);
     }
@@ -38,14 +36,15 @@ class ProductTransferController extends BaseController
      */
     public function edit()
     {
-        $storeModel = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
+
         $model = new ProductTransferModel();
         $lastItem = $model->orderBy('id', 'desc')->first();
         $lastId = $lastItem ? $lastItem->id : 1;
 
         $data = [
             'title' => 'Transfer Products',
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'stores' => $stores,
             'invoice' => substr(time() + 2000000000 + $lastId, 0, 10),
         ];
         return view('pages/transfers/edit_product_transfer', $data);

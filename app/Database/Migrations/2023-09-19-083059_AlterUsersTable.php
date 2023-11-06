@@ -44,7 +44,7 @@ class AlterUsersTable extends Migration
                 'constraint' => 11,
                 'unsigned'   => true,
                 'null' => true,
-            ],
+            ]
         ];
         $forge->addColumn('users', $fields);
         $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_user_user_id');

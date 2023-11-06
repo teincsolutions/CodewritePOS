@@ -3,11 +3,8 @@
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h4>Purchases Return List</h4>
-            <h6>Manage your Returns</h6>
-        </div>
-        <div class="page-btn">
-            <a href="<?= site_url('purchases/returns/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-3"></i>New Purchase Return</a>
+            <h4><?= $title ?? 'Sale Report' ?></h4>
+            <h6>Supplier payment reports</h6>
         </div>
     </div>
 
@@ -22,13 +19,14 @@
                 <div class="wordset">
                 </div>
             </div>
-            <div class="card" id="filter_inputs9">
+
+            <div id="filter_inputsx" class="card">
                 <div class="card-body pb-0">
                     <div class="row">
                         <div class="col-lg-2 col-sm-6 col-12">
                             <div class="form-group">
                                 <div class="input-groupicon">
-                                    <input type="text" class="datetimepicker" placeholder="From date" id="date-from">
+                                    <input type="text" class="datetimepicker" placeholder="From date" value="<?=date('d-m-Y', strtotime('first day of this month')) ?>" id="date-from">
                                     <div class="addonset">
                                         <i class="fa fa-calendar"></i>
                                     </div>
@@ -38,16 +36,16 @@
                         <div class="col-lg-2 col-sm-6 col-12">
                             <div class="form-group">
                                 <div class="input-groupicon">
-                                    <input type="text" class="datetimepicker" placeholder="To date" id="date-to">
+                                    <input type="text" class="datetimepicker" placeholder="To date" value="<?=date('d-m-Y',strtotime('last day of this month')) ?>" id="date-to">
                                     <div class="addonset">
                                         <i class="fa fa-calendar"></i>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-6 col-12">
+                        <div class="col-lg-3 col-sm-6 col-12"  style="overflow-x: auto;">
                             <div class="form-group">
-                                <select name="purchase_returns.store_id" class="select2-store" style="overflow-x: auto;">
+                                <select name="store_id" class="select2-store">
                                     <?php
                                     if (isset($stores))
                                         foreach ($stores as $row) { ?>
@@ -58,29 +56,10 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-6 col-12">
+                        <div class="col-lg-4 col-sm-6 col-12" style="overflow-x: auto;">
                             <div class="form-group">
-                                <select name="supplier_id" class="select2-supplier"  style="overflow-x: auto;">
+                                <select name="supplier_id" class="select2-supplier">
                                     <option value=""></option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-sm-6 col-12">
-                            <div class="form-group">
-                                <input type="text" name="purchases.invoice" placeholder="Enter Purchase Reference No" value="">
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-sm-6 col-12">
-                            <div class="form-group">
-                                <input type="text" name="purchase_returns.invoice" placeholder="Enter Return Reference No" value="">
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 col-12">
-                            <div class="form-group">
-                                <select name="payment_status" class="select">
-                                    <option value="">Select a status</option>
-                                    <option value="due">Due</option>
-                                    <option value="paid">Paid</option>
                                 </select>
                             </div>
                         </div>
@@ -92,22 +71,20 @@
                     </div>
                 </div>
             </div>
+
             <div class="table-responsive">
-                <table id="dt-returns" class="table">
+                <table id="dt-supplier-payment-report" class="table" style="width: 100%;">
                     <thead>
                         <tr>
-                            <th>
-                            </th>
+                            <th></th>
                             <th>Date</th>
-                            <th>Supplier Name</th>
+                            <th>Supplier</th>
                             <th>Reference</th>
-                            <th>Status</th>
-                            <th>Payment</th>
-                            <th>Total</th>
-                            <th>Received</th>
                             <th>Due</th>
-                            <th>Biller</th>
-                            <th class="text-center">Action</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                            <th>Balance</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                 </table>
@@ -117,8 +94,6 @@
 </div>
 <?= $this->endSection() ?>
 
-
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/purchase-returns.js?v=7') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/supplier-payment-report.js?v=1') ?>"></script>
 <?= $this->endSection() ?>

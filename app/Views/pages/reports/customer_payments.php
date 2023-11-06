@@ -13,7 +13,7 @@
             <div class="table-top">
                 <div class="search-set">
                     <div class="search-input">
-                        <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                        <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                     </div>
                 </div>
                 <div class="wordset">
@@ -46,23 +46,20 @@
                         <div class="col-lg-4 col-sm-6 col-12">
                             <div class="form-group">
                                 <select name="store_id" class="select2-store">
-                                    <option value=""></option>
                                     <?php
                                     if (isset($stores))
                                         foreach ($stores as $row) { ?>
-                                        <option value="<?= $row->id ?>">
+                                        <option value="<?= $row->id ?>" <?=($row->id === $settings->get('App.DefaultStore', $context) ? 'selected' : '') ?>>
                                             <?= $row->name; ?> (<?= $row->location; ?>)
                                         </option>
                                     <?php } ?>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="col-lg-3 col-sm-6 col-12"  style="overflow-x: auto;">
                             <div class="form-group">
-                                <select name="ledger_type" class="select">
-                                    <option value="">Select type</option>
-                                    <option value="sales">Sales</option>
-                                    <option value="returns">Returns</option>
+                                <select name="customer_id" class="select2-customer">
+                                    <option value=""></option>
                                 </select>
                             </div>
                         </div>
@@ -83,7 +80,6 @@
                             <th>Date</th>
                             <th>Customer</th>
                             <th>Reference</th>
-                            <th>Type</th>
                             <th>Due</th>
                             <th>Debit</th>
                             <th>Credit</th>

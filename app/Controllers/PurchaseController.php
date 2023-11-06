@@ -5,17 +5,13 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\PurchaseItemModel;
 use App\Models\PurchaseModel;
-use App\Models\PurchaseReturnModel;
 use App\Models\StockModel;
-use App\Models\StoreModel;
 use App\Models\SupplierLedgerModel;
 use App\Models\SupplierModel;
+use App\Models\UserModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
-use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
 use Config\Database;
-use Psr\Log\LoggerInterface;
 
 
 class PurchaseController extends BaseController
@@ -27,12 +23,14 @@ class PurchaseController extends BaseController
     public function index()
     {
         $supModel = new SupplierModel();
-        $storeModel = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Purchase List',
             'suppliers' => $supModel->findAll(),
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'stores' => $stores,
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
         ];
 
         return view('pages/purchases/list_purchase', $data);
@@ -44,11 +42,11 @@ class PurchaseController extends BaseController
      */
     public function daily_report()
     {
-        $storeModel = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Daily Purchase Report',
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'stores' => $stores,
         ];
 
         return view('pages/reports/daily_purchases', $data);
@@ -84,25 +82,16 @@ class PurchaseController extends BaseController
         $model = new PurchaseModel();
         $lastItem = $model->orderBy('id', 'desc')->first();
         $lastId = $lastItem ? $lastItem->id : 1;
-        $storeModel = new StoreModel();
-        $ledgerModel = new SupplierLedgerModel();
+        $stores =  $stores =(new UserModel())->getMyStores();
         $supModel = new SupplierModel();
-        $returnModel = new PurchaseReturnModel();
-
-        $purchaseWhere = ['purchase_date' => date('Y-m-d', time()), 'user_id' => (auth()->user()->id ?? 0)];
-        $returnWhere = ['return_date' => date('Y-m-d', time()), 'user_id' => (auth()->user()->id ?? 0)];
-        $holdWhere = ['order_status' => 'pending', 'user_id' => (auth()->user()->id ?? 0)];
-        $ledgerWhere = ['tdate' => date('Y-m-d', time()), 'user_id' => (auth()->user()->id ?? 0)];
 
         $data = [
             'title' => 'Purchase Order',
             'invoice' => substr(time() + $lastId, 0, 10),
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
+            'stores' => $stores,
             'suppliers' => $supModel->findAll(),
-            'purchaseList' => $model->where($purchaseWhere)->findAll(),
-            'returnList' => $returnModel->where($returnWhere)->findAll(),
-            'ledgerList' => $ledgerModel->where($ledgerWhere)->findAll(),
-            'purchasesOnHold' =>  $model->where($holdWhere)->findAll(),
         ];
 
         if ($id) {

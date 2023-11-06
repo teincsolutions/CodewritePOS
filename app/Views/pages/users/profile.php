@@ -93,7 +93,7 @@
                                                 </a>
                                             </div>
                                             <div class="search-input">
-                                                <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                                <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                                             </div>
                                         </div>
                                         <div class="wordset">
@@ -162,7 +162,7 @@
                                                 </a>
                                             </div>
                                             <div class="search-input">
-                                                <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                                <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                                             </div>
                                         </div>
                                         <div class="wordset">
@@ -230,7 +230,7 @@
                                                 </a>
                                             </div>
                                             <div class="search-input">
-                                                <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                                <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                                             </div>
                                         </div>
                                         <div class="wordset">
@@ -299,7 +299,7 @@
                                                 </a>
                                             </div>
                                             <div class="search-input">
-                                                <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                                <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                                             </div>
                                         </div>
                                         <div class="wordset">

@@ -3,19 +3,16 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\PurchaseItemModel;
 use App\Models\PurchaseModel;
 use App\Models\PurchaseReturnItemModel;
 use App\Models\PurchaseReturnModel;
 use App\Models\StockModel;
 use App\Models\StoreModel;
 use App\Models\SupplierLedgerModel;
+use App\Models\UserModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
-use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
 use Config\Database;
-use Psr\Log\LoggerInterface;
 
 class PurchaseReturnController extends BaseController
 {
@@ -25,10 +22,13 @@ class PurchaseReturnController extends BaseController
      */
     public function index()
     {
-        $storeModel = new StoreModel();
+        $stores = (new UserModel())->getMyStores();;
+
         $data = [
             'title' => 'Purchase Return List',
-            'stores' => $storeModel->where('status','opened')->findAll(),
+            'stores' => $stores,
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
         ];
         return view('pages/purchase_returns/list_purchase_return', $data);
     }
@@ -45,12 +45,12 @@ class PurchaseReturnController extends BaseController
         $purchaseModel = new PurchaseModel();
         $lastItem = $model->orderBy('id', 'desc')->first();
         $lastId = $lastItem ? $lastItem->id : 1;
-        $storeModel = new StoreModel();
+        $stores = (new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Create Purchase Return',
             'invoice' => substr((time() + 1000000000) + $lastId, 0, 10),
-            'stores' => $storeModel->where('status','opened')->findAll(),
+            'stores' => $stores,
         ];
         $whereInvoice = [
             'invoice' => $invoice,
@@ -90,10 +90,10 @@ class PurchaseReturnController extends BaseController
     public function save()
     {
         if (!auth()->user()->can('purchase-returns.create'))
-        return $this->response->setJSON([
-            'status' => false,
-            'message' => "Don't have permission to create this record!"
-        ]);
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to create this record!"
+            ]);
 
         $model = new PurchaseReturnModel();
         $returnItemModel = new PurchaseReturnItemModel();
@@ -161,7 +161,7 @@ class PurchaseReturnController extends BaseController
                     }
                 }
                 $returnItemModel->insertBatch($purchaseItems);
-                if ($inputs['supplier_id']){
+                if ($inputs['supplier_id']) {
                     $ledger->save([
                         'tdate' => $inputs['return_date'],
                         'supplier_id' => $inputs['supplier_id'],
@@ -198,12 +198,13 @@ class PurchaseReturnController extends BaseController
         return $this->response->setJSON($res);
     }
 
-           /**
+    /**
      * return json for receipt
      */
-    public function print($id) : Response {
+    public function print($id): Response
+    {
         $model = new PurchaseReturnModel();
-        $return =$model->where('id', $id)->first();
+        $return = $model->where('id', $id)->first();
         $res = [
             'status' => false,
             'data' => null,
@@ -214,7 +215,7 @@ class PurchaseReturnController extends BaseController
                 'status' => true,
                 'data' => $return,
                 'receipt' =>  view('pages/purchase_returns/pos_receipt', ['return' => $return]),
-                 'message' => "Invoice found!",
+                'message' => "Invoice found!",
             ]);
         }
         return $this->response->setJSON($res);
@@ -230,10 +231,10 @@ class PurchaseReturnController extends BaseController
         $model = new PurchaseReturnModel();
         $model->select('purchase_returns.*');
         $model->join('purchases', 'purchases.id=purchase_returns.purchase_id');
-        return $this->response->setJSON(toDatatableResult($model, $inputs, ));
+        return $this->response->setJSON(toDatatableResult($model, $inputs,));
     }
 
-       /**
+    /**
      * return json for datatables
      * @return Response - http response
      */

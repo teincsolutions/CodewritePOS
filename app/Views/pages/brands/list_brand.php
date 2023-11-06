@@ -7,7 +7,7 @@
             <h6>Manage your Brand</h6>
         </div>
         <div class="page-btn">
-            <a href="<?= site_url('brands/create') ?>" class="btn btn-added"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus.svg" class="me-2" alt="img">Add Brand</a>
+            <a href="<?= site_url('brands/create') ?>" class="btn btn-added"><i class="fa fa-plus fa-lg me-2"></i>Add Brand</a>
         </div>
     </div>
 
@@ -22,7 +22,7 @@
                         </a>
                     </div>
                     <div class="search-input">
-                        <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                        <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                     </div>
                 </div>
                 <div class="wordset">

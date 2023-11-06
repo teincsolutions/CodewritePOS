@@ -8,7 +8,7 @@ $(function () {
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $("#filter_inputs input, #filter_inputs select");
+        let filterForm = $("#filter_inputs9 input, #filter_inputs9 select");
         filterForm.each((i, item) => {
           field = $(item);
 
@@ -106,7 +106,11 @@ $(function () {
                             : ""
                         }
                         <a target="_blank" href="${baseUrl}transfers/units/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table8, ${data}, '${baseUrl}transfers/products')"><i class="fa fa-trash fa-lg"></i></a>
+                        <a ${
+                          Settings.AllowDeleteUnitTransfers === "yes"
+                            ? ""
+                            : "hidden"
+                        } class="text-danger" href="javascript:void(0);" onclick="deleteRow(table8, ${data}, '${baseUrl}transfers/products')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;
@@ -173,5 +177,11 @@ $(function () {
   $(".filter-clear").on("click", function (params) {
     $("#date-from,#date-to").val("");
     table8.ajax.reload();
+  });
+
+
+  $(".select2-store").select2({
+    placeholder: "Seach a store",
+    allowClear: true,
   });
 });

@@ -13,7 +13,7 @@ class ProductModel extends Model
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';
-    protected $useSoftDeletes   = false;
+    protected $useSoftDeletes   = true;
     protected $protectFields    = true;
     protected $allowedFields    = [
         'name',
@@ -107,13 +107,13 @@ class ProductModel extends Model
             } else {
                 $storeModel = new StoreModel();
                 foreach ($model['data'] as $key => $row) {
-                    $model['data'][$key]->inventory = $stockModel->where('product_id', $row->id)->findAll();
+                    $model['data'][$key]->inventory = $builder->where('product_id', $row->id)->get()->getResult();
                     $where = ['product_id' => $row->id];
                     if (setting('App.ProductDiffForStore') === 'yes') {
                         $where = array_merge($where, ['store_id' => $row->store_id]);
                     }
                     if (isset($row->store_id))
-                        $model['data'][$key]->store = $storeModel->find($model['data'][$key]->store_id);
+                        $model['data'][$key]->store = $storeModel->builder()->where('id',$model['data'][$key]->store_id)->get()->getRow();
 
                     $instock = $builder->selectSum('instock', 'total')
                         ->where($where)

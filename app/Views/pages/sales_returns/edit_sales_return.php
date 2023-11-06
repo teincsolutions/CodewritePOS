@@ -24,7 +24,7 @@
                 </div>
                 <div class="row">
 
-                    <div class="col-lg-4 col-sm-6 col-12">
+                    <div class="col-lg-4 col-sm-6 col-12" style="overflow-x: auto;">
                         <div class="form-group">
                             <label>Reference</label>
                             <select name="sale_id" class="select2-invoices" required>
@@ -38,7 +38,7 @@
                     <div class="col-lg-4 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Customer</label>
-                            <select name="customer_id" class="select2-customer">
+                            <select name="customer_id" class="select2-customer" style="overflow-x: auto;">
                                 <option value=""></option>
                             </select>
                         </div>

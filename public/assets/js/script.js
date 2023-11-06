@@ -387,6 +387,9 @@ $(document).ready(function () {
   $(document).on("click", "#filter_search6", function () {
     $("#filter_inputs6").slideToggle("slow");
   });
+  $(document).on("click", "#filter_search7", function () {
+    $("#filter_inputs7").slideToggle("slow");
+  });
   $(document).on("click", "#filter_search", function () {
     $("#filter_search").toggleClass("setclose");
   });

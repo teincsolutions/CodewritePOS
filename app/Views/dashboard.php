@@ -2,13 +2,31 @@
 <?= $this->section('content') ?>
 <div class="content">
     <div class="row">
+        <div class="col-md-4 offset-md-8">
+            <div class="form-group">
+                <label for="store_id">Active Store</label>
+                <select name="store_id" class="select2-store">
+                    <option value=""></option>
+                    <?php
+                    if (isset($stores))
+                        foreach ($stores as $row) { ?>
+                        <option value="<?= $row->id ?>" <?= $activeStore ? ($activeStore->id === $row->id ? 'selected' : '') : ($row->id === $settings->get('App.DefaultStore', $context) ? 'selected' : '') ?>>
+                            <?= $row->name; ?> (<?= $row->location; ?>)
+                        </option>
+                    <?php } ?>
+                </select>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
         <div class="col-lg-3 col-sm-6 col-12">
             <div class="dash-widget dash1">
                 <div class="dash-widgetimg">
                     <span class="text-info"><i class="fa fa-shopping-cart fa-lg"></i></span>
                 </div>
                 <div class="dash-widgetcontent">
-                    <h5>GHC <span class="counters" data-count="<?= model('SalesModel')->getTodayTotalAmount() ?>">0.00</span></h5>
+                    <h5>GHC <span class="counters" data-count="<?= model('SalesModel')->getTodayTotalAmount($activeStore->id ?? 0) ?>">0.00</span></h5>
                     <h6>Today's Sales</h6>
                 </div>
             </div>
@@ -20,7 +38,7 @@
                 </div>
                 <div class="dash-widgetcontent">
                     <h5>GHC
-                        <span class="counters" data-count="<?= model('PurchaseModel')->getTodayTotalAmount() ?>">0.00</span>
+                        <span class="counters" data-count="<?= model('PurchaseModel')->getTodayTotalAmount($activeStore->id ?? 0) ?>">0.00</span>
                     </h5>
                     <h6>Today's Purchases</h6>
                 </div>
@@ -33,7 +51,7 @@
                     <span class="text-warning"><i class="fa fa-cart-arrow-down fa-lg"></i></span>
                 </div>
                 <div class="dash-widgetcontent">
-                    <h5>GHC <span class="counters" data-count="<?= model('SalesModel')->getDueAmount() ?>">0.00</span></h5>
+                    <h5>GHC <span class="counters" data-count="<?= model('SalesModel')->getDueAmount($activeStore->id ?? 0) ?>">0.00</span></h5>
                     <h6>Total Sales Due</h6>
                 </div>
             </div>
@@ -45,7 +63,7 @@
                 </div>
                 <div class="dash-widgetcontent">
                     <h5>GHC
-                        <span class="counters" data-count="<?= model('PurchaseModel')->getDueAmount() ?>">0.00</span>
+                        <span class="counters" data-count="<?= model('PurchaseModel')->getDueAmount($activeStore->id ?? 0) ?>">0.00</span>
                     </h5>
                     <h6>Total Purchase Due</h6>
                 </div>
@@ -57,7 +75,7 @@
                     <span class="text-danger"><i class="fa fa-cart-arrow-down fa-lg"></i></span>
                 </div>
                 <div class="dash-widgetcontent">
-                    <h5>GHC <span class="counters" data-count="<?= model('SalesReturnModel')->getTodayTotalAmount() ?>">0.00</span></h5>
+                    <h5>GHC <span class="counters" data-count="<?= model('SalesReturnModel')->getTodayTotalAmount($activeStore->id ?? 0) ?>">0.00</span></h5>
                     <h6>Today's Sales Returns</h6>
                 </div>
             </div>
@@ -69,7 +87,7 @@
                 </div>
                 <div class="dash-widgetcontent">
                     <h5>GHC
-                        <span class="counters" data-count="<?= model('PurchaseReturnModel')->getTodayTotalAmount() ?>">0.00</span>
+                        <span class="counters" data-count="<?= model('PurchaseReturnModel')->getTodayTotalAmount($activeStore->id ?? 0) ?>">0.00</span>
                     </h5>
                     <h6>Today's P. Returns</h6>
                 </div>
@@ -82,7 +100,7 @@
                     <span class="text-danger"><i class="fa fa-money-bill fa-lg"></i></span>
                 </div>
                 <div class="dash-widgetcontent">
-                    <h5>GHC <span class="counters" data-count="<?= model('ExpenseModel')->getTodayTotalAmount() ?>">0.00</span></h5>
+                    <h5>GHC <span class="counters" data-count="<?= model('ExpenseModel')->getTodayTotalAmount($activeStore->id ?? 0) ?>">0.00</span></h5>
                     <h6>Today's Expenses</h6>
                 </div>
             </div>
@@ -94,9 +112,9 @@
                 </div>
                 <div class="dash-widgetcontent">
                     <h5>GHC
-                        <span class="counters" data-count="<?= model('PurchaseReturnModel')->getDueAmount() ?>">0.00</span>
+                        <span class="counters" data-count="<?= model('CustomerLedgerModel')->getTodayTotalCredit($activeStore->id ?? 0) ?>">0.00</span>
                     </h5>
-                    <h6>Ttl P. Return Due</h6>
+                    <h6>Today's Debt Paymts</h6>
                 </div>
             </div>
         </div>
@@ -127,7 +145,7 @@
         <div class="col-lg-3 col-sm-6 col-12 d-flex">
             <div class="dash-count das2">
                 <div class="dash-counts">
-                    <h4><?= model('PurchaseModel')->countAllResults() ?></h4>
+                    <h4><?= model('PurchaseModel')->where('store_id', $activeStore->id ?? 0)->countAllResults() ?></h4>
                     <h5>Purchase Invoice</h5>
                 </div>
                 <div class="dash-imgs">
@@ -138,7 +156,7 @@
         <div class="col-lg-3 col-sm-6 col-12 d-flex">
             <div class="dash-count das3">
                 <div class="dash-counts">
-                    <h4><?= model('SalesModel')->countAllResults() ?></h4>
+                    <h4><?= model('SalesModel')->where('store_id', $activeStore->id ?? 0)->countAllResults() ?></h4>
                     <h5>Sales Invoice</h5>
                 </div>
                 <div class="dash-imgs">
@@ -164,7 +182,7 @@
                         </ul>
                         <div class="dropdown">
                             <button class="btn btn-white btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                2022 <img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/dropdown.svg" alt="img" class="ms-2">
+                                2022 <i class="fa fa-caret-down"></i>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <li>
@@ -260,4 +278,6 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/expired-products.js') ?>"></script>
+<script src="<?= base_url('assets/js/dashboard.js') ?>"></script>
+
 <?= $this->endSection() ?>

@@ -10,7 +10,7 @@ $(function () {
       data: function (params) {
         let filter = {};
         let filterForm = $(
-          "#ledger-tab #filter_inputs input, #ledger-tab #filter_inputs select"
+          "#ledger-tab #filter_inputs9 input, #ledger-tab #filter_inputs9 select"
         );
         filterForm.each((i, item) => {
           field = $(item);

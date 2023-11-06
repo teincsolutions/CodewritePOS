@@ -36,7 +36,7 @@
                                 <div class="form-group">
                                     <label>Supplier</label>
                                     <div class="row">
-                                        <div class="col-lg-10 col-sm-10 col-10">
+                                        <div class="col-lg-10 col-sm-10 col-10" style="overflow-x: auto;">
                                             <select name="supplier_id" class="select2-suppliers" required>
                                                 <option value=""></option>
                                             </select>
@@ -52,12 +52,12 @@
                             <div class="col-lg-5 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Store</label>
-                                    <select name="store_id" class="select2-store">
+                                    <select name="store_id" class="select2-store" style="overflow-x: auto;">
                                         <option value=""></option>
                                         <?php
                                         if (isset($stores))
                                             foreach ($stores as $row) { ?>
-                                            <option value="<?= $row->id ?>" <?= isset($purchase) ? ($row->id === $purchase->store_id ? 'selected' : '') : null ?>>
+                                            <option value="<?= $row->id ?>" <?= isset($purchase) ? ($row->id === $purchase->store_id ? 'selected' : '') : ($row->id === $settings->get('App.DefaultStore', $context) ? 'selected' : '') ?>>
                                                 <?= $row->name; ?><?= $row->location ? "($row->location)" : null; ?>
                                             </option>
                                         <?php } ?>
@@ -253,7 +253,7 @@
                             </ul>
                         </div>
                         <div class="setvalue">
-                            <input onkeyup="updateTotals()" onchange="updateTotals()" type="number" name="paid" value="<?= isset($purchase) ? $purchase->paid : null ?>" step="any" min="0" class="form-control" placeholder="Enter paid amount">
+                            <input onkeyup="updateTotals()" onchange="updateTotals()" type="number" name="paid" step="any" min="0" class="form-control" placeholder="Enter paid amount">
                         </div>
                         <div class="setvaluecash">
                             <ul>
@@ -373,26 +373,27 @@
                 <div class="tabs-sets">
                     <ul class="nav nav-tabs" id="myTabs" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="purchase-tab" data-bs-toggle="tab" data-bs-target="#purchase" type="button" aria-controls="purchase" aria-selected="true" role="tab">Purchase</button>
+                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#purchase" type="button" aria-controls="purchase" aria-selected="true" role="tab">Purchase</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" aria-controls="payment" aria-selected="false" role="tab">Payment</button>
+                            <button class="nav-link"  data-bs-toggle="tab" data-bs-target="#ledger-tab" type="button" aria-controls="payment" aria-selected="false" role="tab">Payment</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="return-tab" data-bs-toggle="tab" data-bs-target="#return" type="button" aria-controls="return" aria-selected="false" role="tab">Return</button>
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#returns-tab" type="button" aria-controls="return" aria-selected="false" role="tab">Return</button>
                         </li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="purchase" role="tabpanel" aria-labelledby="purchase-tab">
                             <div class="table-top">
 
-                                <div class="purchase-wordset">
+                                <div class="wordset">
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table id="dt-purchases" class="table">
+                                <table id="dt-purchases" class="table w-100">
                                     <thead>
                                         <tr>
+                                            <th></th>
                                             <th>Date</th>
                                             <th>Invoice No.</th>
                                             <th>Supplier</th>
@@ -401,52 +402,19 @@
                                             <th class="text-end">Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <?php
-                                        $badges =  [
-                                            'completed' => "bg-lightgreen",
-                                            'pending' => "bg-lightred",
-                                        ];
-                                        if (isset($purchaseList))
-                                            foreach ($purchaseList as $key => $row) {
-                                        ?>
-                                            <tr>
-                                                <td><?= $row->purchase_date; ?></td>
-                                                <td><a target="_blank" href="<?= site_url('purchases/' . $row->id) ?>" class="btn btn-link btn-sm"><?= $row->invoice; ?></a></td>
-                                                <td>
-                                                    <?php if ($row->supplier) : ?>
-                                                        <a target="_blank" href="<?= site_url('suppliers/' . $row->supplier_id) ?>" class="btn btn-link btn-sm"><?= $row->supplier->name ?></a>
-                                                    <?php endif ?>
-                                                </td>
-                                                <td><span class="badges <?= $badges[$row->order_status]; ?>"><?= $row->order_status; ?></span></td>
-                                                <td><?= $row->total_amount < 0 ? "(" . number_format(abs($row->total_amount), 2) . ")" : number_format($row->total_amount, 2); ?></td>
-                                                <td>
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <a target="_blank" href="<?= site_url('purchases/' . $row->id) ?>" class="btn btn-icon btn-sm"><i class="fa fa-eye fa-lg"></i></a>
-                                                        <?php if ($row->order_status === 'completed') : ?>
-                                                            <a class="me-3 text-secondary" href="<?= site_url('returns/purchases/create?invoice=' . $row->invoice) ?>"><i class="fa fa-reply fa-lg"></i></a>
-                                                        <?php else : ?>
-                                                            <a class="me-3 text-secondary" href="<?= site_url('purchase/pos/' . $row->id) ?>"><i class="fa fa-play fa-lg"></i></a>
-                                                            <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('purchases') ?>', '<?= site_url('purchase/pos') ?>')"><i class="fa fa-trash fa-lg"></i></a>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php
-                                            } ?>
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="payment" role="tabpanel">
+                        <div class="tab-pane fade" id="ledger-tab" role="tabpanel">
                             <div class="table-top">
-                                <div class="payments-wordset">
+                                <div class="wordset">
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table id="dt-payments" class="table">
+                                <table id="dt-ledger" class="table w-100">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Date</th>
                                             <th>Invoice No.</th>
                                             <th>Supplier</th>
@@ -456,45 +424,17 @@
                                             <th class="text-end">Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <?php
-                                        $badges =  [
-                                            'completed' => "bg-lightgreen",
-                                            'pending' => "bg-lightred",
-                                        ];
-                                        if (isset($ledgerList))
-                                            foreach ($ledgerList as $key => $row) {
-                                                $row->balance = $row->debit - $row->credit;
-                                        ?>
-                                            <tr>
-                                                <td><?= $row->tdate; ?></td>
-                                                <td><a target="_blank" href="<?= site_url('purchases/' . $row->purchase_id) ?>" class="btn btn-link btn-sm"><?= $row->purchase->invoice; ?></a></td>
-                                                <td>
-                                                    <a target="_blank" href="<?= site_url('suppliers/' . $row->supplier_id) ?>" class="btn btn-link btn-sm"><?= $row->supplier->name ?></a>
-                                                </td>
-                                                <td><?= number_format($row->debit, 2); ?></td>
-                                                <td><?= number_format($row->credit, 2); ?></td>
-                                                <td><?= $row->balance < 0 ? "(" . number_format(abs($row->balance), 2) . ")" : number_format($row->balance, 2); ?></td>
-                                                <td>
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <a class="me-3 text-secondary" href="<?= site_url('suppliers/ledgers/edit/' . $row->id) ?>"><i class="fa fa-edit fa-lg"></i></a>
-                                                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('suppliers/ledgers') ?>', '<?= site_url('purchase/pos') ?>')"><i class="fa fa-trash fa-lg"></i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php
-                                            } ?>
-                                    </tbody>
+                                   
                                 </table>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="return" role="tabpanel">
+                        <div class="tab-pane fade" id="returns-tab" role="tabpanel">
                             <div class="table-top">
-                                <div class="returns-wordset">
+                                <div class="wordset">
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table id="dt-returns" class="table">
+                                <table id="dt-returns" class="table w-100">
                                     <thead>
                                         <tr>
                                             <th>Date</th>
@@ -505,37 +445,6 @@
                                             <th class="text-end">Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <?php
-                                        $badges =  [
-                                            'completed' => "bg-lightgreen",
-                                            'pending' => "bg-lightred",
-                                        ];
-                                        if (isset($returnList))
-                                            foreach ($returnList as $key => $row) {
-                                        ?>
-                                            <tr>
-                                                <td><?= $row->return_date; ?></td>
-                                                <td><a target="_blank" href="<?= site_url('returns/purchases/' . $row->id) ?>" class="btn btn-link btn-sm"><?= $row->invoice; ?></a></td>
-                                                <td>
-                                                    <?php if ($row->purchase->supplier) : ?>
-                                                        <a target="_blank" href="<?= site_url('suppliers/' . $row->purchase->supplier_id) ?>" class="btn btn-link btn-sm"><?= $row->purchase->supplier->name ?></a>
-                                                    <?php endif ?>
-                                                </td>
-                                                <td><span class="badges <?= $badges[$row->order_status]; ?>"><?= $row->order_status; ?></span></td>
-                                                <td><?= $row->total_amount < 0 ? "(" . number_format(abs($row->total_amount), 2) . ")" : number_format($row->total_amount, 2); ?></td>
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <?= setting("App.AllowCosthange") === "yes" || setting("App.AllowSupplierDiscountChange") === "yes"
-                                                            ? '<span class="edit-cost btn btn-icon"><i class="fa fa-edit"></i></span>'
-                                                            : "" ?>
-                                                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('purchases') ?>', '<?= site_url('returns/purchases') ?>')"><i class="fa fa-trash fa-lg"></i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php
-                                            } ?>
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -654,7 +563,7 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/handle-order.js?v=10') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/order.modal.js') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/order.modal.js?v=1') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?php if (isset($purchase) && $purchase->supplier) {
     $supplier = $purchase->supplier;

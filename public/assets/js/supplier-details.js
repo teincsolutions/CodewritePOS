@@ -1,4 +1,4 @@
-let table1, table2, table3;
+let table1, table2, table3, paymentTable;
 
 $(function () {
   // table1
@@ -27,7 +27,7 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-        filter['store_id'] =$('.select2-store').val();
+        filter["store_id"] = $(".select2-store").val();
         params.fields = filter;
       },
     },
@@ -216,7 +216,7 @@ $(function () {
   // table2
   table2 = $("#dt-ledger").DataTable({
     ajax: {
-      url: baseUrl + "/suppliers/ledger/datatable",
+      url: baseUrl + "reports/ledgers/suppliers/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
@@ -239,7 +239,7 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-        filter['store_id'] =$('.select2-store').val();
+        filter["store_id"] = $(".select2-store").val();
         params.fields = filter;
       },
     },
@@ -280,69 +280,50 @@ $(function () {
           return null;
         },
       },
-      { data: "id", name: "supplier_ledgers.id" },
       { data: "tdate", name: "supplier_ledgers.tdate" },
       {
         data: null,
         render: function (data, type, row) {
-          if (type === "display")
-            return data.purchase
-              ? `INV${data.purchase.invoice}`
-              : `INV${data.purchase_return.invoice}`;
-          return null;
+          return `<a target="_blank" href="${baseUrl}purchases/${data.purchase_id}" class="btn btn-link btn-sm">${data.purchase.invoice}</a>`;
         },
       },
-      { data: "ledger_type", name: "supplier_ledgers.ledger_type" },
       {
-        data: "credit",
+        data: "total_due",
+        render: function (data) {
+          return data < 0
+            ? `GHS (${parseFloat(Math.abs(data)).toFixed(2)})`
+            : `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
+      {
+        data: "total_credit",
         render: function (data) {
           return `GHS ${parseFloat(data).toFixed(2)}`;
         },
       },
       {
-        data: "debit",
+        data: "total_debit",
         render: function (data) {
           return `GHS ${parseFloat(data).toFixed(2)}`;
         },
       },
       {
-        data: "balance",
+        data: "total_balance",
         render: function (data) {
           return data < 0
             ? `(GHS ${Math.abs(data).toFixed(2)})`
             : `GHS ${data.toFixed(2)}`;
         },
       },
-      { data: "payment_type", name: "supplier_ledgers.payment_type" },
       {
-        data: "user",
-        name: "supplier_ledgers.user_id",
-        render: function (data, type, row) {
-          if (type === "display")
-            return data ? `${data.firstname} ${data.lastname}` : null;
-          return data ? data.id : null;
-        },
-      },
-      {
-        data: "id",
+        data: null,
         name: "supplier_ledgers.id",
         render: function (data, type, row) {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
             <a  href="javascript:void(0);" class="me-3" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
-            <a  href="javascript:void(0);" class="me-3" onclick="editRow('#edit-payment',{id:${
-              row.id
-            },tdate:'${moment(row.tdate).format("DD-MM-YYYY")}',purchase_id:${
-              row.purchase_id
-            },payment_type:'${row.payment_type}',debit:${row.debit}},{text:'${
-              row.purchase.invoice
-            } (${row.supplier.name} - GHS ${row.purchase.total_amount})',id:${
-              row.purchase.id
-            },name:'purchase_id'})"><i class="fa fa-edit fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table2, ${
-                          row.id
-                        }, '${baseUrl}suppliers/ledger', table1,table3)"><i class="fa fa-trash fa-lg"></i></a>
-                    </div>`;
+            <a  href="javascript:void(0);" class="me-3" onclick="viewSupPayments(table2,this,paymentTable)"><i class="fa fa-eye fa-lg"></i></a>
+           </div>`;
           }
           return data;
         },
@@ -434,7 +415,7 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-        filter['purchases.store_id'] =$('.select2-store').val();
+        filter["purchases.store_id"] = $(".select2-store").val();
         params.fields = filter;
       },
     },
@@ -615,6 +596,196 @@ $(function () {
     }
   );
 
+  // paymentTable
+  paymentTable = $("#dt-supplier-payments").DataTable({
+    ajax: {
+      url: baseUrl + "suppliers/ledger/datatable",
+      dataType: "json",
+      contentType: "application/json",
+      data: function (params) {
+        let filter = {};
+        let filterForm = $("#input_filter input");
+        filterForm.each((i, item) => {
+          field = $(item);
+
+          if (field.prop("tagName") === "SELECT") {
+            if (
+              typeof field.children("option:selected").val() !== "undefined" &&
+              field.children("option:selected").val() != ""
+            )
+              filter[field.attr("name")] = field
+                .children("option:selected")
+                .val();
+          } else {
+            filter[field.attr("name")] = field.val();
+          }
+        });
+        filter["store_id"] = $(".select2-store").val();
+        params.fields = filter;
+      },
+    },
+    processing: true,
+    bFilter: true,
+    dom: "fBtlpi",
+    buttons: [
+      {
+        extend: "print",
+        text: '<a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><i class="fa text-secondary fa-print"></i></a>',
+        className: "btn btn-light",
+      },
+      "spacer",
+      {
+        extend: "excel",
+        text: '<a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><i class="fa text-success fa-file-excel"></i></a>',
+        className: "btn btn-light",
+      },
+      "spacer",
+      {
+        extend: "pdf",
+        text: '<a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><i class="fa text-danger fa-file-pdf"></i></a>',
+        className: "btn btn-light",
+      },
+    ],
+    pagingType: "numbers",
+    ordering: true,
+    language: {
+      search: " ",
+      sLengthMenu: "_MENU_",
+      searchPlaceholder: "Search...",
+      info: "_START_ - _END_ of _TOTAL_ items",
+    },
+    columns: [
+      {
+        data: null,
+        render: function (data, type, row) {
+          return null;
+        },
+      },
+      { data: "id", name: "supplier_ledgers.id" },
+      { data: "tdate", name: "supplier_ledgers.tdate" },
+      {
+        data: null,
+        render: function (data, type, row) {
+          return data.ledger_type === "purchases"
+            ? `<a target="_blank" href="${baseUrl}purchases/${data.purchase_id}" class="btn btn-link btn-sm">${data.purchase.invoice}</a>`
+            : `<a target="_blank" href="${baseUrl}purchases/returns/${data.purchase_return_id}" class="btn btn-link btn-sm">${data.purchase_return.invoice}(RF: ${data.purchase.invoice})</a>`;
+        },
+      },
+      { data: "ledger_type", name: "supplier_ledgers.ledger_type" },
+      {
+        data: "credit",
+        render: function (data) {
+          return `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
+      {
+        data: "debit",
+        render: function (data) {
+          return `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
+      {
+        data: "balance",
+        render: function (data) {
+          return data < 0
+            ? `(GHS ${Math.abs(data).toFixed(2)})`
+            : `GHS ${data.toFixed(2)}`;
+        },
+      },
+      { data: "payment_type", name: "supplier_ledgers.payment_type" },
+      {
+        data: "user",
+        name: "supplier_ledgers.user_id",
+        render: function (data, type, row) {
+          return data ? `${data.firstname} ${data.lastname}` : "";
+        },
+      },
+      {
+        data: "id",
+        name: "supplier_ledgers.id",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return `<div class="d-flex align-items-center">
+                <a  href="javascript:void(0);" class="me-3" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
+                <a  href="javascript:void(0);" class="me-3" onclick="editRow('#edit-payment',{id:${
+                  row.id
+                },tdate:'${moment(row.tdate).format(
+              "DD-MM-YYYY"
+            )}',purchase_id:${row.purchase_id},payment_type:'${
+              row.payment_type
+            }',debit:${row.debit}},{text:'${row.purchase.invoice} (${
+              row.supplier.name
+            } - GHS ${row.purchase.total_amount})',id:${
+              row.purchase.id
+            },name:'purchase_id'})"><i class="fa fa-edit fa-lg"></i></a>
+                            <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(paymentTable, ${
+                              row.id
+                            }, '${baseUrl}suppliers/ledger', table1,table3)"><i class="fa fa-trash fa-lg"></i></a>
+                        </div>`;
+          }
+          return data;
+        },
+      },
+    ],
+    initComplete: (settings, json) => {
+      $("#ledger-tab .dataTables_filter").appendTo("#ledger-tab #tableSearch");
+      $("#ledger-tab .dataTables_filter").appendTo("#ledger-tab .search-input");
+      if ($('#ledger-tab [data-bs-toggle="tooltip"]').length > 0) {
+        var tooltipTriggerList = [].slice.call(
+          document.querySelectorAll('#ledger-tab [data-bs-toggle="tooltip"]')
+        );
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+      }
+
+      var selectAllItems = "#ledger-tab #select-all";
+      var checkboxItem = ":checkbox";
+
+      $(selectAllItems).click(function () {
+        if (this.checked) {
+          $(checkboxItem).each(function () {
+            this.checked = true;
+          });
+        } else {
+          $(checkboxItem).each(function () {
+            this.checked = false;
+          });
+        }
+      });
+    },
+    footerCallback: function (row, data, start, end, display) {
+      var api = this.api();
+      // Remove the formatting to get integer data for summation
+      var intVal = function (i) {
+        return typeof i === "string"
+          ? i.replace(/[\$,]/g, "") * 1
+          : typeof i === "number"
+          ? i
+          : 0;
+      };
+    },
+    order: [[1, "desc"]],
+    columnDefs: [
+      {
+        orderable: false,
+        className: "select-checkbox",
+        targets: 0,
+      },
+    ],
+    select: {
+      style: "multi",
+      selector: "td:first-child",
+    },
+  });
+  paymentTable.buttons().container().appendTo("#ledger-tab .wordset");
+
+  $("#view-payments .filter").on(
+    "click select2:select select2:unselect",
+    function (params) {
+      paymentTable.ajax.reload();
+    }
+  );
   let form3 = $("#add-payment");
   form3.validate({
     rules: {},
@@ -870,19 +1041,16 @@ $(function () {
       $("#inv-due").val((0).toFixed(2));
     });
 
-    $(".select2-store").select2({
-      placeholder: "Seach a store",
-    });
+  $(".select2-store").select2({
+    placeholder: "Seach a store",
+  });
 
-    $(".select2-store").on(
-      "select2:select select2:unselect",
-      function (params) {
-        table1.ajax.reload();
-        table2.ajax.reload();
-        table3.ajax.reload();
-        table.ajax.reload();
-        $("input[name='store_id']").val($(this).val());
-      }
-    );
-    $("input[name='store_id']").val($(".select2-store").val());
+  $(".select2-store").on("select2:select select2:unselect", function (params) {
+    table1.ajax.reload();
+    table2.ajax.reload();
+    table3.ajax.reload();
+    table.ajax.reload();
+    $("input[name='store_id']").val($(this).val());
+  });
+  $("input[name='store_id']").val($(".select2-store").val());
 });

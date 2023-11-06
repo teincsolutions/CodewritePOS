@@ -12,8 +12,8 @@
         <input id="order-status" type="hidden" name="order_status" value="completed">
         <input id="payment-status" type="hidden" name="payment_status" value="paid">
         <input type="hidden" name="payment_type" value="cash">
-        <input type="hidden" name="supplier_id" value="<?= $purchase->supplier_id ?>">
-        <input type="hidden" name="store_id" value="<?= $purchase->store_id ?>">
+        <input type="hidden" name="supplier_id" value="<?= isset($purchase) ? $purchase->supplier_id : null ?>">
+        <input type="hidden" name="store_id" value="<?= isset($purchase) ? $purchase->store_id:null ?>">
         <input id="purchases-total" type="hidden" name="total_amount" value="<?= isset($purchase) ? $purchase->total_amount : 0.00 ?>">
         <div class="card">
             <div class="card-body">
@@ -26,7 +26,7 @@
                 </div>
                 <div class="row">
 
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-6 col-sm-6 col-12" style="overflow-x: auto;">
                         <div class="form-group">
                             <label>Reference</label>
                             <select name="purchase_id" class="select2-invoices" required>
@@ -116,7 +116,7 @@
                                                 </div>
                                             </td>
                                             <td><?= $row->unit_cost ?></td>
-                                            <td><?= number_format($row->max_qty * $row->unit_cost,2,'.','') ?></td>
+                                            <td><?= number_format($row->max_qty * $row->unit_cost, 2, '.', '') ?></td>
                                             <td><a href="javascript:void(0);" class="delete-set" data-item-id="<?= $row->id ?>"><i class="fa text-danger fa-trash"></i></a></td>
 
                                         </tr>
@@ -188,7 +188,7 @@
                         </div>
                     </div>
                     <div class="col-lg-12">
-                        <button onclick="$('.post-form').submit()"  type="button" class="btn btn-submit me-2">Submit Return</button>
+                        <button onclick="$('.post-form').submit()" type="button" class="btn btn-submit me-2">Submit Return</button>
                     </div>
                 </div>
             </div>

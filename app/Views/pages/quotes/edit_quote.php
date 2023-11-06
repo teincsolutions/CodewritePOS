@@ -54,7 +54,7 @@
                                         <?php
                                         if (isset($stores))
                                             foreach ($stores as $row) { ?>
-                                            <option value="<?= $row->id ?>" <?= isset($quote) ? ($row->id === $quote->store_id ? 'selected' : '') : null ?>>
+                                            <option value="<?= $row->id ?>" <?= isset($quote) ? ($row->id === $quote->store_id ? 'selected' : '') : ($row->id === $settings->get('App.DefaultStore', $context) ? 'selected' : '') ?>>
                                                 <?= $row->name; ?><?= $row->location ? "($row->location)" : null; ?>
                                             </option>
                                         <?php } ?>

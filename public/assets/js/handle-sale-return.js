@@ -76,6 +76,7 @@ $("div.toolbar").html(
 ).on("click",".clear-all", function (e) {
   tableItems.rows().remove().draw();
   saleItemIds = [];
+  updateTotals();
 });
 
 function updateItemRow(row) {

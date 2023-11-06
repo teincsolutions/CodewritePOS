@@ -199,6 +199,7 @@ class AuthGroups extends ShieldAuthGroups
         'permission-settings.access'      => 'Can view and edit the permssions settings',
         'updates.access'      => 'Can access new version update settings',
         'sms-settings.access'      => 'Can access sms settings',
+        'preference-settings.access'      => 'Can view and edit the preference settings',
 
         'users.*' => 'Has full control',
         'customers.*' => 'Has full control',
@@ -227,6 +228,7 @@ class AuthGroups extends ShieldAuthGroups
         'email-settings.*' => 'Has full control',
         'payment-settings.*' => 'Has full control',
         'permission-settings.*' => 'Has full control',
+        'preference-settings.*' => 'Has full control',
         'sms-settings.*' => 'Has full control'
     ];
 
@@ -266,6 +268,7 @@ class AuthGroups extends ShieldAuthGroups
         'email-settings'      => 'Email Settings',
         'payment-settings'      => 'Payment Settings',
         'permission-settings'      => 'Permssions Settings',
+        'preference-settings'      => 'User Preference Settings',
         'updates'      => 'New Version Update Settings',
     ];
 
@@ -284,14 +287,15 @@ class AuthGroups extends ShieldAuthGroups
             'expenses.*', 'customer-ledgers.*', 'supplier-ledgers.*', 'purchases.*', 'sales.*',
             'purchase-returns.*', 'sales-returns.*', 'quotes.*', 'adjustments.*', 'closing.*',
             'general-settings.*', 'email-settings.*', 'payment-settings.*', 'permission-settings.*',
-            'sms-settings.*', 'cashup.*'
+            'sms-settings.*', 'cashup.*','preference-settings.*',
         ],
         'developer' => [
             'users.*', 'customers.*', 'suppliers.*', 'stores.*', 'products.*', 'brands.*',
             'categories.*', 'units.*', 'product-transfers.*', 'unit-transfers.*', 'expense-categories.*',
-            'expenses.*', 'customer-ledgers.*', 'supplier-ledgers.*', 'purchases.*', 'sales.*', 'cashup.*','closing.*',
+            'expenses.*', 'customer-ledgers.*', 'supplier-ledgers.*', 'purchases.*', 'sales.*', 'cashup.*', 'closing.*',
             'purchase-returns.*', 'sales-returns.*', 'quotes.*', 'adjustments.*', 'stocks.*', 'account-debts.*',
             'general-settings.*', 'email-settings.*', 'payment-settings.*', 'permission-settings.*', 'updates.*',
+            'preference-settings.*',
         ],
         'guest' => [
             'customers.view', 'suppliers.view', 'stores.view', 'products.view', 'brands.view',
@@ -302,8 +306,8 @@ class AuthGroups extends ShieldAuthGroups
         'seller' => [
             'customers.view', 'products.view', 'brands.view', 'customers.edit',
             'categories.view', 'units.view', 'product-transfers.view', 'expense-categories.view',
-            'expenses.view','expenses.create','expenses.edit', 'customer-ledgers.view','customer-ledgers.create', 'sales.view','sales.create',
-            'sales-returns.view','sales-returns.create', 'quotes.view','quotes.create','cashup.create','cashup.view','closing.create','closing.view'
+            'expenses.view', 'expenses.create', 'expenses.edit', 'customer-ledgers.view', 'customer-ledgers.create', 'sales.view', 'sales.create',
+            'sales-returns.view', 'sales-returns.create', 'quotes.view', 'quotes.create', 'cashup.create', 'cashup.view', 'closing.create', 'closing.view'
         ],
     ];
 }

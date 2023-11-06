@@ -38,6 +38,7 @@ $routes->get('products/sales/search', 'ProductController::sale_search');
 $routes->get('products/purchases/search', 'ProductController::purchase_search');
 $routes->group('settings', static function (RouteCollection $routes) {
     $routes->post('/', [SettingController::class, 'save_settings']);
+    $routes->post('context', [SettingController::class, 'save_context_settings']);
     $routes->get('general', [SettingController::class, 'general']);
     $routes->get('group-permissions/(:any)', [SettingController::class, 'group_permissions/$1']);
     $routes->get('groups', [SettingController::class, 'groups']);
@@ -54,6 +55,8 @@ $routes->group('reports', static function (RouteCollection $routes) {
     $routes->get('stocks/datatable', [InventoryController::class, 'stock_report_datatable']);
     $routes->get('ledgers/customers', [CustomerLedgerController::class, 'customer_reports']);
     $routes->get('ledgers/customers/datatable', [CustomerLedgerController::class, 'report_datatable']);
+    $routes->get('ledgers/suppliers', [SupplierLedgerController::class, 'supplier_reports']);
+    $routes->get('ledgers/suppliers/datatable', [SupplierLedgerController::class, 'report_datatable']);
 });
 
 

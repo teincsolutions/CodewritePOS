@@ -213,4 +213,17 @@ $(function () {
   $(".select2-store").select2({
     placeholder: "Seach a store",
   });
+
+  $(".select2-category").select2({
+    placeholder: "Choose a category",
+    allowClear: true,
+  });
+  $(".select2-brand").select2({
+    placeholder: "Choose a brand",
+    allowClear: true,
+  });
+  $(".select2-unit").select2({
+    placeholder: "Choose a unit",
+    allowClear: true,
+  });
 });

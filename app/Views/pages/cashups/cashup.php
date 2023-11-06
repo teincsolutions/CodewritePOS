@@ -41,7 +41,7 @@
                         </div>
                         <div class="search-input">
                             <a class="btn btn-searchset">
-                                <img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img">
+                                <i class="fa fa-search"></i>
                             </a>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
                             </div>
                             <div class="col-lg-1 col-sm-6 col-12  ms-auto">
                                 <div class="form-group">
-                                    <button type="button" class="btn btn-filters filter ms-auto"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></button>
+                                    <button type="button" class="btn btn-filters filter ms-auto"><i class="fa fa-search"></i></button>
                                 </div>
                             </div>
                         </div>

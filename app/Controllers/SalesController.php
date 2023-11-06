@@ -7,9 +7,9 @@ use App\Models\CustomerLedgerModel;
 use App\Models\CustomerModel;
 use App\Models\SalesItemModel;
 use App\Models\SalesModel;
-use App\Models\SalesReturnModel;
 use App\Models\StockModel;
 use App\Models\StoreModel;
+use App\Models\UserModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\HTTP\Response;
 use Config\Database;
@@ -24,12 +24,14 @@ class SalesController extends BaseController
     public function index()
     {
         $cusModel = new CustomerModel();
-        $storeModel = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Sales List',
             'customers' => $cusModel->findAll(),
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'stores' => $stores,
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
         ];
 
         return view('pages/sales/list_sales', $data);
@@ -61,27 +63,15 @@ class SalesController extends BaseController
         $model = new SalesModel();
         $lastItem = $model->orderBy('id', 'desc')->first();
         $lastId = $lastItem ? $lastItem->id : 1;
-        $storeModel = new StoreModel();
-        $ledgerModel = new CustomerLedgerModel();
-        $returnModel = new SalesReturnModel();
+        $stores =(new UserModel())->getMyStores();
 
-        $saleWhere = ['sales_date' => date('Y-m-d', time()), 'user_id' => (auth()->user()->id ?? 0)];
-        $returnWhere = ['return_date' => date('Y-m-d', time()), 'user_id' => (auth()->user()->id ?? 0)];
-        $holdWhere = ['order_status' => 'pending', 'user_id' => (auth()->user()->id ?? 0)];
-        $ledgerWhere = [
-            'tdate' => date('Y-m-d', time()),
-            'user_id' => (auth()->user()->id ?? 0),
-            'ledger_type' => 'sales'
-        ];
 
         $data = [
             'title' => 'Point of Sales',
             'invoice' => substr(time() + $lastId, 0, 10),
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
-            'saleList' => $model->where($saleWhere)->findAll(),
-            'returnList' => $returnModel->where($returnWhere)->findAll(),
-            'ledgerList' => $ledgerModel->where($ledgerWhere)->findAll(),
-            'salesOnHold' =>  $model->where($holdWhere)->findAll(),
+            'stores' => $stores,
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
         ];
 
         if ($id) {

@@ -263,6 +263,12 @@
                                         <i data-feather="calendar"></i><span>Customer Ledgers</span></a>
                                 </li>
                             <?php endif ?>
+                            <?php if (auth()->user()->can('supplier-ledgers.report')) : ?>
+                                <li class="<?= getActiveUrl("reports/ledgers/suppliers", "active"); ?>">
+                                    <a href="<?= site_url('reports/ledgers/suppliers') ?>">
+                                        <i data-feather="calendar"></i><span>Supplier Ledgers</span></a>
+                                </li>
+                            <?php endif ?>
                         </ul>
                     </li>
                 <?php endif ?>

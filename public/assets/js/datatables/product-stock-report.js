@@ -8,7 +8,9 @@ $(function () {
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $("#unit-transfer-tabs #filter_inputs6 input,#unit-transfer-tabs #filter_inputs6 select");
+        let filterForm = $(
+          "#unit-transfers-tab #filter_inputs7 input,#unit-transfers-tab #filter_inputs7 select"
+        );
         filterForm.each((i, item) => {
           field = $(item);
 
@@ -68,7 +70,15 @@ $(function () {
         },
       },
       { data: "transfer_date", name: "product_unit_transfers.transfer_date" },
-      { data: "invoice", name: "product_unit_transfers.invoice" },
+      {
+        data: null,
+        name: "product_unit_transfers.invoice",
+        render: function (data, type, row) {
+          if (type === "display")
+            return ` <a target="_blank" href="${baseUrl}transfers/units/${data.id}" >${data.invoice}</a>`;
+          return data.invoice;
+        },
+      },
       {
         data: "store",
         name: "product_unit_transfers.store_id",
@@ -93,7 +103,11 @@ $(function () {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
                         <a target="_blank" href="${baseUrl}transfers/units/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                        <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table8, ${data}, '${baseUrl}transfers/products')"><i class="fa fa-trash fa-lg"></i></a>
+                        <a ${
+                          Settings.AllowDeleteUnitTransfers === "yes"
+                            ? ""
+                            : "hidden"
+                        } class="text-danger" href="javascript:void(0);" onclick="deleteRow(table8, ${data}, '${baseUrl}transfers/products')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;
@@ -101,8 +115,12 @@ $(function () {
       },
     ],
     initComplete: (settings, json) => {
-      $("#unit-transfer-tabs .dataTables_filter").appendTo("#unit-transfer-tabs #tableSearch");
-      $("#unit-transfer-tabs .dataTables_filter").appendTo("#unit-transfer-tabs .search-input");
+      $("#unit-transfers-tab .dataTables_filter").appendTo(
+        "#unit-transfers-tab #tableSearch"
+      );
+      $("#unit-transfers-tab .dataTables_filter").appendTo(
+        "#unit-transfers-tab .search-input"
+      );
       if ($('[data-bs-toggle="tooltip"]').length > 0) {
         var tooltipTriggerList = [].slice.call(
           document.querySelectorAll('[data-bs-toggle="tooltip"]')
@@ -137,6 +155,17 @@ $(function () {
           ? i
           : 0;
       };
+
+      // Total over this page
+      pageTotal = api
+        .column(4, { page: "current" })
+        .data()
+        .reduce(function (a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);
+
+      // Update footer
+      $(api.column(4).footer()).html(pageTotal.toFixed(2));
     },
     order: [[2, "desc"]],
     columnDefs: [
@@ -151,11 +180,14 @@ $(function () {
       selector: "td:first-child",
     },
   });
-  table8.buttons().container().appendTo("#unit-transfer-tabs .wordset");
+  table8.buttons().container().appendTo("#unit-transfers-tab .wordset");
 
-  $("#unit-transfer-tabs .filter").on("click select2:select select2:unselect", function (params) {
-    table8.ajax.reload();
-  });
+  $("#unit-transfers-tab .filter").on(
+    "click select2:select select2:unselect",
+    function (params) {
+      table8.ajax.reload();
+    }
+  );
 
   table6 = $("#dt-adjustments").DataTable({
     ajax: {
@@ -258,13 +290,26 @@ $(function () {
           return data ? data : "0.00";
         },
       },
+      {
+        data: "id",
+        name: "stock_adjustments.id",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return `<div class="d-flex align-items-center">
+                        <a target="_blank" href="${baseUrl}adjustments/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
+                        <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}djustments')"><i class="fa fa-trash fa-lg"></i></a>
+                    </div>`;
+          }
+          return data;
+        },
+      },
     ],
     initComplete: (settings, json) => {
-      $("#adjustments-tabs .dataTables_filter").appendTo(
-        "#adjustments-tabs #tableSearch"
+      $("#adjustments-tab .dataTables_filter").appendTo(
+        "#adjustments-tab #tableSearch"
       );
-      $("#adjustments-tabs .dataTables_filter").appendTo(
-        "#adjustments-tabs .search-input"
+      $("#adjustments-tab .dataTables_filter").appendTo(
+        "#adjustments-tab .search-input"
       );
       if ($('[data-bs-toggle="tooltip"]').length > 0) {
         var tooltipTriggerList = [].slice.call(
@@ -275,7 +320,7 @@ $(function () {
         });
       }
 
-      var selectAllItems = "#adjustments-tabs #select-all";
+      var selectAllItems = "#adjustments-tab #select-all";
       var checkboxItem = ":checkbox";
 
       $(selectAllItems).click(function () {
@@ -300,6 +345,35 @@ $(function () {
           ? i
           : 0;
       };
+
+      // Total over this page
+      pageTotal = api
+        .column(4, { page: "current" })
+        .data()
+        .reduce(function (a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);
+
+      // Update footer
+      $(api.column(4).footer()).html(pageTotal.toFixed(2));
+      pageTotal = api
+        .column(5, { page: "current" })
+        .data()
+        .reduce(function (a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);
+
+      // Update footer
+      $(api.column(5).footer()).html(pageTotal.toFixed(2));
+      pageTotal = api
+        .column(6, { page: "current" })
+        .data()
+        .reduce(function (a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);
+
+      // Update footer
+      $(api.column(6).footer()).html(pageTotal.toFixed(2));
     },
     order: [[2, "desc"]],
     columnDefs: [
@@ -314,9 +388,9 @@ $(function () {
       selector: "td:first-child",
     },
   });
-  table6.buttons().container().appendTo("#adjustments-tabs .wordset");
+  table6.buttons().container().appendTo("#adjustments-tab .wordset");
 
-  $("#adjustments-tabs .filter").on(
+  $("#adjustments-tab .filter").on(
     "click select2:select select2:unselect",
     function (params) {
       table6.ajax.reload();
@@ -390,7 +464,15 @@ $(function () {
         },
       },
       { data: "transfer_date", name: "product_transfers.transfer_date" },
-      { data: "invoice", name: "product_transfers.invoice" },
+      {
+        data: null,
+        name: "product_transfers.invoice",
+        render: function (data, type, row) {
+          if (type === "display")
+            return ` <a target="_blank" href="${baseUrl}transfers/products/${data.id}" >${data.invoice}</a>`;
+          return data.invoice;
+        },
+      },
       {
         data: "fromStore",
         name: "product_transfers.from_store_id",
@@ -461,6 +543,16 @@ $(function () {
           ? i
           : 0;
       };
+
+      pageTotal = api
+        .column(5, { page: "current" })
+        .data()
+        .reduce(function (a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);
+
+      // Update footer
+      $(api.column(5).footer()).html(pageTotal.toFixed(2));
     },
     order: [[2, "desc"]],
     columnDefs: [
@@ -492,7 +584,7 @@ $(function () {
       data: function (params) {
         let filter = {};
         let filterForm = $(
-          "#sales-returns-tab #filter_inputs input, #sales-returns-tab #filter_inputs select"
+          "#sales-returns-tab #filter_inputs9 input, #sales-returns-tab #filter_inputs select"
         );
         filterForm.each((i, item) => {
           field = $(item);
@@ -553,7 +645,15 @@ $(function () {
         },
       },
       { data: "return_date", name: "sales_returns.return_date" },
-      { data: "invoice", name: "sales_returns.invoice" },
+      {
+        data: null,
+        name: "sales_returns.invoice",
+        render: function (data, type, row) {
+          if (type === "display")
+            return ` <a target="_blank" href="${baseUrl}sales/returns/${data.id}" >${data.invoice}</a>`;
+          return data.invoice;
+        },
+      },
       {
         data: "customer",
         name: "sales.customer_id",
@@ -627,6 +727,16 @@ $(function () {
           ? i
           : 0;
       };
+
+      pageTotal = api
+        .column(5, { page: "current" })
+        .data()
+        .reduce(function (a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);
+
+      // Update footer
+      $(api.column(5).footer()).html(pageTotal.toFixed(2));
     },
     order: [[2, "desc"]],
     columnDefs: [
@@ -658,7 +768,7 @@ $(function () {
       data: function (params) {
         let filter = {};
         let filterForm = $(
-          "#purchase-returns-tab #filter_inputs input, #purchase-returns-tab #filter_inputs select"
+          "#purchase-returns-tab #filter_inputs9 input, #purchase-returns-tab #filter_inputs select"
         );
         filterForm.each((i, item) => {
           field = $(item);
@@ -719,7 +829,15 @@ $(function () {
         },
       },
       { data: "return_date", name: "purchase_returns.return_date" },
-      { data: "invoice", name: "purchase_returns.invoice" },
+      {
+        data: null,
+        name: "purchase_returns.invoice",
+        render: function (data, type, row) {
+          if (type === "display")
+            return ` <a target="_blank" href="${baseUrl}purchases/returns/${data.id}" >${data.invoice}</a>`;
+          return data.invoice;
+        },
+      },
       {
         data: "supplier",
         name: "purchases.supplier_id",
@@ -791,6 +909,16 @@ $(function () {
           ? i
           : 0;
       };
+
+      pageTotal = api
+        .column(5, { page: "current" })
+        .data()
+        .reduce(function (a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);
+
+      // Update footer
+      $(api.column(5).footer()).html(pageTotal.toFixed(2));
     },
     order: [[2, "desc"]],
     columnDefs: [
@@ -822,7 +950,7 @@ $(function () {
       data: function (params) {
         let filter = {};
         let filterForm = $(
-          "#sales-tab #filter_inputs input, #sales-tab #filter_inputs select"
+          "#sales-tab #filter_inputs9 input, #sales-tab #filter_inputs select"
         );
         filterForm.each((i, item) => {
           field = $(item);
@@ -884,7 +1012,15 @@ $(function () {
         data: "sales_date",
         name: "sales_date",
       },
-      { data: "invoice", name: "sales.invoice" },
+      {
+        data: null,
+        name: "sales.invoice",
+        render: function (data, type, row) {
+          if (type === "display")
+            return ` <a target="_blank" href="${baseUrl}sales/${data.id}" >${data.invoice}</a>`;
+          return data.invoice;
+        },
+      },
       {
         data: "customer",
         name: "sales.customer_id",
@@ -952,6 +1088,16 @@ $(function () {
           ? i
           : 0;
       };
+
+      pageTotal = api
+        .column(5, { page: "current" })
+        .data()
+        .reduce(function (a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);
+
+      // Update footer
+      $(api.column(5).footer()).html(pageTotal.toFixed(2));
     },
     order: [[2, "desc"]],
     columnDefs: [
@@ -1043,7 +1189,15 @@ $(function () {
         data: "purchase_date",
         name: "purchase_date",
       },
-      { data: "invoice", name: "purchases.invoice" },
+      {
+        data: null,
+        name: "purchases.invoice",
+        render: function (data, type, row) {
+          if (type === "display")
+            return ` <a target="_blank" href="${baseUrl}purchases/${data.id}" >${data.invoice}</a>`;
+          return data.invoice;
+        },
+      },
       {
         data: "supplier",
         name: "purchases.supplier_id",
@@ -1113,6 +1267,16 @@ $(function () {
           ? i
           : 0;
       };
+
+      pageTotal = api
+        .column(5, { page: "current" })
+        .data()
+        .reduce(function (a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);
+
+      // Update footer
+      $(api.column(5).footer()).html(pageTotal.toFixed(2));
     },
     order: [[2, "desc"]],
     columnDefs: [

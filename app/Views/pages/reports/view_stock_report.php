@@ -58,36 +58,7 @@
                                                 <h4>Quantity In Stock</h4>
                                                 <h6><?= $product->instock ?></h6>
                                             </li>
-                                            <li>
-                                                <h4>Tax</h4>
-                                                <h6><?= $product->tax ? $product->tax->rate : 0.00 ?>%</h6>
-                                            </li>
-                                            <?php if (setting('App.ProductDiffForStore') !== 'yes') : ?>
-                                                <li>
-                                                    <h4>Unit Price</h4>
-                                                    <h6>GHS <?= number_format($product->unit_price, 2) ?></h6>
-                                                </li>
-                                                <li>
-                                                    <h4>Unit Cost</h4>
-                                                    <h6>GHS <?= number_format($product->unit_cost, 2) ?></h6>
-                                                </li>
-                                                <li>
-                                                    <h4>Wholesale Price</h4>
-                                                    <h6>GHS <?= number_format($product->unit_ws_price, 2) ?></h6>
-                                                </li>
-                                                <li>
-                                                    <h4>Discount</h4>
-                                                    <h6>GHS <?= $product->discount ?></h6>
-                                                </li>
-                                                <li>
-                                                    <h4>Status</h4>
-                                                    <h6><?= ['Active', 'Discontinued'][$product->discontinued] ?></h6>
-                                                </li>
-                                                <li>
-                                                    <h4>Minimum Qty</h4>
-                                                    <h6><?= $product->min_qty; ?></h6>
-                                                </li>
-                                            <?php endif ?>
+                                           
                                             <li>
                                                 <h4>Description</h4>
                                                 <h6><?= $product->description; ?></h6>
@@ -136,14 +107,14 @@
                                                 </a>
                                             </div>
                                             <div class="search-input">
-                                                <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                                <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                                             </div>
                                         </div>
                                         <div class="wordset">
                                         </div>
                                     </div>
 
-                                    <div class="card" id="filter_inputs">
+                                    <div class="card" id="filter_inputs4">
                                         <div class="card-body pb-0">
                                             <div class="row">
                                                 <div class="col-lg-2 col-sm-6 col-12">
@@ -151,7 +122,20 @@
                                                         <input type="text" name="invoice" placeholder="Enter Reference No" value="">
                                                     </div>
                                                 </div>
-
+                                                <div class="col-lg-3 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <select name="sales.store_id" class="select2-store">
+                                                            <option value=""></option>
+                                                            <?php
+                                                            if (isset($stores))
+                                                                foreach ($stores as $row) { ?>
+                                                                <option value="<?= $row->id ?>">
+                                                                    <?= $row->name; ?> (<?= $row->location; ?>)
+                                                                </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                                 <div class="col-lg-3 col-sm-6 col-12">
                                                     <div class="form-group">
                                                         <a class="btn btn-filters ms-auto filter"><i class="fa fa-search"></i></a>
@@ -173,6 +157,16 @@
                                                     <th>Qty Sold</th>
                                                 </tr>
                                             </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th>Total</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -190,7 +184,7 @@
                                                 </a>
                                             </div>
                                             <div class="search-input">
-                                                <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                                <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                                             </div>
                                         </div>
                                         <div class="wordset">
@@ -205,7 +199,20 @@
                                                         <input type="text" name="invoice" placeholder="Enter Reference No" value="">
                                                     </div>
                                                 </div>
-
+                                                <div class="col-lg-3 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <select name="purchases.store_id" class="select2-store">
+                                                            <option value=""></option>
+                                                            <?php
+                                                            if (isset($stores))
+                                                                foreach ($stores as $row) { ?>
+                                                                <option value="<?= $row->id ?>">
+                                                                    <?= $row->name; ?> (<?= $row->location; ?>)
+                                                                </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                                 <div class="col-lg-3 col-sm-6 col-12">
                                                     <div class="form-group">
                                                         <a class="btn btn-filters ms-auto filter"><i class="fa fa-search"></i></a>
@@ -227,6 +234,16 @@
                                                     <th>Qty Ordered</th>
                                                 </tr>
                                             </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th>Total</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -244,7 +261,7 @@
                                                 </a>
                                             </div>
                                             <div class="search-input">
-                                                <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                                <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                                             </div>
                                         </div>
                                         <div class="wordset">
@@ -259,7 +276,20 @@
                                                         <input type="text" name="invoice" placeholder="Enter Reference No" value="">
                                                     </div>
                                                 </div>
-
+                                                <div class="col-lg-3 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <select name="purchase_returns.store_id" class="select2-store">
+                                                            <option value=""></option>
+                                                            <?php
+                                                            if (isset($stores))
+                                                                foreach ($stores as $row) { ?>
+                                                                <option value="<?= $row->id ?>">
+                                                                    <?= $row->name; ?> (<?= $row->location; ?>)
+                                                                </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                                 <div class="col-lg-3 col-sm-6 col-12">
                                                     <div class="form-group">
                                                         <a class="btn btn-filters ms-auto filter"><i class="fa fa-search"></i></a>
@@ -281,6 +311,16 @@
                                                     <th>Qty Returned</th>
                                                 </tr>
                                             </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th>Total</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -298,7 +338,7 @@
                                                 </a>
                                             </div>
                                             <div class="search-input">
-                                                <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                                <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                                             </div>
                                         </div>
                                         <div class="wordset">
@@ -313,7 +353,20 @@
                                                         <input type="text" name="invoice" placeholder="Enter Reference No" value="">
                                                     </div>
                                                 </div>
-
+                                                <div class="col-lg-3 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <select name="sales_returns.store_id" class="select2-store">
+                                                            <option value=""></option>
+                                                            <?php
+                                                            if (isset($stores))
+                                                                foreach ($stores as $row) { ?>
+                                                                <option value="<?= $row->id ?>">
+                                                                    <?= $row->name; ?> (<?= $row->location; ?>)
+                                                                </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                                 <div class="col-lg-3 col-sm-6 col-12">
                                                     <div class="form-group">
                                                         <a class="btn btn-filters ms-auto filter"><i class="fa fa-search"></i></a>
@@ -335,6 +388,16 @@
                                                     <th>Qty Returned</th>
                                                 </tr>
                                             </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th>Total</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -352,7 +415,7 @@
                                                 </a>
                                             </div>
                                             <div class="search-input">
-                                                <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                                <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                                             </div>
                                         </div>
                                         <div class="wordset">
@@ -367,7 +430,20 @@
                                                         <input type="text" name="invoice" placeholder="Enter Reference No" value="">
                                                     </div>
                                                 </div>
-
+                                                <div class="col-lg-3 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <select name="product_transfers.from_store_id" class="select2-store">
+                                                            <option value=""></option>
+                                                            <?php
+                                                            if (isset($stores))
+                                                                foreach ($stores as $row) { ?>
+                                                                <option value="<?= $row->id ?>">
+                                                                    <?= $row->name; ?> (<?= $row->location; ?>)
+                                                                </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                                 <div class="col-lg-3 col-sm-6 col-12">
                                                     <div class="form-group">
                                                         <a class="btn btn-filters ms-auto filter"><i class="fa fa-search"></i></a>
@@ -389,6 +465,16 @@
                                                     <th>Qty</th>
                                                 </tr>
                                             </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th>Total</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -406,7 +492,7 @@
                                                 </a>
                                             </div>
                                             <div class="search-input">
-                                                <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                                <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                                             </div>
                                         </div>
                                         <div class="wordset">
@@ -421,7 +507,20 @@
                                                         <input type="text" name="invoice" placeholder="Enter Reference No" value="">
                                                     </div>
                                                 </div>
-
+                                                <div class="col-lg-3 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <select name="stock_adjustments.store_id" class="select2-store">
+                                                            <option value=""></option>
+                                                            <?php
+                                                            if (isset($stores))
+                                                                foreach ($stores as $row) { ?>
+                                                                <option value="<?= $row->id ?>">
+                                                                    <?= $row->name; ?> (<?= $row->location; ?>)
+                                                                </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                                 <div class="col-lg-3 col-sm-6 col-12">
                                                     <div class="form-group">
                                                         <a class="btn btn-filters ms-auto filter"><i class="fa fa-search"></i></a>
@@ -442,8 +541,21 @@
                                                     <th>Instock Qty</th>
                                                     <th>Pystical Qty</th>
                                                     <th>Qty Diff</th>
+                                                    <th class="text-center">Action</th>
                                                 </tr>
                                             </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th>Total</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -455,19 +567,19 @@
                                     <div class="table-top">
                                         <div class="search-set">
                                             <div class="search-path">
-                                                <a class="btn btn-filter" id="filter_search">
+                                                <a class="btn btn-filter" id="filter_search7">
                                                     <img src="<?= base_url('assets/icons/filter.svg') ?>" alt="img">
                                                     <span><img src="<?= base_url('assets/icons/closes.svg') ?>" alt="img"></span>
                                                 </a>
                                             </div>
                                             <div class="search-input">
-                                                <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                                                <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                                             </div>
                                         </div>
                                         <div class="wordset">
                                         </div>
                                     </div>
-                                    <div class="card" id="filter_inputs6">
+                                    <div class="card" id="filter_inputs7">
                                         <div class="card-body pb-0">
                                             <div class="row">
                                                 <div class="col-lg-2 col-sm-6 col-12">
@@ -475,7 +587,20 @@
                                                         <input type="text" name="invoice" placeholder="Enter Reference No" value="">
                                                     </div>
                                                 </div>
-
+                                                <div class="col-lg-3 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <select name="unit_transfers.store_id" class="select2-store">
+                                                            <option value=""></option>
+                                                            <?php
+                                                            if (isset($stores))
+                                                                foreach ($stores as $row) { ?>
+                                                                <option value="<?= $row->id ?>">
+                                                                    <?= $row->name; ?> (<?= $row->location; ?>)
+                                                                </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                                 <div class="col-lg-3 col-sm-6 col-12">
                                                     <div class="form-group">
                                                         <a class="btn btn-filters ms-auto filter"><i class="fa fa-search"></i></a>
@@ -496,6 +621,17 @@
                                                     <th class="text-center">Action</th>
                                                 </tr>
                                             </thead>
+
+                                            <tfoot>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th>Total</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -511,5 +647,5 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/product-details.js?v=1') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/product-stock-report.js?v=3') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/product-stock-report.js?v=6') ?>"></script>
 <?= $this->endSection() ?>

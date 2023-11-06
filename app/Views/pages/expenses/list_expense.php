@@ -7,7 +7,7 @@
             <h6>Manage your Expenses</h6>
         </div>
         <div class="page-btn">
-            <a href="<?= site_url("expenses/create"); ?>" class="btn btn-added"><img src="https://dreamspos.dreamguystech.com/html/template/assets/img/icons/plus.svg" class="me-2" alt="img">Add New Expense</a>
+            <a href="<?= site_url("expenses/create"); ?>" class="btn btn-added"><i class="fa fa-plus fa-lg me-2"></i>Add New Expense</a>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
                     </div>
                     <div class="search-input">
                         <a class="btn btn-searchset">
-                            <img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img">
+                            <i class="fa fa-search"></i>
                         </a>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
 
                         <div class="col-lg-1 col-sm-6 col-12  ms-auto">
                             <div class="form-group">
-                                <button type="button" class="btn btn-filters filter ms-auto"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></button>
+                                <button type="button" class="btn btn-filters filter ms-auto"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
                     </div>

@@ -33,7 +33,6 @@ $(function () {
       },
     },
     processing: true,
-    serverSide: true,
     bFilter: true,
     dom: "fBtlpi",
     buttons: [
@@ -79,24 +78,21 @@ $(function () {
             return data
               ? `<a target="_blank" href="${baseUrl}customers/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
               : "";
-          return data ? data.id : null;
+          return data ? data.name : "";
         },
       },
       {
         data: null,
         render: function (data, type, row) {
-          if (type === "display")
-            return data.ledger_type === "sales"
-              ? `INV${data.sale.invoice}`
-              : `INV${data.sales_return.invoice}`;
-          return null;
+          return `<a target="_blank" href="${baseUrl}sales/${data.sale_id}" class="btn btn-link btn-sm">${data.sale.invoice}</a>`;
         },
       },
-      { data: "ledger_type", name: "customer_ledgers.ledger_type" },
       {
         data: "total_due",
         render: function (data) {
-          return `GHS ${parseFloat(data).toFixed(2)}`;
+          return data < 0
+            ? `GHS (${parseFloat(Math.abs(data)).toFixed(2)})`
+            : `GHS ${parseFloat(data).toFixed(2)}`;
         },
       },
       {
@@ -114,29 +110,19 @@ $(function () {
       {
         data: "total_balance",
         render: function (data) {
-          return `GHS ${parseFloat(data).toFixed(2)}`;
+          return data < 0
+            ? `GHS (${parseFloat(Math.abs(data)).toFixed(2)})`
+            : `GHS ${parseFloat(data).toFixed(2)}`;
         },
       },
       {
-        data: "id",
+        data: null,
         name: "customer_ledgers.id",
         render: function (data, type, row) {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
             <a  href="javascript:void(0);" class="me-3" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
-            <a  href="javascript:void(0);" class="me-3" onclick="editRow('#edit-payment',{id:${data},tdate:'${moment(
-              row.tdate
-            ).format("DD-MM-YYYY")}',sale_id:${row.sale_id},payment_type:'${
-              row.payment_type
-            }',credit:${row.credit}},{text:'${row.sale.invoice} (${
-              row.customer.name
-            } - GHS ${row.sale.total_amount})',id:${
-              row.sale.id
-            },name:'sale_id'})"><i class="fa fa-edit fa-lg"></i></a>
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table2, ${
-                          row.id
-                        }, '${baseUrl}customers/ledger',table3,table1)"><i class="fa fa-trash fa-lg"></i></a>
-                    </div>`;
+             </div>`;
           }
           return data;
         },
@@ -207,5 +193,14 @@ $(function () {
   $(".select2-store").select2({
     placeholder: "Seach a store",
     allowClear: true,
+  });
+
+  $(".select2-customer").select2({
+    ajax: {
+      url: `${baseUrl}customers/select2`,
+      dataType: "json",
+    },
+    allowClear: true,
+    placeholder: "Seach a customer",
   });
 });

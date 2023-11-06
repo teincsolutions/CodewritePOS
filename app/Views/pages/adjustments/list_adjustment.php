@@ -22,7 +22,7 @@
                         </a>
                     </div>
                     <div class="search-input">
-                        <a class="btn btn-searchset"><img src="<?= base_url('assets/icons/search-white.svg') ?>" alt="img"></a>
+                        <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                     </div>
                 </div>
                 <div class="wordset">
@@ -51,7 +51,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="col-lg-3 col-sm-6 col-12" style="overflow-x: auto;">
                             <div class="form-group">
                                 <select name="store_id" class="select2-store">
                                     <option value=""></option>

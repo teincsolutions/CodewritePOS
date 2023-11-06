@@ -4,13 +4,10 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\PurchaseModel;
-use App\Models\StoreModel;
 use App\Models\SupplierLedgerModel;
 use App\Models\SupplierModel;
-use CodeIgniter\HTTP\RequestInterface;
+use App\Models\UserModel;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
 
 class SupplierLedgerController extends BaseController
 {
@@ -24,6 +21,22 @@ class SupplierLedgerController extends BaseController
             'title' => 'Supplier Creditors',
         ];
         return view('pages/account_debts/suppliers', $data);
+    }
+
+     /**
+     * return view for list
+     * @return Response - http response
+     */
+    public function supplier_reports()
+    {
+        $stores =(new UserModel())->getMyStores();
+        $data = [
+            'title' => 'Supplier Payment Reports',
+            'stores' => $stores,
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
+        ];
+        return view('pages/reports/supplier_payments', $data);
     }
 
     /**
@@ -204,20 +217,6 @@ class SupplierLedgerController extends BaseController
         return view('pages/ledgers/show_ledger', $data);
     }
 
-        /**
-     * return view for list
-     * @return Response - http response
-     */
-    public function supplier_reports()
-    {
-        $storeModel = new StoreModel();
-        $data = [
-            'title' => 'Customer Payment Reports',
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
-        ];
-        return view('pages/reports/customer_payments', $data);
-    }
-
     /**
      * return json for datatables
      * @return Response - http response
@@ -225,11 +224,41 @@ class SupplierLedgerController extends BaseController
     public function datatable(): Response
     {
         $inputs = $this->request->getVar();
-        $inputs['length'] = 1000;
-        $inputs['start'] = 0;
         $model = new SupplierLedgerModel();
         $model->orderBy('id', 'desc');
         return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+     /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function report_datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new SupplierLedgerModel();
+        $builder = $model->builder();
+        $db = db_connect();
+        $builder->select('id,tdate,purchase_id,purchase_return_id, supplier_id', false)
+            ->selectSum('credit', 'total_credit')
+            ->selectSum('debit', 'total_debit')
+            ->groupBy(['purchase_id', 'tdate', 'supplier_id'])
+            ->orderBy('id','desc');
+        return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) use ($db) {
+            $item->purchase = model('PurchaseModel')->where('id', $item->purchase_id)->first();
+            $item->purchase_return = model('PurchaseReturnModel')->where('id', $item->purchase_return_id)->first();
+            $item->supplier = model('SupplierModel')->where('id', $item->supplier_id)->first();
+            $totals = $db->table('supplier_ledgers')
+            ->select('SUM((credit-debit)) as total_due')
+            ->where('supplier_id', $item->supplier_id)
+            ->where('id <', $item->id)
+            ->get()->getFirstRow();
+
+            $item->total_due = $totals->total_due??0.00;
+            $item->total_balance = ($totals->total_due??0) +($item->total_credit - $item->total_debit);
+
+            return $item;
+        }));
     }
 
     /**
