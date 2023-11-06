@@ -131,16 +131,19 @@ class AuthGroups extends ShieldAuthGroups
         'expenses.create'        => 'Can add new expenses',
         'expenses.edit'          => 'Can edit expenses',
         'expenses.delete'        => 'Can delete existing expenses',
-
+        'expenses.report'        => 'Can View expenses reports',
+       
         'customer-ledgers.view'        => 'Can view customer ledgers',
         'customer-ledgers.create'        => 'Can add new customer ledgers',
         'customer-ledgers.edit'          => 'Can edit customer ledgers',
         'customer-ledgers.delete'        => 'Can delete existing customer ledgers',
+        'customer-ledgers.report'        => 'Can view customer ledgers reports',
 
         'supplier-ledgers.view'        => 'Can view supplier ledgers',
         'supplier-ledgers.create'        => 'Can create new supplier ledgers',
         'supplier-ledgers.edit'          => 'Can edit existing supplier ledgers',
         'supplier-ledgers.delete'        => 'Can delete existing supplier ledgers',
+        'supplier-ledgers.report'        => 'Can View supplier ledgers reports',
 
         'purchases.view'        => 'Can view purchases',
         'purchases.create'        => 'Can add new purchases',
