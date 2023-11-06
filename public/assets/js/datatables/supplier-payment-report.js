@@ -69,29 +69,24 @@ $(function () {
           return null;
         },
       },
+      { data: "id", name: "supplier_ledgers.id" },
       { data: "tdate", name: "supplier_ledgers.tdate" },
       {
         data: "supplier",
-        name: "supplier_ledgers.supplier_id",
         render: function (data, type, row) {
           if (type === "display")
             return data
               ? `<a target="_blank" href="${baseUrl}suppliers/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
-              : "";
+              : null;
           return data ? data.name : null;
         },
       },
-      {
-        data: null,
-        render: function (data, type, row) {
-          return `<a target="_blank" href="${baseUrl}purchases/${data.purchase_id}" class="btn btn-link btn-sm">${data.purchase.invoice}</a>`;
-        },
-      },
+      { data: "ledger_type", name: "supplier_ledgers.ledger_type" },
       {
         data: "total_due",
         render: function (data) {
           return data < 0
-            ? `GHS (${parseFloat(Math.abs(data)).toFixed(2)})`
+            ? `(GHS ${Math.abs(parseFloat(data)).toFixed(2)})`
             : `GHS ${parseFloat(data).toFixed(2)}`;
         },
       },
@@ -111,18 +106,26 @@ $(function () {
         data: "total_balance",
         render: function (data) {
           return data < 0
-            ? `GHS (${parseFloat(Math.abs(data)).toFixed(2)})`
-            : `GHS ${parseFloat(data).toFixed(2)}`;
+            ? `(GHS ${Math.abs(data).toFixed(2)})`
+            : `GHS ${data.toFixed(2)}`;
+        },
+      },
+      { data: "payment_type", name: "supplier_ledgers.payment_type" },
+      {
+        data: "user",
+        name: "supplier_ledgers.user_id",
+        render: function (data, type, row) {
+          return data ? `${data.firstname} ${data.lastname}` : "";
         },
       },
       {
-        data: null,
+        data: "id",
         name: "supplier_ledgers.id",
         render: function (data, type, row) {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
-            <a  href="javascript:void(0);" class="me-3" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
-          </div>`;
+              <a  href="javascript:void(0);" class="me-3" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
+              </div>`;
           }
           return data;
         },

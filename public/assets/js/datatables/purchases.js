@@ -252,6 +252,7 @@ $(function () {
     allowClear: true,
     placeholder: "Seach a supplier",
   });
+  
   $(".select2-store").select2({
     placeholder: "Seach a store",
     allowClear: true,

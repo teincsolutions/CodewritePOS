@@ -124,11 +124,15 @@
                                             <thead>
                                                 <tr>
                                                     <th></th>
+                                                    <th>#Code</th>
                                                     <th>Date</th>
+                                                    <th>Type</th>
                                                     <th>Due</th>
                                                     <th>Credit</th>
                                                     <th>Debit</th>
                                                     <th>A/c Balance</th>
+                                                    <th>Method</th>
+                                                    <th>Added By</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -462,8 +466,9 @@
             <div class="modal-body">
                 <div id="input_filter">
                     <input type="hidden" name="supplier_id" value="0">
-                    <input type="hidden" name="purchase_id" value="0">
-                    <input type="hidden" name="tdate" value="000-00-00">
+                    <input type="hidden" name="purchase_return_id" value="0">
+                    <input type="hidden" name="created_at" value="000-00-00">
+                    <input type="hidden" name="ledger_type" value="">
                 </div>
                 <div class="table-responsive">
                     <table id="dt-supplier-payments" class="table w-100">
@@ -495,6 +500,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/datatables/actions.js?v=3') ?>"></script>
-<script src="<?= base_url('assets/js/supplier-details.js?v=13') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/actions.js?v=4') ?>"></script>
+<script src="<?= base_url('assets/js/supplier-details.js?v=14') ?>"></script>
 <?= $this->endSection() ?>

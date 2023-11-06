@@ -9,7 +9,7 @@ $(function () {
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $("#filter_inputs9 input, #filter_inputs select");
+        let filterForm = $("#filter_inputs input, #filter_inputs select");
         filterForm.each((i, item) => {
           field = $(item);
 
@@ -312,18 +312,14 @@ $(function () {
           return null;
         },
       },
+      { data: "id", name: "customer_ledgers.id" },
       { data: "tdate", name: "customer_ledgers.tdate" },
-      {
-        data: null,
-        render: function (data, type, row) {
-          return `<a target="_blank" href="${baseUrl}sales/${data.sale_id}" class="btn btn-link btn-sm">${data.sale.invoice}</a>`;
-        },
-      },
+      { data: "ledger_type", name: "customer_ledgers.ledger_type" },
       {
         data: "total_due",
         render: function (data) {
           return data < 0
-            ? `GHS (${parseFloat(Math.abs(data)).toFixed(2)})`
+            ? `(GHS ${Math.abs(parseFloat(data)).toFixed(2)})`
             : `GHS ${parseFloat(data).toFixed(2)}`;
         },
       },
@@ -347,15 +343,23 @@ $(function () {
             : `GHS ${data.toFixed(2)}`;
         },
       },
+      { data: "payment_type", name: "customer_ledgers.payment_type" },
+      {
+        data: "user",
+        name: "customer_ledgers.user_id",
+        render: function (data, type, row) {
+          return data ? `${data.firstname} ${data.lastname}` : "";
+        },
+      },
       {
         data: "id",
         name: "customer_ledgers.id",
         render: function (data, type, row) {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
-            <a  href="javascript:void(0);" class="me-3" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
-            <a  href="javascript:void(0);" class="me-3" onclick="viewCusPayments(table2,this,paymentTable)"><i class="fa fa-eye fa-lg"></i></a>
-           </div>`;
+              <a  href="javascript:void(0);" class="me-3" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
+              <a  href="javascript:void(0);" onclick="viewCusPayments(table2,this,paymentTable)"><i class="fa fa-eye fa-lg"></i></a>
+              </div>`;
           }
           return data;
         },
@@ -667,11 +671,15 @@ $(function () {
               filter[field.attr("name")] = field
                 .children("option:selected")
                 .val();
-          } else {
+          } else if (typeof field.attr("name") !== "undefined") {
             filter[field.attr("name")] = field.val();
           }
         });
         filter["store_id"] = $(".select2-store").val();
+        params.date_range_column = "created_at";
+        params.date_from =  $("#input_filter input[name='created_at']").val();
+        params.date_to = $("#input_filter input[name='created_at']").val();
+
         params.fields = filter;
       },
     },
@@ -757,20 +765,22 @@ $(function () {
         render: function (data, type, row) {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
-              <a  href="javascript:void(0);" class="me-3" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
-              <a  href="javascript:void(0);" class="me-3" onclick="editRow('#edit-payment',{id:${
-                row.id
-              },tdate:'${moment(row.tdate).format("DD-MM-YYYY")}',sale_id:${
+            <a  href="javascript:void(0);" class="me-3" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
+            <a  href="javascript:void(0);" class="me-3" onclick="editRow('#edit-payment',{id:${
+              row.id
+            },tdate:'${moment(row.tdate).format("DD-MM-YYYY")}',sale_id:${
               row.sale_id
-            },payment_type:'${row.payment_type}',debit:${row.debit}},{text:'${
-              row.sale.invoice
-            } (${row.customer.name} - GHS ${row.sale.total_amount})',id:${
+            },payment_type:'${row.payment_type}',debit:${row.debit},credit:${
+              row.credit
+            }},{text:'${row.sale.invoice} (${row.customer.name} - GHS ${
+              row.sale.total_amount
+            })',id:${
               row.sale.id
             },name:'sale_id'})"><i class="fa fa-edit fa-lg"></i></a>
-                          <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(paymentTable, ${
-                            row.id
-                          }, '${baseUrl}customers/ledger', table1,table3)"><i class="fa fa-trash fa-lg"></i></a>
-                      </div>`;
+                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(paymentTable, ${
+                          row.id
+                        }, '${baseUrl}customers/ledger', table1,table3)"><i class="fa fa-trash fa-lg"></i></a>
+                    </div>`;
           }
           return data;
         },

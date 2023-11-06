@@ -165,6 +165,12 @@
                             <input onkeyup="updateTotals()" type="number" name="shipping" value="<?= isset($sales) ? $sales->shipping : null ?>" class="form-control" placeholder="Shipping amount">
                         </div>
                     </div>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Change</label>
+                            <input type="number" name="paid" id="paid" class="form-control" placeholder="Change Amount">
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-12 float-md-right">
@@ -190,10 +196,13 @@
                                     <h4>Grand Total </h4>
                                     <h5 class="grandTotal">GHS 0.00</h5>
                                 </li>
+                                <li id="acc-bal">
+                                    <h4>A/c Balance </h4>
+                                    <h5 class="customer-balance">GHS 0.00</h5>
+                                </li>
                                 <li class="total-value">
                                     <h4>Change/Due</h4>
                                     <h5 class="dueTotal">GHS 0.00</h5>
-                                    <input type="hidden" name="paid" id="paid">
                                 </li>
                             </ul>
                         </div>

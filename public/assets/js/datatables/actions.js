@@ -183,9 +183,10 @@ window.viewCusPayments = function (
   let row1 = table.rows(row).data()[0];
 
   $(target).find("input[name='customer_id']").val(row1.customer_id);
-  $(target).find("input[name='sale_id']").val(row1.sale_id);
-  $(target).find("input[name='tdate']").val(row1.tdate);
-  
+  $(target).find("input[name='created_at']").val(row1.created_at);
+  $(target).find("input[name='sales_return_id']").val(row1.sales_return_id);
+  $(target).find("input[name='ledger_type']").val(row1.ledger_type);
+
   if (paymentTable) paymentTable.ajax.reload();
 };
 
@@ -207,8 +208,9 @@ window.viewSupPayments = function (
   let row = $(e).parents("tr").first();
   let row1 = table.rows(row).data()[0];
   $(target).find("[name='supplier_id']").val(row1.supplier_id);
-  $(target).find("[name='purchase_id']").val(row1.purchase_id);
-  $(target).find("[name='tdate']").val(row1.tdate);
+  $(target).find("[name='purchase_return_id']").val(row1.purchase_return_id);
+  $(target).find("[name='created_at']").val(row1.created_at);
+  $(target).find("[name='ledger_type']").val(row1.ledger_type);
 
   if (paymentTable) paymentTable.ajax.reload();
 };

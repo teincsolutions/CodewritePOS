@@ -13,7 +13,7 @@
         <input id="payment-status" type="hidden" name="payment_status" value="paid">
         <input type="hidden" name="payment_type" value="cash">
         <input type="hidden" name="supplier_id" value="<?= isset($purchase) ? $purchase->supplier_id : null ?>">
-        <input type="hidden" name="store_id" value="<?= isset($purchase) ? $purchase->store_id:null ?>">
+        <input type="hidden" name="store_id" value="<?= isset($purchase) ? $purchase->store_id : null ?>">
         <input id="purchases-total" type="hidden" name="total_amount" value="<?= isset($purchase) ? $purchase->total_amount : 0.00 ?>">
         <div class="card">
             <div class="card-body">
@@ -154,6 +154,12 @@
                             <input onkeyup="updateTotals()" type="number" name="shipping" value="<?= isset($purchase) ? $purchase->shipping : null ?>" class="form-control" placeholder="Shipping amount">
                         </div>
                     </div>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Change</label>
+                            <input type="number" name="paid" id="paid" class="form-control" placeholder="Change Amount">
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-12 float-md-right">
@@ -182,7 +188,6 @@
                                 <li class="total-value">
                                     <h4>Change</h4>
                                     <h5 class="dueTotal">GHS 0.00</h5>
-                                    <input type="hidden" name="paid" id="paid">
                                 </li>
                             </ul>
                         </div>

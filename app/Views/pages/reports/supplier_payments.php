@@ -26,7 +26,7 @@
                         <div class="col-lg-2 col-sm-6 col-12">
                             <div class="form-group">
                                 <div class="input-groupicon">
-                                    <input type="text" class="datetimepicker" placeholder="From date" value="<?=date('d-m-Y', strtotime('first day of this month')) ?>" id="date-from">
+                                    <input type="text" class="datetimepicker" placeholder="From date" value="<?= date('d-m-Y', strtotime('first day of this month')) ?>" id="date-from">
                                     <div class="addonset">
                                         <i class="fa fa-calendar"></i>
                                     </div>
@@ -36,20 +36,20 @@
                         <div class="col-lg-2 col-sm-6 col-12">
                             <div class="form-group">
                                 <div class="input-groupicon">
-                                    <input type="text" class="datetimepicker" placeholder="To date" value="<?=date('d-m-Y',strtotime('last day of this month')) ?>" id="date-to">
+                                    <input type="text" class="datetimepicker" placeholder="To date" value="<?= date('d-m-Y', strtotime('last day of this month')) ?>" id="date-to">
                                     <div class="addonset">
                                         <i class="fa fa-calendar"></i>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-sm-6 col-12"  style="overflow-x: auto;">
+                        <div class="col-lg-3 col-sm-6 col-12" style="overflow-x: auto;">
                             <div class="form-group">
                                 <select name="store_id" class="select2-store">
                                     <?php
                                     if (isset($stores))
                                         foreach ($stores as $row) { ?>
-                                        <option value="<?= $row->id ?>" <?=($row->id === $settings->get('App.DefaultStore', $context) ? 'selected' : '') ?>>
+                                        <option value="<?= $row->id ?>" <?= ($row->id === $settings->get('App.DefaultStore', $context) ? 'selected' : '') ?>>
                                             <?= $row->name; ?> (<?= $row->location; ?>)
                                         </option>
                                     <?php } ?>
@@ -77,13 +77,16 @@
                     <thead>
                         <tr>
                             <th></th>
+                            <th>#Code</th>
                             <th>Date</th>
                             <th>Supplier</th>
-                            <th>Reference</th>
+                            <th>Type</th>
                             <th>Due</th>
                             <th>Credit</th>
                             <th>Debit</th>
-                            <th>Balance</th>
+                            <th>A/c Balance</th>
+                            <th>Method</th>
+                            <th>Added By</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -95,5 +98,5 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/datatables/supplier-payment-report.js?v=1') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/supplier-payment-report.js?v=2') ?>"></script>
 <?= $this->endSection() ?>

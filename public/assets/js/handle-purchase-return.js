@@ -110,7 +110,7 @@ function updateTotals() {
   grandTotal += discountAmtTotal;
   grandTotal += shipping;
   grandTotal -= discountAmtTotal;
-  dueTotal = grandTotal - supplierBalance;
+  dueTotal = supplierBalance - grandTotal;
 
   $(".grandTotal").html("GHS " + grandTotal.toFixed(2));
   $("#purchases-total").val(grandTotal);
@@ -126,6 +126,7 @@ function updateTotals() {
         ? "(" + Math.abs(dueTotal).toFixed(2) + ")"
         : dueTotal.toFixed(2))
   );
+  if(dueTotal < 0) $("input[name='paid']").val(dueTotal);
 }
 
 function checkout() {

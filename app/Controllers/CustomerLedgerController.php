@@ -31,7 +31,7 @@ class CustomerLedgerController extends BaseController
      */
     public function customer_reports()
     {
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
         $data = [
             'title' => 'Customer Payment Reports',
             'stores' => $stores,
@@ -212,7 +212,7 @@ class CustomerLedgerController extends BaseController
      */
     public function show($id)
     {
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
         $data = [
             'title' => 'Customer Ledger Details',
             'stores' => $stores,
@@ -247,23 +247,26 @@ class CustomerLedgerController extends BaseController
         $model = new CustomerLedgerModel();
         $builder = $model->builder();
         $db = db_connect();
-        $builder->select('id,tdate,sale_id,sales_return_id, customer_id', false)
-            ->selectSum('credit', 'total_credit')
-            ->selectSum('debit', 'total_debit')
-            ->groupBy(['sale_id', 'tdate', 'customer_id'])
-            ->orderBy('id','desc');
+        $builder->select('id,created_at,tdate,sale_id,sales_return_id,payment_type,customer_id,ledger_type,user_id', false)
+        ->selectSum('credit', 'total_credit')
+        ->selectSum('debit', 'total_debit')
+        ->groupBy('created_at')
+        ->groupBy(['ledger_type','sales_return_id'])
+        ->orderBy('created_at','desc')
+        ->orderBy('id', 'desc');
         return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) use ($db) {
-            $item->sale = model('SalesModel')->where('id', $item->sale_id)->first();
-            $item->sales_return = model('SalesReturnModel')->where('id', $item->sales_return_id)->first();
             $item->customer = model('CustomerModel')->where('id', $item->customer_id)->first();
+            $item->sale = model('SalesModel')->where('id', $item->sale_id)->first();
+            $item->user = model('UserModel')->where('id', $item->user_id)->first();
+            $item->sales_return = model('SalesReturnModel')->where('id', $item->sales_return_id)->first();
             $totals = $db->table('customer_ledgers')
-            ->select('SUM((credit-debit)) as total_due')
-            ->where('customer_id', $item->customer_id)
-            ->where('id <', $item->id)
-            ->get()->getFirstRow();
+                ->select('SUM((credit-debit)) as total_due')
+                ->where('customer_id', $item->customer_id)
+                ->where('id <', $item->id)
+                ->get()->getFirstRow();
 
-            $item->total_due = $totals->total_due??0.00;
-            $item->total_balance = ($totals->total_due??0) +  $item->total_credit- $item->total_debit;
+            $item->total_due = $totals->total_due ?? 0.00;
+            $item->total_balance = ($totals->total_due ?? 0) +  $item->total_credit - $item->total_debit;
 
             return $item;
         }));

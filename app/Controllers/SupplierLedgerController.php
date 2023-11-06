@@ -239,15 +239,18 @@ class SupplierLedgerController extends BaseController
         $model = new SupplierLedgerModel();
         $builder = $model->builder();
         $db = db_connect();
-        $builder->select('id,tdate,purchase_id,purchase_return_id, supplier_id', false)
+        $builder->select('id,created_at,tdate,ledger_type,purchase_id,purchase_return_id, supplier_id,payment_type,user_id', false)
             ->selectSum('credit', 'total_credit')
             ->selectSum('debit', 'total_debit')
-            ->groupBy(['purchase_id', 'tdate', 'supplier_id'])
-            ->orderBy('id','desc');
+            ->groupBy('created_at')
+            ->groupBy(['ledger_type','purchase_return_id'])
+            ->orderBy('created_at','desc')
+            ->orderBy('id', 'desc');
         return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) use ($db) {
             $item->purchase = model('PurchaseModel')->where('id', $item->purchase_id)->first();
             $item->purchase_return = model('PurchaseReturnModel')->where('id', $item->purchase_return_id)->first();
             $item->supplier = model('SupplierModel')->where('id', $item->supplier_id)->first();
+            $item->user = model('UserModel')->where('id', $item->user_id)->first();
             $totals = $db->table('supplier_ledgers')
             ->select('SUM((credit-debit)) as total_due')
             ->where('supplier_id', $item->supplier_id)
