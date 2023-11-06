@@ -9,9 +9,7 @@ $(function () {
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $(
-          "#bills-tab #filter_inputs input, #bills-tab #filter_inputs select"
-        );
+        let filterForm = $("#filter_inputs9 input, #filter_inputs select");
         filterForm.each((i, item) => {
           field = $(item);
 
@@ -552,7 +550,11 @@ $(function () {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
                           <a target="_blank" href="${baseUrl}sales/returns/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                          <a hidden class="text-danger" href="javascript:void(0);" onclick="deleteRow(table3, ${data}, '${baseUrl}sales/returns',table2,table1)"><i class="fa fa-trash fa-lg"></i></a>
+                          <a  ${
+                            Settings.AllowDeleteSalesReturns === "yes"
+                              ? ""
+                              : "hidden"
+                          } class="text-danger" href="javascript:void(0);" onclick="deleteRow(table3, ${data}, '${baseUrl}sales/returns',table2,table1)"><i class="fa fa-trash fa-lg"></i></a>
                       </div>`;
           }
           return data;
@@ -645,18 +647,15 @@ $(function () {
     }
   );
 
-
-  // table4
-  table4 = $("#dt-containers").DataTable({
+  // paymentTable
+  paymentTable = $("#dt-customer-payments").DataTable({
     ajax: {
-      url: baseUrl + "reports/customers/containers/datatable",
+      url: baseUrl + "customers/ledger/datatable",
       dataType: "json",
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $(
-          "#containers-tab #filter_inputs4 input, #containers-tab #filter_inputs4 select"
-        );
+        let filterForm = $("#input_filter input");
         filterForm.each((i, item) => {
           field = $(item);
 
@@ -672,12 +671,11 @@ $(function () {
             filter[field.attr("name")] = field.val();
           }
         });
-
+        filter["store_id"] = $(".select2-store").val();
         params.fields = filter;
       },
     },
     processing: true,
-    serverSide: true,
     bFilter: true,
     dom: "fBtlpi",
     buttons: [
@@ -714,44 +712,83 @@ $(function () {
           return null;
         },
       },
+      { data: "id", name: "customer_ledgers.id" },
+      { data: "tdate", name: "customer_ledgers.tdate" },
       {
-        data: "container",
-        name: "container_id",
+        data: null,
         render: function (data, type, row) {
-          if (type === "display") {
-            return data
-              ? `<a target="_blank" href="${baseUrl}containers/${data.id}" class="btn btn-link btn-sm"><span class="text-warning">${data.sku??''}</span> ${data.name}</a>`
-              : "";
-          }
-          return data ? data.id : null;
+          return data.ledger_type === "sales"
+            ? `<a target="_blank" href="${baseUrl}sales/${data.sale_id}" class="btn btn-link btn-sm">${data.sale.invoice}</a>`
+            : `<a target="_blank" href="${baseUrl}sales/returns/${data.sales_return_id}" class="btn btn-link btn-sm">${data.sales_return.invoice}(RF: ${data.sale.invoice})</a>`;
         },
       },
-      { data: "unit_price"},
-      { data: "qty_in"},
-      { data: "qty_out"},
-      { data: "qty_bal"},
+      { data: "ledger_type", name: "customer_ledgers.ledger_type" },
       {
-        data: "total_bal",
+        data: "debit",
+        render: function (data) {
+          return `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
+      {
+        data: "credit",
+        render: function (data) {
+          return `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
+      {
+        data: "balance",
         render: function (data) {
           return data < 0
-            ? `(GHS ${Math.abs(parseFloat(data)).toFixed(2)})`
-            : `GHS ${parseFloat(data).toFixed(2)}`;
+            ? `(GHS ${Math.abs(data).toFixed(2)})`
+            : `GHS ${data.toFixed(2)}`;
+        },
+      },
+      { data: "payment_type", name: "customer_ledgers.payment_type" },
+      {
+        data: "user",
+        name: "customer_ledgers.user_id",
+        render: function (data, type, row) {
+          return data ? `${data.firstname} ${data.lastname}` : "";
+        },
+      },
+      {
+        data: "id",
+        name: "customer_ledgers.id",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return `<div class="d-flex align-items-center">
+              <a  href="javascript:void(0);" class="me-3" onclick="printReceiptRow(this)"><i class="fa fa-print fa-lg"></i></a>
+              <a  href="javascript:void(0);" class="me-3" onclick="editRow('#edit-payment',{id:${
+                row.id
+              },tdate:'${moment(row.tdate).format("DD-MM-YYYY")}',sale_id:${
+              row.sale_id
+            },payment_type:'${row.payment_type}',debit:${row.debit}},{text:'${
+              row.sale.invoice
+            } (${row.customer.name} - GHS ${row.sale.total_amount})',id:${
+              row.sale.id
+            },name:'sale_id'})"><i class="fa fa-edit fa-lg"></i></a>
+                          <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(paymentTable, ${
+                            row.id
+                          }, '${baseUrl}customers/ledger', table1,table3)"><i class="fa fa-trash fa-lg"></i></a>
+                      </div>`;
+          }
+          return data;
         },
       },
     ],
     initComplete: (settings, json) => {
-      $("#containers-tab .dataTables_filter").appendTo("#containers-tab #tableSearch");
-      $("#containers-tab .dataTables_filter").appendTo("#containers-tab .search-input");
-      if ($('#containers-tab [data-bs-toggle="tooltip"]').length > 0) {
+      $("#ledger-tab .dataTables_filter").appendTo("#ledger-tab #tableSearch");
+      $("#ledger-tab .dataTables_filter").appendTo("#ledger-tab .search-input");
+      if ($('#ledger-tab [data-bs-toggle="tooltip"]').length > 0) {
         var tooltipTriggerList = [].slice.call(
-          document.querySelectorAll('#containers-tab [data-bs-toggle="tooltip"]')
+          document.querySelectorAll('#ledger-tab [data-bs-toggle="tooltip"]')
         );
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
           return new bootstrap.Tooltip(tooltipTriggerEl);
         });
       }
 
-      var selectAllItems = "#containers-tab #select-all";
+      var selectAllItems = "#ledger-tab #select-all";
       var checkboxItem = ":checkbox";
 
       $(selectAllItems).click(function () {
@@ -790,12 +827,12 @@ $(function () {
       selector: "td:first-child",
     },
   });
-  table4.buttons().container().appendTo("#containers-tab .wordset");
+  paymentTable.buttons().container().appendTo("#ledger-tab .wordset");
 
-  $("#containers-tab .filter").on(
+  $("#view-payments .filter").on(
     "click select2:select select2:unselect",
     function (params) {
-      table4.ajax.reload();
+      paymentTable.ajax.reload();
     }
   );
 
