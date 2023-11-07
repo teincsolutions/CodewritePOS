@@ -165,7 +165,7 @@ class SalesReturnController extends BaseController
                         'sales_return_id' => $id,
                         'payment_type' => 'cash',
                         'ledger_type' => 'returns',
-                        'credit' => $inputs['total_amount'],
+                        'credit' => 0,
                         'debit' => $inputs['paid'],
                         'user_id' => isset($inputs['user_id']) ? $inputs['user_id'] : null,
                     ];

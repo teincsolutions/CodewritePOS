@@ -961,6 +961,7 @@ function printInvoice(result) {
     } else if (result2.isDenied) {
       Swal.close();
     }
+    if (form && form.hasClass("refresh-page")) location.reload();
   });
   return true;
 }

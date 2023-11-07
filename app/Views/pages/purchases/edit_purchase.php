@@ -10,7 +10,7 @@
             <a href="<?= site_url('purchases/returns/create') ?>" class="btn btn-added"><i class="fa fa-plus me-1"></i> Purchase Return</a>
         </div>
     </div>
-    <form class="post-form" action="<?= site_url('purchases') ?>" method="post">
+    <form class="post-form <?= isset($purchase) ? 'refresh-page' : null ?>" action="<?= site_url('purchases') ?>" method="post">
 
         <div class="row">
             <div class="col-sm-12 col-lg-8">
@@ -286,7 +286,7 @@
                         </a>
                         <div class="btn-pos">
                             <ul>
-                                <li>
+                                <li hidden>
                                     <a href="javascript:void(0);" onclick="hold(this)" action="<?= site_url('purchase/hold') ?>" class="btn"><i class="fa fa-pause me-1"></i> Hold</a>
                                 </li>
                                 <li>
@@ -562,7 +562,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-order.js?v=11') ?>"></script>
+<script src="<?= base_url('assets/js/handle-order.js?v=12') ?>"></script>
 <script src="<?= base_url('assets/js/datatables/order.modal.js?v=1') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?php if (isset($purchase) && $purchase->supplier) {

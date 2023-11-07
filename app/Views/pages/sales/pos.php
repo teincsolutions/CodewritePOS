@@ -10,7 +10,7 @@
             <a href="<?= site_url('sales/returns/create') ?>" class="btn btn-added"><i class="fa fa-plus me-1"></i> Sales Return</a>
         </div>
     </div>
-    <form class="post-form" action="<?= site_url('sales') ?>" method="post">
+    <form class="post-form <?= isset($sales) ? 'refresh-page': null ?>" action="<?= site_url('sales') ?>" method="post">
         <div class="row">
             <div class="col-sm-12 col-lg-8">
                 <?= csrf_field() ?>

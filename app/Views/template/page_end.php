@@ -12,7 +12,7 @@
 <script src="<?=base_url('assets/js/plugins/bootstrap-datetimepicker.min.js') ?>"></script>
 <script src="<?=base_url('assets/js/plugins/sweetalert2.all.min.js') ?>"></script>
 <script src="<?= base_url('assets/js/jquery/jquery.validate.min.js') ?>"></script>
-<script src="<?= base_url('assets/js/script.js?v=4') ?>"></script>
+<script src="<?= base_url('assets/js/script.js?v=5') ?>"></script>
 <?= $this->renderSection('script') ?>
 </body>
 
