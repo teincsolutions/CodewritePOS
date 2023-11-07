@@ -133,7 +133,6 @@ class CustomerLedgerController extends BaseController
     public function bulk_payment()
     {
         $model = new CustomerLedgerModel();
-        $salesModel = new SalesModel();
         $inputs = $this->request->getVar();
 
         if (auth()->user())
@@ -145,58 +144,17 @@ class CustomerLedgerController extends BaseController
                 'status' => false,
                 'message' => "Don't have permission to create this record!"
             ]);
-
-        $inputs['tdate'] = date('Y-m-d', strtotime($inputs['tdate']));
         $res = [
             'status' => false,
             'data' => null,
             'message' => null,
             'input' => $inputs,
         ];
-
-        $where = [
-            'payment_status' => 'due',
-            'customer_id' => $inputs['customer_id'],
-            'store_id' =>  $inputs['store_id'],
-        ];
-        $sales = $salesModel->where($where)
-            ->orderBy('sales_date', 'asc')
-            ->findAll();
-
-        $data = [];
-        $amount = $inputs['credit'];
-        foreach ($sales as $row) {
-            $due = $row->total_amount - $row->paid;
-            if ($due >= $amount) {
-                array_push($data, array_merge($inputs, [
-                    'sale_id' => $row->id,
-                    'ledger_type' => 'sales',
-                    'credit' => $amount,
-                    'store_id' => $row->store_id,
-                    ''
-                ]));
-                $amount = 0;
-                break;
-            } else {
-                array_push($data, array_merge($inputs, [
-                    'sale_id' => $row->id,
-                    'ledger_type' => 'sales',
-                    'credit' => $due,
-                    'store_id' => $row->store_id,
-                    ''
-                ]));
-            }
-            $amount -= $due;
-        }
-
-        if ($model->insertBatch($data)) {
-            foreach ($sales as $row)
-                $salesModel->updatePaymentStatus($row->id);
-
-            $bal = $amount > 0 ? " Change of GHS " . number_format($amount, 2) : "";
+        $result = $model->makePayment($inputs);
+        if ($result) {
             $res = array_merge($res, [
                 'status' => true,
-                'message' => "Payment(s) added successfully!$bal",
+                'message' => "Payment(s) added successfully!$result->message",
             ]);
         } else {
             $res = array_merge($res, [
@@ -248,12 +206,12 @@ class CustomerLedgerController extends BaseController
         $builder = $model->builder();
         $db = db_connect();
         $builder->select('id,created_at,tdate,sale_id,sales_return_id,payment_type,customer_id,ledger_type,user_id', false)
-        ->selectSum('credit', 'total_credit')
-        ->selectSum('debit', 'total_debit')
-        ->groupBy('created_at')
-        ->groupBy(['ledger_type','sales_return_id'])
-        ->orderBy('created_at','desc')
-        ->orderBy('id', 'desc');
+            ->selectSum('credit', 'total_credit')
+            ->selectSum('debit', 'total_debit')
+            ->groupBy('created_at')
+            ->groupBy(['ledger_type', 'sales_return_id'])
+            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc');
         return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) use ($db) {
             $item->customer = model('CustomerModel')->where('id', $item->customer_id)->first();
             $item->sale = model('SalesModel')->where('id', $item->sale_id)->first();

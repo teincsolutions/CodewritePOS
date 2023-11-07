@@ -166,7 +166,6 @@ class SupplierLedgerController extends BaseController
                     'ledger_type' => 'purchases',
                     'debit' => $amount,
                     'store_id' => $row->store_id,
-                    ''
                 ]));
                 $amount = 0;
                 break;
@@ -176,7 +175,6 @@ class SupplierLedgerController extends BaseController
                     'ledger_type' => 'purchases',
                     'debit' => $due,
                     'store_id' => $row->store_id,
-                    ''
                 ]));
             }
             $amount -= $due;

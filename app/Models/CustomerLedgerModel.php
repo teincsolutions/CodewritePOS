@@ -113,4 +113,55 @@ class CustomerLedgerModel extends Model
             ->total;
         return $total ? $total : 0.00;
     }
+
+    public function makePayment($data)
+    {
+        $salesModel = new SalesModel();
+        $data['tdate'] = date('Y-m-d', strtotime($data['tdate']));
+        $where = [
+            'payment_status' => 'due',
+            'customer_id' => $data['customer_id'],
+            'store_id' =>  $data['store_id'],
+        ];
+        $sales = $salesModel->where($where)
+            ->orderBy('sales_date', 'asc')
+            ->findAll();
+
+        $ledgers = [];
+        $amount = $data['credit'];
+
+        foreach ($sales as $row) {
+            $due = $row->total_amount - $row->paid;
+            if ($due >= $amount) {
+                array_push($ledgers, array_merge($data, [
+                    'sale_id' => $row->id,
+                    'ledger_type' => 'sales',
+                    'credit' => $amount,
+                    'store_id' => $row->store_id,
+                ]));
+                $amount = 0;
+                break;
+            } else {
+                array_push($ledgers, array_merge($data, [
+                    'sale_id' => $row->id,
+                    'ledger_type' => 'sales',
+                    'credit' => $due,
+                    'store_id' => $row->store_id,
+                ]));
+            }
+            $amount -= $due;
+        }
+        
+        if ($this->insertBatch($ledgers)) {
+            foreach ($sales as $row)
+                $salesModel->updatePaymentStatus($row->id);
+
+            $message = $amount > 0 ? " Change of GHS " . number_format($amount, 2) : "";
+            return (object)[
+                'balance' => $amount,
+                'message' => $message
+            ];
+        }
+        return false;
+    }
 }

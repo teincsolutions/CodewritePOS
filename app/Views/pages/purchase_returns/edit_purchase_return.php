@@ -12,7 +12,6 @@
         <input id="order-status" type="hidden" name="order_status" value="completed">
         <input id="payment-status" type="hidden" name="payment_status" value="paid">
         <input type="hidden" name="payment_type" value="cash">
-        <input type="hidden" name="supplier_id" value="<?= isset($purchase) ? $purchase->supplier_id : null ?>">
         <input type="hidden" name="store_id" value="<?= isset($purchase) ? $purchase->store_id : null ?>">
         <input id="purchases-total" type="hidden" name="total_amount" value="<?= isset($purchase) ? $purchase->total_amount : 0.00 ?>">
         <div class="card">
@@ -37,7 +36,14 @@
                             </select>
                         </div>
                     </div>
-
+                    <div class="col-lg-4 col-sm-6 col-12" style="overflow-x: auto;">
+                        <div class="form-group">
+                            <label>Supplier</label>
+                            <select name="supplier_id" class="select2-suppliers" required>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="col-lg-2 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Date</label>
@@ -206,7 +212,7 @@
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-purchase-return.js?v=3') ?>"></script>
+<script src="<?= base_url('assets/js/handle-purchase-return.js?v=4') ?>"></script>
 <?php if (isset($purchase) && $purchase->supplier) {
     $supplier = $purchase->supplier;
     $supplier->text = $supplier->name . " (" . ($supplier->address ? $supplier->address : $supplier->phone) . ")";

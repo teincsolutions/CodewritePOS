@@ -126,7 +126,8 @@ function updateTotals() {
         ? "(" + Math.abs(dueTotal).toFixed(2) + ")"
         : dueTotal.toFixed(2))
   );
-  if(dueTotal < 0) $("input[name='paid']").val(dueTotal);
+  if(dueTotal < 0) $("input[name='paid']").val(Math.abs(dueTotal));
+  else $("input[name='paid']").val(0.00);
 }
 
 function checkout() {
@@ -410,12 +411,8 @@ form.on("submit", function (e) {
     });
   }
 });
-let select2Supplier = $(".select2-supplier")
+let select2Supplier = $(".select2-suppliers")
   .select2({
-    ajax: {
-      url: `${baseUrl}suppliers/select2`,
-      dataType: "json",
-    },
     placeholder: "Search supplier",
     templateResult: formatCustomer,
     templateSelection: formatCustomer,

@@ -157,7 +157,7 @@ class SalesReturnController extends BaseController
                 }
                 $returnItemModel->insertBatch($returnItems);
                 if ($inputs['customer_id']) {
-                    $ledger->save([
+                    $data = [
                         'tdate' => $inputs['return_date'],
                         'customer_id' => $inputs['customer_id'],
                         'sale_id' => $inputs['sale_id'],
@@ -168,9 +168,13 @@ class SalesReturnController extends BaseController
                         'credit' => $inputs['total_amount'],
                         'debit' => $inputs['paid'],
                         'user_id' => isset($inputs['user_id']) ? $inputs['user_id'] : null,
-                    ]);
+                    ];
+                    $ledger->save($data);
                     $saleModel = new SalesModel();
                     $saleModel->updatePaymentStatus($inputs['sale_id']);
+                    $data['credit'] = $inputs['total_amount'];
+                    $data['debit'] = 0;
+                    $ledger->makePayment($data);
                 }
             }
             $this->db->transComplete();

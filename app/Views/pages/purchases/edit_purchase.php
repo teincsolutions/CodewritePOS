@@ -562,7 +562,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-order.js?v=10') ?>"></script>
+<script src="<?= base_url('assets/js/handle-order.js?v=11') ?>"></script>
 <script src="<?= base_url('assets/js/datatables/order.modal.js?v=1') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?php if (isset($purchase) && $purchase->supplier) {

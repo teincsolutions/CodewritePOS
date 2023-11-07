@@ -162,7 +162,7 @@ class PurchaseReturnController extends BaseController
                 }
                 $returnItemModel->insertBatch($purchaseItems);
                 if ($inputs['supplier_id']) {
-                    $ledger->save([
+                    $data = [
                         'tdate' => $inputs['return_date'],
                         'supplier_id' => $inputs['supplier_id'],
                         'purchase_id' => $inputs['purchase_id'],
@@ -170,12 +170,16 @@ class PurchaseReturnController extends BaseController
                         'store_id' => $inputs['store_id'],
                         'payment_type' => 'cash',
                         'ledger_type' => 'returns',
-                        'debit' => $inputs['total_amount'],
+                        'debit' => 0,
                         'credit' => $inputs['paid'],
                         'user_id' => isset($inputs['user_id']) ? $inputs['user_id'] : null,
-                    ]);
+                    ];
+                    $ledger->save($data);
                     $purchaseModel = new PurchaseModel();
                     $purchaseModel->updatePaymentStatus($inputs['purchase_id']);
+                    $data['debit'] =  $inputs['total_amount'];
+                    $data['credit'] = 0;
+                    $ledger->makePayment($data);
                 }
             }
             $this->db->transComplete();
