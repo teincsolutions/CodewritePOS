@@ -5,11 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\CustomerModel;
 use App\Models\StoreModel;
-use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\Shield\Models\UserModel;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
 
 class CustomerController extends BaseController
 {

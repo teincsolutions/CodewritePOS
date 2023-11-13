@@ -101,7 +101,6 @@ class SalesReturnController extends BaseController
         $inputs = $this->request->getVar();
         if (auth()->user())
             $inputs['user_id'] = (auth()->user()->id ?? 0);
-        unset($inputs['items']);
         $inputs['return_date'] = date('Y-m-d', strtotime($inputs['return_date']));
 
         $items = $this->request->getVar('items');
@@ -169,7 +168,7 @@ class SalesReturnController extends BaseController
                         'debit' => $inputs['paid'],
                         'user_id' => isset($inputs['user_id']) ? $inputs['user_id'] : null,
                     ];
-                    $ledger->save($data);
+                    if($inputs['paid'] > 0)  $ledger->save($data);
                     $saleModel = new SalesModel();
                     $saleModel->updatePaymentStatus($inputs['sale_id']);
                     $data['credit'] = $inputs['total_amount'];

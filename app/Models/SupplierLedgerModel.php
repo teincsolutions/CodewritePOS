@@ -67,7 +67,7 @@ class SupplierLedgerModel extends Model
         foreach ($model['id'] as $key => $data) {
             $id = $data;
             $ledger = $ledgerModel->where('id', $id)->first();
-            if ($ledger){
+            if ($ledger) {
                 $purchaseModel->save([
                     'id' => $ledger->purchase_id,
                     'payment_status' => 'due'
@@ -149,7 +149,7 @@ class SupplierLedgerModel extends Model
             if ($due >= $amount) {
                 array_push($ledgers, array_merge($data, [
                     'purchase_id' => $row->id,
-                    'ledger_type' => 'purchases',
+                    'ledger_type' => $data['ledger_type'] ?? 'purchases',
                     'debit' => $amount,
                     'store_id' => $row->store_id,
                 ]));
@@ -158,7 +158,7 @@ class SupplierLedgerModel extends Model
             } else {
                 array_push($ledgers, array_merge($data, [
                     'purchase_id' => $row->id,
-                    'ledger_type' => 'purchases',
+                    'ledger_type' => $data['ledger_type'] ?? 'purchases',
                     'debit' => $due,
                     'store_id' => $row->store_id,
                 ]));
@@ -166,7 +166,7 @@ class SupplierLedgerModel extends Model
             $amount -= $due;
         }
 
-        if ($this->insertBatch($ledgers)) {
+        if (sizeof($ledgers) > 0  && $this->insertBatch($ledgers)) {
             foreach ($purchases as $row)
                 $purchaseModel->updatePaymentStatus($row->id);
 

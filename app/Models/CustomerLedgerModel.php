@@ -135,7 +135,7 @@ class CustomerLedgerModel extends Model
             if ($due >= $amount) {
                 array_push($ledgers, array_merge($data, [
                     'sale_id' => $row->id,
-                    'ledger_type' => 'sales',
+                    'ledger_type' => $data['ledger_type'] ?? 'sales',
                     'credit' => $amount,
                     'store_id' => $row->store_id,
                 ]));
@@ -144,15 +144,15 @@ class CustomerLedgerModel extends Model
             } else {
                 array_push($ledgers, array_merge($data, [
                     'sale_id' => $row->id,
-                    'ledger_type' => 'sales',
+                    'ledger_type' => $data['ledger_type'] ?? 'sales',
                     'credit' => $due,
                     'store_id' => $row->store_id,
                 ]));
             }
             $amount -= $due;
         }
-        
-        if ($this->insertBatch($ledgers)) {
+
+        if (sizeof($ledgers) > 0  && $this->insertBatch($ledgers)) {
             foreach ($sales as $row)
                 $salesModel->updatePaymentStatus($row->id);
 

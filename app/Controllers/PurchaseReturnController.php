@@ -174,7 +174,7 @@ class PurchaseReturnController extends BaseController
                         'credit' => $inputs['paid'],
                         'user_id' => isset($inputs['user_id']) ? $inputs['user_id'] : null,
                     ];
-                    $ledger->save($data);
+                    if($inputs['paid'] > 0)  $ledger->save($data);
                     $purchaseModel = new PurchaseModel();
                     $purchaseModel->updatePaymentStatus($inputs['purchase_id']);
                     $data['debit'] =  $inputs['total_amount'];
