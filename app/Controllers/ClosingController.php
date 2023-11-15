@@ -93,11 +93,11 @@ class ClosingController extends BaseController
                 ->where('type', 'walk-in-customer')
                 ->selectSum('paid', 'total')->get()->getFirstRow()->total;
             $cust = $customerLedgerModel->builder()
-            ->join('sales', 'sales.id=customer_ledgers.sale_id')
-            ->where('customer_ledgers.store_closing_id', null)
-            ->where('sales.store_closing_id', null)
-            ->where('ledger_type', 'sales')
-            ->selectSum('credit', 'total')->get()->getFirstRow()->total;
+                ->join('sales', 'sales.id=customer_ledgers.sale_id')
+                ->where('customer_ledgers.store_closing_id', null)
+                ->where('sales.store_closing_id', null)
+                ->where('ledger_type', 'sales')
+                ->selectSum('credit', 'total')->get()->getFirstRow()->total;
 
             $sale_total = $walkin + $cust;
 
@@ -109,6 +109,7 @@ class ClosingController extends BaseController
                 'store_id' => $store->id,
             ];
             $supplier_payment =  $supplierLedgerModel->builder()->where($where)
+                ->where('ledger_type', 'purchases')
                 ->selectSum('debit', 'total')->get()->getFirstRow()->total;
 
             $purchase_return_total = $purchaseReturnModel->builder()->where($where)
