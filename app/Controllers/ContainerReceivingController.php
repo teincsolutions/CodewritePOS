@@ -3,19 +3,17 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\ContainerItemModel;
-use App\Models\ContainerModel;
-use App\Models\ContainerReturnItemModel;
-use App\Models\ContainerReturnModel;
-use App\Models\StockModel;
-use App\Models\StoreModel;
-use App\Models\SupplierLedgerModel;
+use App\Models\ContainerReceivingItemModel;
+use App\Models\ContainerReceivingModel;
+use App\Models\ContainerStockModel;
+use App\Models\CustomerLedgerModel;
+use App\Models\SalesModel;
 use App\Models\UserModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\HTTP\Response;
 use Config\Database;
 
-class ContainerReturnController extends BaseController
+class ContainerReceivingController extends BaseController
 {
     /**
      * return view for list
@@ -23,14 +21,16 @@ class ContainerReturnController extends BaseController
      */
     public function index()
     {
-        $storeModel = new StoreModel();
-        $data = [
-            'title' => 'Container Return List',
-            'stores' => $storeModel->where('status','opened')->findAll(),
-        ];
-        return view('pages/purchase_returns/list_purchase_return', $data);
-    }
+        $stores =(new UserModel())->getMyStores();
 
+        $data = [
+            'title' => 'Container Receivings List',
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
+            'stores' => $stores,
+        ];
+        return view('pages/container_receivings/list_container_receiving', $data);
+    }
 
     /**
      * return view for edit
@@ -39,15 +39,14 @@ class ContainerReturnController extends BaseController
     public function edit()
     {
         $invoice = $this->request->getVar('invoice');
-        $model = new ContainerReturnModel();
-        $purchaseModel = new ContainerModel();
+        $model = new ContainerReceivingModel();
+        $saleModel = new SalesModel();
         $lastItem = $model->orderBy('id', 'desc')->first();
         $lastId = $lastItem ? $lastItem->id : 1;
         $stores =(new UserModel())->getMyStores();
 
-
         $data = [
-            'title' => 'Create Container Return',
+            'title' => 'Create Container Receivings',
             'invoice' => substr((time() + 1000000000) + $lastId, 0, 10),
             'stores' => $stores,
             'context' => 'user:' . user_id(),
@@ -57,13 +56,13 @@ class ContainerReturnController extends BaseController
             'invoice' => $invoice,
             'order_status' => 'completed'
         ];
-        $purchase = $purchaseModel->where($whereInvoice)->first();
-        if ($invoice && $purchase) {
-            $data = array_merge($data, ['purchase' => $purchase]);
+        $sales = $saleModel->where($whereInvoice)->first();
+        if ($invoice && $sales) {
+            $data = array_merge($data, ['sales' => $sales]);
         } else if ($invoice) {
             $data = array_merge($data, ['error' => "This invoice doesn't exist or not completed!",]);
         }
-        return view('pages/purchase_returns/edit_purchase_return', $data);
+        return view('pages/container_receivings/edit_container_receiving', $data);
     }
 
     /**
@@ -73,16 +72,15 @@ class ContainerReturnController extends BaseController
     public function show($id)
     {
         $data = [
-            'title' => 'Container Return Details'
+            'title' => 'Container Receivings Details'
         ];
-        $model = new ContainerReturnModel();
+        $model = new ContainerReceivingModel();
         $data = array_merge($data, [
             'return' => $model->find($id),
         ]);
 
-        return view('pages/purchase_returns/invoice', $data);
+        return view('pages/container_receivings/invoice', $data);
     }
-
 
     /**
      * return json for save
@@ -90,24 +88,24 @@ class ContainerReturnController extends BaseController
      */
     public function save()
     {
-        if (!auth()->user()->can('purchase-returns.create'))
-        return $this->response->setJSON([
-            'status' => false,
-            'message' => "Don't have permission to create this record!"
-        ]);
+        if (!auth()->user()->can('container-receivings.create'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to create this record!"
+            ]);
 
-        $model = new ContainerReturnModel();
-        $returnItemModel = new ContainerReturnItemModel();
-        $stockModel = new StockModel();
-        $ledger = new SupplierLedgerModel();
+        $model = new ContainerReceivingModel();
+        $returnItemModel = new ContainerReceivingItemModel();
+        $stockModel = new ContainerStockModel();
+        $ledger = new CustomerLedgerModel();
 
         $inputs = $this->request->getVar();
         if (auth()->user())
             $inputs['user_id'] = (auth()->user()->id ?? 0);
-
         $inputs['return_date'] = date('Y-m-d', strtotime($inputs['return_date']));
+
         $items = $this->request->getVar('items');
-        if (!$items || sizeof($items) === 0) return $this->response->setJSON(
+        if (!$items) return $this->response->setJSON(
             [
                 'status' => false,
                 'data' => null,
@@ -115,68 +113,68 @@ class ContainerReturnController extends BaseController
                 'input' => $inputs,
             ]
         );
-        unset($inputs['items']);
-
         $id = $this->request->getPost('id');
 
         $res = [
             'status' => false,
             'data' => null,
-            'message' => "Container couldn't be save!",
+            'message' => "Sales couldn't be save!",
             'input' => $inputs,
         ];
-        $purchase = $model->where('id', $id)->first();
         $this->db = Database::connect();
 
-        if ($purchase) $res = array_merge($res, ['message' => "Container Return updated successfully!"]);
-        else $res = array_merge($res, ['message' => "Container Return created successfully!"]);
+        $res = array_merge($res, ['message' => "Container Receivingss created successfully!"]);
 
         try {
             $this->db->transException(true)->transStart();
             $saved = $model->save($inputs, true);
-
-            if ($saved && !$purchase) {
+            if ($saved) {
                 $id = $model->getInsertID();
-                $purchaseItems = [];
+                $returnItems = [];
                 $builder = $stockModel->builder();
                 foreach ($items as $k => $row) {
-                    $items[$k]['purchase_return_id'] = $id;
-                    if (empty($items[$k]['tax_id'])) $items[$k]['tax_id'] = null;
-                    if (is_null($items[$k]['store_id']) || empty($items[$k]['store_id'])) $items[$k]['store_id'] = $inputs['store_id'];
+                    $items[$k]['container_receiving_id'] = $id;
 
-                    array_push($purchaseItems, $items[$k]);
+                    if (is_null($items[$k]['tax_id']) || empty($items[$k]['tax_id']))
+                        $items[$k]['tax_id'] = null;
+
+                    array_push($returnItems, $items[$k]);
                     $stockWhere = [
                         'product_id' => $items[$k]['product_id'],
                         'store_id' => $items[$k]['store_id']
                     ];
 
                     if ($builder->where($stockWhere)->get()->getRowObject()) {
-                        $builder->set('instock', '(instock - ' . $items[$k]['qty'] . ')', false)
+                        $builder->set('instock', '(instock + ' . $items[$k]['qty'] . ')', false)
                             ->update(null, $stockWhere);
                     } else {
                         $builder->insert([
                             'product_id' => $items[$k]['product_id'],
                             'store_id' =>  $items[$k]['store_id'],
-                            'instock' => 0 - $items[$k]['qty']
+                            'instock' => $items[$k]['qty']
                         ]);
                     }
                 }
-                $returnItemModel->insertBatch($purchaseItems);
-                if ($inputs['supplier_id']){
-                    $ledger->save([
+                $returnItemModel->insertBatch($returnItems);
+                if ($inputs['customer_id']) {
+                    $data = [
                         'tdate' => $inputs['return_date'],
-                        'supplier_id' => $inputs['supplier_id'],
-                        'purchase_id' => $inputs['purchase_id'],
-                        'purchase_return_id' => $id,
+                        'customer_id' => $inputs['customer_id'],
+                        'sale_id' => $inputs['sale_id'],
                         'store_id' => $inputs['store_id'],
+                        'container_receiving_id' => $id,
                         'payment_type' => 'cash',
                         'ledger_type' => 'returns',
-                        'debit' => $inputs['total_amount'],
-                        'credit' => $inputs['paid'],
+                        'credit' => 0,
+                        'debit' => $inputs['paid'],
                         'user_id' => isset($inputs['user_id']) ? $inputs['user_id'] : null,
-                    ]);
-                    $purchaseModel = new ContainerModel();
-                    $purchaseModel->updatePaymentStatus($inputs['purchase_id']);
+                    ];
+                    if($inputs['paid'] > 0)  $ledger->save($data);
+                    $saleModel = new SalesModel();
+                    $saleModel->updatePaymentStatus($inputs['sale_id']);
+                    $data['credit'] = $inputs['total_amount'];
+                    $data['debit'] = 0;
+                    $ledger->makePayment($data);
                 }
             }
             $this->db->transComplete();
@@ -187,11 +185,11 @@ class ContainerReturnController extends BaseController
             return $this->response->setJSON($res);
         }
         if ($this->db->transStatus()) {
-            $return = $model->find($id);
+            $returns = $model->find($id);
             $res = array_merge($res, [
                 'status' => true,
-                'data' => $return,
-                'receipt' => view('pages/purchase_returns/pos_receipt', ['returns' => $return])
+                'data' => $returns,
+                'receipt' => view('pages/container_receivings/pos_receipt', ['returns' => $returns])
             ]);
         } else {
             $res = array_merge($res, ['status' => false]);
@@ -199,11 +197,11 @@ class ContainerReturnController extends BaseController
         return $this->response->setJSON($res);
     }
 
-           /**
+       /**
      * return json for receipt
      */
     public function print($id) : Response {
-        $model = new ContainerReturnModel();
+        $model = new ContainerReceivingModel();
         $return =$model->where('id', $id)->first();
         $res = [
             'status' => false,
@@ -214,12 +212,13 @@ class ContainerReturnController extends BaseController
             $res = array_merge($res, [
                 'status' => true,
                 'data' => $return,
-                'receipt' =>  view('pages/purchase_returns/pos_receipt', ['return' => $return]),
+                'receipt' =>  view('pages/container_receivings/pos_receipt', ['returns' => $return]),
                  'message' => "Invoice found!",
             ]);
         }
         return $this->response->setJSON($res);
     }
+
 
     /**
      * return json for datatables
@@ -228,36 +227,35 @@ class ContainerReturnController extends BaseController
     public function datatable(): Response
     {
         $inputs = $this->request->getVar();
-        $model = new ContainerReturnModel();
-        $model->select('purchase_returns.*');
-        $model->join('purchases', 'purchases.id=purchase_returns.purchase_id');
-        return $this->response->setJSON(toDatatableResult($model, $inputs, ));
+        $model = new ContainerReceivingModel();
+        $model->select('container_receivings.*');
+        $model->join('sales', 'sales.id=container_receivings.sale_id');
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
-       /**
+    /**
      * return json for datatables
      * @return Response - http response
      */
     public function stock_report_datatable(): Response
     {
         $inputs = $this->request->getVar();
-        $model = new ContainerReturnModel();
+        $model = new ContainerReceivingModel();
         $builder = $model->builder();
-        $builder->select('purchase_returns.*')
-            ->selectSum('purchase_returns_items.qty', 'qty')
-            ->join('purchase_returns_items', 'purchase_returns_items.purchase_return_id=purchase_returns.id')
-            ->join('purchases', 'purchases.id=purchase_returns.purchase_id')
+        $builder->select('container_receivings.*, sales.customer_id')
+            ->selectSum('container_receivings_items.qty', 'qty')
+            ->join('container_receivings_items', 'container_receivings_items.container_receiving_id=container_receivings.id')
+            ->join('sales', 'sales.id=container_receivings.sale_id')
             ->where('product_id', $inputs['product_id'] ?? '')
-            ->where('purchase_returns.order_status', 'completed')
-            ->groupBy('purchase_returns.id');
+            ->where('container_receivings.order_status', 'completed')
+            ->groupBy('container_receivings.id');
 
         return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) {
-            $item->supplier = model('SupplierModel')->where('id', $item->supplier_id)->first();
+            $item->customer = model('CustomerModel')->where('id', $item->customer_id)->first();
             $item->store = model('StoreModel')->where('id', $item->store_id)->first();
             return $item;
         }));
     }
-
 
     /**
      * return json for delete
@@ -265,17 +263,17 @@ class ContainerReturnController extends BaseController
      */
     public function delete($id = null)
     {
-        if (!auth()->user()->can('purchase-returns.delete'))
+        if (!auth()->user()->can('container-receivings.delete'))
             return $this->response->setJSON([
                 'status' => false,
                 'message' => "Don't have permission to delete this record!"
             ]);
 
-        $model = new ContainerReturnModel();
+        $model = new ContainerReceivingModel();
         if ($model->delete($id)) {
             $res = [
                 'status' => true,
-                'message' => "Container Return deleted successfully!",
+                'message' => "Container Receivings deleted successfully!",
             ];
         } else {
             $res = [
