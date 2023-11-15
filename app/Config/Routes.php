@@ -7,6 +7,8 @@ use App\Controllers\CategoryController;
 use App\Controllers\ClosingController;
 use App\Controllers\ContainerAdjustmentController;
 use App\Controllers\ContainerController;
+use App\Controllers\ContainerReceivingController;
+use App\Controllers\ContainerReturnController;
 use App\Controllers\CustomerContainerController;
 use App\Controllers\CustomerController;
 use App\Controllers\CustomerLedgerController;
@@ -174,6 +176,9 @@ $routes->get('purchases/returns/create', [PurchaseReturnController::class, 'edit
 $routes->get('quotes/create', [QuoteController::class, 'edit'],['filter'=>'permission:quotes.create']);
 $routes->get('sales/pos', [SalesController::class, 'pos'],['filter'=>'permission:sales.create']);
 $routes->get('sales/returns/create', [SalesReturnController::class, 'edit'],['filter'=>'permission:sales-returns.create']);
+$routes->get('containers/returns/create', [ContainerReturnController::class, 'edit'],['filter'=>'permission:container-returns.create']);
+$routes->get('containers/receivings/create', [ContainerReceivingController::class, 'edit'],['filter'=>'permission:container-receivings.create']);
+
 $routes->get('stores/create', [StoreController::class, 'edit'],['filter'=>'permission:stores.create']);
 $routes->get('suppliers/create', [SupplierController::class, 'edit'],['filter'=>'permission:suppliers.create']);
 $routes->get('units/create', [UnitController::class, 'edit'],['filter'=>'permission:units.create']);
@@ -216,6 +221,9 @@ $routes->get('daily-purchases/datatable', [PurchaseController::class, 'daily_dat
 $routes->get('sales/returns/datatable', [SalesReturnController::class, 'datatable']);
 $routes->get('sales/stocks/datatable', [SalesController::class, 'stock_report_datatable']);
 $routes->get('sales/returns/stocks/datatable', [SalesReturnController::class, 'stock_report_datatable']);
+$routes->get('containers/returns/stocks/datatable', [ContainerReturnController::class, 'stock_report_datatable']);
+$routes->get('containers/recevings/stocks/datatable', [ContainerReceivingController::class, 'stock_report_datatable']);
+
 $routes->get('stores/datatable', [StoreController::class, 'datatable']);
 $routes->get('suppliers/datatable', [SupplierController::class, 'datatable']);
 $routes->get('suppliers/ledger/datatable', [SupplierLedgerController::class, 'datatable']);
@@ -239,6 +247,8 @@ $routes->get('purchases/returns/select2', [PurchaseReturnController::class, 'sel
 $routes->get('quotes/select2', [QuoteController::class, 'select2']);
 $routes->get('sales/select2', [SalesController::class, 'select2']);
 $routes->get('sales/returns/select2', [SalesReturnController::class, 'select2']);
+$routes->get('containers/returns/select2', [ContainerReturnController::class, 'select2']);
+$routes->get('containers/recevings/select2', [ContainerReceivingController::class, 'select2']);
 $routes->get('stores/select2', [StoreController::class, 'select2']);
 $routes->get('suppliers/select2', [SupplierController::class, 'select2']);
 $routes->get('units/select2', [UnitController::class, 'select2']);
@@ -273,6 +283,8 @@ $routes->post('sales', [SalesController::class, 'save']);
 $routes->post('sales/hold', [SalesController::class, 'hold']);
 $routes->post('sales/returns', [SalesReturnController::class, 'save']);
 $routes->post('stores', [StoreController::class, 'save']);
+$routes->post('containers/returns', [ContainerReturnController::class, 'save']);
+$routes->post('containers/recevings', [ContainerReceivingController::class, 'save']);
 $routes->post('suppliers', [SupplierController::class, 'save']);
 $routes->post('units', [UnitController::class, 'save']);
 $routes->post('cashup', [StoreLedgerController::class, 'save']);

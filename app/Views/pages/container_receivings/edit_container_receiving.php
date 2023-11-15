@@ -3,24 +3,22 @@
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h4>Create Container Return</h4>
-            <h6>Add/Update Container Return</h6>
+            <h4>Create Container Receivings</h4>
+            <h6>Add/Update Container Receivings</h6>
         </div>
     </div>
-    <form class="post-form" action="<?= site_url('containers/returns') ?>" method="post">
+    <form class="post-form" action="<?= site_url('sales/returns') ?>" method="post">
         <?= csrf_field() ?>
         <input id="order-status" type="hidden" name="order_status" value="completed">
         <input id="payment-status" type="hidden" name="payment_status" value="paid">
-        <input type="hidden" name="payment_type" value="cash">
-        <input type="hidden" name="supplier_id" value="<?= $container->supplier_id ?>">
-        <input type="hidden" name="store_id" value="<?= $container->store_id ?>">
-        <input id="containers-total" type="hidden" name="total_amount" value="<?= isset($container) ? $container->total_amount : 0.00 ?>">
+        <input type="hidden" name="store_id" value="<?= isset($sales) ? $sales->store_id : '' ?>">
+        <input id="sales-total" type="hidden" name="total_amount" value="<?= isset($sales) ? $sales->total_amount : 0.00 ?>">
         <div class="card">
             <div class="card-body">
                 <div class="row">
                     <?php if (isset($error)) : ?>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert"><?= $error ?>
-                            <a href="<?= site_url('containers/pos') ?>" type="button" class="btn-close" aria-label="Close"></a>
+                            <a href="<?= site_url('sales/pos') ?>" type="button" class="btn-close" aria-label="Close"></a>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -69,7 +67,7 @@
                         <div class="form-group">
                             <div class="form-outline autocomplete">
                                 <label class="form-label" for="form1">Search</label>
-                                <input autocomplete="off" id="search-products" type="search" class="form-control" placeholder="Enter product name, barcode, sku..." />
+                                <input autocomplete="off" id="search-containers" type="search" class="form-control" placeholder="Enter container name, barcode, sku..." />
                             </div>
                         </div>
                     </div>
@@ -82,16 +80,17 @@
                                     <th>#</th>
                                     <th>Product Name</th>
                                     <th>QTY</th>
-                                    <th>Cost</th>
+                                    <th>Price</th>
+                                    <th>Discount</th>
+                                    <th>Tax</th>
                                     <th>Subtotal</th>
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                            </tbody>
+                            <tbody></tbody>
                         </table>
                         <script>
-                            let prodIndex = <?= isset($container) ? sizeof($container->items) : 0 ?>;
+                            let prodIndex = <?= isset($sales) ? sizeof($sales->items) : 0 ?>;
                         </script>
                     </div>
                 </div>
@@ -100,16 +99,16 @@
                         <div class="form-group">
                             <label>Order Tax</label>
                             <div class="input-group">
-                                <input type="text" name="tax" value="<?= isset($container) ? $container->tax : null ?>" class="form-control" placeholder="Container taxes" readonly>
+                                <input type="text" name="tax" value="<?= isset($sales) ? $sales->tax : null ?>" class="form-control" placeholder="Sales taxes" readonly>
                                 <span class="input-group-text">%</span>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
-                            <label>Supplier Discount</label>
+                            <label>Customer Discount</label>
                             <div class="input-group">
-                                <input onkeyup="updateTotals()" type="number" name="discount" value="<?= isset($container) ? $container->discount : null ?>" class="form-control addon-inline" placeholder="Container discount" readonly>
+                                <input onkeyup="updateTotals()" type="number" name="discount" value="<?= isset($sales) ? $sales->discount : null ?>" class="form-control addon-inline" placeholder="Sales discount" readonly>
                                 <span class="input-group-text">%</span>
                             </div>
                         </div>
@@ -117,7 +116,13 @@
                     <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Shipping</label>
-                            <input onkeyup="updateTotals()" type="number" name="shipping" value="<?= isset($container) ? $container->shipping : null ?>" class="form-control" placeholder="Shipping amount">
+                            <input onkeyup="updateTotals()" type="number" name="shipping" value="<?= isset($sales) ? $sales->shipping : null ?>" class="form-control" placeholder="Shipping amount">
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Change</label>
+                            <input type="number" name="paid" id="paid" class="form-control" placeholder="Change Amount">
                         </div>
                     </div>
                 </div>
@@ -145,10 +150,13 @@
                                     <h4>Grand Total </h4>
                                     <h5 class="grandTotal">GHS 0.00</h5>
                                 </li>
+                                <li id="acc-bal">
+                                    <h4>A/c Balance </h4>
+                                    <h5 class="customer-balance">GHS 0.00</h5>
+                                </li>
                                 <li class="total-value">
                                     <h4>Change/Due</h4>
                                     <h5 class="dueTotal">GHS 0.00</h5>
-                                    <input type="hidden" name="paid" id="paid">
                                 </li>
                             </ul>
                         </div>
@@ -163,28 +171,28 @@
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-container-return.js?v=1') ?>"></script>
-<?php if (isset($container) && $container->supplier) {
-    $supplier = $container->supplier;
-    $supplier->text = $supplier->name . " (" . ($supplier->address ? $supplier->address : $supplier->phone) . ")";
+<script src="<?= base_url('assets/js/handle-container-receivings.js?v=1') ?>"></script>
+<?php if (isset($sales) && $sales->customer) {
+    $customer = $sales->customer;
+    $customer->text = $customer->name . " (" . ($customer->address ? $customer->address : $customer->phone) . ")";
 ?>
     <script>
         $(() => {
-            let supplierData = <?= json_encode($supplier) ?>;
-            var option = new Option(supplierData.text, supplierData.id, true, true);
-            select2Supplier.append(option).trigger('change');
-            select2Supplier.trigger({
+            let customerData = <?= json_encode($customer) ?>;
+            var option = new Option(customerData.text, customerData.id, true, true);
+            select2Customer.append(option).trigger('change');
+            select2Customer.trigger({
                 type: 'select2:select',
                 params: {
-                    data: supplierData
+                    data: customerData
                 }
             });
         });
-        containerItemIds = <?= json_encode($ids) ?>;
+        saleItemIds = <?= json_encode($ids) ?>;
     </script>
-<?php } else if (isset($container)) { ?>
+<?php } else if (isset($sales)) { ?>
     <script>
-        containerItemIds = <?= json_encode($ids) ?>;
+        saleItemIds = <?= json_encode($ids) ?>;
     </script>
 <?php } ?>
 <?= $this->endSection() ?>

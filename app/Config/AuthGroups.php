@@ -196,6 +196,19 @@ class AuthGroups extends ShieldAuthGroups
         'container-adjustments.delete'        => 'Can delete existing container adjustments',
         'container-adjustments.report'        => 'Can access container adjustments reports',
 
+        'container-returns.view'        => 'Can view container returns',
+        'container-returns.create'        => 'Can add new container returns',
+        'container-returns.edit'          => 'Can edit container returns',
+        'container-returns.delete'        => 'Can delete existing container returns',
+        'container-returns.report'        => 'Can access container returns reports',
+
+        'container-receivings.view'        => 'Can view container receivings',
+        'container-receivings.create'        => 'Can add new container receivings',
+        'container-receivings.edit'          => 'Can edit container receivings',
+        'container-receivings.delete'        => 'Can delete existing container receivings',
+        'container-receivings.report'        => 'Can access container receivings reports',
+
+
         'stocks.view'        => 'Can view stocks',
         'stocks.create'        => 'Can add new stocks',
         'stocks.edit'          => 'Can edit stocks',
@@ -244,6 +257,8 @@ class AuthGroups extends ShieldAuthGroups
         'sales.*' => 'Has full control',
         'purchase-returns.*' => 'Has full control',
         'sales-returns.*' => 'Has full control',
+        'container-returns.*' => 'Has full control',
+        'container-receivings.*' => 'Has full control',
         'quotes.*' => 'Has full control',
         'stocks.*' => 'Has full control',
         'container-stocks.*' => 'Has full control',
@@ -291,6 +306,8 @@ class AuthGroups extends ShieldAuthGroups
         'quotes'        => 'Quotes Management',
         'adjustments'        => 'Adjustments Management',
         'stocks'        => 'Stocks Management',
+        'container-receivings'        => 'Container Receivings Management',
+        'container-returns'        => 'Container Returns Management',
         'container-adjustments'        => 'Container Adjustments Management',
         'container-stocks'        => 'Container Stocks Management',
         'closing'        => 'Store Closing Management',
@@ -313,20 +330,20 @@ class AuthGroups extends ShieldAuthGroups
      */
     public array $matrix = [
         'admin' => [
-            'users.*', 'customers.*', 'suppliers.*', 'stores.*', 'products.*', 'brands.*',
+            'users.*', 'customers.*', 'suppliers.*', 'stores.*', 'products.*', 'brands.*','containers.*',
             'categories.*', 'units.*', 'product-transfers.*', 'unit-transfers.*', 'expense-categories.*',
             'expenses.*', 'customer-ledgers.*', 'supplier-ledgers.*', 'purchases.*', 'sales.*',
-            'purchase-returns.*', 'sales-returns.*', 'quotes.*', 'adjustments.*', 'closing.*',
+            'purchase-returns.*', 'sales-returns.*', 'quotes.*', 'adjustments.*', 'closing.*','container-adjustments.*', 
             'general-settings.*', 'email-settings.*', 'payment-settings.*', 'permission-settings.*',
-            'sms-settings.*', 'cashup.*','preference-settings.*',
+            'sms-settings.*', 'cashup.*','preference-settings.*','container-returns.*','container-receivings.*'
         ],
         'developer' => [
-            'users.*', 'customers.*', 'suppliers.*', 'stores.*', 'products.*', 'brands.*',
+            'users.*', 'customers.*', 'suppliers.*', 'stores.*', 'products.*', 'brands.*','containers.*',
             'categories.*', 'units.*', 'product-transfers.*', 'unit-transfers.*', 'expense-categories.*','container-stocks.*',
             'expenses.*', 'customer-ledgers.*', 'supplier-ledgers.*', 'purchases.*', 'sales.*', 'cashup.*','closing.*',
             'purchase-returns.*', 'sales-returns.*', 'quotes.*', 'adjustments.*','container-adjustments.*', 'stocks.*', 'account-debts.*',
             'general-settings.*', 'email-settings.*', 'payment-settings.*', 'permission-settings.*', 'updates.*',
-            'preference-settings.*',
+            'preference-settings.*','container-returns.*','container-receivings.*'
         ],
         'guest' => [
             'customers.view', 'suppliers.view', 'stores.view', 'products.view', 'brands.view',

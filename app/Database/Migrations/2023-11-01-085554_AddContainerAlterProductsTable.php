@@ -13,7 +13,6 @@ class AddContainerAlterProductsTable extends Migration
         $fields = [
             'has_container' => [
                 'type'       => 'BOOLEAN',
-                'constraint' => 1,
                 'null' => false,
                 'default' => 0
             ],

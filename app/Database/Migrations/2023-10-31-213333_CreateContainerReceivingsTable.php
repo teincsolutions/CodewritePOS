@@ -6,7 +6,7 @@ use CodeIgniter\Database\Migration;
 use CodeIgniter\Database\RawSql;
 use Config\Database;
 
-class CreateContainerReturnsTable extends Migration
+class CreateContainerReceivingsTable extends Migration
 {
     public function up()
     {
@@ -27,7 +27,7 @@ class CreateContainerReturnsTable extends Migration
                 'type'       => 'DATE',
                 'default' => new RawSql('CURRENT_DATE')
             ],
-            'supplier_id' => [
+            'customer_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
@@ -85,18 +85,18 @@ class CreateContainerReturnsTable extends Migration
 
         $forge->addField($fields);
         $forge->addPrimaryKey('id');
-        $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_container_returns_user_id');
-        $forge->addForeignKey('supplier_id', 'suppliers', 'id', 'CASCADE', 'CASCADE', 'fk_container_returns_supplier_id');
-        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'RESTRICT', 'RESTRICT', 'fk_container_returns_store_closing_id');
-        $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_container_returns_store_id');
+        $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_container_receivings_user_id');
+        $forge->addForeignKey('customer_id', 'customers', 'id', 'CASCADE', 'CASCADE', 'fk_container_receivings_customer_id');
+        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'RESTRICT', 'RESTRICT', 'fk_container_receivings_store_closing_id');
+        $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_container_receivings_store_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
-        $forge->createTable('container_returns', true, $attributes);
+        $forge->createTable('container_receivings', true, $attributes);
     }
 
     public function down()
     {
         $forge = Database::forge();
-        $forge->dropTable('container_returns', true);
+        $forge->dropTable('container_receivings', true);
     }
 }
