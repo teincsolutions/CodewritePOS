@@ -9,7 +9,7 @@ use App\Models\SupplierModel;
 use App\Models\UserModel;
 use CodeIgniter\HTTP\Response;
 
-class SupplierLedgerController extends BaseController
+class supplierLedgerController extends BaseController
 {
     /**
      * return view for list
@@ -23,13 +23,13 @@ class SupplierLedgerController extends BaseController
         return view('pages/account_debts/suppliers', $data);
     }
 
-     /**
+    /**
      * return view for list
      * @return Response - http response
      */
     public function supplier_reports()
     {
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
         $data = [
             'title' => 'Supplier Payment Reports',
             'stores' => $stores,
@@ -75,12 +75,18 @@ class SupplierLedgerController extends BaseController
             'message' => null,
             'input' => $inputs,
         ];
-        $SupplierLedger = $model->where('id', $id)->first();
-        if ($SupplierLedger) {
+        $supplierLedger = $model->where('id', $id)->first();
+        if ($supplierLedger) {
             if (!auth()->user()->can('purchases.edit'))
                 return $this->response->setJSON([
                     'status' => false,
                     'message' => "Don't have permission to edit this record!"
+                ]);
+
+            if ($supplierLedger->credit > 0)
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "You cannot edit purchase credit!"
                 ]);
 
             if ($model->save($inputs)) {
@@ -227,7 +233,7 @@ class SupplierLedgerController extends BaseController
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
-     /**
+    /**
      * return json for datatables
      * @return Response - http response
      */
@@ -241,8 +247,8 @@ class SupplierLedgerController extends BaseController
             ->selectSum('credit', 'total_credit')
             ->selectSum('debit', 'total_debit')
             ->groupBy('created_at')
-            ->groupBy(['ledger_type','purchase_return_id'])
-            ->orderBy('created_at','desc')
+            ->groupBy(['ledger_type', 'purchase_return_id'])
+            ->orderBy('created_at', 'desc')
             ->orderBy('id', 'desc');
         return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) use ($db) {
             $item->purchase = model('PurchaseModel')->where('id', $item->purchase_id)->first();
@@ -250,13 +256,13 @@ class SupplierLedgerController extends BaseController
             $item->supplier = model('SupplierModel')->where('id', $item->supplier_id)->first();
             $item->user = model('UserModel')->where('id', $item->user_id)->first();
             $totals = $db->table('supplier_ledgers')
-            ->select('SUM((credit-debit)) as total_due')
-            ->where('supplier_id', $item->supplier_id)
-            ->where('id <', $item->id)
-            ->get()->getFirstRow();
+                ->select('SUM((credit-debit)) as total_due')
+                ->where('supplier_id', $item->supplier_id)
+                ->where('id <', $item->id)
+                ->get()->getFirstRow();
 
-            $item->total_due = $totals->total_due??0.00;
-            $item->total_balance = ($totals->total_due??0) +($item->total_credit - $item->total_debit);
+            $item->total_due = $totals->total_due ?? 0.00;
+            $item->total_balance = ($totals->total_due ?? 0) + ($item->total_credit - $item->total_debit);
 
             return $item;
         }));
@@ -287,6 +293,14 @@ class SupplierLedgerController extends BaseController
             ]);
 
         $model = new SupplierLedgerModel();
+        $ledger = $model->find($id);
+
+        if ($ledger->credit > 0)
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "You cannot delete purchase credit!"
+            ]);
+
         if ($model->delete($id)) {
             $res = [
                 'status' => true,

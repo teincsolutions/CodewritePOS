@@ -78,18 +78,24 @@ class CustomerLedgerController extends BaseController
             'input' => $inputs,
         ];
 
-        $CustomerLedger = $model->where('id', $id)->first();
-        if ($CustomerLedger) {
+        $customerLedger = $model->where('id', $id)->first();
+        if ($customerLedger) {
             if (!auth()->user()->can('customer-ledgers.edit'))
                 return $this->response->setJSON([
                     'status' => false,
                     'message' => "Don't have permission to edit this record!"
                 ]);
 
+            if ($customerLedger->debit > 0)
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "You cannot edit a sales debit!"
+                ]);
+
             if ($model->save($inputs)) {
-                $sales = $salesModel->where('id', $CustomerLedger->sale_id)->first();
+                $sales = $salesModel->where('id', $customerLedger->sale_id)->first();
                 $salesModel->save([
-                    'id' => $CustomerLedger->sale_id,
+                    'id' => $customerLedger->sale_id,
                     'payment_status' => (($sales->total_amount - $sales->paid > 0) ? 'due' : 'paid')
                 ]);
                 $res = array_merge($res, [
@@ -248,14 +254,20 @@ class CustomerLedgerController extends BaseController
      */
     public function delete($id = null)
     {
+
         if (!auth()->user()->can('customer-ledgers.delete'))
             return $this->response->setJSON([
                 'status' => false,
                 'message' => "Don't have permission to delete this record!"
             ]);
-
         $model = new CustomerLedgerModel();
         $ledger = $model->find($id);
+        if ($ledger->debit > 0)
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "You cannot delete a sales debit!"
+            ]);
+
         if ($model->delete($id)) {
             $saleModel = new SalesModel();
             $saleModel->updatePaymentStatus($ledger->sale_id);
