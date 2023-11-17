@@ -7,6 +7,7 @@ use App\Models\AdjustmentItemModel;
 use App\Models\StockAdjustmentModel;
 use App\Models\StockModel;
 use App\Models\StoreModel;
+use App\Models\UserModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\HTTP\Response;
 use Config\Database;
@@ -20,12 +21,12 @@ class AdjustmentController extends BaseController
      */
     public function index()
     {
-        $storeModel = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
         $data = [
             'title' => 'Adjustment List',
             'context' => 'user:' . user_id(),
             'settings' => service('settings'),
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'stores' => $stores,
         ];
         return view('pages/adjustments/list_adjustment', $data);
     }
@@ -40,12 +41,14 @@ class AdjustmentController extends BaseController
         $model = new StockAdjustmentModel();
         $lastItem = $model->orderBy('id', 'desc')->first();
         $lastId = $lastItem ? $lastItem->id : 1;
-        $storeModel = new StoreModel();
+        $stores =(new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Create Adjustment',
             'invoice' => substr(time() + $lastId, 0, 10),
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'stores' => $stores,
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
         ];
 
         return view('pages/adjustments/edit_adjustment', $data);
@@ -64,6 +67,8 @@ class AdjustmentController extends BaseController
 
         $data = array_merge($data, [
             'adjustment' => $model->find($id),
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
         ]);
 
         return view('pages/adjustments/invoice', $data);
