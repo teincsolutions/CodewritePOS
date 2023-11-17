@@ -11,24 +11,16 @@
         <?= csrf_field() ?>
         <input id="order-status" type="hidden" name="order_status" value="completed">
         <input id="payment-status" type="hidden" name="payment_status" value="paid">
-        <input type="hidden" name="payment_type" value="cash">
-        <input type="hidden" name="supplier_id" value="<?= $container->supplier_id ?>">
-        <input type="hidden" name="store_id" value="<?= $container->store_id ?>">
-        <input id="containers-total" type="hidden" name="total_amount" value="<?= isset($container) ? $container->total_amount : 0.00 ?>">
+        <input id="containers-total" type="hidden" name="total_amount" value="">
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <?php if (isset($error)) : ?>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert"><?= $error ?>
-                            <a href="<?= site_url('containers/pos') ?>" type="button" class="btn-close" aria-label="Close"></a>
-                        </div>
-                    <?php endif; ?>
                 </div>
                 <div class="row">
-                    <div class="col-lg-4 col-sm-6 col-12">
+                    <div class="col-lg-4 col-sm-6 col-12"  style="overflow-x: auto;">
                         <div class="form-group">
                             <label>Customer</label>
-                            <select name="customer_id" class="select2-customer" style="overflow-x: auto;">
+                            <select name="supplier_id" class="select2-suppliers">
                                 <option value=""></option>
                             </select>
                         </div>
@@ -69,7 +61,7 @@
                         <div class="form-group">
                             <div class="form-outline autocomplete">
                                 <label class="form-label" for="form1">Search</label>
-                                <input autocomplete="off" id="search-products" type="search" class="form-control" placeholder="Enter product name, barcode, sku..." />
+                                <input autocomplete="off" id="search-containers" type="search" class="form-control" placeholder="Enter product name, barcode, sku..." />
                             </div>
                         </div>
                     </div>
@@ -90,9 +82,6 @@
                             <tbody>
                             </tbody>
                         </table>
-                        <script>
-                            let prodIndex = <?= isset($container) ? sizeof($container->items) : 0 ?>;
-                        </script>
                     </div>
                 </div>
                 <div class="row">
@@ -164,27 +153,4 @@
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/handle-container-return.js?v=1') ?>"></script>
-<?php if (isset($container) && $container->supplier) {
-    $supplier = $container->supplier;
-    $supplier->text = $supplier->name . " (" . ($supplier->address ? $supplier->address : $supplier->phone) . ")";
-?>
-    <script>
-        $(() => {
-            let supplierData = <?= json_encode($supplier) ?>;
-            var option = new Option(supplierData.text, supplierData.id, true, true);
-            select2Supplier.append(option).trigger('change');
-            select2Supplier.trigger({
-                type: 'select2:select',
-                params: {
-                    data: supplierData
-                }
-            });
-        });
-        containerItemIds = <?= json_encode($ids) ?>;
-    </script>
-<?php } else if (isset($container)) { ?>
-    <script>
-        containerItemIds = <?= json_encode($ids) ?>;
-    </script>
-<?php } ?>
 <?= $this->endSection() ?>

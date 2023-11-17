@@ -23,10 +23,10 @@
                     <?php endif; ?>
                 </div>
                 <div class="row">
-                    <div class="col-lg-4 col-sm-6 col-12">
+                    <div class="col-lg-4 col-sm-6 col-12"  style="overflow-x: auto;">
                         <div class="form-group">
                             <label>Customer</label>
-                            <select name="customer_id" class="select2-customer" style="overflow-x: auto;">
+                            <select name="customer_id" class="select2-customer">
                                 <option value=""></option>
                             </select>
                         </div>
@@ -89,9 +89,6 @@
                             </thead>
                             <tbody></tbody>
                         </table>
-                        <script>
-                            let prodIndex = <?= isset($sales) ? sizeof($sales->items) : 0 ?>;
-                        </script>
                     </div>
                 </div>
                 <div class="row">
@@ -172,27 +169,4 @@
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/handle-container-receivings.js?v=1') ?>"></script>
-<?php if (isset($sales) && $sales->customer) {
-    $customer = $sales->customer;
-    $customer->text = $customer->name . " (" . ($customer->address ? $customer->address : $customer->phone) . ")";
-?>
-    <script>
-        $(() => {
-            let customerData = <?= json_encode($customer) ?>;
-            var option = new Option(customerData.text, customerData.id, true, true);
-            select2Customer.append(option).trigger('change');
-            select2Customer.trigger({
-                type: 'select2:select',
-                params: {
-                    data: customerData
-                }
-            });
-        });
-        saleItemIds = <?= json_encode($ids) ?>;
-    </script>
-<?php } else if (isset($sales)) { ?>
-    <script>
-        saleItemIds = <?= json_encode($ids) ?>;
-    </script>
-<?php } ?>
 <?= $this->endSection() ?>

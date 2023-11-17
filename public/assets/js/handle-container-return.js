@@ -28,7 +28,7 @@ const searchParams = {
   },
 };
 let supplierBalance = 0;
-prodIndex = prodIndex ? prodIndex : 0;
+prodIndex = 0;
 purchaseItemIds = [];
 (dueTotal = 0), (grandTotal = 0), (supplierBalance = 0);
 
@@ -71,13 +71,13 @@ let tableItems = $(".tr-items").DataTable({
   },
 });
 if (initCompleted) updateTotals();
-$("div.toolbar").html(
-  "<span class='btn btn-danger clear-all'>Clear all</span>"
-).on("click",".clear-all", function (e) {
-  tableItems.rows().remove().draw();
-  purchaseItemIds = [];
-  updateTotals();
-});
+$("div.toolbar")
+  .html("<span class='btn btn-danger clear-all'>Clear all</span>")
+  .on("click", ".clear-all", function (e) {
+    tableItems.rows().remove().draw();
+    purchaseItemIds = [];
+    updateTotals();
+  });
 
 function updateItemRow(row) {
   let row1 = $(row).parents("tr").first();
@@ -126,8 +126,8 @@ function updateTotals() {
         ? "(" + Math.abs(dueTotal).toFixed(2) + ")"
         : dueTotal.toFixed(2))
   );
-  if(dueTotal < 0) $("input[name='paid']").val(Math.abs(dueTotal));
-  else $("input[name='paid']").val(0.00);
+  if (dueTotal < 0) $("input[name='paid']").val(Math.abs(dueTotal));
+  else $("input[name='paid']").val(0.0);
 }
 
 function checkout() {
@@ -177,54 +177,54 @@ function autocomplete(inp) {
     b.innerHTML = "<i>Searching...</i>";
     a.appendChild(b);
 
-    $.get(
-      `${baseUrl}containers/search`,
-      searchParams,
-      (d, s) => {
-        a.innerHTML = "";
-        if (s !== "success") {
-          // if fail
+    $.get(`${baseUrl}containers/search`, searchParams, (d, s) => {
+      a.innerHTML = "";
+      if (s !== "success") {
+        // if fail
+        b = document.createElement("DIV");
+        b.innerHTML = "<i>Unable load data!</i>";
+        a.appendChild(b);
+        // if fail
+        return;
+      }
+
+      if (d.data.length === 0) {
+        b = document.createElement("DIV");
+        b.innerHTML = "<span>No container found!</span>";
+        a.appendChild(b);
+        return;
+      } else {
+        d.data.forEach((item, i) => {
+          if (
+            purchaseItemIds.includes(item.purchase_item_id) ||
+            item.max_qty <= 0
+          )
+            return;
+
           b = document.createElement("DIV");
-          b.innerHTML = "<i>Unable load data!</i>";
-          a.appendChild(b);
-          // if fail
-          return;
-        }
+          info = [];
+          (item.category ? info.push(item.category.name) : null) ||
+            (item.brand ? info.push(item.brand.name) : null);
+          let instock = 0;
 
-        if (d.data.length === 0) {
-          b = document.createElement("DIV");
-          b.innerHTML = "<span>No container found!</span>";
-          a.appendChild(b);
-          return;
-        } else {
-          d.data.forEach((item, i) => {
-            if (purchaseItemIds.includes(item.purchase_item_id) || item.max_qty <= 0) return;
+          if (item.inventory) {
+            const stock = item.inventory.filter(
+              (stock, i) => item.store_id == stock.store_id
+            );
+            if (stock.length > 0) instock = stock[0].instock;
+          }
+          info.push(`instock<strong>(${instock})</strong>`);
 
-            b = document.createElement("DIV");
-            info = [];
-            (item.category ? info.push(item.category.name) : null) ||
-              (item.brand ? info.push(item.brand.name) : null);
-            let instock = 0;
+          info = info.join(",");
 
-            if (item.inventory) {
-              const stock = item.inventory.filter(
-                (stock, i) => item.store_id == stock.store_id
-              );
-              if (stock.length > 0) instock = stock[0].instock;
-            }
-            info.push(`instock<strong>(${instock})</strong>`);
+          b.innerHTML =
+            item.discontinued == 1
+              ? `<span class="d-flex justify-content-between" style="z-index:1000"><del><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></del>GHS ${item.unit_cost}</span>`
+              : `<span class="d-flex justify-content-between" style="z-index:1000"><span><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></span>GHS ${item.unit_cost}</span>`;
 
-            info = info.join(",");
-
-            b.innerHTML =
-              item.discontinued == 1
-                ? `<span class="d-flex justify-content-between" style="z-index:1000"><del><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></del>GHS ${item.unit_cost}</span>`
-                : `<span class="d-flex justify-content-between" style="z-index:1000"><span><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></span>GHS ${item.unit_cost}</span>`;
-
-            b.addEventListener("click", function (e) {
- 
-              inp.value = "";
-              let row = ` <tr>
+          b.addEventListener("click", function (e) {
+            inp.value = "";
+            let row = ` <tr>
                                         <td>
                                         </td>
                                         <td class="productimgname">
@@ -234,36 +234,36 @@ function autocomplete(inp) {
                                             : '<a class="p-3"></a>'
                                         }
                                             <a target="_blank" href="${baseUrl}containers/${
-                item.id
-              }">${item.name}(${item.unit.label})</a></td>
+              item.id
+            }">${item.name}(${item.unit.label})</a></td>
                                         <td>
                                         <div class="increment-decrement">
                                             <div class="input-groups">
                                                 <input type='hidden' name="items[${prodIndex}][purchase_item_id]" value="${
-                item.purchase_item_id
-              }">
+              item.purchase_item_id
+            }">
               <input type='hidden' name="items[${prodIndex}][container_id]" value="${
-                item.id
-              }">
+              item.id
+            }">
                                                 <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
-                item.unit_cost
-              }" class="runit_cost">
+              item.unit_cost
+            }" class="runit_cost">
               <input type="hidden" name="items[${prodIndex}][unit_price]" value="${
-                item.unit_price
-              }" class="runit_price">
+              item.unit_price
+            }" class="runit_price">
                       
                                                 <input type="hidden" name="items[${prodIndex}][store_id]" value="${
-                item.store_id
-              }">
+              item.store_id
+            }">
                                                 <input type="hidden" name="items[${prodIndex}][subtotal]" class="rsubtotal" value="${
-                item.unit_cost
-              }">
+              item.unit_cost
+            }">
                                                 <input type="button" value="-" class="button-minus dec button">
                                                 <input onblur="updateItemRow(this)" min=".1" max="${
                                                   item.max_qty
                                                 }" type="text" name="items[${prodIndex}][qty]" value="${
-                item.max_qty
-              }" class="quantity-field rqty" required>
+              item.max_qty
+            }" class="quantity-field rqty" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>
@@ -276,17 +276,16 @@ function autocomplete(inp) {
                                           item.purchase_item_id
                                         }"><i class="fa text-danger fa-trash"></i></a></td>
                                     </tr>`;
-              purchaseItemIds.push(item.purchase_item_id);
-              tableItems.row.add($(row)).draw();
-              tableItems.draw();
-              prodIndex++;
-              closeAllLists();
-            });
-            a.appendChild(b);
+            purchaseItemIds.push(item.purchase_item_id);
+            tableItems.row.add($(row)).draw();
+            tableItems.draw();
+            prodIndex++;
+            closeAllLists();
           });
-        }
+          a.appendChild(b);
+        });
       }
-    ).fail((err) => {
+    }).fail((err) => {
       b = document.createElement("DIV");
       b.innerHTML = "<span>Couldn't load data!</span>";
       a.appendChild(b);
@@ -406,8 +405,14 @@ form.on("submit", function (e) {
     });
   }
 });
+
 let select2Supplier = $(".select2-suppliers")
   .select2({
+    ajax: {
+      url: `${baseUrl}suppliers/select2`,
+      dataType: "json",
+    },
+    allowClear: true,
     placeholder: "Search supplier",
     templateResult: formatCustomer,
     templateSelection: formatCustomer,
@@ -441,23 +446,3 @@ let select2Supplier = $(".select2-suppliers")
 $(".select2-store").select2({
   placeholder: "Seach a store",
 });
-
-let select2Invoices = $(".select2-invoices")
-  .select2({
-    ajax: {
-      url: `${baseUrl}purchases/select2`,
-      dataType: "json",
-    },
-    allowClear: true,
-    minimumInputLength: 3,
-    placeholder: "Enter invoice/receipt reference",
-  })
-  .on("select2:select", function (e) {
-    const data = e.params.data;
-    location.assign(
-      `${baseUrl}purchases/returns/create?invoice=${data.invoice}`
-    );
-  })
-  .on("select2:unselect", function (e) {
-    location.assign(`${baseUrl}purchases/returns/create`);
-  });
