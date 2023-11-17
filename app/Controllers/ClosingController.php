@@ -14,6 +14,7 @@ use App\Models\StoreClosingModel;
 use App\Models\StoreLedgerModel;
 use App\Models\StoreModel;
 use App\Models\SupplierLedgerModel;
+use App\Models\UserModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\Response;
@@ -24,10 +25,13 @@ class ClosingController extends BaseController
 
     public function index(): string
     {
-        $storeModel = new StoreModel();
+        $stores = (new UserModel())->getMyStores();
+
         $data = [
             'title' => 'Closing List',
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
+            'stores' => $stores,
         ];
         return view('pages/closing/list_closing', $data);
     }

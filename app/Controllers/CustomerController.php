@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\CustomerModel;
-use App\Models\StoreModel;
+use App\Models\UserModel;
 use CodeIgniter\HTTP\Response;
 
 class CustomerController extends BaseController
@@ -48,10 +48,13 @@ class CustomerController extends BaseController
      */
     public function show($id)
     {
-        $storeModel = new StoreModel();
+        $stores = (new UserModel())->getMyStores();
+
         $data = [
             'title' => 'Customer Details',
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
+            'stores' => $stores,
         ];
         $model = new CustomerModel();
         $customer =  $model->where('id', $id)->first();
