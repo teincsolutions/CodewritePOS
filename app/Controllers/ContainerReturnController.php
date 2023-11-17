@@ -28,7 +28,7 @@ class ContainerReturnController extends BaseController
             'title' => 'Container Return List',
             'stores' => $storeModel->where('status','opened')->findAll(),
         ];
-        return view('pages/purchase_returns/list_purchase_return', $data);
+        return view('pages/container_returns/list_container_return', $data);
     }
 
 
@@ -38,13 +38,10 @@ class ContainerReturnController extends BaseController
      */
     public function edit()
     {
-        $invoice = $this->request->getVar('invoice');
         $model = new ContainerReturnModel();
-        $purchaseModel = new ContainerModel();
         $lastItem = $model->orderBy('id', 'desc')->first();
         $lastId = $lastItem ? $lastItem->id : 1;
         $stores =(new UserModel())->getMyStores();
-
 
         $data = [
             'title' => 'Create Container Return',
@@ -53,17 +50,8 @@ class ContainerReturnController extends BaseController
             'context' => 'user:' . user_id(),
             'settings' => service('settings'),
         ];
-        $whereInvoice = [
-            'invoice' => $invoice,
-            'order_status' => 'completed'
-        ];
-        $purchase = $purchaseModel->where($whereInvoice)->first();
-        if ($invoice && $purchase) {
-            $data = array_merge($data, ['purchase' => $purchase]);
-        } else if ($invoice) {
-            $data = array_merge($data, ['error' => "This invoice doesn't exist or not completed!",]);
-        }
-        return view('pages/purchase_returns/edit_purchase_return', $data);
+  
+        return view('pages/container_returns/edit_container_return', $data);
     }
 
     /**
@@ -80,7 +68,7 @@ class ContainerReturnController extends BaseController
             'return' => $model->find($id),
         ]);
 
-        return view('pages/purchase_returns/invoice', $data);
+        return view('pages/container_returns/invoice', $data);
     }
 
 
@@ -90,7 +78,7 @@ class ContainerReturnController extends BaseController
      */
     public function save()
     {
-        if (!auth()->user()->can('purchase-returns.create'))
+        if (!auth()->user()->can('container-returns.create'))
         return $this->response->setJSON([
             'status' => false,
             'message' => "Don't have permission to create this record!"
@@ -125,26 +113,26 @@ class ContainerReturnController extends BaseController
             'message' => "Container couldn't be save!",
             'input' => $inputs,
         ];
-        $purchase = $model->where('id', $id)->first();
+        $return = $model->where('id', $id)->first();
         $this->db = Database::connect();
 
-        if ($purchase) $res = array_merge($res, ['message' => "Container Return updated successfully!"]);
+        if ($return) $res = array_merge($res, ['message' => "Container Return updated successfully!"]);
         else $res = array_merge($res, ['message' => "Container Return created successfully!"]);
 
         try {
             $this->db->transException(true)->transStart();
             $saved = $model->save($inputs, true);
 
-            if ($saved && !$purchase) {
+            if ($saved && !$return) {
                 $id = $model->getInsertID();
-                $purchaseItems = [];
+                $returnItems = [];
                 $builder = $stockModel->builder();
                 foreach ($items as $k => $row) {
-                    $items[$k]['purchase_return_id'] = $id;
+                    $items[$k]['container_return_id'] = $id;
                     if (empty($items[$k]['tax_id'])) $items[$k]['tax_id'] = null;
                     if (is_null($items[$k]['store_id']) || empty($items[$k]['store_id'])) $items[$k]['store_id'] = $inputs['store_id'];
 
-                    array_push($purchaseItems, $items[$k]);
+                    array_push($returnItems, $items[$k]);
                     $stockWhere = [
                         'product_id' => $items[$k]['product_id'],
                         'store_id' => $items[$k]['store_id']
@@ -161,13 +149,13 @@ class ContainerReturnController extends BaseController
                         ]);
                     }
                 }
-                $returnItemModel->insertBatch($purchaseItems);
+                $returnItemModel->insertBatch($returnItems);
                 if ($inputs['supplier_id']){
                     $ledger->save([
                         'tdate' => $inputs['return_date'],
                         'supplier_id' => $inputs['supplier_id'],
                         'purchase_id' => $inputs['purchase_id'],
-                        'purchase_return_id' => $id,
+                        'container_return_id' => $id,
                         'store_id' => $inputs['store_id'],
                         'payment_type' => 'cash',
                         'ledger_type' => 'returns',
@@ -175,8 +163,8 @@ class ContainerReturnController extends BaseController
                         'credit' => $inputs['paid'],
                         'user_id' => isset($inputs['user_id']) ? $inputs['user_id'] : null,
                     ]);
-                    $purchaseModel = new ContainerModel();
-                    $purchaseModel->updatePaymentStatus($inputs['purchase_id']);
+                    $returnModel = new ContainerModel();
+                    $returnModel->updatePaymentStatus($inputs['purchase_id']);
                 }
             }
             $this->db->transComplete();
@@ -191,7 +179,7 @@ class ContainerReturnController extends BaseController
             $res = array_merge($res, [
                 'status' => true,
                 'data' => $return,
-                'receipt' => view('pages/purchase_returns/pos_receipt', ['returns' => $return])
+                'receipt' => view('pages/container_returns/pos_receipt', ['returns' => $return])
             ]);
         } else {
             $res = array_merge($res, ['status' => false]);
@@ -214,7 +202,7 @@ class ContainerReturnController extends BaseController
             $res = array_merge($res, [
                 'status' => true,
                 'data' => $return,
-                'receipt' =>  view('pages/purchase_returns/pos_receipt', ['return' => $return]),
+                'receipt' =>  view('pages/container_returns/pos_receipt', ['return' => $return]),
                  'message' => "Invoice found!",
             ]);
         }
@@ -229,8 +217,8 @@ class ContainerReturnController extends BaseController
     {
         $inputs = $this->request->getVar();
         $model = new ContainerReturnModel();
-        $model->select('purchase_returns.*');
-        $model->join('purchases', 'purchases.id=purchase_returns.purchase_id');
+        $model->select('container_returns.*');
+        $model->join('purchases', 'purchases.id=container_returns.purchase_id');
         return $this->response->setJSON(toDatatableResult($model, $inputs, ));
     }
 
@@ -243,13 +231,13 @@ class ContainerReturnController extends BaseController
         $inputs = $this->request->getVar();
         $model = new ContainerReturnModel();
         $builder = $model->builder();
-        $builder->select('purchase_returns.*')
-            ->selectSum('purchase_returns_items.qty', 'qty')
-            ->join('purchase_returns_items', 'purchase_returns_items.purchase_return_id=purchase_returns.id')
-            ->join('purchases', 'purchases.id=purchase_returns.purchase_id')
+        $builder->select('container_returns.*')
+            ->selectSum('container_returns_items.qty', 'qty')
+            ->join('container_returns_items', 'container_returns_items.container_return_id=container_returns.id')
+            ->join('purchases', 'purchases.id=container_returns.purchase_id')
             ->where('product_id', $inputs['product_id'] ?? '')
-            ->where('purchase_returns.order_status', 'completed')
-            ->groupBy('purchase_returns.id');
+            ->where('container_returns.order_status', 'completed')
+            ->groupBy('container_returns.id');
 
         return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) {
             $item->supplier = model('SupplierModel')->where('id', $item->supplier_id)->first();
@@ -265,7 +253,7 @@ class ContainerReturnController extends BaseController
      */
     public function delete($id = null)
     {
-        if (!auth()->user()->can('purchase-returns.delete'))
+        if (!auth()->user()->can('container-returns.delete'))
             return $this->response->setJSON([
                 'status' => false,
                 'message' => "Don't have permission to delete this record!"

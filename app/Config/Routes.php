@@ -97,6 +97,8 @@ $routes->get('account/profile', [AccountController::class, 'profile']);
 $routes->get('account/settings', [AccountController::class, 'settings']);
 $routes->get('adjustments', [AdjustmentController::class, 'index'], ['filter' => 'permission:adjustments.view']);
 $routes->get('container-adjustments', [ContainerAdjustmentController::class, 'index'], ['filter' => 'permission:container-adjustments.view']);
+$routes->get('containers/receivings', [ContainerReceivingController::class, 'index'], ['filter' => 'permission:container-receivings.view']);
+$routes->get('containers/returns', [ContainerReturnController::class, 'index'], ['filter' => 'permission:container-returns.view']);
 $routes->get('brands', [BrandController::class, 'index'], ['filter' => 'permission:brands.view']);
 $routes->get('categories', [CategoryController::class, 'index'], ['filter' => 'permission:categories.view']);
 $routes->get('customers', [CustomerController::class, 'index'], ['filter' => 'permission:customers.view']);

@@ -28,7 +28,7 @@ const searchParams = {
   },
 };
 
-prodIndex = prodIndex ? prodIndex : 0;
+prodIndex = 0;
 saleItemIds = [];
 (dueTotal = 0), (grandTotal = 0), (customerBalance = 0);
 
@@ -453,6 +453,11 @@ form.on("submit", function (e) {
 });
 let select2Customer = $(".select2-customer")
   .select2({
+    ajax: {
+      url: `${baseUrl}customers/select2`,
+      dataType: "json",
+    },
+    allowClear: true,
     placeholder: "walk-in-customer",
     templateResult: formatCustomer,
     templateSelection: formatCustomer,
