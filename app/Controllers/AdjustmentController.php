@@ -142,7 +142,7 @@ class AdjustmentController extends BaseController
                         ]);
                     }
                 }
-                $adjustmentItemModel->insertBatch($adjustmentItems);
+                $adjustmentItemModel->insertBatch($adjustmentItems, null, sizeof($adjustmentItems));
             }
             $this->db->transComplete();
         } catch (DatabaseException $e) {
