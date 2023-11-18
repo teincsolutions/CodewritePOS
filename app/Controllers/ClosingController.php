@@ -67,9 +67,9 @@ class ClosingController extends BaseController
         $store = $storeModel->where('id', $storeId)->first();
         $closingWhere = ['status' => 'pending'];
         $closing = $closingModel->where($closingWhere)->orderBy('id', 'desc')->first();
-
+        $stores = (new UserModel())->getMyStores();
         $data = [
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'stores' => $stores,
             'title' => 'Store Closing',
         ];
 
