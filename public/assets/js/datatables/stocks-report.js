@@ -70,7 +70,7 @@ $(function () {
           if (type === "display") {
             return `<a target="_blank" href="${baseUrl}products/${row.id}" class="btn btn-link btn-sm"><span class="text-warning">${row.sku}</span> ${row.name} (${row.unit_label})</a>`;
           }
-          return data;
+          return `${row.sku} ${row.name} (${row.unit_label})`;
         },
       },
       {
