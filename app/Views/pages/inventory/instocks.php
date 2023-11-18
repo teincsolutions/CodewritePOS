@@ -56,7 +56,7 @@
                         </div>
                         <div class="col-lg-2 col-sm-6 col-12">
                             <div class="form-group">
-                                <input name="sku" type="text" placeholder="Enter sku">
+                                <input name="sku" type="text" placeholder="Enter sku/code">
                             </div>
                         </div>
                         <div class="col-lg-1 col-sm-6 col-12  ms-auto">
@@ -89,5 +89,5 @@
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/instocks.js?v=1') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/instocks.js?v=2') ?>"></script>
 <?= $this->endSection() ?>
