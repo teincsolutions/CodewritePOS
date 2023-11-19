@@ -99,7 +99,7 @@
                                         ? '<a class="product-img"><img src="' . base_url($row->product->image_uri) . '" alt="product"></a>'
                                         : '<a class="p-3"></a>' ?>
                                     <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
-                                        <?= $row->product->name ?>
+                                    <?= setting('App.ShowProductSKU') === 'yes' ? $row->product->sku : '' ?> <?= $row->product->name ?>
                                 </td>
                                 <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->unit_cost ?></td>
                                 <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->instock_qty ?></td>

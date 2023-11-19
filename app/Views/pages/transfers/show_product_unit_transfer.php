@@ -94,14 +94,14 @@
                                         ? '<a class="product-img"><img src="' . base_url($row->fromProduct->image_uri) . '" alt="product"></a>'
                                         : '<a class="p-3"></a>' ?>
                                     <a target="_blank" href="<?= site_url('products/' . $row->from_product_id) ?>">
-                                        <?= $row->fromProduct->name ?> (<?= $row->fromProduct->unit->label ?>)
+                                        <?= setting('App.ShowProductSKU') === 'yes' ? $row->product->sku : '' ?> <?= $row->fromProduct->name ?> (<?= $row->fromProduct->unit->label ?>)
                                 </td>
                                 <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
-                                    <?= $row->fromProduct->image_uri
-                                        ? '<a class="product-img"><img src="' . base_url($row->fromProduct->image_uri) . '" alt="product"></a>'
+                                    <?= $row->toProduct->image_uri
+                                        ? '<a class="product-img"><img src="' . base_url($row->toProduct->image_uri) . '" alt="product"></a>'
                                         : '<a class="p-3"></a>' ?>
-                                    <a target="_blank" href="<?= site_url('products/' . $row->from_product_id) ?>">
-                                        <?= $row->fromProduct->name ?> (<?= $row->fromProduct->unit->label ?>)
+                                    <a target="_blank" href="<?= site_url('products/' . $row->to_product_id) ?>">
+                                        <?= setting('App.ShowProductSKU') === 'yes' ? $row->toProduct->sku : '' ?> <?= $row->toProduct->name ?> (<?= $row->toProduct->unit->label ?>)
                                 </td>
                                 <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->from_unit_qty ?></td>
                                 <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; "><?= $row->to_unit_qty ?></td>

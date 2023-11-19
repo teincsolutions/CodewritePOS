@@ -86,54 +86,7 @@
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <?php
-                                if (isset($transfer)) :
-                                    $ids = array_map(function ($item) {
-                                        return $item->id;
-                                    }, $transfer->items);
-
-                                    foreach ($transfer->items as $key => $row) :
-                                        if ($row->qty <= 0) continue;
-                                ?>
-                                        <tr>
-                                            <td>
-                                            </td>
-                                            <td class="productimgname">
-                                                <?= $row->product->image_uri
-                                                    ? '<a class="product-img"><img src="' . base_url($row->product->image_uri) . '" alt="product"></a>'
-                                                    : '<a class="p-3"></a>' ?>
-                                                <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
-                                                    <?= $row->product->name ?>
-                                                    (<?= $row->store->name; ?><?= $row->store->location ? "(" . $row->store->location . ")" : null; ?>)</a>
-                                            </td>
-                                            <td>
-                                                <div class="increment-decrement">
-                                                    <div class="input-groups">
-                                                        <input type="button" value="-" class="button-minus dec button">
-                                                        <input type='hidden' name="items[<?= $key ?>][product_id]" value="<?= $row->product_id ?>">
-                                                        <input type="hidden" name="items[<?= $key ?>][unit_price]" value="<?= $row->unit_price; ?>">
-                                                        <input type="hidden" name="items[<?= $key ?>][unit_cost]" value="<?= $row->unit_cost; ?>">
-                                                        <input type="hidden" name="items[<?= $key ?>][tax_id]" value="<?= $row->tax_id ?>">
-                                                        <input type="hidden" name="items[<?= $key ?>][store_id]" value="<?= $row->store_id; ?>">
-                                                        <input type="hidden" name="items[<?= $key ?>][tax]" class="rtax" value="<?= $row->tax ?>">
-                                                        <input type="hidden" name="items[<?= $key ?>][discount]" class="rdiscount" value="<?= $row->discount ?>">
-                                                        <input type="hidden" name="items[<?= $key ?>][subtotal]" class="rsubtotal" value="<?= $row->subtotal ?>">
-                                                        <input onblur="updateItemRow(this)" min="1" type="text" name="items[<?= $key ?>][qty]" max="<?= $row->qty ?>" value="<?= $row->qty ?>" class="quantity-field" required>
-                                                        <input type="button" value="+" class="button-plus inc button">
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><?= $row->unit_price ?></td>
-                                            <td data-discount="<?= $row->discount ?>"><?= $row->discount ?></td>
-                                            <td data-tax="<?= $row->tax ?>" class="suffix-percent"><?= number_format($row->tax, 2) ?></td>
-                                            <td><?= number_format($row->subtotal, 2) ?></td>
-                                            <td><a href="javascript:void(0);" class="delete-set" data-item-id="<?= $row->id ?>"><i class="fa text-danger fa-trash"></i></a></td>
-
-                                        </tr>
-                                <?php endforeach;
-                                endif ?>
-                            </tbody>
+                           <tbody></tbody>
                         </table>
 
                     </div>
@@ -204,6 +157,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-product-transfer.js?v=2') ?>"></script>
+<script src="<?= base_url('assets/js/handle-product-transfer.js?v=3') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?= $this->endSection() ?>

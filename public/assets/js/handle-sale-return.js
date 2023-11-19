@@ -71,13 +71,13 @@ let tableItems = $(".tr-items").DataTable({
   },
 });
 if (initCompleted) updateTotals();
-$("div.toolbar").html(
-  "<span class='btn btn-danger clear-all'>Clear all</span>"
-).on("click",".clear-all", function (e) {
-  tableItems.rows().remove().draw();
-  saleItemIds = [];
-  updateTotals();
-});
+$("div.toolbar")
+  .html("<span class='btn btn-danger clear-all'>Clear all</span>")
+  .on("click", ".clear-all", function (e) {
+    tableItems.rows().remove().draw();
+    saleItemIds = [];
+    updateTotals();
+  });
 
 function updateItemRow(row) {
   let row1 = $(row).parents("tr").first();
@@ -261,7 +261,11 @@ function autocomplete(inp) {
                                         }
                                             <a target="_blank" href="${baseUrl}products/${
                 item.id
-              }">${item.name}(${item.unit.label})</a></td>
+              }">${Settings.ShowProductSKU === "yes" ? item.sku : ""} ${
+                item.name
+              }(${
+                item.unit.label
+              })</a><span class="badge bg-info">${instock}</span></td>
                                         <td>
                                         <div class="increment-decrement">
                                             <div class="input-groups">

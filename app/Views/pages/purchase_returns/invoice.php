@@ -130,7 +130,7 @@
                                         ? '<a class="product-img"><img src="' . base_url($row->product->image_uri) . '" alt="product"></a>'
                                         : '<a class="p-3"></a>' ?>
                                     <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
-                                        <?= $row->product->name ?>
+                                    <?= setting('App.ShowProductSKU') === 'yes' ? $row->product->sku : '' ?> <?= $row->product->name ?>
                                         <?php if ($row->store) { ?>
                                             <?= $row->store->name; ?><?= $row->store->location ? "(" . $row->store->location . ")" : null; ?></a>
                                 <?php } ?>

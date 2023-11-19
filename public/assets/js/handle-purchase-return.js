@@ -71,13 +71,13 @@ let tableItems = $(".tr-items").DataTable({
   },
 });
 if (initCompleted) updateTotals();
-$("div.toolbar").html(
-  "<span class='btn btn-danger clear-all'>Clear all</span>"
-).on("click",".clear-all", function (e) {
-  tableItems.rows().remove().draw();
-  purchaseItemIds = [];
-  updateTotals();
-});
+$("div.toolbar")
+  .html("<span class='btn btn-danger clear-all'>Clear all</span>")
+  .on("click", ".clear-all", function (e) {
+    tableItems.rows().remove().draw();
+    purchaseItemIds = [];
+    updateTotals();
+  });
 
 function updateItemRow(row) {
   let row1 = $(row).parents("tr").first();
@@ -126,8 +126,8 @@ function updateTotals() {
         ? "(" + Math.abs(dueTotal).toFixed(2) + ")"
         : dueTotal.toFixed(2))
   );
-  if(dueTotal < 0) $("input[name='paid']").val(Math.abs(dueTotal));
-  else $("input[name='paid']").val(0.00);
+  if (dueTotal < 0) $("input[name='paid']").val(Math.abs(dueTotal));
+  else $("input[name='paid']").val(0.0);
 }
 
 function checkout() {
@@ -200,7 +200,11 @@ function autocomplete(inp) {
           return;
         } else {
           d.data.forEach((item, i) => {
-            if (purchaseItemIds.includes(item.purchase_item_id) || item.max_qty <= 0) return;
+            if (
+              purchaseItemIds.includes(item.purchase_item_id) ||
+              item.max_qty <= 0
+            )
+              return;
 
             b = document.createElement("DIV");
             info = [];
@@ -240,7 +244,11 @@ function autocomplete(inp) {
                                         }
                                             <a target="_blank" href="${baseUrl}products/${
                 item.id
-              }">${item.name}(${item.unit.label})</a></td>
+              }">${Settings.ShowProductSKU === "yes" ? item.sku : ""} ${
+                item.name
+              }(${
+                item.unit.label
+              })</a><span class="badge bg-info">${instock}</span></td>
                                         <td>
                                         <div class="increment-decrement">
                                             <div class="input-groups">

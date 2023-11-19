@@ -96,47 +96,7 @@
                                             <th></th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <?php
-                                        if (isset($quote))
-                                            foreach ($quote->items as $key => $row) : ?>
-                                            <tr>
-                                                <td>
-                                                </td>
-                                                <td class="productimgname">
-                                                    <?= $row->product->image_uri
-                                                        ? '<a class="product-img"><img src="' . base_url($row->product->image_uri) . '" alt="product"></a>'
-                                                        : '<a class="p-3"></a>' ?>
-                                                    <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
-                                                        <?= $row->product->name ?>
-                                                        (<?= $row->product->unit->label; ?>)
-                                                </td>
-                                                <td>
-                                                    <div class="increment-decrement">
-                                                        <div class="input-groups">
-                                                            <input type="button" value="-" class="button-minus dec button">
-                                                            <input type='hidden' name="items[<?= $key ?>][quote_id]" value="<?= $row->quote_id ?>">
-                                                            <input type='hidden' name="items[<?= $key ?>][product_id]" value="<?= $row->product_id ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][unit_cost]" value="<?= $row->unit_cost; ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][tax_id]" value="<?= $row->tax_id ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][store_id]" value="<?= $row->store_id; ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][tax]" class="rtax" value="<?= ($row->unit_cost * $row->qty * $row->tax) / 100 ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][discount]" class="rdiscount" value="<?= $row->discount ?>">
-                                                            <input type="hidden" name="items[<?= $key ?>][subtotal]" class="rsubtotal" value="<?= $row->unit_cost * $row->qty - $row->discount + ($row->unit_cost * $row->qty * $row->tax) / 100 ?>">
-                                                            <input onblur="updateItemRow(this)" min=".1" type="text" name="items[<?= $key ?>][qty]" value="<?= $row->qty ?>" class="quantity-field" required>
-                                                            <input type="button" value="+" class="button-plus inc button">
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td><?= $row->unit_cost ?></td>
-                                                <td data-discount="<?= $row->discount ?>"><?= $row->discount ?></td>
-                                                <td data-tax="<?= $row->tax ?>"><?= number_format(($row->unit_cost * $row->qty * $row->tax) / 100, 2) ?></td>
-                                                <td><?= number_format($row->unit_cost * $row->qty - $row->discount + (($row->unit_cost * $row->qty * $row->tax) / 100), 2) ?></td>
-                                                <td><a href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
-
-                                            </tr>
-                                        <?php endforeach ?>
-                                    </tbody>
+                                    <tbody></tbody>
                                 </table>
                                 <script>
                                     let prodIndex = <?= isset($quote) ? sizeof($quote->items) : 0 ?>;
@@ -407,7 +367,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-quote.js?v=10') ?>"></script>
+<script src="<?= base_url('assets/js/handle-quote.js?v=15') ?>"></script>
 <script src="<?= base_url('assets/js/datatables/quote.modal.js') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?= $this->endSection() ?>

@@ -104,7 +104,7 @@
                                                     ? '<a class="product-img"><img src="' . base_url($row->product->image_uri) . '" alt="product"></a>'
                                                     : '<a class="p-3"></a>' ?>
                                                 <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
-                                                    <?= $row->product->name ?>
+                                                    <?= setting('App.ShowProductSKU') === 'yes' ? $row->product->sku : '' ?> <?= $row->product->name ?>
                                                     (<?= $row->product->unit->label; ?>)</a>
                                             </td>
                                             <td>
@@ -208,7 +208,7 @@
                         </div>
                     </div>
                     <div class="col-lg-12">
-                        <button onclick="$('.post-form').submit()"  type="button" class="btn btn-submit me-2">Submit Return</button>
+                        <button onclick="$('.post-form').submit()" type="button" class="btn btn-submit me-2">Submit Return</button>
                     </div>
                 </div>
             </div>
@@ -217,7 +217,7 @@
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-sale-return.js?v=10') ?>"></script>
+<script src="<?= base_url('assets/js/handle-sale-return.js?v=15') ?>"></script>
 <?php if (isset($sales) && $sales->customer) {
     $customer = $sales->customer;
     $customer->text = $customer->name . " (" . ($customer->address ? $customer->address : $customer->phone) . ")";

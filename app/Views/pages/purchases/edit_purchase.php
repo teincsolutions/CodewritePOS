@@ -110,8 +110,9 @@
                                                         ? '<a class="product-img"><img src="' . base_url($row->product->image_uri) . '" alt="product"></a>'
                                                         : '<a class="p-3"></a>' ?>
                                                     <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
-                                                        <?= $row->product->name ?>
-                                                        (<?= $row->product->unit->label; ?>)</td>
+                                                        <?= setting('App.ShowProductSKU') === 'yes' ? $row->product->sku : '' ?> <?= $row->product->name ?>
+                                                        (<?= $row->product->unit->label; ?>)
+                                                </td>
                                                 <td>
                                                     <div class="increment-decrement">
                                                         <div class="input-groups">
@@ -376,7 +377,7 @@
                             <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#purchase" type="button" aria-controls="purchase" aria-selected="true" role="tab">Purchase</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link"  data-bs-toggle="tab" data-bs-target="#ledger-tab" type="button" aria-controls="payment" aria-selected="false" role="tab">Payment</button>
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#ledger-tab" type="button" aria-controls="payment" aria-selected="false" role="tab">Payment</button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" data-bs-toggle="tab" data-bs-target="#returns-tab" type="button" aria-controls="return" aria-selected="false" role="tab">Return</button>
@@ -424,7 +425,7 @@
                                             <th class="text-end">Action</th>
                                         </tr>
                                     </thead>
-                                   
+
                                 </table>
                             </div>
                         </div>
@@ -562,7 +563,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-order.js?v=12') ?>"></script>
+<script src="<?= base_url('assets/js/handle-order.js?v=14') ?>"></script>
 <script src="<?= base_url('assets/js/datatables/order.modal.js?v=1') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?php if (isset($purchase) && $purchase->supplier) {

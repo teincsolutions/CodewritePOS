@@ -10,7 +10,7 @@
             <a href="<?= site_url('sales/returns/create') ?>" class="btn btn-added"><i class="fa fa-plus me-1"></i> Sales Return</a>
         </div>
     </div>
-    <form class="post-form <?= isset($sales) ? 'refresh-page': null ?>" action="<?= site_url('sales') ?>" method="post">
+    <form class="post-form <?= isset($sales) ? 'refresh-page' : null ?>" action="<?= site_url('sales') ?>" method="post">
         <div class="row">
             <div class="col-sm-12 col-lg-8">
                 <?= csrf_field() ?>
@@ -110,7 +110,7 @@
                                                         ? '<a class="product-img"><img src="' . base_url($row->product->image_uri) . '" alt="product"></a>'
                                                         : '<a class="p-3"></a>' ?>
                                                     <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
-                                                        <?= $row->product->name ?>
+                                                        <?= setting('App.ShowProductSKU') === 'yes' ? $row->product->sku : '' ?> <?= $row->product->name ?>
                                                         (<?= $row->product->unit->label; ?>)
                                                 </td>
                                                 <td>
@@ -589,7 +589,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-pos.js?v=10') ?>"></script>
+<script src="<?= base_url('assets/js/handle-pos.js?v=15') ?>"></script>
 <script src="<?= base_url('assets/js/datatables/pos.modal.js?v=4') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?php if (isset($sales) && $sales->customer) {

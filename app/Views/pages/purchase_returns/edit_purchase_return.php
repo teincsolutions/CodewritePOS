@@ -103,7 +103,7 @@
                                                     ? '<a class="product-img"><img src="' . base_url($row->product->image_uri) . '" alt="product"></a>'
                                                     : '<a class="p-3"></a>' ?>
                                                 <a target="_blank" href="<?= site_url('products/' . $row->product_id) ?>">
-                                                    <?= $row->product->name ?>
+                                                    <?= setting('App.ShowProductSKU') === 'yes' ? $row->product->sku : '' ?> <?= $row->product->name ?>
                                                     (<?= $row->product->unit->label; ?>)</a>
                                             </td>
                                             <td>
@@ -212,7 +212,7 @@
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-purchase-return.js?v=4') ?>"></script>
+<script src="<?= base_url('assets/js/handle-purchase-return.js?v=5') ?>"></script>
 <?php if (isset($purchase) && $purchase->supplier) {
     $supplier = $purchase->supplier;
     $supplier->text = $supplier->name . " (" . ($supplier->address ? $supplier->address : $supplier->phone) . ")";

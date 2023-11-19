@@ -116,6 +116,21 @@
                                                 </td>
                                             </tr>
                                             <tr>
+                                                <td>Display Product SKU/Code</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="ShowProductSKU" value="yes" <?= setting('App.ShowProductSKU') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="ShowProductSKU" value="no" <?= setting('App.ShowProductSKU') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <td>Use Whole Sale Prices</td>
                                                 <td>
                                                     <div class="d-flex gap-5">

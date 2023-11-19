@@ -264,7 +264,7 @@ function autocomplete(inp) {
                                         }
                                             <a target="_blank" href="${baseUrl}products/${
               item.id
-            }">${item.name}(${item.unit.label})</a></td>
+            }">${Settings.ShowProductSKU === "yes" ? item.sku : ""} ${item.name}(${item.unit.label})</a></td>
                                         <td>
                                         <div class="increment-decrement">
                                             <div class="input-groups">

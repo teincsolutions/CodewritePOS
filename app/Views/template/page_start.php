@@ -26,13 +26,13 @@
         <?php
         $settings = [
             'ProductDiffForStore',
-            'AllowPriceChange', 
-            'LimitPriceChange', 
-            'AllowCostChange', 
-            'LimitCostChange', 
+            'AllowPriceChange',
+            'LimitPriceChange',
+            'AllowCostChange',
+            'LimitCostChange',
             'AllowWholeSalePrices',
-            'AllowCustomerDiscountChange', 
-            'AllowSupplierDiscountChange', 
+            'AllowCustomerDiscountChange',
+            'AllowSupplierDiscountChange',
             'AllowDeleteSales',
             'AllowDeleteSalesReturns',
             'AllowDeletePurchases',
@@ -40,12 +40,13 @@
             'AllowDeleteClosing',
             'UseExpiration',
             'AllowDeleteQuotes',
-            'companyName', 
+            'companyName',
             'companyContacts',
             'ShowMainBranchAddress',
             'AllowDeleteUnitTransfers',
             'AllowDeleteTransfers',
-            'AllowDeleteAdjustments'
+            'AllowDeleteAdjustments',
+            'ShowProductSKU'
         ];
         $data = [];
         foreach ($settings as  $key)
