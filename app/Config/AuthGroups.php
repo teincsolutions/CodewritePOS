@@ -159,7 +159,7 @@ class AuthGroups extends ShieldAuthGroups
 
         'sales.view'        => 'Can view sales',
         'sales.create'        => 'Can add new sales',
-        'sales.edit'          => 'Can edit sales',
+        'sales.edit-price'          => 'Can edit sale product prices',
         'sales.delete'        => 'Can delete existing sales',
         'sales.report'        => 'Can access sales reports',
 

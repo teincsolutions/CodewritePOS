@@ -578,7 +578,7 @@
             </div>
 
             <div class="modal-footer">
-                <?php if (auth()->user()->can('products.edit')) : ?>
+                <?php if (auth()->user()->can('sales.edit-price')) : ?>
                     <button onclick="updateProduct()" type="submit" class="btn btn-submit">Update</button>
                 <?php endif ?>
                 <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
