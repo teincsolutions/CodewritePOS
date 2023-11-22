@@ -161,7 +161,7 @@ $(".tr-items").on("click", ".inc.button", function () {
   var $this = $(this),
     $input = $this.prev("input"),
     newValue = parseFloat($input.val()) + 1;
-  if (newValue > 0 && newValue <= $input.attr("max")) $input.val(newValue);
+  if (newValue > 0 && newValue <= intVal($input.attr("max"))) $input.val(newValue);
   updateItemRow(this);
 });
 $(".tr-items").on("click", ".dec.button", function () {
