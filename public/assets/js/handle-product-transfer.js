@@ -161,7 +161,8 @@ $(".tr-items").on("click", ".inc.button", function () {
   var $this = $(this),
     $input = $this.prev("input"),
     newValue = parseFloat($input.val()) + 1;
-  if (newValue > 0 && newValue <= intVal($input.attr("max"))) $input.val(newValue);
+  if (newValue > 0 && newValue <= intVal($input.attr("max")))
+    $input.val(newValue);
   updateItemRow(this);
 });
 $(".tr-items").on("click", ".dec.button", function () {
@@ -264,7 +265,11 @@ function autocomplete(inp) {
                                         }
                                             <a target="_blank" href="${baseUrl}products/${
               item.id
-            }">${Settings.ShowProductSKU === "yes" ? item.sku : ""} ${item.name}(${item.unit.label})</a><span class="badge bg-info">${instock}</span></td>
+            }">${Settings.ShowProductSKU === "yes" ? item.sku : ""} ${
+              item.name
+            }(${
+              item.unit.label
+            })</a><span class="badge bg-info">${instock}</span></td>
                                         <td>
                                         <div class="increment-decrement">
                                             <div class="input-groups">
