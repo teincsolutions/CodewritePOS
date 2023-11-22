@@ -264,7 +264,7 @@ function autocomplete(inp) {
                                         }
                                             <a target="_blank" href="${baseUrl}products/${
               item.id
-            }">${Settings.ShowProductSKU === "yes" ? item.sku : ""} ${item.name}(${item.unit.label})</a></td>
+            }">${Settings.ShowProductSKU === "yes" ? item.sku : ""} ${item.name}(${item.unit.label})</a><span class="badge bg-info">${instock}</span></td>
                                         <td>
                                         <div class="increment-decrement">
                                             <div class="input-groups">
@@ -298,7 +298,7 @@ function autocomplete(inp) {
               (item.unit_price * (item.tax ? item.tax.rate : 0.0)) / 100
             }">
                                                 <input type="button" value="-" class="button-minus dec button">
-                                                <input onblur="updateItemRow(this)" min="0.1" max="${instock}" type="text" name="items[${prodIndex}][qty]" value="0" class="quantity-field" required>
+                                                <input onblur="updateItemRow(this)" min="0.1" step="any" max="${instock}" type="text" name="items[${prodIndex}][qty]" value="0" class="quantity-field" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>
