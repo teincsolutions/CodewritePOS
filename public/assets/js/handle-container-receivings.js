@@ -167,7 +167,7 @@ $(".tr-items").on("click", ".inc.button", function () {
   var $this = $(this),
     $input = $this.prev("input"),
     newValue = parseFloat($input.val()) + 1;
-  if (newValue > 0 && newValue <= $input.attr("max")) $input.val(newValue);
+  if (newValue > 0) $input.val(newValue);
   updateItemRow(this);
 });
 $(".tr-items").on("click", ".dec.button", function () {
@@ -291,9 +291,7 @@ function autocomplete(inp) {
                 (item.unit_price * (item.tax ? item.tax.rate : 0.0)) / 100
               }">
                                                 <input type="button" value="-" class="button-minus dec button">
-                                                <input onblur="updateItemRow(this)" min=".1" max="${
-                                                  item.max_qty
-                                                }" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field rqty" required>
+                                                <input onblur="updateItemRow(this)" min=".1" step="any" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field rqty" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>
