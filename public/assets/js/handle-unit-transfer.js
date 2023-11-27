@@ -86,7 +86,7 @@ function updateItemRow(row) {
   $("td:eq(4)", row1).html((qty * (from_unit_qty / to_unit_qty)).toFixed(2));
   $(".to_unit_qty", row1).val((qty * (from_unit_qty / to_unit_qty)).toFixed(2));
 
-  tableItems.draw();
+  updateTotals();
 }
 
 $(".tr-items").on("click", ".delete-set", function () {

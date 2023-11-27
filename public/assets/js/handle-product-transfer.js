@@ -100,7 +100,7 @@ function updateItemRow(row) {
   $("td:eq(5)", row1).html(((tax / 100) * qty * price).toFixed(2));
   $("td:eq(4)", row1).html((qty * discount).toFixed(2));
   $("td:eq(6)", row1).html(subtotal.toFixed(2));
-  tableItems.draw();
+  updateTotals();
 }
 
 function updateTotals() {

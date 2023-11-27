@@ -212,7 +212,7 @@
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-purchase-return.js?v=5') ?>"></script>
+<script src="<?= base_url('assets/js/handle-purchase-return.js?v=16') ?>"></script>
 <?php if (isset($purchase) && $purchase->supplier) {
     $supplier = $purchase->supplier;
     $supplier->text = $supplier->name . " (" . ($supplier->address ? $supplier->address : $supplier->phone) . ")";

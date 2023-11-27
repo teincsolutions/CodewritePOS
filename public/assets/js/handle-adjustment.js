@@ -96,7 +96,7 @@ function updateItemRow(row) {
   $("td:eq(6)", row1).html(subtotal.toFixed(2));
   $(".rsubtotal", row1).val(subtotal);
 
-  tableItems.draw();
+  updateTotals();
 }
 
 function updateTotals() {

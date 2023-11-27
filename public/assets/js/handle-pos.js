@@ -102,7 +102,7 @@ function updateItemRow(row) {
   $("td:eq(4)", row1).html(discount.toFixed(2));
   $("td:eq(5)", row1).html(tax.toFixed(2));
   $("td:eq(6)", row1).html(subtotal.toFixed(2));
-  tableItems.draw();
+  updateTotals();
 }
 
 function updateTotals() {
@@ -496,7 +496,7 @@ function autocomplete(inp) {
               (unitPrice * (item.tax ? item.tax.rate : 0.0)) / 100
             }">
                                                 <input type="button" value="-" class="button-minus dec button">
-                                                <input onblur="updateItemRow(this)" min="0.1" type="text" name="items[${prodIndex}][qty]" value="1" class="rqty quantity-field" required>
+                                                <input onkeyup="updateItemRow(this)" min="0.1" type="text" name="items[${prodIndex}][qty]" value="1" class="rqty quantity-field" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>

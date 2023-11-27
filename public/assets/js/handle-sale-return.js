@@ -91,7 +91,7 @@ function updateItemRow(row) {
   $("td:eq(4)", row1).html(discount.toFixed(2));
   $("td:eq(5)", row1).html(tax.toFixed(2));
   $("td:eq(6)", row1).html(subtotal.toFixed(2));
-  tableItems.draw();
+  updateTotals();
 }
 
 function updateTotals() {

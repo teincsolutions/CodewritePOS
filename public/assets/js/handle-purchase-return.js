@@ -87,7 +87,7 @@ function updateItemRow(row) {
     subtotal = qty * cost;
   $(".rsubtotal", row1).val(subtotal);
   $("td:eq(4)", row1).html(subtotal.toFixed(2));
-  tableItems.draw();
+  updateTotals();
 }
 
 function updateTotals() {

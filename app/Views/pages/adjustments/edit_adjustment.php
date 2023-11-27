@@ -63,7 +63,7 @@
                         </div>
                         <div class="row">
                             <div class="table-responsive mb-3">
-                                <table class="table tr-items">
+                                <table class="table tr-items" style="max-height: 500px !important;overflow-y:scroll">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -111,6 +111,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-adjustment.js?v=15') ?>"></script>
+<script src="<?= base_url('assets/js/handle-adjustment.js?v=16') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?= $this->endSection() ?>

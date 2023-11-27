@@ -99,7 +99,7 @@ function updateItemRow(row) {
   $("td:eq(3)", row1).html(cost.toFixed(2));
   $("td:eq(4)", row1).html(discount.toFixed(2));
   $("td:eq(5)", row1).html(subtotal.toFixed(2));
-  tableItems.draw();
+  updateTotals();
 }
 
 // cost change
