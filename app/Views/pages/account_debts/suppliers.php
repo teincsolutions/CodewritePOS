@@ -147,5 +147,5 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/supplier-creditors.js?v=1') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/supplier-creditors.js?v=2') ?>"></script>
 <?= $this->endSection() ?>
