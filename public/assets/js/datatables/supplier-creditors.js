@@ -71,9 +71,11 @@ $(function () {
       {
         data: "balance",
         render: function (data, type, row) {
-          return data < 0
-            ? `(GHS ${Math.abs(data).toFixed(2)})`
-            : `GHS ${parseFloat(data).toFixed(2)}`;
+          if (type === "display")
+            return data < 0
+              ? `(GHS ${Math.abs(data).toFixed(2)})`
+              : `GHS ${parseFloat(data).toFixed(2)}`;
+          return Math.abs(data).toFixed(2);
         },
       },
       {
