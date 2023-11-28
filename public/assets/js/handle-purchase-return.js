@@ -272,7 +272,7 @@ function autocomplete(inp) {
                 item.unit_cost
               }">
                                                 <input type="button" value="-" class="button-minus dec button">
-                                                <input onblur="updateItemRow(this)" min=".1" max="${
+                                                <input onkeyup="updateItemRow(this)" min=".1" max="${
                                                   item.max_qty
                                                 }" type="text" name="items[${prodIndex}][qty]" value="${
                 item.max_qty

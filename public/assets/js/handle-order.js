@@ -420,7 +420,7 @@ function autocomplete(inp) {
               item.unit_cost - item?.pdiscount
             }"> 
                             <input type="button" value="-" class="button-minus dec button">
-                                                <input onblur="updateItemRow(this)" min="0.1" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field rqty" required>
+                                                <input onkeyup="updateItemRow(this)" min="0.1" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field rqty" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>

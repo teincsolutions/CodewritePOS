@@ -303,7 +303,7 @@ function autocomplete(inp) {
               (item.unit_price * (item.tax ? item.tax.rate : 0.0)) / 100
             }">
                                                 <input type="button" value="-" class="button-minus dec button">
-                                                <input onblur="updateItemRow(this)" min="0.1" step="any" max="${instock}" type="text" name="items[${prodIndex}][qty]" value="0" class="quantity-field" required>
+                                                <input onkeyup="updateItemRow(this)" min="0.1" step="any" max="${instock}" type="text" name="items[${prodIndex}][qty]" value="0" class="quantity-field" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>

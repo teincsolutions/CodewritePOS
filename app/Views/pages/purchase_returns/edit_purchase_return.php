@@ -116,7 +116,7 @@
                                                         <input type="hidden" name="items[<?= $key ?>][store_id]" value="<?= $row->store_id; ?>">
                                                         <input type="hidden" name="items[<?= $key ?>][subtotal]" class="rsubtotal" value="<?= $row->max_qty * $row->unit_cost ?>">
                                                         <input type="button" value="-" class="button-minus dec button">
-                                                        <input onblur="updateItemRow(this)" min="0.1" type="text" name="items[<?= $key ?>][qty]" max="<?= $row->max_qty ?>" value="<?= $row->max_qty ?>" class="quantity-field rqty" required>
+                                                        <input onkeyup="updateItemRow(this)" min="0.1" type="text" name="items[<?= $key ?>][qty]" max="<?= $row->max_qty ?>" value="<?= $row->max_qty ?>" class="quantity-field rqty" required>
                                                         <input type="button" value="+" class="button-plus inc button">
                                                     </div>
                                                 </div>

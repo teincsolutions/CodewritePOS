@@ -106,7 +106,7 @@ $(".tr-items").on("click", ".add-set", function () {
           <div class="input-groups">
               <input type="hidden" name="items[${prodIndex}][to_unit_qty]" value="0" class="to_unit_qty" required>
               <input type="button" value="-" class="button-minus dec button">
-              <input onblur="updateItemRow(this)" min=".1" type="text" name="items[${prodIndex}][from_unit_qty]" value="0" class="quantity-field" required>
+              <input onkeyup="updateItemRow(this)" min=".1" type="text" name="items[${prodIndex}][from_unit_qty]" value="0" class="quantity-field" required>
               <input type="button" value="+" class="button-plus inc button">
           </div>
       </div>

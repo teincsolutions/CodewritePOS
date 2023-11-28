@@ -120,7 +120,7 @@
                                                         <input type="hidden" name="items[<?= $key ?>][discount]" value="<?= $row->discount ?>" class="rdiscount">
                                                         <input type="hidden" name="items[<?= $key ?>][subtotal]" value="<?= $row->unit_price * $row->max_qty + $row->unit_price * ($row->tax / 100) * $row->max_qty + $row->discount * $row->max_qty ?>" class="rsubtotal">
                                                         <input type="button" value="-" class="button-minus dec button">
-                                                        <input onblur="updateItemRow(this)" min="0.1" type="text" name="items[<?= $key ?>][qty]" max="<?= $row->max_qty ?>" value="<?= $row->max_qty ?>" class="quantity-field rqty" required>
+                                                        <input onkeyup="updateItemRow(this)" min="0.1" type="text" name="items[<?= $key ?>][qty]" max="<?= $row->max_qty ?>" value="<?= $row->max_qty ?>" class="quantity-field rqty" required>
                                                         <input type="button" value="+" class="button-plus inc button">
                                                     </div>
                                                 </div>
