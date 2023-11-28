@@ -36,7 +36,7 @@ class CreateSalesReturnItemsTable extends Migration
                 'null' => true,
             ],
             'sale_item_id' => [
-                'type'       => 'BGINT',
+                'type'       => 'BIGINT',
                 'constraint' => 18,
                 'unsigned'  => true,
                 'null' => true,
