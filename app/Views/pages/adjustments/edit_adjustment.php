@@ -111,6 +111,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-adjustment.js?v=16') ?>"></script>
+<script src="<?= base_url('assets/js/handle-adjustment.js?v=17') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?= $this->endSection() ?>
