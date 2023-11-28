@@ -29,8 +29,6 @@ $(function () {
         params.fields = filter;
       },
     },
-    processing: true,
-    serverSide: true,
     bFilter: true,
     dom: "fBtlpi",
     buttons: [
