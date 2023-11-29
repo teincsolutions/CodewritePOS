@@ -149,6 +149,17 @@ $(function () {
           ? i
           : 0;
       };
+
+      // Total over this page
+      pageTotal = api
+        .column(4, { page: "current" })
+        .data()
+        .reduce(function (a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);
+
+      // Update footer
+      $(api.column(4).footer()).html("GHS " + pageTotal.toFixed(2));
     },
     order: [[3, "desc"]],
     columnDefs: [

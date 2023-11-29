@@ -199,6 +199,38 @@ $(function () {
           ? i
           : 0;
       };
+
+      // Total over this page
+      pageTotal = api
+        .column(6, { page: "current" })
+        .data()
+        .reduce(function (a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);
+
+      // Update footer
+      $(api.column(6).footer()).html("GHS " + pageTotal.toFixed(2));
+
+      // Total over this page
+      pageTotal = api
+        .column(7, { page: "current" })
+        .data()
+        .reduce(function (a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);
+
+      // Update footer
+      $(api.column(7).footer()).html("GHS " + pageTotal.toFixed(2));
+      // Total over this page
+      pageTotal = api
+        .column(8, { page: "current" })
+        .data()
+        .reduce(function (a, b) {
+          return intVal(a) + intVal(b.total_amount - b.paid);
+        }, 0);
+
+      // Update footer
+      $(api.column(8).footer()).html("GHS " + pageTotal.toFixed(2));
     },
     order: [[1, "desc"]],
     columnDefs: [

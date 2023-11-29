@@ -15,7 +15,7 @@
         <div class="card-body">
             <div class="table-top">
                 <div class="search-set">
-                  
+
                     <div class="search-input">
                         <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
                     </div>
@@ -30,7 +30,7 @@
                         <div class="col-lg-2 col-sm-6 col-12">
                             <div class="form-group">
                                 <div class="input-groupicon">
-                                    <input type="text" class="datetimepicker" placeholder="From date" id="date-from" value="<?=date('d-m-Y', strtotime('first day of this month')) ?>">
+                                    <input type="text" class="datetimepicker" placeholder="From date" id="date-from" value="<?= date('d-m-Y', strtotime('first day of this month')) ?>">
                                     <div class="addonset">
                                         <i class="fa fa-calendar"></i>
                                     </div>
@@ -40,7 +40,7 @@
                         <div class="col-lg-2 col-sm-6 col-12">
                             <div class="form-group">
                                 <div class="input-groupicon">
-                                    <input type="text" class="datetimepicker" placeholder="To date" id="date-to" value="<?=date('d-m-Y',strtotime('last day of this month')) ?>">
+                                    <input type="text" class="datetimepicker" placeholder="To date" id="date-to" value="<?= date('d-m-Y', strtotime('last day of this month')) ?>">
                                     <div class="addonset">
                                         <i class="fa fa-calendar"></i>
                                     </div>
@@ -62,7 +62,7 @@
                                     <?php
                                     if (isset($stores))
                                         foreach ($stores as $row) { ?>
-                                        <option value="<?= $row->id ?>" <?=($row->id === $settings->get('App.DefaultStore', $context) ? 'selected' : '') ?>>
+                                        <option value="<?= $row->id ?>" <?= ($row->id === $settings->get('App.DefaultStore', $context) ? 'selected' : '') ?>>
                                             <?= $row->name; ?> (<?= $row->location; ?>)
                                         </option>
                                     <?php } ?>
@@ -127,6 +127,21 @@
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th>Total</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th class="text-center"></th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>

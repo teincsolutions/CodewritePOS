@@ -7,7 +7,7 @@
             <h6>Transfer your stocks to one store another store.</h6>
         </div>
         <div class="page-btn">
-            <a href="<?=site_url('transfers/products/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add Transfer</a>
+            <a href="<?= site_url('transfers/products/create') ?>" class="btn btn-added"><i class="fa fa-plus" class="me-1"></i>Add Transfer</a>
         </div>
     </div>
 
@@ -102,6 +102,22 @@
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
+                    <tfoot>
+                        <tr>
+                            <th> </th>
+                            <th>Total</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th class="text-center"></th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>

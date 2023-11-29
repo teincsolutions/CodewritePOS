@@ -51,7 +51,7 @@
                                     <?php
                                     if (isset($stores))
                                         foreach ($stores as $row) { ?>
-                                        <option value="<?= $row->id ?>" <?=($row->id === $settings->get('App.DefaultStore', $context) ? 'selected' : '') ?>>
+                                        <option value="<?= $row->id ?>" <?= ($row->id === $settings->get('App.DefaultStore', $context) ? 'selected' : '') ?>>
                                             <?= $row->name; ?> (<?= $row->location; ?>)
                                         </option>
                                     <?php } ?>
@@ -60,7 +60,7 @@
                         </div>
                         <div class="col-lg-4 col-sm-6 col-12">
                             <div class="form-group">
-                                <select name="supplier_id" class="select2-supplier"  style="overflow-x: auto;">
+                                <select name="supplier_id" class="select2-supplier" style="overflow-x: auto;">
                                     <option value=""></option>
                                 </select>
                             </div>
@@ -96,8 +96,7 @@
                 <table id="dt-returns" class="table">
                     <thead>
                         <tr>
-                            <th>
-                            </th>
+                            <th></th>
                             <th>Date</th>
                             <th>Supplier Name</th>
                             <th>Reference</th>
@@ -110,6 +109,21 @@
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th>Total</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th class="text-center"></th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>

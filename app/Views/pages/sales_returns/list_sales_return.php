@@ -122,6 +122,21 @@
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th>Total</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th class="text-center"></th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
