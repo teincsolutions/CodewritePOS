@@ -414,7 +414,6 @@
                             <div id="input-filter" class="row">
 
                             </div>
-
                             <div class="table-responsive">
                                 <table id="dt-sales" class="table w-100">
                                     <thead>
@@ -589,7 +588,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-pos.js?v=17') ?>"></script>
+<script src="<?= base_url('assets/js/handle-pos.js?v=18') ?>"></script>
 <script src="<?= base_url('assets/js/datatables/pos.modal.js?v=4') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?php if (isset($sales) && $sales->customer) {
