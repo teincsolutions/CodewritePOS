@@ -38,38 +38,31 @@ class CreateStoreClosingTable extends Migration
             ],
             'customer_payment' => [
                 'type'           => 'DECIMAL',
-                'constraint'     => "32,2",
-                'unsigned'       => true,
+                'constraint'     => "32,2"
             ],
             'supplier_payment' => [
                 'type'       => 'DECIMAL',
                 'constraint' => "32,2",
-                'unsigned'     => true,
             ],
             'sale_total' => [
                 'type'       => 'DECIMAL',
                 'constraint' => "32,2",
-                'unsigned'     => true,
             ],
             'sale_return_total' => [
                 'type'       => 'DECIMAL',
                 'constraint' => "32,2",
-                'unsigned'     => true,
             ],
             'purchase_return_total' => [
                 'type'       => 'DECIMAL',
                 'constraint' => "32,2",
-                'unsigned'     => true,
             ],
             'expense_total' => [
                 'type'       => 'DECIMAL',
                 'constraint' => "32,2",
-                'unsigned'     => true,
             ],
             'cash_in_hand' => [
                 'type'       => 'DECIMAL',
-                'constraint' => "32,2",
-                'unsigned'     => true,
+                'constraint' => "32,2"
             ],
             'cashup' => [
                 'type'       => 'DECIMAL',
@@ -78,8 +71,7 @@ class CreateStoreClosingTable extends Migration
             ],
             'closing_balance' => [
                 'type'       => 'DECIMAL',
-                'constraint' => "32,2",
-                'unsigned'     => true,
+                'constraint' => "32,2"
             ],
             'status' => [
                 'type' => 'ENUM',

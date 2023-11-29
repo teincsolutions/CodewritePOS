@@ -98,7 +98,7 @@ class CreateSupplierLedgerTable extends Migration
         $forge->addForeignKey('purchase_id', 'purchases', 'id', 'CASCADE', 'CASCADE', 'fk_supplier_ledger_purchase_id');
         $forge->addForeignKey('purchase_return_id', 'purchase_returns', 'id', 'CASCADE', 'CASCADE', 'fk_supplier_ledger_purchase_return_id');
         $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_supplier_ledger_user_id');
-        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'RESTRICT', 'RESTRICT', 'fk_supplier_ledger_store_closing_id');
+        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'SET NULL', 'SET NULL', 'fk_supplier_ledger_store_closing_id');
         $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_supplier_ledger_store_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];

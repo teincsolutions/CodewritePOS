@@ -108,7 +108,7 @@ class CreateProductTransfersTable extends Migration
         $forge->addForeignKey('from_store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_product_transfer_from_store_id');
         $forge->addForeignKey('to_store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_product_transfer_to_store_id');
         $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_product_transfer_user_id');
-        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'RESTRICT', 'RESTRICT', 'fk_product_transfer_store_closing_id');
+        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'SET NULL', 'SET NULL', 'fk_product_transfer_store_closing_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('product_transfers', true, $attributes);

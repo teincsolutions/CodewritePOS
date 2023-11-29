@@ -116,7 +116,7 @@ class CreatePurchaseReturnsTable extends Migration
         $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_purchase_returns_user_id');
         $forge->addForeignKey('purchase_id', 'purchases', 'id', 'CASCADE', 'CASCADE', 'fk_purchase_returns_purchase_id');
         $forge->addForeignKey('tax_id', 'taxes', 'id', 'RESTRICT', 'RESTRICT', 'fk_purchase_return_tax_id');
-        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'RESTRICT', 'RESTRICT', 'fk_purchase_return_store_closing_id');
+        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'SET NULL', 'SET NULL', 'fk_purchase_return_store_closing_id');
         $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_purchase_returns_store_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];

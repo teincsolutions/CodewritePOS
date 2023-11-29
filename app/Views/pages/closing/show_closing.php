@@ -67,7 +67,7 @@
                                         </li>
                                         <li>
                                             <h4>Approved By</h4>
-                                            <h6><?= $closing->approvalUser->firstname ?> <?= $closing->approvalUser->lastname ?></h6>
+                                            <h6><?= $closing->approvalUser ? $closing->approvalUser->firstname : '' ?> <?= $closing->approvalUser ? $closing->approvalUser->lastname : '' ?></h6>
                                         </li>
                                     <?php endif ?>
                                 </ul>

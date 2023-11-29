@@ -74,7 +74,7 @@ class CreateExpensesTable extends Migration
         $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_expense_store_id');
         $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_expense_user_id');
         $forge->addForeignKey('expense_category_id', 'expense_categories', 'id', 'RESTRICT', 'RESTRICT', 'fk_expense_expense_category_id');
-        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'RESTRICT', 'RESTRICT', 'fk_expense_store_closing_id');
+        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'SET NULL', 'SET NULL', 'fk_expense_store_closing_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('expenses', true, $attributes);

@@ -98,7 +98,7 @@ class CreateCustomerLedgerTable extends Migration
         $forge->addForeignKey('sale_id', 'sales', 'id', 'CASCADE', 'CASCADE', 'fk_customer_ledger_sale_id');
         $forge->addForeignKey('sales_return_id', 'sales_returns', 'id', 'CASCADE', 'CASCADE', 'fk_customer_ledger_sales_return_id');
         $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_customer_ledger_user_id');
-        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'RESTRICT', 'RESTRICT', 'fk_customer_ledger_store_closing_id');
+        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'SET NULL', 'SET NULL', 'fk_customer_ledger_store_closing_id');
         $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_customer_ledger_store_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];

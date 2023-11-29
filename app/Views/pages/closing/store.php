@@ -150,7 +150,7 @@
             cashInHand = intVal($("[name='cash_in_hand']").val()),
             totalOutflows = supplierPayment + saleReturnTotal + cashInHand + expenseTotal;
 
-        $("[name='closing_balance']").val((totalInflows - totalOutflows).toFixed(2));
+        $("input[name='closing_balance']").val((totalInflows - totalOutflows).toFixed(2));
     }
     $(() => {
         updateClosing();

@@ -69,7 +69,7 @@ class CreateStoreLedgerTable extends Migration
         $forge->addPrimaryKey('id');
         $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_store_ledger_user_id');
         $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_store_ledger_store_id');
-        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'RESTRICT', 'RESTRICT', 'fk_store_ledger_closing_id');
+        $forge->addForeignKey('store_closing_id', 'store_closings', 'id', 'SET NULL', 'SET NULL', 'fk_store_ledger_closing_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
         $forge->createTable('store_ledgers', true, $attributes);
