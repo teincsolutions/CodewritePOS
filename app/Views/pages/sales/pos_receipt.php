@@ -48,24 +48,23 @@
             <table>
                 <tr class="tabletitle">
                     <th style="width:50%">
-                        <strong>Item</strong>
+                       Item
                     </th>
                     <th style="width:10%">
-                        <strong>Price</strong>
+                     Price
                     </th>
                     <th style="width:15%">
-                        <strong>Qty
+                       Qty
                             <?php if (model('SalesModel')->hasReturns($sales->id)) : ?>
                                 | (Rtn)
                             <?php endif ?>
-                        </strong>
+                       
                     </th>
                     <th style="width:25%">
-                        <strong>Sub Ttl
+                      Sub Ttl
                             <?php if (model('SalesModel')->hasReturns($sales->id)) : ?>
                                 | (Rtn Ttl)
                             <?php endif ?>
-                        </strong>
                     </th>
                 </tr>
                 <?php

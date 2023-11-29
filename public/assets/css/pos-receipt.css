@@ -58,6 +58,10 @@
 #invoice-POS .info address {
   font-size: small !important;
 }
+
+#invoice-POS .sec {
+  font-size: small !important;
+}
 #invoice-POS .title {
   float: right;
 }
@@ -69,12 +73,13 @@
   border-collapse: collapse;
 }
 #invoice-POS .tabletitle {
-  font-size: .70em;
+  font-size: .55em;
+  font-weight: bold;
   background: #eee;
 }
 
 #invoice-POS .foottitle {
-  font-size: .60em;
+  font-size: .55em;
   font-weight: bold;
   text-align:left;
   background: #eee;
