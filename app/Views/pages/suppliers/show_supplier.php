@@ -127,6 +127,7 @@
                                                     <th>#Code</th>
                                                     <th>Date</th>
                                                     <th>Type</th>
+                                                    <th>Due</th>
                                                     <th>Credit</th>
                                                     <th>Debit</th>
                                                     <th>A/c Balance</th>
@@ -478,7 +479,6 @@
                                 <th>Date</th>
                                 <th>Reference</th>
                                 <th>Type</th>
-                                <th>Due</th>
                                 <th>Credit</th>
                                 <th>Debit</th>
                                 <th>A/c Balance</th>
