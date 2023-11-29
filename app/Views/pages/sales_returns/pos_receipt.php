@@ -47,10 +47,10 @@
                         Item
                     </th>
                     <th style="width:15%">
-                        Price
+                        Qty
                     </th>
                     <th style="width:15%">
-                        Qty
+                        Price
                     </th>
                     <th style="width:20%">
                         Sub Total
@@ -65,10 +65,10 @@
                             <p class="itemtext"><?= $row->product->name; ?>(<?= $row->product->unit->label; ?>)</p>
                         </td>
                         <td class="tableitem">
-                            <p class="itemtext"><?= number_format($row->unit_price, 2); ?></p>
+                            <p class="itemtext"><?= $row->qty; ?></p>
                         </td>
                         <td class="tableitem">
-                            <p class="itemtext"><?= $row->qty; ?></p>
+                            <p class="itemtext"><?= number_format($row->unit_price, 2); ?></p>
                         </td>
                         <td class="tableitem">
                             <p class="itemtext"><?= number_format($row->subtotal, 2); ?></p>

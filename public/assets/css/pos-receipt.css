@@ -60,7 +60,7 @@
 }
 
 #invoice-POS .sec {
-  font-size: small !important;
+  font-size: .25em !important;
 }
 #invoice-POS .title {
   float: right;
@@ -74,8 +74,6 @@
 }
 #invoice-POS .tabletitle {
   font-size: .55em;
-  font-weight: bold;
-  background: #eee;
 }
 
 #invoice-POS .foottitle {

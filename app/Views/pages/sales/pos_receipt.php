@@ -50,15 +50,14 @@
                     <th style="width:50%">
                        Item
                     </th>
-                    <th style="width:10%">
-                     Price
-                    </th>
                     <th style="width:15%">
                        Qty
                             <?php if (model('SalesModel')->hasReturns($sales->id)) : ?>
                                 | (Rtn)
                             <?php endif ?>
-                       
+                    </th>
+                    <th style="width:10%">
+                     Price
                     </th>
                     <th style="width:25%">
                       Sub Ttl
@@ -88,14 +87,15 @@
                                 (<?= $row->product->unit->label; ?>)</p>
                         </td>
                         <td class="tableitem border-end">
-                            <p class="itemtext"><?= number_format($row->unit_price, 2); ?></p>
-                        </td>
-                        <td class="tableitem border-end">
                             <p class="itemtext"><?= floatval($row->qty); ?>
                                 <?php if (model('SalesModel')->hasReturns($sales->id)) : ?>
                                     (<?= floatval($row->rtn_qty) ?>)
                                 <?php endif ?></p>
                         </td>
+                        <td class="tableitem border-end">
+                            <p class="itemtext"><?= number_format($row->unit_price, 2); ?></p>
+                        </td>
+                    
                         <td class="tableitem">
                             <p class="itemtext"><?= number_format($row->subtotal, 2); ?>
                                 <?php if (model('SalesModel')->hasReturns($sales->id)) : ?>

@@ -46,7 +46,8 @@
             'AllowDeleteUnitTransfers',
             'AllowDeleteTransfers',
             'AllowDeleteAdjustments',
-            'ShowProductSKU'
+            'ShowProductSKU',
+            'UseSalesPriceOnReceipt'
         ];
         $data = [];
         foreach ($settings as  $key)

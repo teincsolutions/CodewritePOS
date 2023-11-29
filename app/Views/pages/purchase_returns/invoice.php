@@ -175,7 +175,7 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <a href="javascript:void(0);" class="btn btn-submit me-2">Print Invoice</a>
+                    <a onclick="rePrintInvoice('<?= site_url('print/purchases/returns/' . $return->id) ?>')" href="javascript:void(0);" class="btn btn-submit me-2">Print Invoice</a>
                 </div>
             </div>
         </div>

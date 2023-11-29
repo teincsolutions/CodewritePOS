@@ -248,27 +248,54 @@
                     <li class="submenu-open">
                         <h6 class="submenu-hdr">Reports</h6>
                         <ul>
-                            <?php if (auth()->user()->can('sales.report')) : ?>
-                                <li class="<?= getActiveUrl("reports/sales", "active"); ?>"><a href="<?= site_url('reports/sales') ?>"><i data-feather="bar-chart-2"></i><span>Sales Report</span></a></li>
-                            <?php endif ?>
-                            <?php if (auth()->user()->can('purchases.report')) : ?>
-                                <li class="<?= getActiveUrl("purchases/report", "active"); ?>"><a href="<?= site_url('reports/purchases') ?>"><i data-feather="pie-chart"></i><span>Purchase report</span></a></li>
-                            <?php endif ?>
-                            <?php if (auth()->user()->can('stocks.report')) : ?>
-                                <li class="<?= getActiveUrl("reports/stocks", "active"); ?>"><a href="<?= site_url('reports/stocks') ?>"><i data-feather="credit-card"></i><span>Inventory Report</span></a></li>
-                            <?php endif ?>
-                            <?php if (auth()->user()->can('customer-ledgers.report')) : ?>
-                                <li class="<?= getActiveUrl("reports/ledgers/customers", "active"); ?>">
-                                    <a href="<?= site_url('reports/ledgers/customers') ?>">
-                                        <i data-feather="calendar"></i><span>Customer Ledgers</span></a>
-                                </li>
-                            <?php endif ?>
-                            <?php if (auth()->user()->can('supplier-ledgers.report')) : ?>
-                                <li class="<?= getActiveUrl("reports/ledgers/suppliers", "active"); ?>">
-                                    <a href="<?= site_url('reports/ledgers/suppliers') ?>">
-                                        <i data-feather="calendar"></i><span>Supplier Ledgers</span></a>
-                                </li>
-                            <?php endif ?>
+                            <li class="submenu">
+                                <a class="<?= getActiveUrl("reports*", "subdrop active") ?>" href="javascript:void(0);">
+                                    <i data-feather="calendar"></i>
+                                    <span>Reports</span><span class="menu-arrow"></span>
+                                </a>
+                                <ul>
+                                    <?php if (auth()->user()->can('sales.report')) : ?>
+                                        <li class="<?= getActiveUrl("reports/sales", "active"); ?>">
+                                            <a href="<?= site_url('reports/sales') ?>">
+                                                <span>Sales Report</span></a>
+                                        </li>
+                                    <?php endif ?>
+                                    <?php if (auth()->user()->can('purchases.report')) : ?>
+                                        <li class="<?= getActiveUrl("reports/purchases", "active"); ?>">
+                                            <a href="<?= site_url('reports/purchases') ?>">
+                                                <span>Purchase report</span></a>
+                                        </li>
+                                    <?php endif ?>
+                                    <?php if (auth()->user()->can('stocks.report')) : ?>
+                                        <li class="<?= getActiveUrl("reports/stocks", "active"); ?>"><a href="<?= site_url('reports/stocks') ?>">
+                                                <span>Inventory Report</span></a></li>
+                                    <?php endif ?>
+                                    <?php if (auth()->user()->can('customer-ledgers.report')) : ?>
+                                        <li class="<?= getActiveUrl("reports/ledgers/customers", "active"); ?>">
+                                            <a href="<?= site_url('reports/ledgers/customers') ?>">
+                                                <span>Customer Ledgers</span></a>
+                                        </li>
+                                    <?php endif ?>
+                                    <?php if (auth()->user()->can('customer-ledgers.report')) : ?>
+                                        <li class="<?= getActiveUrl("reports/debts/customers", "active"); ?>">
+                                            <a href="<?= site_url('reports/debts/customers') ?>">
+                                                <span>Customer Debt Pay.</span></a>
+                                        </li>
+                                    <?php endif ?>
+                                    <?php if (auth()->user()->can('supplier-ledgers.report')) : ?>
+                                        <li class="<?= getActiveUrl("reports/ledgers/suppliers", "active"); ?>">
+                                            <a href="<?= site_url('reports/ledgers/suppliers') ?>">
+                                                <span>Supplier Ledgers</span></a>
+                                        </li>
+                                    <?php endif ?>
+                                    <?php if (auth()->user()->can('supplier-ledgers.report')) : ?>
+                                        <li class="<?= getActiveUrl("reports/debts/suppliers", "active"); ?>">
+                                            <a href="<?= site_url('reports/debts/suppliers') ?>">
+                                                <span>Supplier Debt Pay.</span></a>
+                                        </li>
+                                    <?php endif ?>
+                                </ul>
+                            </li>
                         </ul>
                     </li>
                 <?php endif ?>

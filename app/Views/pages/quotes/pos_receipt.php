@@ -48,18 +48,16 @@
             <table>
                 <tr class="tabletitle">
                     <th style="width:50%">
-                        <strong>Item</strong>
+                      Item
                     </th>
                     <th style="width:10%">
-                        <strong>Price</strong>
+                       Price
                     </th>
                     <th style="width:15%">
-                        <strong>Qty
-                        </strong>
+                       Qty
                     </th>
                     <th style="width:25%">
-                        <strong>Sub Ttl
-                        </strong>
+                      Sub Ttl
                     </th>
                 </tr>
                 <?php
@@ -76,10 +74,10 @@
                                 (<?= $row->product->unit->label; ?>)</p>
                         </td>
                         <td class="tableitem border-end">
-                            <p class="itemtext"><?= number_format($row->unit_price, 2); ?></p>
+                            <p class="itemtext"><?= floatval($row->qty); ?>
                         </td>
                         <td class="tableitem border-end">
-                            <p class="itemtext"><?= floatval($row->qty); ?>
+                            <p class="itemtext"><?= number_format($row->unit_price, 2); ?></p>
                         </td>
                         <td class="tableitem">
                             <p class="itemtext"><?= number_format($row->subtotal, 2); ?>

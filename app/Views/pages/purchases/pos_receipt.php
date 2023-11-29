@@ -48,24 +48,22 @@
             <table>
                 <tr class="tabletitle">
                     <th style="width:50%">
-                        <strong>Item</strong>
-                    </th>
-                    <th style="width:10%">
-                        <strong>Price</strong>
+                        Item
                     </th>
                     <th style="width:15%">
-                        <strong>Qty
-                            <?php if (model('PurchaseModel')->hasReturns($purchases->id)) : ?>
-                                | (Rtn)
-                            <?php endif ?>
-                        </strong>
+                        Qty
+                        <?php if (model('PurchaseModel')->hasReturns($purchases->id)) : ?>
+                            | (Rtn)
+                        <?php endif ?>
+                    </th>
+                    <th style="width:10%">
+                        Cost
                     </th>
                     <th style="width:25%">
-                        <strong>Sub Ttl
-                            <?php if (model('PurchaseModel')->hasReturns($purchases->id)) : ?>
-                                | (Rtn Ttl)
-                            <?php endif ?>
-                        </strong>
+                        Sub Ttl
+                        <?php if (model('PurchaseModel')->hasReturns($purchases->id)) : ?>
+                            | (Rtn Ttl)
+                        <?php endif ?>
                     </th>
                 </tr>
                 <?php
@@ -75,12 +73,21 @@
                     $items = model('PurchaseModel')->getItemsWithReturnItems($purchases->id);
                 else $items = $purchases->items;
 
+                $purchases->total_amount2 = 0.00;
+
                 foreach ($items as $k => $row) : ?>
                     <?php
                     $total_discount += $row->discount;
+                    $row->subtotal2 = $row->qty * $row->unit_price - $row->discount;
+                    $purchases->total_amount2 += $row->subtotal2;
+
                     if (model('PurchaseModel')->hasReturns($purchases->id)) {
                         $rtntotalDiscount += $row->rtn_discount;
-                        $rtnTotalAmount += $row->rtn_subtotal;
+                        $row->rtn_subtotal2 = $row->qty * $row->unit_price;
+
+                        if (setting('App.UseSalesPriceOnReceipt') === 'yes')
+                            $rtnTotalAmount += $row->rtn_subtotal2;
+                        else   $rtnTotalAmount += $row->rtn_subtotal;
                     }
                     ?>
                     <tr class="service">
@@ -89,18 +96,33 @@
                                 (<?= $row->product->unit->label; ?>)</p>
                         </td>
                         <td class="tableitem border-end">
-                            <p class="itemtext"><?= number_format($row->unit_price, 2); ?></p>
-                        </td>
-                        <td class="tableitem border-end">
                             <p class="itemtext"><?= floatval($row->qty); ?>
                                 <?php if (model('PurchaseModel')->hasReturns($purchases->id)) : ?>
                                     (<?= floatval($row->rtn_qty) ?>)
                                 <?php endif ?></p>
                         </td>
+                        <td class="tableitem border-end">
+                            <p class="itemtext">
+                                <?php if (setting('App.UseSalesPriceOnReceipt') === 'yes') : ?>
+                                    <?= number_format($row->unit_price, 2); ?>
+                                <?php else : ?>
+                                    <?= number_format($row->unit_cost, 2); ?>
+                                <?php endif ?>
+                            </p>
+                        </td>
                         <td class="tableitem">
-                            <p class="itemtext"><?= number_format($row->subtotal, 2); ?>
+                            <p class="itemtext">
+                                <?php if (setting('App.UseSalesPriceOnReceipt') === 'yes') : ?>
+                                    <?= number_format($row->subtotal2, 2); ?>
+                                <?php else : ?>
+                                    <?= number_format($row->subtotal, 2); ?>
+                                <?php endif ?>
                                 <?php if (model('PurchaseModel')->hasReturns($purchases->id)) : ?>
-                                    (<?= $row->rtn_subtotal ?>)
+                                    (<?php if (setting('App.UseSalesPriceOnReceipt') === 'yes') : ?>
+                                    <?= number_format($row->rtn_subtotal2, 2); ?>
+                                <?php else : ?>
+                                    <?= number_format($row->rtn_subtotal, 2); ?>
+                                    <?php endif ?>)
                                 <?php endif ?></p>
                         </td>
                     </tr>
@@ -117,7 +139,11 @@
                     <td>Grand Total</td>
                     <td></td>
                     <td colspan="2">
-                        GHS <?= number_format($purchases->total_amount, 2) ?>
+                        GHS <?php if (setting('App.UseSalesPriceOnReceipt') === 'yes') : ?>
+                            <?= number_format($purchases->total_amount2, 2) ?>
+                        <?php else : ?>
+                            <?= number_format($purchases->total_amount, 2) ?>
+                        <?php endif ?>
                     </td>
                 </tr>
                 <tr class="foottitle">

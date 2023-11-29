@@ -39,6 +39,21 @@ class supplierLedgerController extends BaseController
         return view('pages/reports/supplier_payments', $data);
     }
 
+     /**
+     * return view for list
+     * @return Response - http response
+     */
+    public function supplier_debt_reports()
+    {
+        $stores = (new UserModel())->getMyStores();
+        $data = [
+            'title' => 'Supplier Debt Payment Reports',
+            'stores' => $stores,
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
+        ];
+        return view('pages/reports/supplier_debt_payments', $data);
+    }
     /**
      * return view for edit
      * @return Response - http response
@@ -246,6 +261,44 @@ class supplierLedgerController extends BaseController
         $builder->select('id,created_at,tdate,ledger_type,purchase_id,purchase_return_id, supplier_id,payment_type,user_id', false)
             ->selectSum('credit', 'total_credit')
             ->selectSum('debit', 'total_debit')
+            ->groupBy('created_at')
+            ->groupBy(['ledger_type', 'purchase_return_id'])
+            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc');
+        return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) use ($db) {
+            $item->purchase = model('PurchaseModel')->where('id', $item->purchase_id)->first();
+            $item->purchase_return = model('PurchaseReturnModel')->where('id', $item->purchase_return_id)->first();
+            $item->supplier = model('SupplierModel')->where('id', $item->supplier_id)->first();
+            $item->user = model('UserModel')->where('id', $item->user_id)->first();
+            $totals = $db->table('supplier_ledgers')
+                ->select('SUM((credit-debit)) as total_due')
+                ->where('supplier_id', $item->supplier_id)
+                ->where('id <', $item->id)
+                ->get()->getFirstRow();
+
+            $item->total_due = $totals->total_due ?? 0.00;
+            $item->total_balance = ($totals->total_due ?? 0) + ($item->total_credit - $item->total_debit);
+
+            return $item;
+        }));
+    }
+
+    /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function debt_report_datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new SupplierLedgerModel();
+        $builder = $model->builder();
+        $db = db_connect();
+        $builder->select('supplier_ledgers.id,supplier_ledgers.created_at,tdate,supplier_ledgers.ledger_type,purchase_id,purchase_return_id,supplier_ledgers.supplier_id,supplier_ledgers.payment_type,supplier_ledgers.user_id', false)
+            ->selectSum('credit', 'total_credit')
+            ->selectSum('debit', 'total_debit')
+            ->join('purchases', 'purchases.id=supplier_ledgers.purchase_id')
+            ->where('purchases.store_closing_id !=', null)
+            ->where('ledger_type','purchases')
             ->groupBy('created_at')
             ->groupBy(['ledger_type', 'purchase_return_id'])
             ->orderBy('created_at', 'desc')

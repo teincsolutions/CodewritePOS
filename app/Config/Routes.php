@@ -54,9 +54,13 @@ $routes->group('reports', static function (RouteCollection $routes) {
     $routes->get('stocks/product/(:num)', [InventoryController::class, 'view_stock_report']);
     $routes->get('stocks/datatable', [InventoryController::class, 'stock_report_datatable']);
     $routes->get('ledgers/customers', [CustomerLedgerController::class, 'customer_reports']);
+    $routes->get('debts/customers', [CustomerLedgerController::class, 'customer_debt_reports']);
     $routes->get('ledgers/customers/datatable', [CustomerLedgerController::class, 'report_datatable']);
+    $routes->get('debts/customers/datatable', [CustomerLedgerController::class, 'debt_report_datatable']);
     $routes->get('ledgers/suppliers', [SupplierLedgerController::class, 'supplier_reports']);
+    $routes->get('debts/suppliers', [SupplierLedgerController::class, 'supplier_debt_reports']);
     $routes->get('ledgers/suppliers/datatable', [SupplierLedgerController::class, 'report_datatable']);
+    $routes->get('debts/suppliers/datatable', [SupplierLedgerController::class, 'debt_report_datatable']);
 });
 
 

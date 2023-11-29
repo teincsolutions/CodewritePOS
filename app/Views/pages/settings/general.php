@@ -332,6 +332,22 @@
                                                     </div>
                                                 </td>
                                             </tr>
+
+                                            <tr>
+                                                <td>Use Sales Price on Receipt</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="UseSalesPriceOnReceipt" value="yes" <?= setting('App.UseSalesPriceOnReceipt') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="UseSalesPriceOnReceipt" value="no" <?= setting('App.UseSalesPriceOnReceipt') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                             <tr>
                                                 <td>Allow Delete Purchase Returns</td>
                                                 <td>
