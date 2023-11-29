@@ -321,40 +321,17 @@
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table id="dt-quotes" class="table">
+                            <table id="dt-quotes" class="table w-100">
                                     <thead>
                                         <tr>
+                                            <th></th>
                                             <th>Date</th>
                                             <th>Invoice No.</th>
                                             <th>Customer</th>
-                                            <th>Amount </th>
+                                            <th>Amount</th>
                                             <th class="text-end">Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <?php
-                                        if (isset($quoteList))
-                                            foreach ($quoteList as $key => $row) {
-                                        ?>
-                                            <tr>
-                                                <td><?= $row->quote_date; ?></td>
-                                                <td><a target="_blank" href="<?= site_url('quotes/' . $row->id) ?>" class="btn btn-link btn-sm"><?= $row->invoice; ?></a></td>
-                                                <td>
-                                                    <?php if ($row->customer) : ?>
-                                                        <a target="_blank" href="<?= site_url('customers/' . $row->customer_id) ?>" class="btn btn-link btn-sm"><?= $row->customer->name ?></a>
-                                                    <?php endif ?>
-                                                </td>
-                                                <td>GHS <?= $row->total_amount < 0 ? "(" . number_format(abs($row->total_amount), 2) . ")" : number_format($row->total_amount, 2); ?></td>
-                                                <td>
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <a target="_blank" href="<?= site_url('quotes/' . $row->id) ?>" class="btn btn-icon btn-sm"><i class="fa fa-eye fa-lg"></i></a>
-                                                        <a class="text-danger" href="javascript:void(0);" onclick="deleteRecord(<?= $row->id ?>,'<?= site_url('quotes') ?>', '<?= site_url('quotes/create') ?>')"><i class="fa fa-trash fa-lg"></i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php
-                                            } ?>
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -364,10 +341,50 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="edit-product" tabindex="-1" aria-labelledby="editproduct" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Product Info</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <?php if (setting('App.AllowPriceChange') === 'yes' || setting('App.AllowCustomerDiscountChange') === 'yes') : ?>
+                    <div class="row">
+                        <div <?= setting('App.AllowPriceChange') === 'yes' ? '' : 'hidden' ?> class="col-lg-6 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label>Unit Price</label>
+                                <input id="unit-price" min="0" type="number" class="form-control" placeholder="Unit Price">
+                            </div>
+                        </div>
+                        <div <?= setting('App.AllowCustomerDiscountChange') === 'yes' ? '' : 'hidden' ?> class="col-lg-6 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label>Discount</label>
+                                <input id="discount" type="number" placeholder="Discount Amount" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                <?php else : ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        You don't have permission to Edit Products. Please Contact Admin
+                    </div>
+                <?php endif ?>
+            </div>
+
+            <div class="modal-footer">
+                <?php if (auth()->user()->can('sales.edit-price')) : ?>
+                    <button onclick="updateProduct()" type="submit" class="btn btn-submit">Update</button>
+                <?php endif ?>
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/handle-quote.js?v=17') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/quote.modal.js') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/quote.modal.js?v=1') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?= $this->endSection() ?>

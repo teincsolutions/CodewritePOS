@@ -377,7 +377,7 @@ class PurchaseController extends BaseController
         $inputs = $this->request->getVar();
         $model = new PurchaseModel();
 
-        return $this->response->setJSON(toBuilderDatatableResult($model->getDailyWalkinReport(), $inputs));
+        return $this->response->setJSON(toBuilderDatatableResult($model->getDailyReport(), $inputs));
     }
 
     /**

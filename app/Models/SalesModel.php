@@ -209,7 +209,7 @@ class SalesModel extends Model
         return false;
     }
 
-    public function getDailyWalkinReport($where = [], $from = null, $to = null): Builder
+    public function getDailyReport($where = [], $from = null, $to = null): Builder
     {
         $builder = $this->builder();
 

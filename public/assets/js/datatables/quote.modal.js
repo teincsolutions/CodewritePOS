@@ -2,6 +2,42 @@ let table, table2, table3;
 
 $(function () {
   table = $("#dt-quotes").DataTable({
+    ajax: {
+      url: baseUrl + "quotes/datatable",
+      dataType: "json",
+      contentType: "application/json",
+      data: function (params) {
+        let filter = {};
+        let filterForm = $(
+          "#quotes #input-filter input, #quotes #input-filter select"
+        );
+        filterForm.each((i, item) => {
+          field = $(item);
+
+          if (field.prop("tagName") === "SELECT") {
+            if (
+              typeof field.children("option:selected").val() !== "undefined" &&
+              field.children("option:selected").val() != ""
+            )
+              filter[field.attr("name")] = field
+                .children("option:selected")
+                .val();
+          } else if (typeof field.attr("name") !== "undefined") {
+            filter[field.attr("name")] = field.val();
+          }
+        });
+        filter["quotes.store_id"] = $(".select2-store").val();
+        filter["quotes.user_id"] = $("input[name='user_id']").val();
+
+        params.date_range_column = "quote_date";
+        params.date_from = moment().format("YYYY-MM-DD");
+        params.date_to = moment().format("YYYY-MM-DD");
+
+        params.fields = filter;
+      },
+    },
+    processing: true,
+    serverSide: true,
     bFilter: true,
     dom: "fBtlpi",
     buttons: [
@@ -31,8 +67,103 @@ $(function () {
       searchPlaceholder: "Search...",
       info: "_START_ - _END_ of _TOTAL_ items",
     },
-    initComplete: (settings, json) => {},
-    order: [[1, "desc"]],
+    columns: [
+      {
+        data: null,
+        render: function (data, type, row) {
+          return null;
+        },
+      },
+      { data: "quote_date", name: "quotes.quote_date" },
+      {
+        data: "customer",
+        name: "quotes.customer_id",
+        render: function (data, type, row) {
+          if (type === "display")
+            return data
+              ? `<a target="_blank" href="${baseUrl}customers/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+              : "walk-in-customer";
+          return data ? data.id : null;
+        },
+      },
+      { data: "invoice", name: "quotes.invoice" },
+      {
+        data: "total_amount",
+        render: function (data) {
+          return `GHS ${parseFloat(data).toFixed(2)}`;
+        },
+      },
+      {
+        data: "id",
+        name: "quotes.id",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return `<div class="d-flex align-items-center">
+                        <a target="_blank" href="${baseUrl}quotes/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
+                        ${
+                          row.order_status === "completed"
+                            ? `<a href="${baseUrl}quotes/returns/create?invoice=${row.invoice}" class="me-3"><i class="fa fa-reply fa-lg"></i></a>`
+                            : `<a href="${baseUrl}quotes/pos/${data}" class="me-3"><i class="fa fa-play fa-lg"></i></a>`
+                        }
+                        <a ${
+                          row.order_status === "completed" ? "hidden" : ""
+                        } class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}quotes')"><i class="fa fa-trash fa-lg"></i></a>
+                    </div>`;
+          }
+          return data;
+        },
+      },
+    ],
+    initComplete: (settings, json) => {
+      $("#quotes .dataTables_filter").appendTo("#quotes #tableSearch");
+      $("#quotes .dataTables_filter").appendTo("#quotes .search-input");
+      if ($('#quotes [data-bs-toggle="tooltip"]').length > 0) {
+        var tooltipTriggerList = [].slice.call(
+          document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        );
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+      }
+
+      var selectAllItems = "#select-all";
+      var checkboxItem = ":checkbox";
+
+      $(selectAllItems).click(function () {
+        if (this.checked) {
+          $(checkboxItem).each(function () {
+            this.checked = true;
+          });
+        } else {
+          $(checkboxItem).each(function () {
+            this.checked = false;
+          });
+        }
+      });
+    },
+    footerCallback: function (row, data, start, end, display) {
+      var api = this.api();
+      // Remove the formatting to get integer data for summation
+      var intVal = function (i) {
+        return typeof i === "string"
+          ? i.replace(/[\$,]/g, "") * 1
+          : typeof i === "number"
+          ? i
+          : 0;
+      };
+    },
+    order: [[3, "desc"]],
+    columnDefs: [
+      {
+        orderable: false,
+        className: "select-checkbox",
+        targets: 0,
+      },
+    ],
+    select: {
+      style: "multi",
+      selector: "td:first-child",
+    },
   });
   table.buttons().container().appendTo(".quotes-wordset");
 

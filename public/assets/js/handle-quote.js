@@ -24,6 +24,10 @@ const searchParams = {
       searchable: "true",
     },
     {
+      name: "categories.name",
+      searchable: "true",
+    },
+    {
       name: "products.barcode",
       searchable: "true",
     },
@@ -131,6 +135,9 @@ function updateTotals() {
   taxAmtTotal += (orderTax / 100) * grandTotal;
   grandTotal += shipping;
   grandTotal -= discountAmtTotal;
+  dueTotal =
+    grandTotal - $("input[name='paid']").first().val() - customerBalance;
+
   $(".grandTotal").html("GHS " + grandTotal.toFixed(2));
   $("#sales-total").val(grandTotal);
   $(".shippingTotal").html("GHS " + shipping.toFixed(2));
@@ -138,20 +145,193 @@ function updateTotals() {
   $(".orderTaxes").html(
     "GHS " + taxAmtTotal.toFixed(2) + " (" + taxTotal.toFixed(2) + "%)"
   );
-  $(".grandTotal").html("GHS " + grandTotal.toFixed(2));
-  $("#quote-total").val(grandTotal);
+  $(".dueTotal").html(
+    "GHS " +
+      (dueTotal < 0
+        ? "(" + Math.abs(dueTotal).toFixed(2) + ")"
+        : dueTotal.toFixed(2))
+  );
 }
 
 function checkout() {
+  const type = $("#sales-type"),
+    customer = $(".select2-customer");
+  const orderStatus = $("#order-status"),
+    paymentStatus = $("#payment-status");
+  const paidAmt = parseFloat($("input[name='paid']").val());
+  orderStatus.val("completed");
+
+  if (customer.val() == "") {
+    type.val("walk-in-customer");
+    paymentStatus.val("paid");
+  } else {
+    type.val("customer");
+    if (grandTotal - paidAmt > 0) paymentStatus.val("due");
+    else paymentStatus.val("paid");
+  }
+  return true;
+}
+
+function hold(e) {
+  const type = $("#sales-type"),
+    customer = $(".select2-customer");
+
+  if (customer.val() == "") {
+    type.val("walk-in-customer");
+  } else {
+    type.val("customer");
+  }
   if (grandTotal <= 0) {
     Swal.fire({
       icon: "error",
-      title: "Quote Alert!",
-      text: "You cannot make an empty quote.",
+      title: "Sale Alert!",
+      text: "You cannot hold an empty sales.",
     });
-    return false;
+    return;
   }
-  return true;
+  const orderStatus = $("#order-status"),
+    paymentStatus = $("#payment-status");
+  orderStatus.val("pending");
+  paymentStatus.val("due");
+
+  $.ajax({
+    method: "POST",
+    url: e.getAttribute("action"),
+    data: new FormData(form[0]),
+    enctype: "multipart/form-data",
+    dataType: "json",
+    contentType: false,
+    processData: false,
+    cache: false,
+    success: function (d, r) {
+      if (!d || r === "nocontent") {
+        Swal.fire({
+          icon: "error",
+          text: "Malformed form data sumbitted! Please try agian.",
+        });
+        return;
+      }
+      if (typeof d.status !== "boolean" || typeof d.message !== "string") {
+        Swal.fire({
+          icon: "error",
+          text: "Malformed data response! Please try agian.",
+        });
+        return;
+      }
+
+      if (d.status === true) {
+        window.location.assign(baseUrl + "/sales/pos");
+        Swal.fire({
+          icon: "success",
+          text: d.message,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          text: d.message,
+        });
+      }
+    },
+    error: function (r) {
+      Swal.fire({
+        icon: "error",
+        text: "Unable to submit form! Please try agian.",
+      });
+    },
+  });
+}
+
+function qoute(e) {
+  const type = $("#sales-type"),
+    customer = $(".select2-customer");
+
+  if (customer.val() == "") {
+    type.val("walk-in-customer");
+  } else {
+    type.val("customer");
+  }
+
+  if (grandTotal <= 0) {
+    Swal.fire({
+      icon: "error",
+      title: "Sale Alert!",
+      text: "You cannot make a qoute of an empty sales.",
+    });
+    return;
+  }
+  $.ajax({
+    method: "POST",
+    url: e.getAttribute("action"),
+    data: new FormData(form[0]),
+    enctype: "multipart/form-data",
+    dataType: "json",
+    contentType: false,
+    processData: false,
+    cache: false,
+    success: function (d, r) {
+      if (!d || r === "nocontent") {
+        Swal.fire({
+          icon: "error",
+          text: "Malformed form data sumbitted! Please try agian.",
+        });
+        return;
+      }
+      if (typeof d.status !== "boolean" || typeof d.message !== "string") {
+        Swal.fire({
+          icon: "error",
+          text: "Malformed data response! Please try agian.",
+        });
+        return;
+      }
+
+      if (d.status === true) {
+        if (printInvoice(d.data)) {
+          window.location.reload();
+        }
+
+        Swal.fire({
+          icon: "success",
+          text: d.message,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          text: d.message,
+        });
+      }
+    },
+    error: function (r) {
+      Swal.fire({
+        icon: "error",
+        text: "Unable to submit form! Please try agian.",
+      });
+    },
+  });
+}
+// price change
+let editModal = new bootstrap.Modal($("#edit-product")[0]);
+let rowSelected;
+$(".tr-items").on("click", ".edit-price", function () {
+  rowSelected = this;
+  let row = $(rowSelected).parents("tr").first();
+  $("#edit-product #unit-price").val($(".runit_price", row).val());
+  if (Settings.LimitPriceChange === "yes")
+    $("#edit-product #unit-price").attr("min", $(".runit_price", row).val());
+  $("#edit-product #discount").val($(".rdiscount", row).val());
+
+  editModal.show();
+});
+
+function updateProduct() {
+  let row = $(rowSelected).parents("tr").first();
+  if (
+    $("#edit-product #unit-price").val() >=
+    $("#edit-product #unit-price").attr("min")
+  )
+    $(".runit_price", row).val($("#edit-product #unit-price").val());
+  $(".rdiscount", row).val($("#edit-product #discount").val());
+  updateItemRow(rowSelected);
+  editModal.hide();
 }
 
 $(".tr-items").on("click", ".delete-set", function () {
@@ -239,7 +419,6 @@ function autocomplete(inp) {
           info.push(`instock<strong>(${instock})</strong>`);
 
           info = info.join(",");
-          inp.value = "";
           let unitPrice = "0.00";
           if (Settings.AllowWholeSalePrices === "yes") {
             unitPrice =
@@ -265,12 +444,9 @@ function autocomplete(inp) {
                 text: "You have (" + instock + ") stock left for " + item.name,
               });
             }
-            let store = "";
-            if ($(".select2-store").val() != "") {
-              store = "(" + $(".select2-store option:selected").text() + ")";
-            }
+            inp.value = "";
 
-            let row = ` <tr>
+            let row = `<tr>
                                         <td>
                                         </td>
                                         <td class="productimgname">
@@ -301,7 +477,7 @@ function autocomplete(inp) {
               ".select2-store"
             ).val()}">
                                                 <input type="hidden" name="items[${prodIndex}][tax]" class="rtax" value="${
-              item.tax ? item.tax.rate : 0
+              item.tax ? item.tax.rate : "0.00"
             }">
                                                 <input type="hidden" name="items[${prodIndex}][discount]" class="rdiscount" value="${
               item?.discount
@@ -312,15 +488,21 @@ function autocomplete(inp) {
               (unitPrice * (item.tax ? item.tax.rate : 0.0)) / 100
             }">
                                                 <input type="button" value="-" class="button-minus dec button">
-                                                <input onkeyup="updateItemRow(this)" min=".1" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field rqty" required>
+                                                <input onkeyup="updateItemRow(this)" min="0.1" type="text" name="items[${prodIndex}][qty]" value="1" class="rqty quantity-field" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>
                                         </td>
-                                        <td>${unitPrice}</td>
-                                        <td>${item.discount}</td>
+                                        <td>
+                                        ${unitPrice}
+                                        </td>
+                                        <td>${item?.discount}</td>
                                         <td class="suffix-percent">${
-                                          item.tax ? item.tax.rate : "0.00"
+                                          item.tax
+                                            ? parseFloat(item.tax.rate).toFixed(
+                                                2
+                                              )
+                                            : "0.00"
                                         }</td>
                                         <td>${(
                                           unitPrice -
@@ -329,7 +511,14 @@ function autocomplete(inp) {
                                             (item.tax ? item.tax.rate : 0.0)) /
                                             100
                                         ).toFixed(2)}</td>
-                                        <td><a   href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
+                                        <td> ${
+                                          Settings.AllowPriceChange === "yes" ||
+                                          Settings.AllowCustomerDiscountChange ===
+                                            "yes"
+                                            ? `<span class="edit-price btn btn-icon"><i class="fa fa-edit"></i></span>`
+                                            : ""
+                                        }
+                                        <a   href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
                                     </tr>`;
             tableItems.row.add($(row)).draw();
             tableItems.draw();
@@ -442,6 +631,7 @@ form.on("submit", function (e) {
             $("select").trigger("change");
             updateTotals();
           }
+          table.ajax.reload();
         } else {
           Swal.fire({
             icon: "error",
@@ -473,7 +663,6 @@ let select2Customer = $(".select2-customer")
     const data = e.params.data;
     customerBalance = parseFloat(data.balance);
     customerType = data.type;
-
     $(".customer-balance").html(
       customerBalance < 0
         ? `(GHS ${Math.abs(customerBalance).toFixed(2)})`
