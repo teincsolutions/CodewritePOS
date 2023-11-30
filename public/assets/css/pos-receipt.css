@@ -60,7 +60,7 @@
 }
 
 #invoice-POS .sec {
-  font-size: .55em !important;
+  font-size: .6em !important;
 }
 #invoice-POS .title {
   float: right;
@@ -73,7 +73,7 @@
   border-collapse: collapse;
 }
 #invoice-POS .tabletitle {
-  font-size: .55em;
+  font-size: .6em;
 }
 
 #invoice-POS .foottitle {
@@ -96,16 +96,16 @@
   margin-left: 2mm;
 }
 #invoice-POS .itemtext {
-  font-size: 0.55em;
+  font-size: 0.6em;
 }
 #invoice-POS #legalcopy {
   margin-top: 5mm;
 }
 
 small {
-    font-size: .55em;
+    font-size: .6em;
 }
 
 .developer small{
-     font-size: .35em;
+     font-size: .45em;
 }
