@@ -83,7 +83,7 @@
 
                     if (model('PurchaseModel')->hasReturns($purchases->id)) {
                         $rtntotalDiscount += $row->rtn_discount;
-                        $row->rtn_subtotal2 = $row->qty * $row->unit_price;
+                        $row->rtn_subtotal2 = $row->rtn_qty * $row->unit_price;
 
                         if (setting('App.UseSalesPriceOnReceipt') === 'yes')
                             $rtnTotalAmount += $row->rtn_subtotal2;

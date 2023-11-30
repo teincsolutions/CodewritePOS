@@ -34,7 +34,7 @@
 
             <body>
                 <tr>
-                    <td><strong>Today's Total Purchases</strong></td>
+                    <td><strong>Total Purchases</strong></td>
                     <td></td>
                     <td></td>
                     <td>
@@ -43,7 +43,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <strong>Today's Purchases Payments</strong>
+                        <strong>Purchases Payments</strong>
                     </td>
                     <td><?= number_format($report->cash_purchases, 2) ?></td>
                     <td>
@@ -55,7 +55,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <strong>Today's Debt Payments</strong>
+                        <strong>Debt Payments</strong>
                     </td>
                     <td>
                         <?= number_format($report->cash_debt_paid, 2) ?>
@@ -68,7 +68,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Today's Total Due</strong></td>
+                    <td><strong>Total Due</strong></td>
                     <td></td>
                     <td></td>
                     <td>
