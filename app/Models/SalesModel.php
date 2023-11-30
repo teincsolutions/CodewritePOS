@@ -219,9 +219,14 @@ class SalesModel extends Model
             $builder->where("sales_date BETWEEN $from AND $to");
         }
     
-        $queryDebtPayment = "SELECT SUM(credit) FROM customer_ledgers INNER JOIN sales ON sales.id=customer_ledgers.sale_id WHERE sales.store_closing_id IS NOT NULL AND tdate=d1 AND customer_ledgers.store_id=s1";
-        $queryDebtPaymentCash = "SELECT SUM(credit) FROM customer_ledgers INNER JOIN sales ON sales.id=customer_ledgers.sale_id WHERE sales.store_closing_id IS NOT NULL AND tdate=d1 AND customer_ledgers.store_id=s1 AND customer_ledgers.payment_type='cash'";
-        $queryDebtPaymentMoMo = "SELECT SUM(credit) FROM customer_ledgers INNER JOIN sales ON sales.id=customer_ledgers.sale_id WHERE sales.store_closing_id IS NOT NULL AND tdate=d1 AND customer_ledgers.store_id=s1 AND customer_ledgers.payment_type='momo'";
+        $queryDebtPayment = "SELECT SUM(credit) FROM customer_ledgers INNER JOIN sales ON sales.id=customer_ledgers.sale_id WHERE sales.store_closing_id IS NOT NULL AND tdate=d1 AND customer_ledgers.store_id=s1 AND ledger_type='sales'";
+        $queryDebtPaymentCash = "SELECT SUM(credit) FROM customer_ledgers INNER JOIN sales ON sales.id=customer_ledgers.sale_id WHERE sales.store_closing_id IS NOT NULL AND tdate=d1 AND customer_ledgers.store_id=s1 AND customer_ledgers.payment_type='cash' AND ledger_type='sales'";
+        $queryDebtPaymentMoMo = "SELECT SUM(credit) FROM customer_ledgers INNER JOIN sales ON sales.id=customer_ledgers.sale_id WHERE sales.store_closing_id IS NOT NULL AND tdate=d1 AND customer_ledgers.store_id=s1 AND customer_ledgers.payment_type='momo' AND ledger_type='sales'";
+        
+        $queryCusReturnPayment = "SELECT SUM(credit) FROM customer_ledgers INNER JOIN sales_returns ON sales_returns.id=customer_ledgers.sales_return_id WHERE tdate=d1 AND customer_ledgers.store_id=s1";
+        $queryWalkinReturnPayment = "SELECT SUM(sales_returns.paid) FROM sales_returns INNER JOIN sales ON sales.id=sales_returns.sale_id WHERE return_date=d1 AND sales_returns.store_id=s1 AND type='walk-in-customer'";
+        $queryTotalReturns = "SELECT SUM(sales_returns.paid) FROM sales_returns WHERE  return_date=d1 AND customer_ledgers.store_id=s1";
+  
         $builder->select(
             "sales_date,
             sales_date as d1,
@@ -230,6 +235,9 @@ class SalesModel extends Model
             ($queryDebtPayment) as total_debt_paid,
             ($queryDebtPaymentCash) as cash_debt_paid,
             ($queryDebtPaymentMoMo) as momo_debt_paid,
+            ifnull(($queryCusReturnPayment),0) as return_debt_paid,
+            ifnull(($queryWalkinReturnPayment),0) as return_paid,
+            ifnull(($queryTotalReturns),0) as total_returns,
             SUM((CASE WHEN customer_ledgers.payment_type = 'cash' AND type = 'customer' THEN (ifnull(customer_ledgers.credit,0)) ELSE 0 END)+(CASE WHEN sales.payment_type = 'cash' AND type = 'walk-in-customer' THEN paid ELSE 0 END)) AS total_cash_sales,
             SUM(CASE WHEN customer_ledgers.payment_type = 'cash' AND type = 'customer' THEN (ifnull(customer_ledgers.credit,0)) ELSE 0 END) AS customer_cash_sales,
             SUM(CASE WHEN sales.payment_type = 'cash' AND type = 'walk-in-customer' THEN (paid) ELSE 0 END) AS cash_sales,

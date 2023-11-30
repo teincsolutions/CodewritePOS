@@ -3,7 +3,7 @@
 <div id="invoice-POS">
     <center id="top">
         <div class="info">
-            <h2 class="text-uppercase"><?= $title ?? "Daily Sales Report" ?></h2>
+            <h2 class="text-uppercase"><?= $title ?? "Daily Purchases Report" ?></h2>
         </div>
         <?php if (setting('App.Logo')) : ?>
             <div class="logo" style="background: url(<?= base_url(setting('App.Logo')) ?>) no-repeat;"></div>
@@ -20,7 +20,7 @@
     </center>
     <div class="d-flex flex-row justify-content-between gap-1" style="margin-top:3px; margin-bottom: 3px;">
         <div class="info">
-            <strong>Date : </strong><span><?= date('d/m/y', strtotime($report->sales_date)); ?></span></br>
+            <strong>Date : </strong><span><?= date('d/m/y', strtotime($report->purchase_date)); ?></span></br>
         </div>
     </div>
     <div id="bot">
@@ -34,47 +34,28 @@
 
             <body>
                 <tr>
-                    <td><strong>Total Sales</strong></td>
+                    <td><strong>Today's Total Purchases</strong></td>
                     <td></td>
                     <td></td>
                     <td>
-                        <strong>GHS <?= number_format($report->total_sales, 2) ?></strong>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>Total Sales Returns</strong></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <strong>GHS (<?= number_format($report->total_returns, 2) ?>)</strong>
+                        <strong>GHS <?= number_format($report->total_purchases, 2) ?></strong>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <strong>Sales Payments</strong>
+                        <strong>Today's Purchases Payments</strong>
                     </td>
-                    <td><?= number_format($report->total_cash_sales, 2) ?></td>
+                    <td><?= number_format($report->cash_purchases, 2) ?></td>
                     <td>
-                        <?= number_format($report->total_momo_sales, 2) ?>
-                    </td>
-                    <td>
-                        GHS <?= number_format($report->total_cash_sales + $report->total_momo_sales, 2) ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <strong>Return Payments</strong>
-                    </td>
-                    <td>(<?= number_format($report->return_paid, 2) ?>)</td>
-                    <td>
+                        <?= number_format($report->momo_purchases, 2) ?>
                     </td>
                     <td>
-                        GHS (<?= number_format($report->return_paid, 2) ?>)
+                        GHS <?= number_format($report->cash_purchases + $report->momo_purchases, 2) ?>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <strong>Debt Payments</strong>
+                        <strong>Today's Debt Payments</strong>
                     </td>
                     <td>
                         <?= number_format($report->cash_debt_paid, 2) ?>
@@ -87,34 +68,15 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        <strong>Returns Debt Pay.</strong>
-                    </td>
-                    <td>
-                        (<?= number_format($report->return_debt_paid, 2) ?>)
-                    </td>
-                    <td>
-                       
-                    </td>
-                    <td>
-                        GHS (<?= number_format($report->return_debt_paid, 2) ?>)
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>Total Due</strong></td>
+                    <td><strong>Today's Total Due</strong></td>
                     <td></td>
                     <td></td>
                     <td>
-                        <strong>GHS <?= number_format($report->due_sales, 2) ?></strong>
+                        <strong>GHS <?= number_format($report->due_purchases, 2) ?></strong>
                     </td>
                 </tr>
             </body>
-            <tfoot>
-                <th>Total Balance</th>
-                <th>GHS <?= number_format($report->total_cash_sales-($report->return_paid+$report->return_debt_paid)+$report->cash_debt_paid, 2) ?></th>
-                <th>GHS <?= number_format($report->total_momo_sales+$report->momo_debt_paid, 2) ?></th>
-                <th></th>
-            </tfoot>
+           
         </table>
         <div id="legalcopy">
             <p class="legal"><strong>Thank you for your business!</strong></p>
