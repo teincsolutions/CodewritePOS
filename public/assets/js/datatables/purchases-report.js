@@ -93,6 +93,17 @@ $(function () {
           return `GHS ${parseFloat(data).toFixed(2)}`;
         },
       },
+      {
+        data: "purchase_date",
+        render: function (data, type, row) {
+          if (type === "display") {
+            return `<div class="d-flex align-items-center">
+                        <a onclick="viewReport('${baseUrl}/reports/purchases/print?date=${data}')" href="javascript:void(0);" class="me-3"><i class="fa fa-print fa-lg"></i></a>
+                       </div>`;
+          }
+          return null;
+        },
+      },
     ],
     initComplete: (settings, json) => {
       $(".dataTables_filter").appendTo("#tableSearch");

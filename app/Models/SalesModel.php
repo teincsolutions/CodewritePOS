@@ -220,16 +220,20 @@ class SalesModel extends Model
         }
     
         $queryDebtPayment = "SELECT SUM(credit) FROM customer_ledgers INNER JOIN sales ON sales.id=customer_ledgers.sale_id WHERE sales.store_closing_id IS NOT NULL AND tdate=d1 AND customer_ledgers.store_id=s1";
+        $queryDebtPaymentCash = "SELECT SUM(credit) FROM customer_ledgers INNER JOIN sales ON sales.id=customer_ledgers.sale_id WHERE sales.store_closing_id IS NOT NULL AND tdate=d1 AND customer_ledgers.store_id=s1 AND customer_ledgers.payment_type='cash'";
+        $queryDebtPaymentMoMo = "SELECT SUM(credit) FROM customer_ledgers INNER JOIN sales ON sales.id=customer_ledgers.sale_id WHERE sales.store_closing_id IS NOT NULL AND tdate=d1 AND customer_ledgers.store_id=s1 AND customer_ledgers.payment_type='momo'";
         $builder->select(
             "sales_date,
             sales_date as d1,
             sales.store_id,
             sales.store_id as s1,
             ($queryDebtPayment) as total_debt_paid,
-            SUM(CASE WHEN customer_ledgers.payment_type = 'cash' THEN (ifnull(customer_ledgers.credit,0)) ELSE 0 END) AS total_cash_sales,
+            ($queryDebtPaymentCash) as cash_debt_paid,
+            ($queryDebtPaymentMoMo) as momo_debt_paid,
+            SUM((CASE WHEN customer_ledgers.payment_type = 'cash' AND type = 'customer' THEN (ifnull(customer_ledgers.credit,0)) ELSE 0 END)+(CASE WHEN sales.payment_type = 'cash' AND type = 'walk-in-customer' THEN paid ELSE 0 END)) AS total_cash_sales,
             SUM(CASE WHEN customer_ledgers.payment_type = 'cash' AND type = 'customer' THEN (ifnull(customer_ledgers.credit,0)) ELSE 0 END) AS customer_cash_sales,
             SUM(CASE WHEN sales.payment_type = 'cash' AND type = 'walk-in-customer' THEN (paid) ELSE 0 END) AS cash_sales,
-            SUM(CASE WHEN customer_ledgers.payment_type = 'momo' THEN (ifnull(customer_ledgers.credit,0)) ELSE 0 END) AS total_momo_sales,
+            SUM((CASE WHEN customer_ledgers.payment_type = 'momo' THEN (ifnull(customer_ledgers.credit,0)) ELSE 0 END)+(CASE WHEN sales.payment_type = 'momo' AND type = 'walk-in-customer' THEN (paid) ELSE 0 END)) AS total_momo_sales,
             SUM(CASE WHEN customer_ledgers.payment_type = 'momo' AND type = 'customer' THEN (ifnull(customer_ledgers.credit,0)) ELSE 0 END) AS customer_momo_sales,
             SUM(CASE WHEN sales.payment_type = 'momo' AND type = 'walk-in-customer' THEN (paid) ELSE 0 END) AS momo_sales,
             SUM(total_amount) AS total_sales,

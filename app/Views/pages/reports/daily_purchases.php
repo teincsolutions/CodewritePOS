@@ -76,6 +76,7 @@
                             <th>MoMo Paid</th>
                             <th>Total Purchases</th>
                             <th>Due</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                 </table>
@@ -86,5 +87,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/datatables/purchases-report.js?v=8') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/purchases-report.js?v=9') ?>"></script>
+<script src="<?= base_url('assets/js/record-actions.js?v=1') ?>"></script>
 <?= $this->endSection() ?>

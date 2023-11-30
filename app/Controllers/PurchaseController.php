@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\PurchaseItemModel;
 use App\Models\PurchaseModel;
 use App\Models\StockModel;
+use App\Models\StoreModel;
 use App\Models\SupplierLedgerModel;
 use App\Models\SupplierModel;
 use App\Models\UserModel;
@@ -44,6 +45,7 @@ class PurchaseController extends BaseController
     {
         $date = $this->request->getVar('date');
         $model = new PurchaseModel();
+        $storeModel = new StoreModel();
         $res = [
             'status' => false,
             'data' => null,
@@ -52,6 +54,7 @@ class PurchaseController extends BaseController
         $report = $model->getDailyReport(['purchase_date' => $date])->get()->getFirstRow();
 
         if ($report) {
+            $report->store = $storeModel->where('id',$report->store_id)->first();
             $res = array_merge($res, [
                 'status' => true,
                 'data' => $report,

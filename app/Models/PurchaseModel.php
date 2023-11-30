@@ -190,8 +190,18 @@ class PurchaseModel extends Model
             $to = $builder->db->escape($to);
             $builder->where("purchase_date BETWEEN $from AND $to");
         }
+        $queryDebtPayment = "SELECT SUM(credit) FROM supplier_ledgers INNER JOIN purchases ON purchases.id=supplier_ledgers.purchase_id WHERE purchases.store_closing_id IS NOT NULL AND tdate=d1 AND supplier_ledgers.store_id=p1";
+        $queryDebtPaymentCash = "SELECT SUM(credit) FROM supplier_ledgers INNER JOIN purchases ON purchases.id=supplier_ledgers.purchase_id WHERE purchases.store_closing_id IS NOT NULL AND tdate=d1 AND supplier_ledgers.store_id=p1 AND supplier_ledgers.payment_type='cash'";
+        $queryDebtPaymentMoMo = "SELECT SUM(credit) FROM supplier_ledgers INNER JOIN purchases ON purchases.id=supplier_ledgers.purchase_id WHERE purchases.store_closing_id IS NOT NULL AND tdate=d1 AND supplier_ledgers.store_id=p1 AND supplier_ledgers.payment_type='momo'";
+       
         $builder->select(
             "purchase_date,
+            purchase_date as d1,
+            purchases.store_id,
+            purchases.store_id as p1,
+            ($queryDebtPayment) as total_debt_paid,
+            ($queryDebtPaymentCash) as cash_debt_paid,
+            ($queryDebtPaymentMoMo) as momo_debt_paid,
             SUM(CASE WHEN supplier_ledgers.payment_type = 'cash' THEN (ifnull(supplier_ledgers.debit,0)) ELSE 0 END) AS cash_purchases,
             SUM(CASE WHEN supplier_ledgers.payment_type = 'momo' THEN (ifnull(supplier_ledgers.debit,0)) ELSE 0 END) AS momo_purchases,
             SUM(total_amount) AS total_purchases,
