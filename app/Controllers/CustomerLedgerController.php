@@ -101,7 +101,7 @@ class CustomerLedgerController extends BaseController
                     'message' => "Don't have permission to edit this record!"
                 ]);
 
-            if ($customerLedger->debit > 0)
+            if ($customerLedger->debit > 0 && !auth()->user()->can('customer-ledgers.edit-debit'))
                 return $this->response->setJSON([
                     'status' => false,
                     'message' => "You cannot edit a sales debit!"

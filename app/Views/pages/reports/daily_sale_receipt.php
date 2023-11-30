@@ -43,16 +43,36 @@
                 <div class="row">
                     <div class="col-md-12">
                         <b>Cash</b>
-                        <span><?= number_format($report->total_cash_sales,2) ?></span>
+                        <span><?= number_format($report->total_cash_sales, 2) ?></span>
                     </div>
                     <div class="col-md-12">
                         <b>MoMo</b>
-                        <span><?= number_format($report->total_momo_sales,2) ?></span>
+                        <span><?= number_format($report->total_momo_sales, 2) ?></span>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <b>GHS <?= 0.00 ?></b>
+                <b>GHS <?= number_format($report->total_cash_sales + $report->total_momo_sales, 2) ?></b>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <b>Today's Debt Payments</b>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <b>Cash</b>
+                        <span><?= number_format($report->total_cash_sales, 2) ?></span>
+                    </div>
+                    <div class="col-md-12">
+                        <b>MoMo</b>
+                        <span><?= number_format($report->total_momo_sales, 2) ?></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <b>GHS <?= number_format($report->total_cash_sales + $report->total_momo_sales, 2) ?></b>
             </div>
         </div>
         <div id="legalcopy">

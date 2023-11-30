@@ -92,13 +92,13 @@ class supplierLedgerController extends BaseController
         ];
         $supplierLedger = $model->where('id', $id)->first();
         if ($supplierLedger) {
-            if (!auth()->user()->can('purchases.edit'))
+            if (!auth()->user()->can('supplier_ledgers.edit'))
                 return $this->response->setJSON([
                     'status' => false,
                     'message' => "Don't have permission to edit this record!"
                 ]);
 
-            if ($supplierLedger->credit > 0)
+            if ($supplierLedger->credit > 0 && !auth()->user()->can('supplier-ledgers.edit-credit'))
                 return $this->response->setJSON([
                     'status' => false,
                     'message' => "You cannot edit purchase credit!"
