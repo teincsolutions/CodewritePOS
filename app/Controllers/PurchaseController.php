@@ -36,6 +36,32 @@ class PurchaseController extends BaseController
         return view('pages/purchases/list_purchase', $data);
     }
 
+      /**
+     * return view for list
+     * @return Response - http response
+     */
+    public function daily_report_print()
+    {
+        $date = $this->request->getVar('date');
+        $model = new PurchaseModel();
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => "Invoice not found!",
+        ];
+        $report = $model->getDailyReport(['purchase_date' => $date])->get()->getFirstRow();
+
+        if ($report) {
+            $res = array_merge($res, [
+                'status' => true,
+                'data' => $report,
+                'receipt' => view('pages/reports/daily_purchase_receipt', ['report' => $report]),
+                'message' => "Invoice found!",
+            ]);
+        }
+        return $this->response->setJSON($res);
+    }
+
     /**
      * return view for list
      * @return Response - http response
@@ -47,6 +73,8 @@ class PurchaseController extends BaseController
         $data = [
             'title' => 'Daily Purchase Report',
             'stores' => $stores,
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
         ];
 
         return view('pages/reports/daily_purchases', $data);

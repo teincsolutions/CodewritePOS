@@ -49,7 +49,9 @@ $routes->group('settings', static function (RouteCollection $routes) {
 
 $routes->group('reports', static function (RouteCollection $routes) {
     $routes->get('sales', [SalesController::class, 'daily_report']);
+    $routes->get('sales/print', [SalesController::class, 'daily_report_print']);
     $routes->get('purchases', [PurchaseController::class, 'daily_report']);
+    $routes->get('purchases/print', [PurchaseController::class, 'daily_report_print']);
     $routes->get('stocks', [InventoryController::class, 'stock_report']);
     $routes->get('stocks/product/(:num)', [InventoryController::class, 'view_stock_report']);
     $routes->get('stocks/datatable', [InventoryController::class, 'stock_report_datatable']);

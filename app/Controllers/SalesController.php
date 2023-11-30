@@ -24,7 +24,7 @@ class SalesController extends BaseController
     public function index()
     {
         $cusModel = new CustomerModel();
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Sales List',
@@ -41,14 +41,42 @@ class SalesController extends BaseController
      * return view for list
      * @return Response - http response
      */
+    public function daily_report_print()
+    {
+        $date = $this->request->getVar('date');
+        $model = new SalesModel();
+        $storeModel = new StoreModel();
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => "Invoice not found!",
+        ];
+        $report = $model->getDailyReport(['sales_date' => $date])->get()->getFirstRow();
+
+        if ($report) {
+            $report->store = $storeModel->where('id',$report->store_id)->first();
+            $res = array_merge($res, [
+                'status' => true,
+                'data' => $report,
+                'receipt' => view('pages/reports/daily_sale_receipt', ['report' => $report]),
+                'message' => "Invoice found!",
+            ]);
+        }
+        return $this->response->setJSON($res);
+    }
+
+    /**
+     * return view for list
+     * @return Response - http response
+     */
     public function daily_report()
     {
-        $cusModel = new CustomerModel();
-        $storeModel = new StoreModel();
-
+        $stores = (new UserModel())->getMyStores();
         $data = [
             'title' => 'Daily Sales Report',
-            'stores' => $storeModel->where('status', 'opened')->findAll(),
+            'stores' => $stores,
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
         ];
 
         return view('pages/reports/daily_sales', $data);
@@ -63,7 +91,7 @@ class SalesController extends BaseController
         $model = new SalesModel();
         $lastItem = $model->orderBy('id', 'desc')->first();
         $lastId = $lastItem ? $lastItem->id : 1;
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
 
 
         $data = [

@@ -90,6 +90,22 @@
                             <th>Action</th>
                         </tr>
                     </thead>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>Total Paid</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -98,5 +114,5 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/datatables/customer-payment-report.js?v=2') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/customer-payment-report.js?v=3') ?>"></script>
 <?= $this->endSection() ?>
