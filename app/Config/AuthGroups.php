@@ -136,6 +136,7 @@ class AuthGroups extends ShieldAuthGroups
         'customer-ledgers.view'        => 'Can view customer ledgers',
         'customer-ledgers.create'        => 'Can add new customer ledgers',
         'customer-ledgers.edit'          => 'Can edit customer ledgers',
+        'customer-ledgers.edit-debit'          => 'Can edit customer debits',
         'customer-ledgers.delete'        => 'Can delete existing customer ledgers',
         'customer-ledgers.report'        => 'Can view customer ledgers reports',
 
