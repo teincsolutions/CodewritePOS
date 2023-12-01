@@ -8,7 +8,7 @@ $(function () {
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $("#filter_inputs9 input, #filter_inputs9 select");
+        let filterForm = $("#filter_inputs input, #filter_inputs select");
         filterForm.each((i, item) => {
           field = $(item);
           if (field.prop("tagName") === "SELECT") {

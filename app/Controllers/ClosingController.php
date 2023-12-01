@@ -50,6 +50,31 @@ class ClosingController extends BaseController
         return view('pages/closing/show_closing', $data);
     }
 
+    /**
+     * return view for list
+     * @return Response - http response
+     */
+    public function print($id)
+    {
+        $model = new StoreClosingModel();
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => "Invoice not found!",
+        ];
+        $report = $model->where('id', $id)->first();
+
+        if ($report) {
+            $res = array_merge($res, [
+                'status' => true,
+                'data' => $report,
+                'receipt' => view('pages/closing/closing_receipt', ['report' => $report]),
+                'message' => "Invoice found!",
+            ]);
+        }
+        return $this->response->setJSON($res);
+    }
+
     public function store(): string
     {
         $storeModel = new StoreModel();

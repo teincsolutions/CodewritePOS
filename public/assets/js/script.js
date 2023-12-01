@@ -957,7 +957,7 @@ function printInvoice(result) {
       setTimeout(() => {
         newWin.print();
         newWin.close();
-      }, 300);
+      }, 0);
     } else if (result2.isDenied) {
       Swal.close();
     }

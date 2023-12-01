@@ -73,6 +73,7 @@ $routes->group('print', static function (RouteCollection $routes) {
     $routes->get('purchases/returns/(:num)', [PurchaseReturnController::class, 'print/$1']);
     $routes->get('adjustments/(:num)', [SalesController::class, 'print/$1']);
     $routes->get('transfers/products/(:num)', [ProductTransferController::class, 'print/$1']);
+    $routes->get('closing/(:num)', [ClosingController::class, 'print/$1']);
 });
 
 //indexs

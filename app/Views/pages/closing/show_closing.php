@@ -14,7 +14,7 @@
         <div class="col-md-12">
             <div class="card bg-white">
                 <div class="card-body">
-                    <h5 class="card-title">Closing Report of <?= date('l,jS M Y H:i A', strtotime($closing->created_at)); ?></h5>
+                    <h5 class="card-title">Closing Report of <?= date('l,jS M Y h:i A', strtotime($closing->created_at)); ?></h5>
                     <div class="row">
                         <div class="col-md-6">
                             <h3 class="text-success">InFlows</h3>
@@ -119,6 +119,7 @@
                     </div>
                 </div>
                 <div class="card-footer text-end">
+                    <a onclick="viewReport('<?=site_url('print/closing/'.$closing->id) ?>')" href="javascript:void(0);" class="me-3 btn btn-success"><i class="fa fa-print fa-lg"></i> Print Report</a>
                     <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#edit-closing" class="btn btn-primary">Update Status</a>
                 </div>
             </div>
@@ -161,4 +162,5 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/handle-post.js?v=2') ?>"></script>
+<script src="<?= base_url('assets/js/record-actions.js?v=1') ?>"></script>
 <?= $this->endSection() ?>

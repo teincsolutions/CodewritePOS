@@ -192,6 +192,7 @@ $(function () {
           if (type === "display") {
             return `<div class="d-flex align-items-center">
                         <a target="_blank" href="${baseUrl}closing/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
+                        <a onclick="viewReport('${baseUrl}/print/closing/${data}')" href="javascript:void(0);" class="me-3"><i class="fa fa-print fa-lg"></i></a>
                         <a $${
                           Settings.AllowDeleteClosing === "yes" ? "" : "hidden"
                         } class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}closing')"><i class="fa fa-trash fa-lg"></i></a>
