@@ -258,7 +258,7 @@ class SalesController extends BaseController
 
                     if (setting('App.AllowCustomerLimit') === 'yes') {
                        
-                        $balance = abs($customer->balance + ($inputs['paid'] - $inputs['total_amount']));
+                        $balance = abs($customer->balance);
                         $days = $model->customerLatestDays($customer->id);
                         $customer->credit_limit_days = $customer->credit_limit_days ?? setting('App.LimitSalesDebitDays');
 
