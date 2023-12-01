@@ -675,6 +675,8 @@ $(function () {
         dataType: "json",
         data: function (params) {
           let filter = {};
+          filter["purchases.payment_status"] = 'due';
+          filter["sales.order_status"] = 'completed';
           params.filter = filter;
           return params;
         },

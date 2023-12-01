@@ -194,7 +194,7 @@ class PurchaseReturnController extends BaseController
             $res = array_merge($res, [
                 'status' => true,
                 'data' => $return,
-                'receipt' => view('pages/purchase_returns/pos_receipt', ['returns' => $return])
+                'receipt' => view('pages/purchase_returns/pos_receipt', ['return' => $return])
             ]);
         } else {
             $res = array_merge($res, ['status' => false]);

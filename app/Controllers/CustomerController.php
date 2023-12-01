@@ -113,6 +113,19 @@ class CustomerController extends BaseController
                     'message' => "Don't have permission to edit this record!"
                 ]);
 
+            // customer limit permissions
+            if (setting('App.AllowCustomerLimit') === 'yes') {
+                if (
+                    floatval($this->request->getVar('credit_limit') ?? 0) !== floatval($customer->credit_limit ?? 0)
+                    || $this->request->getVar('credit_limit_days') !== $customer->credit_limit_days
+                )
+                    if (!auth()->user()->can('customers.edit-limit'))
+                        return $this->response->setJSON([
+                            'status' => false,
+                            'message' => "Don't have permission to edit customer credit limit this record!"
+                        ]);
+            }
+
             if ($model->save($inputs)) {
                 $res = array_merge($res, [
                     'status' => true,

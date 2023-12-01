@@ -23,6 +23,8 @@ class CustomerModel extends Model
         'address',
         'discount',
         'user_id',
+        'credit_limit',
+        'credit_limit_days'
     ];
 
     // Dates

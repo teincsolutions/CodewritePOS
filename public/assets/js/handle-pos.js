@@ -465,7 +465,9 @@ function autocomplete(inp) {
                                         }
                                             <a target="_blank" href="${baseUrl}products/${
               item.id
-            }">${Settings.ShowProductSKU === "yes" ? item.sku : ""} ${item.name}(${
+            }">${Settings.ShowProductSKU === "yes" ? item.sku : ""} ${
+              item.name
+            }(${
               item.unit.label
             })</a><span class="badge bg-info">${instock}</span></td>
                                         <td>
@@ -670,15 +672,18 @@ let select2Customer = $(".select2-customer")
   .on("select2:select", function (e) {
     const data = e.params.data;
     customerBalance = parseFloat(data.balance);
+    let customerLimit = parseFloat(data.credit_limit);
     customerType = data.type;
     $(".customer-balance").html(
       customerBalance < 0
         ? `(GHS ${Math.abs(customerBalance).toFixed(2)})`
         : `GHS ${customerBalance.toFixed(2)}`
     );
+    $(".customer-limit").html(`GHS ${customerLimit.toFixed(2)}`);
+
     $(".customer").html(data.text);
     $("input[name='discount']").val(data.discount);
-    $("#acc-bal").removeClass("d-none");
+    $("#acc-bal,#acc-limit").removeClass("d-none");
     updateTotals();
   })
   .on("select2:unselect", function (e) {
@@ -689,6 +694,8 @@ let select2Customer = $(".select2-customer")
         ? `(GHS ${Math.abs(customerBalance).toFixed(2)})`
         : `GHS ${customerBalance.toFixed(2)}`
     );
+    $(".customer-limit").html(`GHS 0.00`);
+
     $(".customer").html("walk-in-customer");
     $("input[name='discount']").val("");
     $("#acc-bal").addClass("d-none");

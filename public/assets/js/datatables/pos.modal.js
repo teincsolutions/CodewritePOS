@@ -698,6 +698,8 @@ $(function () {
         data: function (params) {
           let filter = {};
           filter["sales.type"] = "customer";
+          filter["sales.payment_status"] = 'due';
+          filter["sales.order_status"] = 'completed';
           params.filter = filter;
           return params;
         },

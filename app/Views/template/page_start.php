@@ -47,7 +47,10 @@
             'AllowDeleteTransfers',
             'AllowDeleteAdjustments',
             'ShowProductSKU',
-            'UseSalesPriceOnReceipt'
+            'UseSalesPriceOnReceipt',
+            'SalesDebitAllowedDays',
+            'AllowCustomerLimit',
+            'LimitSalesDebitDays'
         ];
         $data = [];
         foreach ($settings as  $key)

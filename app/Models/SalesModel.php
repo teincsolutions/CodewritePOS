@@ -5,7 +5,7 @@ namespace App\Models;
 use CodeIgniter\Database\MySQLi\Builder;
 use CodeIgniter\Database\RawSql;
 use CodeIgniter\Model;
-
+use DateTime;
 
 class SalesModel extends Model
 {
@@ -218,15 +218,15 @@ class SalesModel extends Model
             $to = $builder->db->escape($to);
             $builder->where("sales_date BETWEEN $from AND $to");
         }
-    
+
         $queryDebtPayment = "SELECT SUM(credit) FROM customer_ledgers INNER JOIN sales ON sales.id=customer_ledgers.sale_id WHERE sales.store_closing_id IS NOT NULL AND tdate=d1 AND customer_ledgers.store_id=s1 AND ledger_type='sales'";
         $queryDebtPaymentCash = "SELECT SUM(credit) FROM customer_ledgers INNER JOIN sales ON sales.id=customer_ledgers.sale_id WHERE sales.store_closing_id IS NOT NULL AND tdate=d1 AND customer_ledgers.store_id=s1 AND customer_ledgers.payment_type='cash' AND ledger_type='sales'";
         $queryDebtPaymentMoMo = "SELECT SUM(credit) FROM customer_ledgers INNER JOIN sales ON sales.id=customer_ledgers.sale_id WHERE sales.store_closing_id IS NOT NULL AND tdate=d1 AND customer_ledgers.store_id=s1 AND customer_ledgers.payment_type='momo' AND ledger_type='sales'";
-        
+
         $queryCusReturnPayment = "SELECT SUM(credit) FROM customer_ledgers INNER JOIN sales_returns ON sales_returns.id=customer_ledgers.sales_return_id WHERE tdate=d1 AND customer_ledgers.store_id=s1";
         $queryWalkinReturnPayment = "SELECT SUM(sales_returns.paid) FROM sales_returns INNER JOIN sales ON sales.id=sales_returns.sale_id WHERE return_date=d1 AND sales_returns.store_id=s1 AND type='walk-in-customer'";
         $queryTotalReturns = "SELECT SUM(sales_returns.paid) FROM sales_returns WHERE  return_date=d1 AND customer_ledgers.store_id=s1";
-  
+
         $builder->select(
             "sales_date,
             sales_date as d1,
@@ -253,5 +253,20 @@ class SalesModel extends Model
             ->groupBy('sales_date');
 
         return $builder;
+    }
+
+    public function customerLatestDays($customerId, array $cond = null)
+    {
+        $where = ['customer_id' => $customerId];
+
+        if ($cond == null) $where = array_merge($where, [
+            'order_status' => 'completed',
+            'payment_status' => 'due'
+        ]);
+        else array_merge($where, $cond);
+        
+        $sale = $this->where($where)->orderBy('id', 'asc')->first();
+        if ($sale) return (new DateTime($sale->sales_date))->diff(new DateTime())->days;
+        return null;
     }
 }

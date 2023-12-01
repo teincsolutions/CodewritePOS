@@ -179,7 +179,45 @@
                                                 <th style="width: 25%;">Sales</th>
                                                 <th>Value</th>
                                             </thead>
-
+                                            <tr>
+                                                <td>Allow Customer Sales Limit</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="AllowCustomerLimit" value="yes" <?= setting('App.AllowCustomerLimit') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="AllowCustomerLimit" value="no" <?= setting('App.AllowCustomerLimit') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Limit Sales Debit to Allowed Days</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="LimitSalesDebitDays" value="yes" <?= setting('App.LimitSalesDebitDays') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="LimitSalesDebitDays" value="no" <?= setting('App.LimitSalesDebitDays') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td> Default Sales Debit Allowed Days</td>
+                                                <td>
+                                                    <div class="input-group w-50">
+                                                        <input type="number" class="form-control" min="0" name="SalesDebitAllowedDays" value="<?= setting('App.SalesDebitAllowedDays') ?? 14 ?>" placeholder="Allowed days">
+                                                        <div class="input-group-text text-info">days</div>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                             <tr>
                                                 <td>Sales Tax Rates(%)</td>
                                                 <td>
@@ -313,6 +351,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
+                                          
                                             <thead class="border-top-0">
                                                 <th style="width: 25%;">Purchases & Returns</th>
                                                 <th>Value</th>

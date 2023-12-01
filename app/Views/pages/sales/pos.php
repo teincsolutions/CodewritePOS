@@ -234,7 +234,7 @@
                                     <h5>Customer </h5>
                                     <h6 class="customer"><?= isset($sales) ? ($sales->customer ? $sales->customer->name : 'walk-in-customer') : 'walk-in-customer' ?></h6>
                                 </li>
-                                <li id="acc-bal" class="<?= isset($sales) ? ($sales->customer ? $sales->customer->name : 'd-none') : 'd-none' ?>">
+                                <li id="acc-bal" class="<?= isset($sales) ? ($sales->customer ? '': 'd-none') : 'd-none' ?>">
                                     <h5>A/c Balance</h5>
                                     <?php
                                     if (isset($sales) && $sales->customer) : ?>
@@ -243,6 +243,17 @@
                                         </h6>
                                     <?php else : ?>
                                         <h6 class="customer-balance" data-balance="0.00">GHS 0.00</h6>
+                                    <?php endif ?>
+                                </li>
+                                <li id="acc-limit" class="<?= isset($sales) ? ($sales->customer ? '' : 'd-none') : 'd-none' ?>">
+                                    <h5>A/c Credit Limit</h5>
+                                    <?php
+                                    if (isset($sales) && $sales->customer) : ?>
+                                        <h6 class="customer-limit" data-credit-limit="<?= $sales->customer->balance ?>">GHS
+                                            <?= $sales->customer->credit_limit < 0 ? "(" . number_format(abs($sales->customer->credit_limit), 2, '.', '') . ")" : $sales->customer->credit_limit ?>
+                                        </h6>
+                                    <?php else : ?>
+                                        <h6 class="customer-limit" data-balance="0.00">GHS 0.00</h6>
                                     <?php endif ?>
                                 </li>
                                 <li>
@@ -589,7 +600,7 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/handle-pos.js?v=18') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/pos.modal.js?v=4') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/pos.modal.js?v=5') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?php if (isset($sales) && $sales->customer) {
     $customer = $sales->customer;

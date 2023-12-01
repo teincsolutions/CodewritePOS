@@ -79,6 +79,7 @@ class AuthGroups extends ShieldAuthGroups
         'customers.view'        => 'Can view customers',
         'customers.create'        => 'Can create new customers',
         'customers.edit'          => 'Can edit existing customers',
+        'customers.edit-limit'          => 'Can edit customer limits',
         'customers.delete'        => 'Can delete existing customers',
 
         'suppliers.view'        => 'Can view suppliers',

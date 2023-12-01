@@ -31,6 +31,7 @@
                     </div>
                     <h5 class="card-title">
                         Details of <?= $customer->name; ?>
+                        <a class="btn btn-primary btn-sm me-3" href="<?= site_url('customers/edit/' . $customer->id) ?>"><i class="fa fa-edit"></i> Edit </a>
                     </h5>
                 </div>
                 <div class="card-body">
@@ -82,6 +83,16 @@
                                                 <h4>Account Balance</h4>
                                                 <h6>GHS <?= $customer->balance < 0 ? "(" . number_format(abs($customer->balance), 2) . ")" : number_format($customer->balance, 2) ?></h6>
                                             </li>
+                                            <?php if (setting('App.AllowCustomerLimit') === 'yes') : ?>
+                                                <li>
+                                                    <h4>Credit Limit</h4>
+                                                    <h6>GHS <?= number_format($customer->credit_limit, 2) ?></h6>
+                                                </li>
+                                                <li>
+                                                    <h4>Credit Limit Days</h4>
+                                                    <h6><?= $customer->credit_limit_days  ?> days</h6>
+                                                </li>
+                                            <?php endif ?>
                                             <li>
                                                 <h4>Status</h4>
                                                 <h6 class="text-capitalize <?= ['text-danger', 'text-success'][$customer->status === 'opened' ? 1 : 0] ?>"><?= $customer->status ?></h6>
@@ -526,5 +537,5 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js?v=4') ?>"></script>
-<script src="<?= base_url('assets/js/customer-details.js?v=21') ?>"></script>
+<script src="<?= base_url('assets/js/customer-details.js?v=22') ?>"></script>
 <?= $this->endSection() ?>

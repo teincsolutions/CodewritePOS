@@ -54,7 +54,7 @@ class SalesController extends BaseController
         $report = $model->getDailyReport(['sales_date' => $date])->get()->getFirstRow();
 
         if ($report) {
-            $report->store = $storeModel->where('id',$report->store_id)->first();
+            $report->store = $storeModel->where('id', $report->store_id)->first();
             $res = array_merge($res, [
                 'status' => true,
                 'data' => $report,
@@ -173,6 +173,7 @@ class SalesController extends BaseController
         $salesItemModel = new SalesItemModel();
         $stockModel = new StockModel();
         $ledger = new CustomerLedgerModel();
+        $cusModel = new CustomerModel();
 
         $inputs = $this->request->getVar();
         if (auth()->user())
@@ -252,6 +253,36 @@ class SalesController extends BaseController
                         'user_id' => isset($inputs['user_id']) ? $inputs['user_id'] : null,
                     ]);
                     $model->updatePaymentStatus($id);
+
+                    $customer = $cusModel->where('id', $inputs['customer_id'])->first();
+
+                    if (setting('App.AllowCustomerLimit') === 'yes') {
+                        $balance = abs($customer->balance + ($inputs['paid'] - $inputs['total_amount']));
+                        $days = $model->customerLatestDays($customer->id);
+
+                        if ($balance > $customer->credit_limit &&  $balance > abs($customer->balance))
+                            return $this->response->setJSON(
+                                [
+                                    'status' => false,
+                                    'data' => null,
+                                    'message' => "Customer has exceeded his/her Credit Limit of GHS "
+                                        . number_format($customer->credit_limit, 2)
+                                        . " with a balance of GHS " . number_format($balance, 2),
+                                    'input' => $inputs,
+                                ]
+                            );
+                            // limit to allowed days
+                        if (setting('App.LimitSalesDebitDays') === 'yes')
+                            if ($days !== null && intval($days) > $customer->credit_limit_days &&  $balance > abs($customer->balance))
+                                return $this->response->setJSON(
+                                    [
+                                        'status' => false,
+                                        'data' => null,
+                                        'message' => "Customer has exceeded his/her Credit Days Limit of $customer->credit_limit_days days. It's been $days days since last credit sales.",
+                                        'input' => $inputs,
+                                    ]
+                                );
+                    }
                 }
             }
             $this->db->transComplete();

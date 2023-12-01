@@ -29,7 +29,9 @@
                             </div>
                         </div>
                     </div>
-                    <h5 class="card-title">Details of <?= $supplier->name; ?></h5>
+                    <h5 class="card-title">Details of <?= $supplier->name; ?>
+                        <a class="btn btn-primary btn-sm me-3" href="<?= site_url('products/edit/' . $supplier->id) ?>"><i class="fa fa-edit"></i> Edit </a>
+                    </h5>
                 </div>
                 <div class="card-body">
                     <ul class="nav nav-tabs nav-justified">
@@ -500,5 +502,5 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js?v=4') ?>"></script>
-<script src="<?= base_url('assets/js/supplier-details.js?v=14') ?>"></script>
+<script src="<?= base_url('assets/js/supplier-details.js?v=15') ?>"></script>
 <?= $this->endSection() ?>

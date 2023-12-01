@@ -728,7 +728,7 @@ $(function () {
             },name:'purchase_id'})"><i class="fa fa-edit fa-lg"></i></a>
                             <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(paymentTable, ${
                               row.id
-                            }, '${baseUrl}suppliers/ledger', table1,table3)"><i class="fa fa-trash fa-lg"></i></a>
+                            }, '${baseUrl}suppliers/ledger', table1,table2)"><i class="fa fa-trash fa-lg"></i></a>
                         </div>`;
           }
           return data;
