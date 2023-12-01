@@ -65,6 +65,7 @@
                             </th>
                             <th>Customer Name</th>
                             <th>Phone</th>
+                            <th>email</th>
                             <th>Address</th>
                             <th>A/c Balance</th>
                              <th>Added By</th>
