@@ -144,6 +144,7 @@ class AuthGroups extends ShieldAuthGroups
         'supplier-ledgers.view'        => 'Can view supplier ledgers',
         'supplier-ledgers.create'        => 'Can create new supplier ledgers',
         'supplier-ledgers.edit'          => 'Can edit existing supplier ledgers',
+        'supplier-ledgers.edit-credit'          => 'Can edit existing supplier ledgers',
         'supplier-ledgers.delete'        => 'Can delete existing supplier ledgers',
         'supplier-ledgers.report'        => 'Can View supplier ledgers reports',
 
