@@ -257,8 +257,10 @@ class SalesController extends BaseController
                     $customer = $cusModel->where('id', $inputs['customer_id'])->first();
 
                     if (setting('App.AllowCustomerLimit') === 'yes') {
+                       
                         $balance = abs($customer->balance + ($inputs['paid'] - $inputs['total_amount']));
                         $days = $model->customerLatestDays($customer->id);
+                        $customer->credit_limit_days = $customer->credit_limit_days ?? setting('App.LimitSalesDebitDays');
 
                         if ($balance > $customer->credit_limit &&  $balance > abs($customer->balance))
                             return $this->response->setJSON(
@@ -271,7 +273,7 @@ class SalesController extends BaseController
                                     'input' => $inputs,
                                 ]
                             );
-                            // limit to allowed days
+                        // limit to allowed days
                         if (setting('App.LimitSalesDebitDays') === 'yes')
                             if ($days !== null && intval($days) > $customer->credit_limit_days &&  $balance > abs($customer->balance))
                                 return $this->response->setJSON(

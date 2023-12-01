@@ -67,7 +67,7 @@
                                     <label>Credit Limit</label>
                                     <div class="input-group">
                                     <span class="input-group-text">GHS</span>
-                                        <input type="number" name="credit_limit" class="form-control w-100" value="<?= isset($customer) ? $customer->credit_limit : '0.00' ?>" placeholder="Customer credit limit" required>
+                                        <input type="number" name="credit_limit" class="form-control w-100" value="<?= isset($customer) ? $customer->credit_limit : null ?>" placeholder="Customer credit limit">
                                     </div>
                                 </div>
                             </div>

@@ -20,7 +20,7 @@ class AddCustomerLimitsAlterCustomersTable extends Migration
             'credit_limit_days' => [
                 'type' => 'INT',
                 'constraint' => 11,
-                'default' => 14,
+                'null' => true,
                 'unsigned'       => true,
             ]
         ];
