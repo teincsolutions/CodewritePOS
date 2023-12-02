@@ -54,7 +54,6 @@ let tableItems = $(".tr-items").DataTable({
             },
           })
           .on("select2:select select2:unselect", (e) => {
-             console.log(e.params.data);
             updateItemRow(this);
           });
       }
@@ -87,8 +86,6 @@ function updateItemRow(row) {
     to_unit_qty = parseFloat(data2.unit_qty ?? 1);
   $("td:eq(4)", row1).html((qty * (from_unit_qty / to_unit_qty)).toFixed(2));
   $(".to_unit_qty", row1).val((qty * (from_unit_qty / to_unit_qty)).toFixed(2));
-
-  updateTotals();
 }
 
 $(".tr-items").on("click", ".delete-set", function () {
