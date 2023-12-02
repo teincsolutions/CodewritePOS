@@ -274,6 +274,7 @@ class ProductController extends BaseController
         $builder->join('units', 'units.id=products.unit_id');
         $builder->join('categories', 'categories.id=products.category_id');
         $builder->join('brands', 'brands.id=products.brand_id', 'left');
+        $builder->join('stocks', 'stocks.product_id=products.id');
         $builder->where('products.deleted_at', null);
         if (isset($inputs['exclude']))
             $builder->whereNotIn('products.id', $inputs['exclude']);
@@ -281,7 +282,7 @@ class ProductController extends BaseController
             $builder,
             ['products.sku', 'products.name', 'brands.name', 'units.label', 'categories.name'],
             $inputs,
-            'concat(ifnull(concat(products.sku," "),""),products.name," ",ifnull(brands.name,"")," (",units.label, ")"," ₵",products.unit_price) as text, products.*',
+            'concat(ifnull(concat(products.sku," "),""),products.name," ",ifnull(brands.name,"")," (",units.label, ")"," ₵",products.unit_price) as text, products.*,sum(stocks.instock)',
         ));
     }
     /**

@@ -43,6 +43,7 @@ let tableItems = $(".tr-items").DataTable({
               dataType: "json",
               data: function (params) {
                 params.filter = {};
+                params.filter['stocks.store_id'] = $('.select2-store').val();
                 params.exclude = [];
 
                 $(".select2-product").each((i, sel) => {
@@ -53,7 +54,7 @@ let tableItems = $(".tr-items").DataTable({
             },
           })
           .on("select2:select select2:unselect", (e) => {
-            console.log(e);
+             console.log(e.params.data);
             updateItemRow(this);
           });
       }
