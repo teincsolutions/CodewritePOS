@@ -112,21 +112,26 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="closing_balance">Closing Balance</label>
-                                <input type="number" name="closing_balance" value="<?= isset($closing) ? $closing->closing_balance : null ?>" class="form-control" placeholder="Closing Balance" readonly required>
+                                <label for="closing_balance">Avaliable Balance</label>
+                                <input type="number" name="avaliable_balance" value="<?= isset($closing) ? number_format($closing->closing_balance + $closing->cash_in_hand, 2, '.', '') : null ?>" class="form-control" placeholder="Closing Balance" readonly required>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="closing_balance">Closing Balance</label>
+                                    <input type="number" name="closing_balance" value="<?= isset($closing) ? $closing->closing_balance : null ?>" class="form-control" placeholder="Closing Balance" readonly required>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="row mt-3">
-                    <div class="col-lg-12">
-                        <button type="submit" class="btn btn-submit me-2">Submit</button>
-                        <a href="<?= site_url('closing') ?>" class="btn btn-cancel">Cancel</a>
+                    <div class="row mt-3">
+                        <div class="col-lg-12">
+                            <button type="submit" class="btn btn-submit me-2">Submit</button>
+                            <a href="<?= site_url('closing') ?>" class="btn btn-cancel">Cancel</a>
+                        </div>
                     </div>
+                <?php endif ?>
                 </div>
-            <?php endif ?>
-        </div>
     </form>
 </div>
 <?= $this->endSection() ?>

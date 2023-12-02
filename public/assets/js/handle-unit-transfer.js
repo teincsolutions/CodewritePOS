@@ -53,6 +53,7 @@ let tableItems = $(".tr-items").DataTable({
             },
           })
           .on("select2:select select2:unselect", (e) => {
+            console.log(e);
             updateItemRow(this);
           });
       }

@@ -87,6 +87,7 @@
                             <th>Transfers Bal</th>
                             <th>Expenses</th>
                             <th>Cash in Hand</th>
+                            <th>Avaliable Bal</th>
                             <th>Closing Bal</th>
                             <th>Closed By</th>
                             <th>Action</th>
@@ -100,6 +101,6 @@
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/closings.js?v=2') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/closings.js?v=3') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js?v=1') ?>"></script>
 <?= $this->endSection() ?>

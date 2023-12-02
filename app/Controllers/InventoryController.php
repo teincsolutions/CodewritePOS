@@ -22,7 +22,7 @@ class InventoryController extends BaseController
      */
     public function stock_report()
     {
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Inventory Report',
@@ -39,7 +39,7 @@ class InventoryController extends BaseController
      */
     public function view_stock_report($id = null)
     {
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
         $productModel = new ProductModel();
 
         $product = $productModel->where('id', $id)->first();
@@ -61,7 +61,7 @@ class InventoryController extends BaseController
      */
     public function short_stocks()
     {
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
         $data = [
             'title' => 'Short Stock List',
             'stores' => $stores,
@@ -77,7 +77,7 @@ class InventoryController extends BaseController
      */
     public function outofstocks()
     {
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
         $data = [
             'title' => 'Out of Stock List',
             'stores' => $stores,
@@ -93,7 +93,7 @@ class InventoryController extends BaseController
      */
     public function instocks()
     {
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Instock List',
@@ -137,6 +137,7 @@ class InventoryController extends BaseController
             ->selectSubquery($pReturnQuery, 'qtyOrderReturned')
             ->selectSubquery($quoteQuery, 'qtyQuoted')
             ->selectSubquery($inStockQuery, 'qtyInstock')
+            ->where('products.deleted_at', null)
             ->join("units", "units.id=products.unit_id");
 
         return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs));
@@ -162,7 +163,8 @@ class InventoryController extends BaseController
         $inputs = $this->request->getVar();
         $model = new ProductModel();
         $model->select("products.*");
-        $model->where('ifnull((SELECT sum(ifnull(stocks.instock,0)) from stocks where stocks.product_id=products.id AND stocks.store_id=' . $inputs['store_id'] . '),0) <=', 0, false);
+        $model->where('ifnull((SELECT sum(ifnull(stocks.instock,0)) from stocks where stocks.product_id=products.id AND stocks.store_id=' . $inputs['store_id'] . '),0) <=', 0, false)
+            ->where('products.deleted_at', null);
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
@@ -177,7 +179,8 @@ class InventoryController extends BaseController
         $model->select("stocks.*");
         $model->join('products', 'products.id=stocks.product_id');
         $model->where('stocks.instock <=', 'products.min_qty', false);
-        $model->where('stocks.instock >=', 0);
+        $model->where('stocks.instock >=', 0)
+        ->where('products.deleted_at', null);
 
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }

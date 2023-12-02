@@ -170,10 +170,22 @@ $(function () {
         },
       },
       {
+        data: null,
+        render: function (data) {
+          let bal = parseFloat(data.closing_balance) + parseFloat(data.cash_in_hand);
+
+          return bal < 0
+            ? `GHS (${parseFloat(Math.abs(bal)).toFixed(2)})`
+            : `GHS ${parseFloat(bal).toFixed(2)}`;
+        },
+      },
+      {
         data: "closing_balance",
         name: "store_closings.closing_balance",
         render: function (data) {
-          return `GHS ${parseFloat(data).toFixed(2)}`;
+          return data < 0
+          ? `GHS (${parseFloat(Math.abs(data)).toFixed(2)})`
+          : `GHS ${parseFloat(data).toFixed(2)}`;
         },
       },
       {

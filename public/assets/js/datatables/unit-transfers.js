@@ -110,7 +110,7 @@ $(function () {
                           Settings.AllowDeleteUnitTransfers === "yes"
                             ? ""
                             : "hidden"
-                        } class="text-danger" href="javascript:void(0);" onclick="deleteRow(table8, ${data}, '${baseUrl}transfers/products')"><i class="fa fa-trash fa-lg"></i></a>
+                        } class="text-danger" href="javascript:void(0);" onclick="deleteRow(table8, ${data}, '${baseUrl}transfers/units')"><i class="fa fa-trash fa-lg"></i></a>
                     </div>`;
           }
           return data;

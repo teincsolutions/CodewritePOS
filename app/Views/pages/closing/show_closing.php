@@ -95,6 +95,10 @@
                                         <h6>GHS <?= number_format($closing->expense_total, 2) ?></h6>
                                     </li>
                                     <li>
+                                        <h4>Avaliable Balance</h4>
+                                        <h6>GHS <?= ($closing->closing_balance+$closing->cash_in_hand) < 0 ? "(" . number_format(abs($closing->closing_balance), 2) . ")" : number_format($closing->closing_balance + $closing->cash_in_hand, 2) ?></h6>
+                                    </li>
+                                    <li>
                                         <h4>Closing Balance</h4>
                                         <h6>GHS <?= $closing->closing_balance < 0 ? "(" . number_format(abs($closing->closing_balance), 2) . ")" : number_format($closing->closing_balance, 2) ?></h6>
                                     </li>

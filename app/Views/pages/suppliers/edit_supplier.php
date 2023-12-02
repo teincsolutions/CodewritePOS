@@ -6,6 +6,9 @@
             <h4>Supplier Management</h4>
             <h6>Save/Update Supplier</h6>
         </div>
+        <div class="page-btn">
+            <a href="<?=site_url('suppliers') ?>" class="btn btn-added"><i class="fa fa-arrow-left fa-lg me-1"></i>List Suppliers</a>
+        </div>
     </div>
 
     <form action="<?= site_url('suppliers') ?>" class="card post-form" method="post">
