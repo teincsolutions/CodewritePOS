@@ -135,8 +135,12 @@
                                         <span>Adjustments</span><span class="menu-arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a class="<?= getActiveUrl("adjustments/create"); ?>" href="<?= site_url('adjustments/create') ?>">Create Adjustment</a></li>
-                                        <li><a class="<?= getActiveUrl("adjustments"); ?>" href="<?= site_url("adjustments") ?>">List Adjustment</a></li>
+                                        <?php if (auth()->user()->can('adjustments.create')) : ?>
+                                            <li><a class="<?= getActiveUrl("adjustments/create"); ?>" href="<?= site_url('adjustments/create') ?>">Create Adjustment</a></li>
+                                        <?php endif ?>
+                                        <?php if (auth()->user()->can('adjustments.view')) : ?>
+                                            <li><a class="<?= getActiveUrl("adjustments"); ?>" href="<?= site_url("adjustments") ?>">List Adjustment</a></li>
+                                        <?php endif ?>
                                     </ul>
                                 </li>
                             <?php endif ?>
@@ -244,7 +248,6 @@
                     </li>
                 <?php endif ?>
                 <?php if (auth()->user()->can('sales.report', 'purchases.report', 'stocks.report')) : ?>
-
                     <li class="submenu-open">
                         <h6 class="submenu-hdr">Reports</h6>
                         <ul>
@@ -296,8 +299,30 @@
                                     <?php endif ?>
                                 </ul>
                             </li>
+                            <li class="submenu">
+                                <a class="<?= getActiveUrl("reports*", "subdrop active") ?>" href="javascript:void(0);">
+                                    <i data-feather="calendar"></i>
+                                    <span>Overdue Reports</span><span class="menu-arrow"></span>
+                                </a>
+                                <ul>
+                                    <?php if (auth()->user()->can('sales.overdue-report')) : ?>
+                                        <li class="<?= getActiveUrl("reports/overdue/sales", "active"); ?>">
+                                            <a href="<?= site_url('reports/overdue/sales') ?>">
+                                                <span>Sales Overdue</span></a>
+                                        </li>
+                                    <?php endif ?>
+                                    <?php if (auth()->user()->can('purchases.overdue-report') && false) : ?>
+                                        <li class="<?= getActiveUrl("reports/overdue/purchases", "active"); ?>">
+                                            <a href="<?= site_url('reports/overdue/purchases') ?>">
+                                                <span>Purchase Overdue</span></a>
+                                        </li>
+                                    <?php endif ?>
+                                </ul>
+                            </li>
                         </ul>
+
                     </li>
+
                 <?php endif ?>
                 <?php if (auth()->user()->can('users.view', 'users.create', 'users.edit')) : ?>
                     <li class="submenu-open">

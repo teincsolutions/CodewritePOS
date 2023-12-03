@@ -65,7 +65,7 @@
                             </th>
                             <th>Customer Name</th>
                             <th>Phone</th>
-                            <th>email</th>
+                            <th>Type</th>
                             <th>Address</th>
                             <th>A/c Balance</th>
                              <th>Added By</th>
@@ -211,5 +211,5 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js?v=1') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/customers.js?v=2') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/customers.js?v=3') ?>"></script>
 <?= $this->endSection() ?>

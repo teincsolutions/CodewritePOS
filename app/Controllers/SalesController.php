@@ -83,6 +83,23 @@ class SalesController extends BaseController
     }
 
     /**
+     * return view for list
+     * @return Response - http response
+     */
+    public function overdue_report()
+    {
+        $stores = (new UserModel())->getMyStores();
+        $data = [
+            'title' => 'Overdue Sales Report',
+            'stores' => $stores,
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
+        ];
+
+        return view('pages/reports/overdue_sales', $data);
+    }
+
+    /**
      * return view for edit
      * @return Response - http response
      */
@@ -451,6 +468,26 @@ class SalesController extends BaseController
 
         return $this->response->setJSON(toBuilderDatatableResult($model->getDailyReport(), $inputs));
     }
+
+    /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function overdue_datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new SalesModel();
+
+        return $this->response->setJSON(toBuilderDatatableResult(
+            $model->getOverdueReport(),
+            $inputs,
+            function ($item) {
+                $item->customer = (new CustomerModel())->where('id', $item->customer_id)->first();
+                return $item;
+            }
+        ));
+    }
+
 
     /**
      * return json for datatables

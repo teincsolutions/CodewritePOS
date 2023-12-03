@@ -65,6 +65,12 @@ $routes->group('reports', static function (RouteCollection $routes) {
     $routes->get('debts/suppliers/datatable', [SupplierLedgerController::class, 'debt_report_datatable']);
 });
 
+$routes->group('reports/overdue', static function (RouteCollection $routes) {
+    $routes->get('sales', [SalesController::class, 'overdue_report']);
+    $routes->get('sales/datatable', [SalesController::class, 'overdue_datatable']);
+    $routes->get('purchases', [PurchaseController::class, 'overdue_report']);
+});
+
 
 $routes->group('print', static function (RouteCollection $routes) {
     $routes->get('sales/(:num)', [SalesController::class, 'print/$1']);

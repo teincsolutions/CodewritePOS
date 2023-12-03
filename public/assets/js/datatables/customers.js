@@ -69,7 +69,7 @@ $(function () {
       },
       { data: "name", name: "customers.name" },
       { data: "phone", name: "customers.phone" },
-      { data: "email", name: "customers.email" },
+      { data: "type", name: "customers.type" },
       { data: "address", name: "customers.address" },
       {
         data: "balance",

@@ -255,6 +255,37 @@ class SalesModel extends Model
         return $builder;
     }
 
+    public function getOverdueReport($where = [], $from = null, $to = null): Builder
+    {
+        $builder = $this->builder();
+
+        if ($from && $to) {
+            $from  = $builder->db->escape($from);
+            $to = $builder->db->escape($to);
+            $builder->where("sales_date BETWEEN $from AND $to");
+        }
+
+        $queryMaxSales = "SELECT MAX(sales.sales_date) FROM sales WHERE sales.customer_id=customers.id AND sales.order_status='completed' AND sales.payment_status = 'due'";
+
+        $builder->select(
+            "DATE_FORMAT(MAX(customer_ledgers.tdate), '%D %M,%Y') as tdate,
+            MAX(sales.sales_date) as last_sale_date,
+            sales.store_id,
+            sales.customer_id,
+            SUM((debit-credit)) AS total_due,
+            DATEDIFF(DATE(NOW()),($queryMaxSales)) as days_left",
+            false
+        )->join('customer_ledgers', 'customer_ledgers.sale_id=sales.id')
+            ->join('customers', 'customers.id=sales.customer_id')
+            ->where($where)
+            ->where('order_status', 'completed')
+            ->where('payment_status', 'due')
+            ->where("DATEDIFF(DATE(NOW()),($queryMaxSales)) >= customers.credit_limit_days")
+            ->groupBy('sales.customer_id');
+
+        return $builder;
+    }
+
     public function customerLatestDays($customerId, array $cond = null)
     {
         $where = ['customer_id' => $customerId];
@@ -264,7 +295,7 @@ class SalesModel extends Model
             'payment_status' => 'due'
         ]);
         else array_merge($where, $cond);
-        
+
         $sale = $this->where($where)->orderBy('id', 'asc')->first();
         if ($sale) return (new DateTime($sale->sales_date))->diff(new DateTime())->days;
         return null;
