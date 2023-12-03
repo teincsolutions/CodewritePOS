@@ -73,7 +73,7 @@
                                             <div class="input-groups">
                                                 <input type="hidden" name="items[0][to_unit_qty]" value="0" class="to_unit_qty" required>
                                                 <input type="button" value="-" class="button-minus dec button">
-                                                <input onkeyup="updateItemRow(this)" min="1" type="text" name="items[0][from_unit_qty]" value="0" class="quantity-field" required>
+                                                <input onkeyup="updateItemRow(this)" min="0.1" max="0" type="text" name="items[0][from_unit_qty]" value="0" class="quantity-field" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>
