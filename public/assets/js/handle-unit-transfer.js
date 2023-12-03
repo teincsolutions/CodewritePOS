@@ -38,11 +38,13 @@ let tableItems = $(".tr-items").DataTable({
         $(sel)
           .select2({
             placeholder: "Search a product",
+            allowClear: true,
             ajax: {
               url: `${baseUrl}products/select2`,
               dataType: "json",
               data: function (params) {
                 params.filter = {};
+                params.filter['stocks.store_id'] = $('.select2-store').val();
                 params.exclude = [];
 
                 $(".select2-product").each((i, sel) => {
@@ -53,7 +55,7 @@ let tableItems = $(".tr-items").DataTable({
             },
           })
           .on("select2:select select2:unselect", (e) => {
-            updateItemRow(this);
+            updateItemRow(sel);
           });
       }
     });
@@ -62,7 +64,6 @@ let tableItems = $(".tr-items").DataTable({
     initCompleted = true;
   },
 });
-
 
 function checkout() {
   return true;
@@ -83,10 +84,11 @@ function updateItemRow(row) {
         : toProduct.select2("data")[0],
     from_unit_qty = parseFloat(data1.unit_qty ?? 1),
     to_unit_qty = parseFloat(data2.unit_qty ?? 1);
+    
+    row1.find(".quantity-field").attr("max", data1.instock);
+
   $("td:eq(4)", row1).html((qty * (from_unit_qty / to_unit_qty)).toFixed(2));
   $(".to_unit_qty", row1).val((qty * (from_unit_qty / to_unit_qty)).toFixed(2));
-
-  updateTotals();
 }
 
 $(".tr-items").on("click", ".delete-set", function () {
@@ -106,7 +108,7 @@ $(".tr-items").on("click", ".add-set", function () {
           <div class="input-groups">
               <input type="hidden" name="items[${prodIndex}][to_unit_qty]" value="0" class="to_unit_qty" required>
               <input type="button" value="-" class="button-minus dec button">
-              <input onkeyup="updateItemRow(this)" min=".1" type="text" name="items[${prodIndex}][from_unit_qty]" value="0" class="quantity-field" required>
+              <input onkeyup="updateItemRow(this)" min=".1" max="0" type="text" name="items[${prodIndex}][from_unit_qty]" value="0" class="quantity-field" required>
               <input type="button" value="+" class="button-plus inc button">
           </div>
       </div>
@@ -131,7 +133,7 @@ $(".tr-items").on("click", ".inc.button", function () {
   var $this = $(this),
     $input = $this.prev("input"),
     newValue = parseFloat($input.val()) + 1;
-  $input.val(newValue);
+  if (newValue <= parseFloat($input.attr("max"))) $input.val(newValue);
   updateItemRow(this);
 });
 $(".tr-items").on("click", ".dec.button", function () {

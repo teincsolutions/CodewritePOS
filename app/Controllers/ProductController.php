@@ -272,14 +272,18 @@ class ProductController extends BaseController
         $builder = $model->builder();
 
         $builder->join('units', 'units.id=products.unit_id');
+        $builder->join('categories', 'categories.id=products.category_id');
         $builder->join('brands', 'brands.id=products.brand_id', 'left');
+        $builder->join('stocks', 'stocks.product_id=products.id', 'left');
+        $builder->where('products.deleted_at', null);
+        $builder->groupBy('stocks.product_id');
         if (isset($inputs['exclude']))
             $builder->whereNotIn('products.id', $inputs['exclude']);
         return $this->response->setJSON(toSelect2BuilderResult(
             $builder,
-            ['products.sku', 'products.name', 'brands.name'],
+            ['products.sku', 'products.name', 'brands.name', 'units.label', 'categories.name'],
             $inputs,
-            'concat(ifnull(concat(products.sku," "),""),products.name," ",ifnull(brands.name,"")," (",units.label, ")"," ₵",products.unit_price) as text, products.*',
+            'concat(ifnull(concat(products.sku," "),""),products.name," ",ifnull(brands.name,"")," (",units.label, ")"," ₵",products.unit_price) as text, products.*,sum(ifnull(stocks.instock,0)) as instock',
         ));
     }
     /**

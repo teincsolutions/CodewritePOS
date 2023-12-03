@@ -6,6 +6,9 @@
             <h4>Create Transfer</h4>
             <h6>Transfer your stocks to one store another store.</h6>
         </div>
+        <div class="page-btn">
+            <a href="<?= site_url('transfers/products') ?>" class="btn btn-added"><i class="fa fa-arrow-left" class="me-1"></i>List Transfers</a>
+        </div>
     </div>
     <form class="post-form" action="<?= site_url('transfers/products') ?>" method="post">
         <?= csrf_field() ?>

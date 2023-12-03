@@ -37,7 +37,7 @@ class ProductUnitTransferController extends BaseController
      */
     public function edit($id = null)
     {
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
 
         $model = new UnitTransferModel();
         $lastItem = $model->orderBy('id', 'desc')->first();
@@ -124,6 +124,16 @@ class ProductUnitTransferController extends BaseController
                         'product_id' => $items[$k]['from_product_id'],
                         'store_id' => $inputs['store_id']
                     ];
+
+                    if (empty($items[$k]['from_product_id']) || empty($items[$k]['to_product_id']))
+                        return $this->response->setJSON(
+                            [
+                                'status' => false,
+                                'data' => null,
+                                'message' => empty($items[$k]['from_product_id']) ? "From product not selected!" : "To product not selected!",
+                                'input' => $inputs,
+                            ]
+                        );
 
                     if ($builder->where($stockWhere)->get()->getRowObject()) {
                         $builder->set('instock', '(instock - ' . $items[$k]['from_unit_qty'] . ')', false)

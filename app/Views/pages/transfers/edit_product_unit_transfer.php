@@ -6,6 +6,9 @@
             <h4>Create Unit Transfer</h4>
             <h6>Unit Transfer your stocks to one store another store.</h6>
         </div>
+        <div class="page-btn">
+            <a href="<?= site_url('transfers/units') ?>" class="btn btn-added"><i class="fa fa-arrow-left" class="me-1"></i>List Unit Transfers</a>
+        </div>
     </div>
     <form class="post-form" action="<?= site_url('transfers/units') ?>" method="post">
         <?= csrf_field() ?>
@@ -70,7 +73,7 @@
                                             <div class="input-groups">
                                                 <input type="hidden" name="items[0][to_unit_qty]" value="0" class="to_unit_qty" required>
                                                 <input type="button" value="-" class="button-minus dec button">
-                                                <input onkeyup="updateItemRow(this)" min="1" type="text" name="items[0][from_unit_qty]" value="0" class="quantity-field" required>
+                                                <input onkeyup="updateItemRow(this)" min="0.1" max="0" type="text" name="items[0][from_unit_qty]" value="0" class="quantity-field" required>
                                                 <input type="button" value="+" class="button-plus inc button">
                                             </div>
                                         </div>
@@ -102,6 +105,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-unit-transfer.js?v=18') ?>"></script>
+<script src="<?= base_url('assets/js/handle-unit-transfer.js?v=19') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?= $this->endSection() ?>

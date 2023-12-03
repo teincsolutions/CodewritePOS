@@ -206,7 +206,7 @@ if (!function_exists('toSelect2BuilderResult')) {
      * @param array $inputs Request input data
      * @param function $callback Callback to modify each result
      */
-    function toSelect2BuilderResult(Builder $model, array $columns, array $inputs, $select = "*", $joins = null): array
+    function toSelect2BuilderResult(Builder $model, array $columns, array $inputs, $select = "*", $joins = null,$countSelect="*"): array
     {
         $term = isset($inputs['term']) ? $inputs['term'] : '';
         $take = 10;
@@ -221,7 +221,7 @@ if (!function_exists('toSelect2BuilderResult')) {
             foreach ($joins as $key => $join)
                 $model->join($join['table'], $join['cond'], $join['type'] ?? '', null);
 
-        $total = $model->countAllResults(false);
+        $total = $model->selectCount($countSelect,'count')->countAllResults(false);
 
         $model->select($select,false);
         $model->groupStart();
