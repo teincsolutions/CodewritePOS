@@ -42,7 +42,7 @@ class CustomerModel extends Model
 
     // Callbacks
     protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
+    protected $beforeInsert   = ['setDefault'];
     protected $afterInsert    = [];
     protected $beforeUpdate   = [];
     protected $afterUpdate    = [];
@@ -50,6 +50,17 @@ class CustomerModel extends Model
     protected $afterFind      = ['setRelation'];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    protected function setDefaultId(array $data)
+    {
+        if (isset($data['data']['credit_limit']) && empty($data['data']['credit_limit']))
+            $data['data']['credit_limit'] = NULL;
+
+        if (isset($data['data']['credit_limit_days']) && empty($data['data']['credit_limit_days']))
+            $data['data']['credit_limit_days'] = NULL;
+
+        return $data;
+    }
 
     protected function setRelation($model)
     {

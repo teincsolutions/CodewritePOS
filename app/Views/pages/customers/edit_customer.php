@@ -75,7 +75,7 @@
                                 <div class="form-group">
                                     <label>Credit Limit Days</label>
                                     <div class="input-group">
-                                        <input type="number" name="credit_limit_days" class="form-control w-100" value="<?= isset($customer) ? ($customer->credit_limit_days == '' ? setting('App.SalesDebitAllowedDays') : $customer->credit_limit_days) : setting('App.SalesDebitAllowedDays') ?>" placeholder="Customer credit limit days" required>
+                                        <input type="number" name="credit_limit_days" class="form-control w-100" value="<?= isset($customer) ? ($customer->credit_limit_days == '' ? setting('App.SalesDebitAllowedDays') : $customer->credit_limit_days) : setting('App.SalesDebitAllowedDays') ?>" placeholder="Customer credit limit days">
                                         <span class="input-group-text">days</span>
                                     </div>
                                 </div>
