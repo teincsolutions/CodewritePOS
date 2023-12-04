@@ -99,7 +99,7 @@ class ClosingController extends BaseController
         ];
 
         if ($store) {
-            $opening_balance = $closing ? $closing->closing_balance : 0.0;
+            $opening_balance = $closing ? $closing->closing_balance + $closing->cash_in_hand : 0.0;
             $cashup =  $storeLedgerModel->builder()
                 ->selectSum('credit', 'total')
                 ->where('store_closing_id', null)
