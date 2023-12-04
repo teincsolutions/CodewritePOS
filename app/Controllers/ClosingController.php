@@ -103,7 +103,7 @@ class ClosingController extends BaseController
             $cashup =  $storeLedgerModel->builder()
                 ->selectSum('credit', 'total')
                 ->where('store_closing_id', null)
-                ->where('store_id', $storeId)->get()
+                ->where('store_ledgers.store_id', $storeId)->get()
                 ->getRowObject()->total;
 
             $where = [
@@ -115,7 +115,7 @@ class ClosingController extends BaseController
                 ->where('customer_ledgers.store_closing_id', null)
                 ->where('sales.store_closing_id !=', null)
                 ->where('ledger_type', 'sales')
-                ->where('store_id', $storeId)
+                ->where('customer_ledgers.store_id', $storeId)
                 ->selectSum('credit', 'total')->get()->getFirstRow()->total;
 
             $walkin = $saleModel->builder()->where($where)
@@ -127,7 +127,7 @@ class ClosingController extends BaseController
                 ->where('customer_ledgers.store_closing_id', null)
                 ->where('sales.store_closing_id', null)
                 ->where('ledger_type', 'sales')
-                ->where('store_id', $storeId)
+                ->where('customer_ledgers.store_id', $storeId)
                 ->selectSum('credit', 'total')->get()->getFirstRow()->total;
 
             $sale_total = $walkin + $cust;
