@@ -112,7 +112,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="closing_balance">Avaliable Balance</label>
+                                <label for="avaliable_balance">Avaliable Balance</label>
                                 <input type="number" name="avaliable_balance" value="<?= isset($closing) ? number_format($closing->closing_balance + $closing->cash_in_hand, 2, '.', '') : null ?>" class="form-control" placeholder="Closing Balance" readonly required>
                             </div>
                             <div class="col-md-6">
@@ -156,6 +156,7 @@
             totalOutflows = supplierPayment + saleReturnTotal + cashInHand + expenseTotal;
 
         $("input[name='closing_balance']").val((totalInflows - totalOutflows).toFixed(2));
+        $("input[name='avaliable_balance']").val((totalInflows - totalOutflows + cashInHand).toFixed(2));
     }
     $(() => {
         updateClosing();
