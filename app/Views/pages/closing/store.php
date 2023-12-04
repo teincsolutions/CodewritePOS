@@ -113,13 +113,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="avaliable_balance">Avaliable Balance</label>
-                                <input type="number" name="avaliable_balance" value="<?= isset($closing) ? number_format($closing->closing_balance + $closing->cash_in_hand, 2, '.', '') : null ?>" class="form-control" placeholder="Closing Balance" readonly required>
+                                <input type="number" name="avaliable_balance" value="<?= isset($closing) ? number_format($closing->closing_balance + $closing->cash_in_hand, 2, '.', '') : null ?>" class="form-control" placeholder="Avaliable Balance" readonly required>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="closing_balance">Closing Balance</label>
-                                    <input type="number" name="closing_balance" value="<?= isset($closing) ? $closing->closing_balance : null ?>" class="form-control" placeholder="Closing Balance" readonly required>
-                                </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="closing_balance">Closing Balance</label>
+                                <input type="number" name="closing_balance" value="<?= isset($closing) ? $closing->closing_balance : null ?>" class="form-control" placeholder="Closing Balance" readonly required>
                             </div>
                         </div>
                     </div>
