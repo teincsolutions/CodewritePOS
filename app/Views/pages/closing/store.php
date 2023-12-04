@@ -109,19 +109,20 @@
                                     <input type="number" name="expense_total" value="<?= isset($closing) ? $closing->expense_total :  number_format($expense_total ?? 0, 2, '.', '') ?>" class="form-control" readonly required>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="avaliable_balance">Avaliable Balance</label>
-                                <input type="number" name="avaliable_balance" value="<?= isset($closing) ? number_format($closing->closing_balance + $closing->cash_in_hand, 2, '.', '') : null ?>" class="form-control" placeholder="Avaliable Balance" readonly required>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="avaliable_balance">Avaliable Balance</label>
+                                    <input type="number" name="avaliable_balance" value="<?= isset($closing) ? number_format($closing->closing_balance + $closing->cash_in_hand, 2, '.', '') : null ?>" class="form-control" placeholder="Avaliable Balance" readonly required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="closing_balance">Closing Balance</label>
+                                    <input type="number" name="closing_balance" value="<?= isset($closing) ? $closing->closing_balance : null ?>" class="form-control" placeholder="Closing Balance" readonly required>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="closing_balance">Closing Balance</label>
-                                <input type="number" name="closing_balance" value="<?= isset($closing) ? $closing->closing_balance : null ?>" class="form-control" placeholder="Closing Balance" readonly required>
-                            </div>
-                        </div>
+
                     </div>
 
                     <div class="row mt-3">
