@@ -91,7 +91,7 @@ class ClosingController extends BaseController
         $storeId = $this->request->getVar('store_id');
         $store = $storeModel->where('id', $storeId)->first();
         $closingWhere = ['status' => 'pending'];
-        $closing = $closingModel->where($closingWhere)->orderBy('id', 'desc')->first();
+        $closing = $closingModel->where($closingWhere)->first();
         $stores = (new UserModel())->getMyStores();
         $data = [
             'stores' => $stores,
@@ -115,6 +115,7 @@ class ClosingController extends BaseController
                 ->where('customer_ledgers.store_closing_id', null)
                 ->where('sales.store_closing_id !=', null)
                 ->where('ledger_type', 'sales')
+                ->where('store_id', $storeId)
                 ->selectSum('credit', 'total')->get()->getFirstRow()->total;
 
             $walkin = $saleModel->builder()->where($where)
@@ -126,6 +127,7 @@ class ClosingController extends BaseController
                 ->where('customer_ledgers.store_closing_id', null)
                 ->where('sales.store_closing_id', null)
                 ->where('ledger_type', 'sales')
+                ->where('store_id', $storeId)
                 ->selectSum('credit', 'total')->get()->getFirstRow()->total;
 
             $sale_total = $walkin + $cust;
