@@ -46,7 +46,6 @@
                         <div class="col-lg-4 col-sm-6 col-12">
                             <div class="form-group">
                                 <select name="sales.store_id" class="select2-store">
-                                    <option value=""></option>
                                     <?php
                                     if (isset($stores))
                                         foreach ($stores as $row) { ?>
