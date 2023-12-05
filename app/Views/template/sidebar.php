@@ -299,26 +299,28 @@
                                     <?php endif ?>
                                 </ul>
                             </li>
-                            <li class="submenu">
-                                <a class="<?= getActiveUrl("reports*", "subdrop active") ?>" href="javascript:void(0);">
-                                    <i data-feather="calendar"></i>
-                                    <span>Overdue Reports</span><span class="menu-arrow"></span>
-                                </a>
-                                <ul>
-                                    <?php if (auth()->user()->can('sales.overdue-report')) : ?>
-                                        <li class="<?= getActiveUrl("reports/overdue/sales", "active"); ?>">
-                                            <a href="<?= site_url('reports/overdue/sales') ?>">
-                                                <span>Sales Overdue</span></a>
-                                        </li>
-                                    <?php endif ?>
-                                    <?php if (auth()->user()->can('purchases.overdue-report') && false) : ?>
-                                        <li class="<?= getActiveUrl("reports/overdue/purchases", "active"); ?>">
-                                            <a href="<?= site_url('reports/overdue/purchases') ?>">
-                                                <span>Purchase Overdue</span></a>
-                                        </li>
-                                    <?php endif ?>
-                                </ul>
-                            </li>
+                            <?php if (setting('App.AllowCustomerLimit') === 'yes') : ?>
+                                <li class="submenu">
+                                    <a class="<?= getActiveUrl("reports*", "subdrop active") ?>" href="javascript:void(0);">
+                                        <i data-feather="calendar"></i>
+                                        <span>Overdue Reports</span><span class="menu-arrow"></span>
+                                    </a>
+                                    <ul>
+                                        <?php if (auth()->user()->can('sales.overdue-report')) : ?>
+                                            <li class="<?= getActiveUrl("reports/overdue/sales", "active"); ?>">
+                                                <a href="<?= site_url('reports/overdue/sales') ?>">
+                                                    <span>Sales Overdue</span></a>
+                                            </li>
+                                        <?php endif ?>
+                                        <?php if (auth()->user()->can('purchases.overdue-report') && false) : ?>
+                                            <li class="<?= getActiveUrl("reports/overdue/purchases", "active"); ?>">
+                                                <a href="<?= site_url('reports/overdue/purchases') ?>">
+                                                    <span>Purchase Overdue</span></a>
+                                            </li>
+                                        <?php endif ?>
+                                    </ul>
+                                </li>
+                            <?php endif ?>
                         </ul>
 
                     </li>
