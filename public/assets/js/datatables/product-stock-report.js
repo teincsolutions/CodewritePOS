@@ -163,7 +163,14 @@ $(function () {
         .column(4, { page: "current" })
         .data()
         .reduce(function (a, b) {
-          return intVal(a) + intVal(b);
+          return (
+            intVal(a) +
+            intVal(
+              $("input[name='product_id']").val() === b.from_product_id
+                ? b.fromUnitQty
+                : b.toUnitQty
+            )
+          );
         }, 0);
 
       // Update footer
