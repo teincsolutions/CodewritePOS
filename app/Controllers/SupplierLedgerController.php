@@ -105,7 +105,7 @@ class supplierLedgerController extends BaseController
                 ]);
 
             if ($model->save($inputs)) {
-                $purchasesModel->updatePaymentStatus($inputs['purchase_id']);
+                $purchasesModel->updatePaymentStatus($supplierLedger->purchase_id);
                 $res = array_merge($res, [
                     'status' => true,
                     'message' => "Payment updated successfully!",
