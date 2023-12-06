@@ -75,6 +75,21 @@ class CustomerLedgerController extends BaseController
         }
         return view('pages/ledgers/edit_ledger', $data);
     }
+
+    /**
+     * return view for edit
+     * @return Response - http response
+     */
+    public function view($id)
+    {
+        $model = new CustomerLedgerModel();
+        $data = [
+            'ledger' => $model->find($id),
+            'title' => 'Payment Recepit'
+        ];
+        return view('pages/ledgers/view_ledger', $data);
+    }
+
     public function save()
     {
         $model = new CustomerLedgerModel();
@@ -266,7 +281,7 @@ class CustomerLedgerController extends BaseController
             ->selectSum('debit', 'total_debit')
             ->join('sales', 'sales.id=customer_ledgers.sale_id')
             ->where('sales.store_closing_id !=', null)
-            ->where('ledger_type','sales')
+            ->where('ledger_type', 'sales')
             ->groupBy('created_at')
             ->groupBy(['ledger_type', 'sales_return_id'])
             ->orderBy('created_at', 'desc')
