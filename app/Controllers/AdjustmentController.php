@@ -21,7 +21,7 @@ class AdjustmentController extends BaseController
      */
     public function index()
     {
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
         $data = [
             'title' => 'Adjustment List',
             'context' => 'user:' . user_id(),
@@ -41,7 +41,7 @@ class AdjustmentController extends BaseController
         $model = new StockAdjustmentModel();
         $lastItem = $model->orderBy('id', 'desc')->first();
         $lastId = $lastItem ? $lastItem->id : 1;
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Create Adjustment',
@@ -133,6 +133,7 @@ class AdjustmentController extends BaseController
 
                     if ($builder->where($stockWhere)->get()->getRowObject()) {
                         $builder->set('instock',  $items[$k]['qty'], false)
+                            ->set('updated_at', date('Y-m-d H:i:s'))
                             ->update(null, $stockWhere);
                     } else {
                         $builder->insert([
@@ -157,7 +158,7 @@ class AdjustmentController extends BaseController
                 'status' => true,
                 'message' => "Adjustment created successfully!",
                 'data' => $adjustment,
-               // 'receipt' => view('pages/adjustments/pos_receipt', ['adjustment' => $adjustment])
+                // 'receipt' => view('pages/adjustments/pos_receipt', ['adjustment' => $adjustment])
             ]);
         } else {
             $res = array_merge($res, ['status' => false]);
@@ -176,7 +177,7 @@ class AdjustmentController extends BaseController
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
-       /**
+    /**
      * return json for datatables
      * @return Response - http response
      */

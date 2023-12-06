@@ -22,7 +22,7 @@ class SalesReturnController extends BaseController
      */
     public function index()
     {
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Sales Return List',
@@ -44,7 +44,7 @@ class SalesReturnController extends BaseController
         $saleModel = new SalesModel();
         $lastItem = $model->orderBy('id', 'desc')->first();
         $lastId = $lastItem ? $lastItem->id : 1;
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Create Sales Return',
@@ -145,6 +145,7 @@ class SalesReturnController extends BaseController
 
                     if ($builder->where($stockWhere)->get()->getRowObject()) {
                         $builder->set('instock', '(instock + ' . $items[$k]['qty'] . ')', false)
+                            ->set('updated_at', date('Y-m-d H:i:s'))
                             ->update(null, $stockWhere);
                     } else {
                         $builder->insert([
@@ -168,7 +169,7 @@ class SalesReturnController extends BaseController
                         'debit' => $inputs['paid'],
                         'user_id' => isset($inputs['user_id']) ? $inputs['user_id'] : null,
                     ];
-                    if($inputs['paid'] > 0)  $ledger->save($data);
+                    if ($inputs['paid'] > 0)  $ledger->save($data);
                     $saleModel = new SalesModel();
                     $saleModel->updatePaymentStatus($inputs['sale_id']);
                     $data['credit'] = $inputs['total_amount'];
@@ -196,12 +197,13 @@ class SalesReturnController extends BaseController
         return $this->response->setJSON($res);
     }
 
-       /**
+    /**
      * return json for receipt
      */
-    public function print($id) : Response {
+    public function print($id): Response
+    {
         $model = new SalesReturnModel();
-        $return =$model->where('id', $id)->first();
+        $return = $model->where('id', $id)->first();
         $res = [
             'status' => false,
             'data' => null,
@@ -212,7 +214,7 @@ class SalesReturnController extends BaseController
                 'status' => true,
                 'data' => $return,
                 'receipt' =>  view('pages/sales_returns/pos_receipt', ['returns' => $return]),
-                 'message' => "Invoice found!",
+                'message' => "Invoice found!",
             ]);
         }
         return $this->response->setJSON($res);

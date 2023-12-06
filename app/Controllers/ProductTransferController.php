@@ -21,7 +21,7 @@ class ProductTransferController extends BaseController
      */
     public function index()
     {
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Product Transfer List',
@@ -36,7 +36,7 @@ class ProductTransferController extends BaseController
      */
     public function edit()
     {
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
 
         $model = new ProductTransferModel();
         $lastItem = $model->orderBy('id', 'desc')->first();
@@ -144,6 +144,7 @@ class ProductTransferController extends BaseController
                     ];
                     if ($builder->where($stockWhere)->get()->getRowObject()) {
                         $builder->set('instock', '(instock + ' . $items[$k]['qty'] . ')', false)
+                            ->set('updated_at', date('Y-m-d H:i:s'))
                             ->update(null, $stockWhere);
                     } else {
                         $builder->insert([

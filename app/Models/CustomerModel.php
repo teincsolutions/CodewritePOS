@@ -51,7 +51,7 @@ class CustomerModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    protected function setDefaultId(array $data)
+    protected function setDefault(array $data)
     {
         if (isset($data['data']['credit_limit']) && empty($data['data']['credit_limit']))
             $data['data']['credit_limit'] = NULL;

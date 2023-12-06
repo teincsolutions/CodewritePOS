@@ -137,6 +137,7 @@ class ProductUnitTransferController extends BaseController
 
                     if ($builder->where($stockWhere)->get()->getRowObject()) {
                         $builder->set('instock', '(instock - ' . $items[$k]['from_unit_qty'] . ')', false)
+                            ->set('updated_at', date('Y-m-d H:i:s'))
                             ->update(null, $stockWhere);
                     } else {
                         $builder->insert([
@@ -151,6 +152,7 @@ class ProductUnitTransferController extends BaseController
                     ];
                     if ($builder->where($stockWhere)->get()->getRowObject()) {
                         $builder->set('instock', '(instock + ' . $items[$k]['to_unit_qty'] . ')', false)
+                            ->set('updated_at', date('Y-m-d H:i:s'))
                             ->update(null, $stockWhere);
                     } else {
                         $builder->insert([

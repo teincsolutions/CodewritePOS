@@ -24,7 +24,7 @@ class PurchaseController extends BaseController
     public function index()
     {
         $supModel = new SupplierModel();
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Purchase List',
@@ -37,7 +37,7 @@ class PurchaseController extends BaseController
         return view('pages/purchases/list_purchase', $data);
     }
 
-      /**
+    /**
      * return view for list
      * @return Response - http response
      */
@@ -54,7 +54,7 @@ class PurchaseController extends BaseController
         $report = $model->getDailyReport(['purchase_date' => $date])->get()->getFirstRow();
 
         if ($report) {
-            $report->store = $storeModel->where('id',$report->store_id)->first();
+            $report->store = $storeModel->where('id', $report->store_id)->first();
             $res = array_merge($res, [
                 'status' => true,
                 'data' => $report,
@@ -71,7 +71,7 @@ class PurchaseController extends BaseController
      */
     public function daily_report()
     {
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Daily Purchase Report',
@@ -113,7 +113,7 @@ class PurchaseController extends BaseController
         $model = new PurchaseModel();
         $lastItem = $model->orderBy('id', 'desc')->first();
         $lastId = $lastItem ? $lastItem->id : 1;
-        $stores =  $stores =(new UserModel())->getMyStores();
+        $stores =  $stores = (new UserModel())->getMyStores();
         $supModel = new SupplierModel();
 
         $data = [
@@ -228,6 +228,7 @@ class PurchaseController extends BaseController
 
                     if ($builder->where($stockWhere)->get()->getRowObject()) {
                         $builder->set('instock', '(instock + ' . $items[$k]['qty'] . ')', false)
+                            ->set('updated_at', date('Y-m-d H:i:s'))
                             ->update(null, $stockWhere);
                     } else {
                         $builder->insert([

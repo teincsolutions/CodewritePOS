@@ -246,6 +246,7 @@ class SalesController extends BaseController
 
                     if ($builder->where($stockWhere)->get()->getRowObject()) {
                         $builder->set('instock', '(instock - ' . $items[$k]['qty'] . ')', false)
+                            ->set('updated_at', date('Y-m-d H:i:s'))
                             ->update(null, $stockWhere);
                     } else {
                         $builder->insert([
