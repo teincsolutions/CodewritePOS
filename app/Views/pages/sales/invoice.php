@@ -19,7 +19,11 @@
             </div>
             <div class="invoice-box table-height" style="max-width: 1600px;width:100%;overflow: auto;margin:15px auto;padding: 0;font-size: 14px;line-height: 24px;color: #555;">
                 <table style="width: 100%;line-height: inherit;text-align: left; display:table !important;">
-                    <tbody>
+                   <thead>
+                    <td class="w-50"></td>
+                    <td class="w-50"></td>
+                   </thead>
+                <tbody>
                         <tr>
                             <td colspan="6" style="padding:5px;vertical-align:top;text-align:left;padding-bottom:20px;width:100%; text-align:center">
 
@@ -63,8 +67,8 @@
                                     </font>
                                 </div>
                             </td>
-                            <td style="padding:5px;vertical-align:top;text-align:right;padding-bottom:20px;min-width: 150px !important;">
-                                <div>
+                            <td style="padding:5px;vertical-align:top;text-align:right;padding-bottom:20px;min-width: 200px !important;">
+                                <div style="width: 200px;">
                                     <font style="vertical-align: inherit;margin-bottom:25px;">
                                         <font style="vertical-align: inherit;font-size:14px;color:#7367F0;font-weight:600;line-height: 35px; ">
                                             Invoice Info</font>
@@ -80,15 +84,19 @@
                                     <font style="vertical-align: inherit;">
                                         <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
                                             Order Status:</font>
-                                    </font>
+                                    </font><br>
                                     <font style="vertical-align: inherit;">
                                         <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
                                             Payment Method:</font>
+                                    </font><br>
+                                    <font style="vertical-align: inherit;">
+                                        <font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
+                                            Time:</font>
                                     </font>
                                 </div>
                             </td>
-                            <td style="padding:5px;vertical-align:top;text-align:right;padding-bottom:20px;width:calc(25%)">
-                                <div>
+                            <td style="padding:5px;vertical-align:top;text-align:right;padding-bottom:20px;width:calc(40%)">
+                                <div style="width: 150px;">
                                     <font style="vertical-align: inherit;margin-bottom:25px;">
                                         <font style="vertical-align: inherit;font-size:14px;color:#7367F0;font-weight:600;line-height: 35px; ">
                                             &nbsp;</font>
@@ -108,6 +116,10 @@
                                     <font style="vertical-align: inherit;">
                                         <font class="text-capitalize" style="vertical-align: inherit;font-size: 14px;color:#FE7D32;font-weight: 400;">
                                             <?= $sales->payment_type; ?></font>
+                                    </font><br>
+                                    <font style="vertical-align: inherit;">
+                                        <font class="text-capitalize" style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">
+                                            <?= date('d/m/y h:i a', strtotime($sales->created_at)); ?></font>
                                     </font>
                                 </div>
                             </td>
