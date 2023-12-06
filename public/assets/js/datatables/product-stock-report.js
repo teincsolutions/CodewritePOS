@@ -91,9 +91,11 @@ $(function () {
         },
       },
       {
-        data: "fromUnitQty",
+        data: null,
         render: function (data) {
-          return data ? data : "0.00";
+          return $("input[name='product_id']").val() === data.from_product_id
+            ? data.fromUnitQty
+            : data.toUnitQty;
         },
       },
       {

@@ -205,6 +205,7 @@ class ProductUnitTransferController extends BaseController
         $model = new UnitTransferModel();
         $builder = $model->builder();
         $builder->select('product_unit_transfers.*')
+            ->select("unit_transfer_items.from_product_id,unit_transfer_items.to_product_id")
             ->selectSum('unit_transfer_items.from_unit_qty', 'fromUnitQty')
             ->selectSum('unit_transfer_items.to_unit_qty', 'toUnitQty')
             ->join('unit_transfer_items', 'unit_transfer_items.unit_transfer_id=product_unit_transfers.id')
