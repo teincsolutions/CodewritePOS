@@ -306,13 +306,13 @@
                                         <span>Overdue Reports</span><span class="menu-arrow"></span>
                                     </a>
                                     <ul>
-                                        <?php if (auth()->user()->can('sales.overdue-report')) : ?>
+                                        <?php if (auth()->user()->can('sales.report')) : ?>
                                             <li class="<?= getActiveUrl("reports/overdue/sales", "active"); ?>">
                                                 <a href="<?= site_url('reports/overdue/sales') ?>">
                                                     <span>Sales Overdue</span></a>
                                             </li>
                                         <?php endif ?>
-                                        <?php if (auth()->user()->can('purchases.overdue-report') && false) : ?>
+                                        <?php if (auth()->user()->can('purchases.report') && false) : ?>
                                             <li class="<?= getActiveUrl("reports/overdue/purchases", "active"); ?>">
                                                 <a href="<?= site_url('reports/overdue/purchases') ?>">
                                                     <span>Purchase Overdue</span></a>
