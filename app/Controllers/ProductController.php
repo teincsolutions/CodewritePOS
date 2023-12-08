@@ -283,7 +283,7 @@ class ProductController extends BaseController
             $builder,
             ['products.sku', 'products.name', 'brands.name', 'units.label', 'categories.name'],
             $inputs,
-            'concat(ifnull(concat(products.sku," "),""),products.name," ",ifnull(brands.name,"")," (",units.label, ")"," ₵",products.unit_price) as text, products.*,sum(ifnull(stocks.instock,0)) as instock',
+            'concat(ifnull(concat(products.sku," "),""),products.name," ",ifnull(brands.name,"")," (",units.label, ")"," ₵",products.unit_price) as text, products.*,ifnull(stocks.instock,0) as instock',
         ));
     }
     /**
