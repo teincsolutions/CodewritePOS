@@ -111,6 +111,7 @@ class SupplierController extends BaseController
         $supplier = $model->where('id', $id)->first();
         $data = array_merge($data, [
             'supplier' => $supplier,
+            'title' => $supplier->name,
         ]);
 
         return view('pages/suppliers/show_supplier', $data);

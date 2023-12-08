@@ -3,7 +3,9 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\CustomerLedgerModel;
 use App\Models\CustomerModel;
+use App\Models\SalesModel;
 use App\Models\UserModel;
 use CodeIgniter\HTTP\Response;
 
@@ -61,6 +63,7 @@ class CustomerController extends BaseController
 
         $data = array_merge($data, [
             'customer' => $customer,
+            'title' => $customer->name,
         ]);
 
         return view('pages/customers/show_customer', $data);
@@ -152,6 +155,70 @@ class CustomerController extends BaseController
                 $res = array_merge($res, [
                     'status' => true,
                     'message' => "Customer created successfully!",
+                    'data' => $model->find($model->getInsertID()),
+                ]);
+            } else {
+                $res = array_merge($res, [
+                    'status' => false,
+                    'message' => "Couldn't be created!"
+                ]);
+            }
+        }
+        return $this->response->setJSON($res);
+    }
+
+    public function addInitialBalance()
+    {
+        $model = new CustomerModel();
+        $salesModel = new SalesModel();
+        $inputs = $this->request->getVar();
+
+        if (auth()->user())
+            $inputs['user_id'] = auth()->user()->id;
+
+        $cid = $this->request->getPost('customer_id');
+        $inputs['tdate'] = date('Y-m-d', strtotime($inputs['tdate']));
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => null,
+            'input' => $inputs,
+        ];
+
+        $customer = $model->where('id', $cid)->first();
+        if ($customer) {
+            if (!auth()->user()->can('customer-ledgers.create'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to edit this record!"
+                ]);
+
+            if ($model->save($inputs)) {
+                $res = array_merge($res, [
+                    'status' => true,
+                    'message' => "Payment updated successfully!",
+                ]);
+            } else {
+                $res = array_merge($res, [
+                    'status' => false,
+                    'message' => "Couldn't be updated!"
+                ]);
+            }
+        } else {
+            if (!auth()->user()->can('customer-ledgers.create'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to create this record!"
+                ]);
+
+            $sales = $salesModel->where('id', $inputs['sale_id'])->first();
+            $inputs['customer_id'] = $sales->customer_id;
+            $inputs['store_id'] = $sales->store_id;
+            if ($model->save($inputs)) {
+                $salesModel->updatePaymentStatus($inputs['sale_id']);
+                $res = array_merge($res, [
+                    'status' => true,
+                    'message' => "Payment added successfully!",
                     'data' => $model->find($model->getInsertID()),
                 ]);
             } else {
