@@ -384,6 +384,14 @@
                             </select>
                         </div>
                     </div>
+                    <?php if (auth()->user()->can('customer-ledgers.edit-credit')) : ?>
+                        <div class="col-lg-6 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label>Credit</label>
+                                <input type="text" name="credit" min="0" value="" placeholder="Enter Amount" required>
+                            </div>
+                        </div>
+                    <?php endif ?>
                     <div class="col-lg-6 col-sm-12 col-12">
                         <div class="form-group">
                             <label>Paying Amount</label>
