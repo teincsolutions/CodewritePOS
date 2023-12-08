@@ -276,7 +276,7 @@ class ProductController extends BaseController
         $builder->join('brands', 'brands.id=products.brand_id', 'left');
         $builder->join('stocks', 'stocks.product_id=products.id', 'left');
         $builder->where('products.deleted_at', null);
-        $builder->groupBy('products.id');
+        //$builder->groupBy('products.id');
         if (isset($inputs['exclude']))
             $builder->whereNotIn('products.id', $inputs['exclude']);
         return $this->response->setJSON(toSelect2BuilderResult(
