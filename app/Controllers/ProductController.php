@@ -279,13 +279,13 @@ class ProductController extends BaseController
         if (isset($inputs['exclude']))
             $builder->whereNotIn('products.id', $inputs['exclude']);
         if (isset($inputs['store_id']))
-            $where = "stocks.store_id =" . $inputs['store_id'];
+            $where = " AND stocks.store_id =" . $inputs['store_id'];
 
         return $this->response->setJSON(toSelect2BuilderResult(
             $builder,
             ['products.sku', 'products.name', 'brands.name', 'units.label', 'categories.name'],
             $inputs,
-            'concat(ifnull(concat(products.sku," "),""),products.name," ",ifnull(brands.name,"")," (",units.label, ")"," ₵",products.unit_price) as text, products.*,(SELECT instock FROM stocks where product_id=products.id) as instock',
+            'concat(ifnull(concat(products.sku," "),""),products.name," ",ifnull(brands.name,"")," (",units.label, ")"," ₵",products.unit_price) as text, products.*,(SELECT SUM(instock) FROM stocks where product_id=products.id '.$where.') as instock',
         ));
     }
     /**

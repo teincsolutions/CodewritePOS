@@ -44,7 +44,7 @@ let tableItems = $(".tr-items").DataTable({
               dataType: "json",
               data: function (params) {
                 params.filter = {};
-                params.filter['stocks.store_id'] = $('.select2-store').val();
+                params.store_id = $(".select2-store").val();
                 params.exclude = [];
 
                 $(".select2-product").each((i, sel) => {
@@ -84,8 +84,8 @@ function updateItemRow(row) {
         : toProduct.select2("data")[0],
     from_unit_qty = parseFloat(data1.unit_qty ?? 1),
     to_unit_qty = parseFloat(data2.unit_qty ?? 1);
-    
-    row1.find(".quantity-field").attr("max", data1.instock);
+
+  row1.find(".quantity-field").attr("max", data1.instock);
 
   $("td:eq(4)", row1).html((qty * (from_unit_qty / to_unit_qty)).toFixed(2));
   $(".to_unit_qty", row1).val((qty * (from_unit_qty / to_unit_qty)).toFixed(2));
