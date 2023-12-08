@@ -105,6 +105,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-unit-transfer.js?v=20') ?>"></script>
+<script src="<?= base_url('assets/js/handle-unit-transfer.js?v=21') ?>"></script>
 <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
 <?= $this->endSection() ?>
