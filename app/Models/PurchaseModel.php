@@ -157,10 +157,11 @@ class PurchaseModel extends Model
     {
         $builder = $this->builder();
 
-        $builder->selectSum(new RawSql('(total_amount - paid)'), 'total')
+        $builder->selectSum(new RawSql('(credit - debit)'), 'total')
+            ->join('supplier_ledgers', 'supplier_ledgers.purchase_id=purchases.id')
             ->where('payment_status', 'due')
             ->where('order_status', 'completed');
-        if ($storeId) $builder->where('store_id', $storeId);
+        if ($storeId) $builder->where('purchases.store_id', $storeId);
 
         $total = $builder->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
