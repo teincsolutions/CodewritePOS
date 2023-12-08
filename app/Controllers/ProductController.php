@@ -49,7 +49,7 @@ class ProductController extends BaseController
         $unitModel = new UnitModel();
         $brandModel = new BrandModel();
         $taxModel = new TaxModel();
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Create Product',
@@ -210,7 +210,7 @@ class ProductController extends BaseController
         $inputs = $this->request->getVar();
         $inputs['length'] = 1000;
         $inputs['start'] = 0;
-        
+
         $model = new ProductModel();
         if (setting('App.ProductDiffForStore') === 'yes') {
             $model->select('products.id,products.name,products.barcode,products.sku,products.pdiscount,products.description,' .
@@ -232,7 +232,7 @@ class ProductController extends BaseController
         $inputs = $this->request->getVar();
         $inputs['length'] = 1000;
         $inputs['start'] = 0;
-        
+
         $model = new ProductModel();
         $model->where('expiration <=', date('Y-m-d', time()));
         return $this->response->setJSON(toDatatableResult($model, $inputs));
@@ -274,16 +274,18 @@ class ProductController extends BaseController
         $builder->join('units', 'units.id=products.unit_id');
         $builder->join('categories', 'categories.id=products.category_id');
         $builder->join('brands', 'brands.id=products.brand_id', 'left');
-        $builder->join('stocks', 'stocks.product_id=products.id', 'left');
         $builder->where('products.deleted_at', null);
         $builder->groupBy('products.id');
         if (isset($inputs['exclude']))
             $builder->whereNotIn('products.id', $inputs['exclude']);
+        if (isset($inputs['store_id']))
+            $where = "stocks.store_id =" . $inputs['store_id'];
+
         return $this->response->setJSON(toSelect2BuilderResult(
             $builder,
             ['products.sku', 'products.name', 'brands.name', 'units.label', 'categories.name'],
             $inputs,
-            'concat(ifnull(concat(products.sku," "),""),products.name," ",ifnull(brands.name,"")," (",units.label, ")"," ₵",products.unit_price) as text, products.*,ifnull(stocks.instock,0) as instock',
+            'concat(ifnull(concat(products.sku," "),""),products.name," ",ifnull(brands.name,"")," (",units.label, ")"," ₵",products.unit_price) as text, products.*,(SELECT instock FROM stocks where product_id=products.id) as instock',
         ));
     }
     /**
