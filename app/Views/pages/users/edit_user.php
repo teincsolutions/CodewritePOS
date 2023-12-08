@@ -6,6 +6,9 @@
             <h4>User Management</h4>
             <h6>Save/Update User</h6>
         </div>
+        <div class="page-btn">
+            <a href="<?= site_url('users') ?>" class="btn btn-added"><i class="fa fa-arrow-left me-2"></i>List Users</a>
+        </div>
     </div>
 
     <form action="<?= site_url('users') ?>" autocomplete="off" class="card post-form" method="post">

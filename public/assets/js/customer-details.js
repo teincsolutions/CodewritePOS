@@ -9,7 +9,7 @@ $(function () {
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $("#filter_inputs input, #filter_inputs select");
+        let filterForm = $("#bills-tab #filter_inputs input,#bills-tab #filter_inputs select");
         filterForm.each((i, item) => {
           field = $(item);
 
@@ -21,11 +21,14 @@ $(function () {
               filter[field.attr("name")] = field
                 .children("option:selected")
                 .val();
-          } else {
+          } else if(typeof field.attr("name") !== 'undefined') {
             filter[field.attr("name")] = field.val();
           }
         });
         filter["store_id"] = $(".select2-store").val();
+        params.date_range_column = "sales_date";
+        params.date_from = $("#bills-tab #date-from").val();
+        params.date_to = $("#bills-tab  #date-to").val();
         params.fields = filter;
       },
     },
@@ -267,11 +270,14 @@ $(function () {
               filter[field.attr("name")] = field
                 .children("option:selected")
                 .val();
-          } else {
+          } else if(typeof field.attr("name") !== 'undefined') {
             filter[field.attr("name")] = field.val();
           }
         });
         filter["store_id"] = $(".select2-store").val();
+        params.date_range_column = "tdate";
+        params.date_from = $("#ledger-tab #date-from").val();
+        params.date_to = $("#ledger-tab #date-to").val();
         params.fields = filter;
       },
     },
@@ -447,11 +453,14 @@ $(function () {
               filter[field.attr("name")] = field
                 .children("option:selected")
                 .val();
-          } else {
+          } else if(typeof field.attr("name") !== 'undefined') {
             filter[field.attr("name")] = field.val();
           }
         });
         filter["sales.store_id"] = $(".select2-store").val();
+        params.date_range_column = "return_date";
+        params.date_from = $("#returns-tab #date-from").val();
+        params.date_to = $("#returns-tab #date-to").val();
         params.fields = filter;
       },
     },
@@ -787,18 +796,18 @@ $(function () {
       },
     ],
     initComplete: (settings, json) => {
-      $("#ledger-tab .dataTables_filter").appendTo("#ledger-tab #tableSearch");
-      $("#ledger-tab .dataTables_filter").appendTo("#ledger-tab .search-input");
-      if ($('#ledger-tab [data-bs-toggle="tooltip"]').length > 0) {
+      $("#view-payments .dataTables_filter").appendTo("#view-payments #tableSearch");
+      $("#view-payments .dataTables_filter").appendTo("#view-payments .search-input");
+      if ($('#view-payments [data-bs-toggle="tooltip"]').length > 0) {
         var tooltipTriggerList = [].slice.call(
-          document.querySelectorAll('#ledger-tab [data-bs-toggle="tooltip"]')
+          document.querySelectorAll('#view-payments [data-bs-toggle="tooltip"]')
         );
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
           return new bootstrap.Tooltip(tooltipTriggerEl);
         });
       }
 
-      var selectAllItems = "#ledger-tab #select-all";
+      var selectAllItems = "#view-payments #select-all";
       var checkboxItem = ":checkbox";
 
       $(selectAllItems).click(function () {
@@ -837,7 +846,7 @@ $(function () {
       selector: "td:first-child",
     },
   });
-  paymentTable.buttons().container().appendTo("#ledger-tab .wordset");
+  paymentTable.buttons().container().appendTo("#view-payments .wordset");
 
   $("#view-payments .filter").on(
     "click select2:select select2:unselect",

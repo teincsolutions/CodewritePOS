@@ -185,11 +185,12 @@ class SalesModel extends Model
     public function getDueAmount($storeId = null): float
     {
         $builder = $this->builder();
-        $builder->selectSum(new RawSql('(total_amount - paid)'), 'total')
+        $builder->selectSum(new RawSql('(debit - credit)'), 'total')
+            ->join('customer_ledgers','customer_ledgers.sale_id=sales.id')
             ->where('order_status', 'completed')
             ->where('payment_status', 'due');
 
-        if ($storeId) $builder->where('store_id', $storeId);
+        if ($storeId) $builder->where('sales.store_id', $storeId);
 
         $total =  $builder->get()->getFirstRow()->total;
         return $total ? $total : 0.00;

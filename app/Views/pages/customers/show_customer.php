@@ -108,12 +108,46 @@
                                     <button type="button" data-bs-toggle="modal" data-bs-target="#add-payment" class="btn btn-primary btn-sm me-3"><i class="fa fa-plus me-2"></i>Add Payment</button>
                                     <button type="button" data-bs-toggle="modal" data-bs-target="#add-bulk-payment" class="btn btn-secondary btn-sm"><i class="fa fa-plus me-2"></i>Bulk Payment</button>
                                 </div>
+                                <div class="table-top">
+                                    <div class="search-set">
+                                        <div class="search-path">
+                                            <a class="btn btn-filter" id="filter_search3">
+                                                <img src="<?= base_url('assets/icons/filter.svg') ?>" alt="img">
+                                                <span><img src="<?= base_url('assets/icons/closes.svg') ?>" alt="img"></span>
+                                            </a>
+                                        </div>
+                                        <div class="search-input">
+                                            <a class="btn btn-searchset"><i class="fa fa-search"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="wordset">
+                                    </div>
+                                </div>
                                 <div class="col-md-12">
                                     <div class="card" id="filter_inputs3">
                                         <div class="card-body pb-0">
                                             <div class="row">
                                                 <input type="hidden" name="customer_id" value="<?= $customer->id; ?>">
-
+                                                <div class="col-lg-2 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <div class="input-groupicon">
+                                                            <input type="text" class="datetimepicker" placeholder="From date" id="date-from" value="">
+                                                            <div class="addonset">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-2 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <div class="input-groupicon">
+                                                            <input type="text" class="datetimepicker" placeholder="To date" id="date-to" value="">
+                                                            <div class="addonset">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div class="col-lg-3 col-sm-6 col-12">
                                                     <div class="form-group">
                                                         <a class="btn btn-filters ms-auto filter"><i class="fa fa-search"></i></a>
@@ -168,6 +202,26 @@
                                             <div class="row">
                                                 <input type="hidden" name="customer_id" value="<?= $customer->id; ?>">
                                                 <div class="col-lg-2 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <div class="input-groupicon">
+                                                            <input type="text" class="datetimepicker" placeholder="From date" id="date-from" value="">
+                                                            <div class="addonset">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-2 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <div class="input-groupicon">
+                                                            <input type="text" class="datetimepicker" placeholder="To date" id="date-to" value="">
+                                                            <div class="addonset">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-6 col-12">
                                                     <div class="form-group">
                                                         <input type="text" name="invoice" placeholder="Enter Reference No" value="">
                                                     </div>
@@ -251,6 +305,26 @@
                                             <div class="row">
                                                 <input type="hidden" name="sales.customer_id" value="<?= $customer->id; ?>">
                                                 <div class="col-lg-2 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <div class="input-groupicon">
+                                                            <input type="text" class="datetimepicker" placeholder="From date" id="date-from" value="">
+                                                            <div class="addonset">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-2 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <div class="input-groupicon">
+                                                            <input type="text" class="datetimepicker" placeholder="To date" id="date-to" value="">
+                                                            <div class="addonset">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-6 col-12">
                                                     <div class="form-group">
                                                         <input type="text" name="invoice" placeholder="Enter Reference No" value="">
                                                     </div>
