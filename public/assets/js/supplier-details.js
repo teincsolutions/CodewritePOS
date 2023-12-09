@@ -420,6 +420,7 @@ $(function () {
           }
         });
         filter["purchases.store_id"] = $(".select2-store").val();
+        filter["purchases.supplier_id"] = $("input[name='supplier_id']").val();
         params.fields = filter;
       },
     },
