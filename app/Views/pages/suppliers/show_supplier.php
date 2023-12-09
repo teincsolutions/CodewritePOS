@@ -237,7 +237,7 @@
                                     <div class="card" id="filter_inputs1">
                                         <div class="card-body pb-0">
                                             <div class="row">
-                                                <input type="hidden" name="purchases.supplier_id" value="<?= $supplier->id; ?>">
+                                                <input type="hidden" name="supplier_id" value="<?= $supplier->id; ?>">
                                                 <div class="col-lg-2 col-sm-6 col-12">
                                                     <div class="form-group">
                                                         <input type="text" name="invoice" placeholder="Enter Reference No" value="">
