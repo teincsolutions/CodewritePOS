@@ -234,6 +234,7 @@ $routes->post('adjustments', [AdjustmentController::class, 'save']);
 $routes->post('brands', [BrandController::class, 'save']);
 $routes->post('categories', [CategoryController::class, 'save']);
 $routes->post('customers', [CustomerController::class, 'save']);
+$routes->post('customers/debit', [CustomerController::class, 'save_debit']);
 $routes->post('expenses/categories', [ExpenseCategoryController::class, 'save']);
 $routes->post('expenses', [ExpenseController::class, 'save']);
 $routes->post('products', [ProductController::class, 'save']);

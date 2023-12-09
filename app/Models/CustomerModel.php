@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\Database\RawSql;
 use CodeIgniter\Model;
+use Config\Database;
 
 class CustomerModel extends Model
 {
@@ -93,5 +95,71 @@ class CustomerModel extends Model
             }
         }
         return $model;
+    }
+
+    public function addInitialBalance($customer_id, $store_id, $amount, $date = null)
+    {
+        $salesModel = new SalesModel();
+        $ledgerModel = new CustomerLedgerModel();
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => null
+        ];
+
+        $customer = $this->where('id', $customer_id)->first();
+        $this->db = Database::connect();
+
+        if ($customer) {
+            if (!auth()->user()->can('customer-ledgers.create'))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "Don't have permission to credit this record!"
+                ]);
+
+            try {
+                $this->db->transException(true)->transStart();
+
+                $lastItem = $salesModel->orderBy('id', 'desc')->first();
+                $lastId = $lastItem ? $lastItem->id : 1;
+                $data = [
+                    'customer_id' => $customer_id,
+                    'store_id' => $store_id,
+                    'invoice' => substr(time() + $lastId, 0, 10),
+                    'sales_date' => $date ?? date('Y-m-d'),
+                    'total_amount' => $amount,
+                    'type' => 'customer',
+                    'order_status' => 'completed',
+                    'user_id' => auth()->user()->id,
+                    'payment_status' => $amount > 0 ? 'due' : 'paid'
+                ];
+
+                $salesModel->save($data);
+
+                $data = [
+                    'customer_id' => $customer_id,
+                    'store_id' => $store_id,
+                    'sale_id' => $salesModel->getInsertID(),
+                    'ledger_type' => 'sales',
+                    'tdate' => $date ?? date('Y-m-d'),
+                    'debit' => $amount,
+                    'credit' => 0,
+                    'user_id' => auth()->user()->id,
+                ];
+                $ledgerModel->save($data);
+
+                if ($this->db->transComplete()) {
+                    $res = array_merge($res, [
+                        'status' => true,
+                        'message' => "Balance updated successfully!",
+                    ]);
+                }
+            } catch (DatabaseException $e) {
+                $res = array_merge($res, [
+                    'message' => $e->getMessage(),
+                ]);
+            }
+        }
+        return $res;
     }
 }

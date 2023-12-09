@@ -9,7 +9,9 @@ $(function () {
       contentType: "application/json",
       data: function (params) {
         let filter = {};
-        let filterForm = $("#bills-tab #filter_inputs input,#bills-tab #filter_inputs select");
+        let filterForm = $(
+          "#bills-tab #filter_inputs input,#bills-tab #filter_inputs select"
+        );
         filterForm.each((i, item) => {
           field = $(item);
 
@@ -21,7 +23,7 @@ $(function () {
               filter[field.attr("name")] = field
                 .children("option:selected")
                 .val();
-          } else if(typeof field.attr("name") !== 'undefined') {
+          } else if (typeof field.attr("name") !== "undefined") {
             filter[field.attr("name")] = field.val();
           }
         });
@@ -270,7 +272,7 @@ $(function () {
               filter[field.attr("name")] = field
                 .children("option:selected")
                 .val();
-          } else if(typeof field.attr("name") !== 'undefined') {
+          } else if (typeof field.attr("name") !== "undefined") {
             filter[field.attr("name")] = field.val();
           }
         });
@@ -453,7 +455,7 @@ $(function () {
               filter[field.attr("name")] = field
                 .children("option:selected")
                 .val();
-          } else if(typeof field.attr("name") !== 'undefined') {
+          } else if (typeof field.attr("name") !== "undefined") {
             filter[field.attr("name")] = field.val();
           }
         });
@@ -686,7 +688,7 @@ $(function () {
         });
         filter["store_id"] = $(".select2-store").val();
         params.date_range_column = "created_at";
-        params.date_from =  $("#input_filter input[name='created_at']").val();
+        params.date_from = $("#input_filter input[name='created_at']").val();
         params.date_to = $("#input_filter input[name='created_at']").val();
 
         params.fields = filter;
@@ -796,8 +798,12 @@ $(function () {
       },
     ],
     initComplete: (settings, json) => {
-      $("#view-payments .dataTables_filter").appendTo("#view-payments #tableSearch");
-      $("#view-payments .dataTables_filter").appendTo("#view-payments .search-input");
+      $("#view-payments .dataTables_filter").appendTo(
+        "#view-payments #tableSearch"
+      );
+      $("#view-payments .dataTables_filter").appendTo(
+        "#view-payments .search-input"
+      );
       if ($('#view-payments [data-bs-toggle="tooltip"]').length > 0) {
         var tooltipTriggerList = [].slice.call(
           document.querySelectorAll('#view-payments [data-bs-toggle="tooltip"]')
@@ -1057,6 +1063,81 @@ $(function () {
           if (d.status === true) {
             form5.trigger("reset");
             form5.modal("hide");
+            table2.ajax.reload();
+            table1.ajax.reload();
+            table3.ajax.reload();
+            Swal.fire({
+              icon: "success",
+              text: d.message,
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              text: d.message,
+            });
+          }
+        },
+        error: function (r) {
+          Swal.fire({
+            icon: "error",
+            text: "Unable to submit form! Please try agian.",
+          });
+        },
+      });
+    }
+  });
+
+  let form6 = $("#add-debit");
+  form6.validate({
+    rules: {},
+    messages: {},
+    errorElement: "em",
+    errorPlacement: function (t, e) {
+      t.addClass("invalid-feedback"),
+        "checkbox" === e.prop("type")
+          ? t.insertAfter(e.nex$("label"))
+          : t.insertAfter(e);
+    },
+    highlight: function (e, i, n) {
+      $(e).addClass("is-invalid").removeClass("is-valid");
+    },
+    unhighlight: function (e, i, n) {
+      $(e).addClass("is-valid").removeClass("is-invalid");
+    },
+  });
+
+  form6.on("submit", function (e) {
+    e.preventDefault();
+
+    if ($(this).valid() === true) {
+      $.ajax({
+        method: "POST",
+        url: this.getAttribute("action"),
+        data: new FormData(this),
+        enctype: "multipart/form-data",
+        dataType: "json",
+        contentType: false,
+        processData: false,
+        cache: false,
+        success: function (d, r) {
+          if (!d || r === "nocontent") {
+            Swal.fire({
+              icon: "error",
+              text: "Malformed form data sumbitted! Please try agian.",
+            });
+            return;
+          }
+          if (typeof d.status !== "boolean" || typeof d.message !== "string") {
+            Swal.fire({
+              icon: "error",
+              text: "Malformed data response! Please try agian.",
+            });
+            return;
+          }
+
+          if (d.status === true) {
+            form6.trigger("reset");
+            form6.modal("hide");
             table2.ajax.reload();
             table1.ajax.reload();
             table3.ajax.reload();

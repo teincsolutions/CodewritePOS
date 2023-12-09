@@ -169,73 +169,15 @@ class CustomerController extends BaseController
         return $this->response->setJSON($res);
     }
 
-    public function addInitialBalance()
+    public function save_debit()
     {
         $model = new CustomerModel();
-        $salesModel = new SalesModel();
-        $ledgerModel = new CustomerLedgerModel();
-
         $inputs = $this->request->getVar();
+        $inputs['tdate'] = date('Y-m-d', strtotime($inputs['tdate']));
 
-        if (auth()->user())
-            $inputs['user_id'] = auth()->user()->id;
+        $res = $model->addInitialBalance($inputs['customer_id'], $inputs['store_id'], $inputs['amount'], $inputs['tdate']);
+        $res = array_merge($res, ['input' => $inputs]);
 
-        $cid = $this->request->getPost('customer_id');
-        $res = [
-            'status' => false,
-            'data' => null,
-            'message' => null,
-            'input' => $inputs,
-        ];
-
-        $customer = $model->where('id', $cid)->first();
-        $this->db = Database::connect();
-
-        if ($customer) {
-            if (!auth()->user()->can('customer-ledgers.create'))
-                return $this->response->setJSON([
-                    'status' => false,
-                    'message' => "Don't have permission to credit this record!"
-                ]);
-
-            try {
-                $this->db->transException(true)->transStart();
-                $data = [
-                    'customer_id' => $inputs['customer_id'],
-                    'store_id' => $inputs['store_id'],
-                    'sales_date' => date('Y-m-d'),
-                    'total_amount' => $inputs['amount'],
-                    'type' => 'customer',
-                    'order_status' => 'completed',
-                    'payment_status' => $inputs['amount'] > 0 ? 'due' : 'paid'
-                ];
-
-                $salesModel->save($data);
-
-                $data = [
-                    'customer_id' => $inputs['customer_id'],
-                    'store_id' => $inputs['store_id'],
-                    'sale_id' => $salesModel->getInsertID(),
-                    'ledger_type' => 'sales',
-                    'tdate' => date('Y-m-d'),
-                    'debit' => $inputs['amount'],
-                    'credit' => 0,
-                ];
-                $ledgerModel->save($data);
-
-                if ($this->db->transComplete()) {
-                    $res = array_merge($res, [
-                        'status' => true,
-                        'message' => "Initial balance set successfully!",
-                    ]);
-                }
-            } catch (DatabaseException $e) {
-                $res = array_merge($res, [
-                    'message' => $e->getMessage(),
-                ]);
-                return $this->response->setJSON($res);
-            }
-        }
         return $this->response->setJSON($res);
     }
 
