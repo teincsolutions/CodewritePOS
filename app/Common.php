@@ -40,8 +40,10 @@ if (!function_exists('toDatatableResult')) {
 
         if (isset($inputs['fields'])) {
             foreach ($inputs['fields'] as $field => $val) {
-                if (!empty(trim($val)) && in_array($field, ['type', 'user_id', 'payment_type', 'customer_id',
-                'supplier_id']))
+                if (!empty(trim($val)) && in_array($field, [
+                    'type', 'user_id', 'payment_type', 'customer_id',
+                    'supplier_id'
+                ]))
                     $model->where($field, $val);
                 else if (!empty(trim($val))) $model->like($field, $val);
             }
@@ -103,7 +105,11 @@ if (!function_exists('toBuilderDatatableResult')) {
 
         if (isset($inputs['fields'])) {
             foreach ($inputs['fields'] as $field => $val) {
-                if (!empty(trim($val)) && in_array($field, ['type', 'user_id', 'payment_type', 'customer_id', 'supplier_id']))
+                if (!empty(trim($val)) && in_array($field, [
+                    'type', 'user_id', 'payment_type',
+                    'customer_id', 'customer_ledgers.customer_id', 'supplier_ledgers.supplier_id',
+                    'customer_legers.store_id','supplier_ledgers.store_id', 'supplier_id'
+                ]))
                     $model->where($field, $val);
                 else if (!empty(trim($val))) $model->like($field, $val);
             }
@@ -173,7 +179,7 @@ if (!function_exists('toSelect2Result')) {
 
         $total = $model->countAllResults(false);
 
-        $model->select($select,false);
+        $model->select($select, false);
         $model->groupStart();
         foreach ($columns as $row) $model->orLike($row, $term);
         $model->groupEnd();
@@ -206,7 +212,7 @@ if (!function_exists('toSelect2BuilderResult')) {
      * @param array $inputs Request input data
      * @param function $callback Callback to modify each result
      */
-    function toSelect2BuilderResult(Builder $model, array $columns, array $inputs, $select = "*", $joins = null,$countSelect="*"): array
+    function toSelect2BuilderResult(Builder $model, array $columns, array $inputs, $select = "*", $joins = null, $countSelect = "*"): array
     {
         $term = isset($inputs['term']) ? $inputs['term'] : '';
         $take = 10;
@@ -221,9 +227,9 @@ if (!function_exists('toSelect2BuilderResult')) {
             foreach ($joins as $key => $join)
                 $model->join($join['table'], $join['cond'], $join['type'] ?? '', null);
 
-        $total = $model->selectCount($countSelect,'count')->countAllResults(false);
+        $total = $model->selectCount($countSelect, 'count')->countAllResults(false);
 
-        $model->select($select,false);
+        $model->select($select, false);
         $model->groupStart();
         foreach ($columns as $row) $model->orLike($row, $term);
         $model->groupEnd();
@@ -232,6 +238,18 @@ if (!function_exists('toSelect2BuilderResult')) {
         if (isset($inputs['filter']) && is_array($inputs['filter']))
             foreach ($inputs['filter'] as $field => $val)
                 $model->where($field, $val);
+
+        if (isset($inputs['fields'])) {
+            foreach ($inputs['fields'] as $field => $val) {
+                if (!empty(trim($val)) && in_array($field, [
+                    'type', 'user_id', 'payment_type',
+                    'customer_id', 'customer_ledgers.customer_id', 'supplier_ledgers.supplier_id',
+                    'customer_legers.store_id','supplier_ledgers.store_id', 'supplier_id'
+                ]))
+                    $model->where($field, $val);
+                else if (!empty(trim($val))) $model->like($field, $val);
+            }
+        }
 
         $data = $model->get()->getResult();
 
