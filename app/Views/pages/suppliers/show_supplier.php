@@ -489,7 +489,7 @@
                             </div>
                         </div>
                     </div>
-                    <input type="hidden" name="customer_id" value="<?= $customer->id ?>">
+                    <input type="hidden" name="supplier_id" value="<?= $supplier->id ?>">
                     <input type="hidden" name="store_id">
                     <div class="col-lg-6 col-sm-12 col-12">
                         <div class="form-group">

@@ -239,7 +239,7 @@ $routes->post('expenses/categories', [ExpenseCategoryController::class, 'save'])
 $routes->post('expenses', [ExpenseController::class, 'save']);
 $routes->post('products', [ProductController::class, 'save']);
 $routes->post('suppliers/ledgers', [SupplierLedgerController::class, 'save']);
-$routes->post('suppliers/credit', [SupplierLedgerController::class, 'save_credit']);
+$routes->post('suppliers/credit', [SupplierController::class, 'save_credit']);
 $routes->post('suppliers/ledgers/bulk', [SupplierLedgerController::class, 'bulk_payment']);
 $routes->post('customers/ledgers', [CustomerLedgerController::class, 'save']);
 $routes->post('customers/ledgers/bulk', [CustomerLedgerController::class, 'bulk_payment']);
