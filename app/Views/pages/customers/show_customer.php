@@ -609,7 +609,6 @@
     </div>
 </form>
 
-
 <form action="<?= site_url('customers/ledgers/bulk') ?>" class="modal fade" id="add-bulk-payment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">

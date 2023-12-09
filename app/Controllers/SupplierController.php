@@ -40,6 +40,19 @@ class SupplierController extends BaseController
         }
         return view('pages/suppliers/edit_supplier', $data);
     }
+
+    public function save_credit()
+    {
+        $model = new SupplierModel();
+        $inputs = $this->request->getVar();
+        $inputs['tdate'] = date('Y-m-d', strtotime($inputs['tdate']));
+
+        $res = $model->addInitialBalance($inputs['supplier_id'], $inputs['store_id'], $inputs['amount'], $inputs['tdate']);
+        $res = array_merge($res, ['input' => $inputs]);
+
+        return $this->response->setJSON($res);
+    }
+
     public function save()
     {
         $model = new SupplierModel();

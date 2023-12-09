@@ -111,10 +111,10 @@ class CustomerModel extends Model
         $this->db = Database::connect();
 
         if ($customer) {
-            if (!auth()->user()->can('customer-ledgers.create'))
+            if (!auth()->user()->can('customer-ledgers.edit-debit'))
                 return $this->response->setJSON([
                     'status' => false,
-                    'message' => "Don't have permission to credit this record!"
+                    'message' => "Don't have permission to debit this record!"
                 ]);
 
             try {

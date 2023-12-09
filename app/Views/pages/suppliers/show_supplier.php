@@ -90,6 +90,9 @@
                         <div class="tab-pane" id="ledger-tab">
                             <div class="row mt-5">
                                 <div class="col-md-12 mb-3 d-flex justify-content-end">
+                                <?php if (auth()->user()->can('customer-ledgers.edit-credit')) : ?>
+                                        <button type="button" data-bs-toggle="modal" data-bs-target="#add-credit" class="btn btn-danger btn-sm me-3"><i class="fa fa-minus me-2"></i>Add Credit</button>
+                                    <?php endif ?>
                                     <button type="button" data-bs-toggle="modal" data-bs-target="#add-payment" class="btn btn-primary btn-sm  me-3"><i class="fa fa-plus me-2"></i>Add Payment</button>
                                     <button type="button" data-bs-toggle="modal" data-bs-target="#add-bulk-payment" class="btn btn-secondary btn-sm"><i class="fa fa-plus me-2"></i>Bulk Payment</button>
                                 </div>
@@ -454,6 +457,44 @@
                                 <option value="momo">MoMo</option>
                                 <option value="credit">Credit Card</option>
                             </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-submit">Submit</button>
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form action="<?= site_url('suppliers/credit') ?>" class="modal fade" id="add-credit" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Credit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Date</label>
+                            <div class="input-groupicon">
+                                <input type="text" name="tdate" value="<?= date('d-m-Y', time()) ?>" class="datetimepicker" required>
+                                <div class="addonset">
+                                    <i class="fa fa-calendar fa-lg"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="customer_id" value="<?= $customer->id ?>">
+                    <input type="hidden" name="store_id">
+                    <div class="col-lg-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="text" name="amount" min="0" value="" placeholder="Enter Amount" required>
                         </div>
                     </div>
                 </div>
