@@ -7,7 +7,9 @@ use App\Models\CustomerLedgerModel;
 use App\Models\CustomerModel;
 use App\Models\SalesModel;
 use App\Models\UserModel;
+use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\HTTP\Response;
+use Config\Database;
 
 class CustomerController extends BaseController
 {
@@ -171,13 +173,14 @@ class CustomerController extends BaseController
     {
         $model = new CustomerModel();
         $salesModel = new SalesModel();
+        $ledgerModel = new CustomerLedgerModel();
+
         $inputs = $this->request->getVar();
 
         if (auth()->user())
             $inputs['user_id'] = auth()->user()->id;
 
         $cid = $this->request->getPost('customer_id');
-        $inputs['tdate'] = date('Y-m-d', strtotime($inputs['tdate']));
         $res = [
             'status' => false,
             'data' => null,
@@ -186,46 +189,51 @@ class CustomerController extends BaseController
         ];
 
         $customer = $model->where('id', $cid)->first();
+        $this->db = Database::connect();
+
         if ($customer) {
             if (!auth()->user()->can('customer-ledgers.create'))
                 return $this->response->setJSON([
                     'status' => false,
-                    'message' => "Don't have permission to edit this record!"
+                    'message' => "Don't have permission to credit this record!"
                 ]);
 
-            if ($model->save($inputs)) {
-                $res = array_merge($res, [
-                    'status' => true,
-                    'message' => "Payment updated successfully!",
-                ]);
-            } else {
-                $res = array_merge($res, [
-                    'status' => false,
-                    'message' => "Couldn't be updated!"
-                ]);
-            }
-        } else {
-            if (!auth()->user()->can('customer-ledgers.create'))
-                return $this->response->setJSON([
-                    'status' => false,
-                    'message' => "Don't have permission to create this record!"
-                ]);
+            try {
+                $this->db->transException(true)->transStart();
+                $data = [
+                    'customer_id' => $inputs['customer_id'],
+                    'store_id' => $inputs['store_id'],
+                    'sales_date' => date('Y-m-d'),
+                    'total_amount' => $inputs['amount'],
+                    'type' => 'customer',
+                    'order_status' => 'completed',
+                    'payment_status' => $inputs['amount'] > 0 ? 'due' : 'paid'
+                ];
 
-            $sales = $salesModel->where('id', $inputs['sale_id'])->first();
-            $inputs['customer_id'] = $sales->customer_id;
-            $inputs['store_id'] = $sales->store_id;
-            if ($model->save($inputs)) {
-                $salesModel->updatePaymentStatus($inputs['sale_id']);
+                $salesModel->save($data);
+
+                $data = [
+                    'customer_id' => $inputs['customer_id'],
+                    'store_id' => $inputs['store_id'],
+                    'sale_id' => $salesModel->getInsertID(),
+                    'ledger_type' => 'sales',
+                    'tdate' => date('Y-m-d'),
+                    'debit' => $inputs['amount'],
+                    'credit' => 0,
+                ];
+                $ledgerModel->save($data);
+
+                if ($this->db->transComplete()) {
+                    $res = array_merge($res, [
+                        'status' => true,
+                        'message' => "Initial balance set successfully!",
+                    ]);
+                }
+            } catch (DatabaseException $e) {
                 $res = array_merge($res, [
-                    'status' => true,
-                    'message' => "Payment added successfully!",
-                    'data' => $model->find($model->getInsertID()),
+                    'message' => $e->getMessage(),
                 ]);
-            } else {
-                $res = array_merge($res, [
-                    'status' => false,
-                    'message' => "Couldn't be created!"
-                ]);
+                return $this->response->setJSON($res);
             }
         }
         return $this->response->setJSON($res);

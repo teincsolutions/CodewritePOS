@@ -58,7 +58,7 @@
                         </div>
                         <div class="col-lg-3 col-sm-6 col-12" style="overflow-x: auto;">
                             <div class="form-group">
-                                <select name="customer_id" class="select2-customer">
+                                <select name="customer_ledgers.customer_id" class="select2-customer">
                                     <option value=""></option>
                                 </select>
                             </div>
