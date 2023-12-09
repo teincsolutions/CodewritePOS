@@ -246,6 +246,7 @@ class CustomerLedgerController extends BaseController
             ->selectSum('debit', 'total_debit')
             ->groupBy('created_at')
             ->groupBy(['ledger_type', 'sales_return_id'])
+            ->orderBy('tdate', 'desc')
             ->orderBy('created_at', 'desc')
             ->orderBy('id', 'desc');
         return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) use ($db) {
