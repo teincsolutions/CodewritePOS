@@ -275,6 +275,7 @@ class supplierLedgerController extends BaseController
                 ->select('SUM((credit-debit)) as total_due')
                 ->where('supplier_id', $item->supplier_id)
                 ->where('id <', $item->id)
+                ->orderBy('tdate', 'desc')
                 ->get()->getFirstRow();
 
             $item->total_due = $totals->total_due ?? 0.00;
