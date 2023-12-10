@@ -246,8 +246,6 @@ class CustomerLedgerController extends BaseController
             ->selectSum('debit', 'total_debit')
             ->groupBy('created_at')
             ->groupBy(['ledger_type', 'sales_return_id'])
-            ->orderBy('tdate', 'desc')
-            ->orderBy('created_at', 'desc')
             ->orderBy('id', 'desc');
         return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) use ($db) {
             $item->customer = model('CustomerModel')->where('id', $item->customer_id)->first();
@@ -258,7 +256,6 @@ class CustomerLedgerController extends BaseController
                 ->select('SUM((credit-debit)) as total_due')
                 ->where('customer_id', $item->customer_id)
                 ->where('id <', $item->id)
-                ->orderBy('tdate', 'desc')
                 ->get()->getFirstRow();
 
             $item->total_due = $totals->total_due ?? 0.00;
