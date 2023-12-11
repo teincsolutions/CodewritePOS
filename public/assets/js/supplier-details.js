@@ -627,7 +627,7 @@ $(function () {
         });
         filter["store_id"] = $(".select2-store").val();
         params.date_range_column = "created_at";
-        params.date_from =  $("#input_filter input[name='created_at']").val();
+        params.date_from = $("#input_filter input[name='created_at']").val();
         params.date_to = $("#input_filter input[name='created_at']").val();
 
         params.fields = filter;
@@ -722,9 +722,9 @@ $(function () {
               "DD-MM-YYYY"
             )}',purchase_id:${row.purchase_id},payment_type:'${
               row.payment_type
-            }',debit:${row.debit},credit:${row.credit}},{text:'${row.purchase.invoice} (${
-              row.supplier.name
-            } - GHS ${row.purchase.total_amount})',id:${
+            }',debit:${row.debit},credit:${row.credit}},{text:'${
+              row.purchase.invoice
+            } (${row.supplier.name} - GHS ${row.purchase.total_amount})',id:${
               row.purchase.id
             },name:'purchase_id'})"><i class="fa fa-edit fa-lg"></i></a>
                             <a class="text-danger" href="javascript:void(0);" onclick="deleteRow(paymentTable, ${
@@ -816,8 +816,17 @@ $(function () {
 
   form3.on("submit", function (e) {
     e.preventDefault();
-
+  
     if ($(this).valid() === true) {
+
+      Swal.fire({
+        title: "Please wait !",
+        allowOutsideClick: false,
+        willOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      
       $.ajax({
         method: "POST",
         url: this.getAttribute("action"),
@@ -894,6 +903,14 @@ $(function () {
     e.preventDefault();
 
     if ($(this).valid() === true) {
+      Swal.fire({
+        title: "Please wait !",
+        allowOutsideClick: false,
+        willOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
       $.ajax({
         method: "POST",
         url: this.getAttribute("action"),
@@ -969,6 +986,14 @@ $(function () {
     e.preventDefault();
 
     if ($(this).valid() === true) {
+      Swal.fire({
+        title: "Please wait !",
+        allowOutsideClick: false,
+        willOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
       $.ajax({
         method: "POST",
         url: this.getAttribute("action"),
@@ -1044,6 +1069,14 @@ $(function () {
     e.preventDefault();
 
     if ($(this).valid() === true) {
+      Swal.fire({
+        title: "Please wait !",
+        allowOutsideClick: false,
+        willOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
       $.ajax({
         method: "POST",
         url: this.getAttribute("action"),

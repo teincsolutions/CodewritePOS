@@ -551,5 +551,5 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js?v=4') ?>"></script>
-<script src="<?= base_url('assets/js/supplier-details.js?v=17') ?>"></script>
+<script src="<?= base_url('assets/js/supplier-details.js?v=24') ?>"></script>
 <?= $this->endSection() ?>

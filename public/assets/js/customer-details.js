@@ -884,6 +884,15 @@ $(function () {
     e.preventDefault();
 
     if ($(this).valid() === true) {
+
+      Swal.fire({
+        title: "Please wait !",
+        allowOutsideClick: false,
+        willOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
       $.ajax({
         method: "POST",
         url: this.getAttribute("action"),
@@ -960,6 +969,15 @@ $(function () {
     e.preventDefault();
 
     if ($(this).valid() === true) {
+
+      Swal.fire({
+        title: "Please wait !",
+        allowOutsideClick: false,
+        willOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
       $.ajax({
         method: "POST",
         url: this.getAttribute("action"),
@@ -1035,6 +1053,15 @@ $(function () {
     e.preventDefault();
 
     if ($(this).valid() === true) {
+
+      Swal.fire({
+        title: "Please wait !",
+        allowOutsideClick: false,
+        willOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
       $.ajax({
         method: "POST",
         url: this.getAttribute("action"),
@@ -1110,6 +1137,15 @@ $(function () {
     e.preventDefault();
 
     if ($(this).valid() === true) {
+
+      Swal.fire({
+        title: "Please wait !",
+        allowOutsideClick: false,
+        willOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      
       $.ajax({
         method: "POST",
         url: this.getAttribute("action"),
