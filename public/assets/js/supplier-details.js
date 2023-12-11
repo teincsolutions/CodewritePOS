@@ -722,7 +722,7 @@ $(function () {
               "DD-MM-YYYY"
             )}',purchase_id:${row.purchase_id},payment_type:'${
               row.payment_type
-            }',debit:${row.debit}},{text:'${row.purchase.invoice} (${
+            }',debit:${row.debit},credit:${row.credit}},{text:'${row.purchase.invoice} (${
               row.supplier.name
             } - GHS ${row.purchase.total_amount})',id:${
               row.purchase.id
