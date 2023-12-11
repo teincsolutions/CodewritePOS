@@ -196,7 +196,7 @@
                                     <h5 class="supplier-balance">GHS 0.00</h5>
                                 </li>
                                 <li class="total-value">
-                                    <h4>Change</h4>
+                                    <h4>Change/Due</h4>
                                     <h5 class="dueTotal">GHS 0.00</h5>
                                 </li>
                             </ul>
@@ -212,7 +212,7 @@
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-purchase-return.js?v=18') ?>"></script>
+<script src="<?= base_url('assets/js/handle-purchase-return.js?v=19') ?>"></script>
 <?php if (isset($purchase) && $purchase->supplier) {
     $supplier = $purchase->supplier;
     $supplier->text = $supplier->name . " (" . ($supplier->address ? $supplier->address : $supplier->phone) . ")";
