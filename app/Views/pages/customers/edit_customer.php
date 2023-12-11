@@ -47,7 +47,7 @@
                 <div class="col-lg-6 col-12">
                     <div class="form-group">
                         <label>Address</label>
-                        <input type="text" value="<?= isset($customer) ? $customer->address : null ?>" placeholder="Customer address">
+                        <input type="text" name="address" value="<?= isset($customer) ? $customer->address : null ?>" placeholder="Customer address">
                     </div>
                 </div>
                 <div class="col-lg-3 col-12">
