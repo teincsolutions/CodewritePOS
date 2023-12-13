@@ -17,7 +17,7 @@ class ExpenseController extends BaseController
      */
     public function index()
     {
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
         $data = [
             'title' => 'Expense List',
             'context' => 'user:' . user_id(),
@@ -34,7 +34,7 @@ class ExpenseController extends BaseController
     public function edit($id = null)
     {
         $eCatModel = new ExpenseCategoryModel();
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
         $data = [
             'title' => 'Create Expense',
             'categories' => $eCatModel->findAll(),
@@ -74,6 +74,14 @@ class ExpenseController extends BaseController
                 return $this->response->setJSON([
                     'status' => false,
                     'message' => "Don't have permission to edit this record!"
+                ]);
+
+            $allowed = array_merge(setting('AuthGroups.disabledGroup'), [setting('AuthGroups.defaultGroup')]);
+
+            if ($expense->store_closing_id && !auth()->user()->inGroup(...$allowed))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "This expense has been closed!"
                 ]);
 
             if ($model->save($inputs)) {
@@ -134,6 +142,17 @@ class ExpenseController extends BaseController
             ]);
 
         $model = new ExpenseModel();
+        $expense = $model->find($id);
+
+        $allowed = array_merge(setting('AuthGroups.disabledGroup'), [setting('AuthGroups.defaultGroup')]);
+
+        if ($expense->store_closing_id && !auth()->user()->inGroup(...$allowed))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "This expense has been closed!"
+            ]);
+
+
         if ($model->delete($id)) {
             $res = [
                 'status' => true,
