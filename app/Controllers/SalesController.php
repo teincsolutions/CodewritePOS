@@ -201,6 +201,7 @@ class SalesController extends BaseController
         $inputs['sales_date'] = date('Y-m-d', strtotime($inputs['sales_date']));
 
         $items = $this->request->getVar('items');
+
         if (!$items) return $this->response->setJSON(
             [
                 'status' => false,
@@ -209,6 +210,17 @@ class SalesController extends BaseController
                 'input' => $inputs,
             ]
         );
+        if (($inputs['customer_id'] === null || empty($inputs['customer_id']))
+            && $inputs['total_amount'] !== $inputs['paid']
+        ) return $this->response->setJSON(
+            [
+                'status' => false,
+                'data' => null,
+                'message' => "Walk in customer cannot owe!",
+                'input' => $inputs,
+            ]
+        );
+
         $id = $this->request->getPost('id');
 
         $res = [
@@ -258,6 +270,7 @@ class SalesController extends BaseController
                 }
                 $salesItemModel->insertBatch($salesItems);
                 $sales = $model->find($id);
+
                 if ($inputs['customer_id']) {
                     $ledger->save([
                         'tdate' => $inputs['sales_date'],
