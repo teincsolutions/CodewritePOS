@@ -121,6 +121,13 @@ class CustomerLedgerController extends BaseController
                     'status' => false,
                     'message' => "You cannot edit a sales debit!"
                 ]);
+            $allowed = array_merge(setting('AuthGroups.disabledGroup'), [setting('AuthGroups.defaultGroup')]);
+
+            if ($customerLedger->store_closing_id && !auth()->user()->inGroup(...$allowed))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "This ledger has been closed!"
+                ]);
 
             if ($model->save($inputs)) {
                 $sales = $salesModel->where('id', $customerLedger->sale_id)->first();
@@ -333,6 +340,14 @@ class CustomerLedgerController extends BaseController
             return $this->response->setJSON([
                 'status' => false,
                 'message' => "You cannot delete a sales debit!"
+            ]);
+            
+        $allowed = array_merge(setting('AuthGroups.disabledGroup'), [setting('AuthGroups.defaultGroup')]);
+
+        if ($ledger->store_closing_id && !auth()->user()->inGroup(...$allowed))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "This ledger has been closed!"
             ]);
 
         if ($model->delete($id)) {

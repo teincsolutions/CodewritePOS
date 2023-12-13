@@ -39,7 +39,7 @@ class supplierLedgerController extends BaseController
         return view('pages/reports/supplier_payments', $data);
     }
 
-     /**
+    /**
      * return view for list
      * @return Response - http response
      */
@@ -102,6 +102,14 @@ class supplierLedgerController extends BaseController
                 return $this->response->setJSON([
                     'status' => false,
                     'message' => "You cannot edit purchase credit!"
+                ]);
+
+            $allowed = array_merge(setting('AuthGroups.disabledGroup'), [setting('AuthGroups.defaultGroup')]);
+
+            if ($supplierLedger->store_closing_id && !auth()->user()->inGroup(...$allowed))
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => "This ledger has been closed!"
                 ]);
 
             if ($model->save($inputs)) {
@@ -297,7 +305,7 @@ class supplierLedgerController extends BaseController
             ->selectSum('debit', 'total_debit')
             ->join('purchases', 'purchases.id=supplier_ledgers.purchase_id')
             ->where('purchases.store_closing_id !=', null)
-            ->where('ledger_type','purchases')
+            ->where('ledger_type', 'purchases')
             ->groupBy('created_at')
             ->groupBy(['ledger_type', 'purchase_return_id'])
             ->orderBy('created_at', 'desc')
@@ -351,6 +359,14 @@ class supplierLedgerController extends BaseController
             return $this->response->setJSON([
                 'status' => false,
                 'message' => "You cannot delete purchase credit!"
+            ]);
+
+        $allowed = array_merge(setting('AuthGroups.disabledGroup'), [setting('AuthGroups.defaultGroup')]);
+
+        if ($ledger->store_closing_id && !auth()->user()->inGroup(...$allowed))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "This ledger has been closed!"
             ]);
 
         if ($model->delete($id)) {
