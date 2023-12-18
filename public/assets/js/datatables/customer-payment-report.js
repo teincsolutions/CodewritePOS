@@ -215,4 +215,9 @@ $(function () {
     allowClear: true,
     placeholder: "Seach a customer",
   });
+
+  $(".select2-type").select2({
+    allowClear: true,
+    placeholder: "Select ledger type",
+  });
 });

@@ -63,6 +63,15 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-lg-2 col-sm-6 col-12" style="overflow-x: auto;">
+                            <div class="form-group">
+                                <select name="ledger_type" class="select2-type">
+                                    <option value="">All</option>
+                                    <option value="sales">Sales</option>
+                                    <option value="returns">Returns</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-lg-1 col-sm-6 col-12">
                             <div class="form-group">
                                 <a class="btn btn-filters ms-auto filter"><i class="fa fa-search"></i></a>
@@ -114,5 +123,5 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/datatables/customer-payment-report.js?v=3') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/customer-payment-report.js?v=4') ?>"></script>
 <?= $this->endSection() ?>
