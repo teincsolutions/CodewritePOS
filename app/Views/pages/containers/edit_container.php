@@ -19,6 +19,16 @@
             <div class="row">
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
+                        <label>Container Type</label>
+                        <select class="select2-ctype" name="type" required>
+                            <option value="product" <?= isset($container) ? ('product' === $container->type ? 'selected' : '') : null ?>>Product Container</option>
+                            <option value="brand" <?= isset($container) ? ('brand' === $container->type ? 'selected' : '') : null ?>>Brand Container</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
                         <label>Container Code/SKU</label>
                         <input type="text" name="sku" value="<?= isset($container) ? $container->sku : null ?>" placeholder="Container Code/SKU" required>
                     </div>
@@ -82,7 +92,6 @@
                         </select>
                     </div>
                 </div>
-
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Brand</label>
