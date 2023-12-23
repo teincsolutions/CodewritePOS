@@ -29,11 +29,14 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 col-12">
+                <div id="related-product" class="col-lg-3 col-sm-6 col-12 <?= isset($container->product) ? '' : 'd-none' ?>">
                     <div class="form-group">
                         <label>Related Product</label>
                         <select class="select2-product" name="product_id" required>
                             <option value=""></option>
+                            <?php if ($container && $container->product) : ?>
+                                <option value="<?= $container->product_id ?>" selected><?= $container->product->sku; ?> <?= $container->product->name; ?> (<?= $container->product->unit->label; ?>)</option>
+                            <?php endif ?>
                         </select>
                     </div>
                 </div>
@@ -77,12 +80,6 @@
                         </div>
                     <?php endif ?>
 
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Min. Quantity</label>
-                            <input type="number" name="min_qty" class="form-control" value="<?= isset($container) ? $container->min_qty : 10 ?>" placeholder="Minimum quantity">
-                        </div>
-                    </div>
                 <?php endif ?>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
@@ -147,22 +144,7 @@
                         <input type="number" name="unit_qty" class="form-control" value="<?= isset($container) ? $container->unit_qty : 1 ?>" placeholder="Unit quantity">
                     </div>
                 </div>
-                <?php if (setting('App.UseExpiration') === 'yes') : ?>
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Expiration Date</label>
-                            <input type="date" class="form-control" name="expiration" value="<?= isset($container) ? $container->expiration : null ?>">
-                        </div>
-                    </div>
-                <?php endif ?>
-                <?php if (setting('App.UsePurchaseDiscount') === 'yes') : ?>
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Purchase Discount</label>
-                            <input type="number" name="pdiscount" step="any" class="form-control" value="<?= isset($container) ? $container->pdiscount : "0.00" ?>" placeholder="Purchase Discount">
-                        </div>
-                    </div>
-                <?php endif ?>
+
                 <?php if (setting('App.ContainerDiffForStore') === 'yes') : ?>
                     <div class="col-lg-12">
                         <?php foreach ($stores as $key => $row) : ?>

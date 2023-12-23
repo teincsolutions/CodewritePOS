@@ -79,7 +79,6 @@
                             <th>
                             </th>
                             <th>Container Name</th>
-                            <th>Desc</th>
                             <th>Barcode</th>
                             <th>SKU</th>
                             <th>Brand</th>

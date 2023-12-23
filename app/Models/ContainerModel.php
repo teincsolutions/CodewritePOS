@@ -19,6 +19,7 @@ class ContainerModel extends Model
         'barcode',
         'sku',
         'brand_id',
+        'product_id',
         'category_id',
         'unit_cost',
         'unit_price',
@@ -124,11 +125,14 @@ class ContainerModel extends Model
             $catModel = new CategoryModel();
             $unitModel = new UnitModel();
             $taxModel = new TaxModel();
+            $productModel = new ProductModel();
+
             if ($model['singleton']) {
                 $model['data']->user = $userModel->where('id', $model['data']->user_id)->first();
                 $model['data']->brand = $brandModel->where('id', $model['data']->brand_id)->first();
                 $model['data']->category = $catModel->where('id', $model['data']->category_id)->first();
                 $model['data']->unit = $unitModel->where('id', $model['data']->unit_id)->first();
+                $model['data']->product = $productModel->where('id', $model['data']->product_id)->first();
                 $model['data']->tax = $taxModel->where('id', $model['data']->tax_id)->first();
             } else {
                 foreach ($model['data'] as $key => $row) {

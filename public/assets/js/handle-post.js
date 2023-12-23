@@ -101,9 +101,9 @@ $(".select2-ctype").select2({
   allowClear: true,
 })
   .on("select2:select select2:unselect", (e) => {
-    let type = $(this).val();
-    if (type === 'product') $(".select2-product").show();
-    else $(".select2-product").hide();
+    let type =$(".select2-ctype").val();
+    if (type === 'product') $("#related-product").removeClass('d-none');
+    else $("#related-product").addClass('d-none');
   });
 
 $(".select2-product")
