@@ -95,3 +95,9 @@ $(".select2-store").select2({
 $(".select2-tax").on("change", (e) => {
   $("[name='tax']").val($(this).data("rate"));
 });
+
+$(".select2-ctype").select2({
+  placeholder: "Choose a container type",
+  allowClear: true,
+});
+
