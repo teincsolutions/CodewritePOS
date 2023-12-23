@@ -29,12 +29,12 @@
                         </select>
                     </div>
                 </div>
-                <div id="related-product" class="col-lg-3 col-sm-6 col-12 <?= isset($container->product) ? '' : 'd-none' ?>">
+                <div id="related-product" class="col-lg-3 col-sm-6 col-12 <?= isset($container) ? (isset($container->product) ? '' : 'd-none') : '' ?>">
                     <div class="form-group">
                         <label>Related Product</label>
                         <select class="select2-product" name="product_id" required>
                             <option value=""></option>
-                            <?php if ($container && $container->product) : ?>
+                            <?php if (isset($container) && isset($container->product)) : ?>
                                 <option value="<?= $container->product_id ?>" selected><?= $container->product->sku; ?> <?= $container->product->name; ?> (<?= $container->product->unit->label; ?>)</option>
                             <?php endif ?>
                         </select>
