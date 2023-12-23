@@ -47,6 +47,13 @@ class CreateContainersTable extends Migration
                 'null' => true,
                 'default' => null,
             ],
+            'product_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'       => true,
+                'null' => true,
+                'default' => null,
+            ],
             'category_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,
@@ -134,6 +141,7 @@ class CreateContainersTable extends Migration
         $forge->addPrimaryKey('id');
         $forge->addForeignKey('user_id', 'users', 'id', 'RESTRICT', 'RESTRICT', 'fk_container_user_id');
         $forge->addForeignKey('brand_id', 'brands', 'id', 'RESTRICT', 'RESTRICT', 'fk_container_brand_id');
+        $forge->addForeignKey('product_id', 'products', 'id', 'SET NULL', 'SET NULL', 'fk_container_product_id');
         $forge->addForeignKey('category_id', 'categories', 'id', 'RESTRICT', 'RESTRICT', 'fk_container_cateogry_id');
         $forge->addForeignKey('unit_id', 'units', 'id', 'RESTRICT', 'RESTRICT', 'fk_container_unit_id');
         $forge->addForeignKey('tax_id', 'taxes', 'id', 'RESTRICT', 'RESTRICT', 'fk_container_tax_id');

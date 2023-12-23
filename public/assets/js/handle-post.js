@@ -99,5 +99,23 @@ $(".select2-tax").on("change", (e) => {
 $(".select2-ctype").select2({
   placeholder: "Choose a container type",
   allowClear: true,
-});
+})
+  .on("select2:select select2:unselect", (e) => {
+    let type = $(this).val();
+    if (type === 'product') $(".select2-product").show();
+    else $(".select2-product").hide();
+  });
 
+$(".select2-product")
+  .select2({
+    placeholder: "Search a product",
+    allowClear: true,
+    ajax: {
+      url: `${baseUrl}products/select2`,
+      dataType: "json",
+      data: function (params) {
+        params.filter = {};
+        return params;
+      },
+    },
+  });

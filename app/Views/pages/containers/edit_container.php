@@ -7,7 +7,8 @@
             <h6>Create new container</h6>
         </div>
         <div class="page-btn">
-            <a href="<?= site_url('containers') ?>" class="btn btn-added"><i class="fa fa-arrow-left me-2"></i>List Container</a>
+            <a href="<?= site_url('containers') ?>" class="btn btn-added"><i class="fa fa-arrow-left me-2"></i>List
+                Container</a>
         </div>
     </div>
 
@@ -21,9 +22,18 @@
                     <div class="form-group">
                         <label>Container Type</label>
                         <select class="select2-ctype" name="type" required>
-                            <option value="product" <?= isset($container) ? ('product' === $container->type ? 'selected' : '') : null ?>>Product Container</option>
-                            <option value="brand" <?= isset($container) ? ('brand' === $container->type ? 'selected' : '') : null ?>>Brand Container</option>
-
+                            <option value="product" <?= isset($container) ? ('product' === $container->type ? 'selected' : '') : null ?>>
+                                Product Container</option>
+                            <option value="brand" <?= isset($container) ? ('brand' === $container->type ? 'selected' : '') : null ?>>Brand
+                                Container</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Related Product</label>
+                        <select class="select2-product" name="product_id" required>
+                            <option value=""></option>
                         </select>
                     </div>
                 </div>
@@ -82,7 +92,8 @@
                             <?php
                             if (isset($categories) && isset($container))
                                 foreach ($categories as $row) { ?>
-                                <option value="<?= $row->id ?>" <?= $row->id === $container->category_id ? 'selected' : '' ?>><?= $row->name; ?></option>
+                                <option value="<?= $row->id ?>" <?= $row->id === $container->category_id ? 'selected' : '' ?>><?= $row->name; ?>
+                                </option>
                                 <?php }
                             else if (isset($categories)) {
                                 foreach ($categories as $row) { ?>
@@ -100,7 +111,8 @@
                             <?php
                             if (isset($brands) && isset($container))
                                 foreach ($brands as $row) { ?>
-                                <option value="<?= $row->id ?>" <?= $row->id === $container->brand_id ? 'selected' : '' ?>><?= $row->name; ?></option>
+                                <option value="<?= $row->id ?>" <?= $row->id === $container->brand_id ? 'selected' : '' ?>>
+                                    <?= $row->name; ?></option>
                                 <?php }
                             else if (isset($brands)) {
                                 foreach ($brands as $row) { ?>
@@ -118,7 +130,8 @@
                             <?php
                             if (isset($units) && isset($container))
                                 foreach ($units as $row) { ?>
-                                <option value="<?= $row->id ?>" <?= $row->id === $container->unit_id ? 'selected' : '' ?>><?= $row->label; ?></option>
+                                <option value="<?= $row->id ?>" <?= $row->id === $container->unit_id ? 'selected' : '' ?>>
+                                    <?= $row->label; ?></option>
                                 <?php }
                             else if (isset($units)) {
                                 foreach ($units as $row) { ?>
@@ -223,7 +236,8 @@
                             <?php
                             if (isset($taxes) && isset($container))
                                 foreach ($taxes as $row) { ?>
-                                <option value="<?= $row->id ?>" <?= $row->id == $container->tax_id ? 'selected' : '' ?>><?= $row->label; ?></option>
+                                <option value="<?= $row->id ?>" <?= $row->id == $container->tax_id ? 'selected' : '' ?>>
+                                    <?= $row->label; ?></option>
                                 <?php }
                             else if (isset($taxes)) {
                                 foreach ($taxes as $row) { ?>
