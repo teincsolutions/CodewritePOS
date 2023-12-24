@@ -67,7 +67,6 @@ $(function () {
         },
       },
       { data: "name", name: "containers.name" },
-      { data: "description", name: "containers.description" },
       { data: "barcode", name: "containers.barcode" },
       { data: "sku", name: "containers.sku" },
       {

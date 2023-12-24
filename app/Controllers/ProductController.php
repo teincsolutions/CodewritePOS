@@ -278,6 +278,8 @@ class ProductController extends BaseController
         $builder->groupBy('products.id');
         if (isset($inputs['exclude']))
             $builder->whereNotIn('products.id', $inputs['exclude']);
+        
+        $where = "";
         if (isset($inputs['store_id']))
             $where = " AND stocks.store_id =" . $inputs['store_id'];
 

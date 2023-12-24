@@ -19,6 +19,28 @@
             <div class="row">
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
+                        <label>Container Type</label>
+                        <select class="select2-ctype" name="type" required>
+                            <option value="product" <?= isset($container) ? ('product' === $container->type ? 'selected' : '') : null ?>>
+                                Product Container</option>
+                            <option value="brand" <?= isset($container) ? ('brand' === $container->type ? 'selected' : '') : null ?>>Brand
+                                Container</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="related-product" class="col-lg-3 col-sm-6 col-12 <?= isset($container) ? (isset($container->product) ? '' : 'd-none') : '' ?>">
+                    <div class="form-group">
+                        <label>Related Product</label>
+                        <select class="select2-product" name="product_id" required>
+                            <option value=""></option>
+                            <?php if (isset($container) && isset($container->product)) : ?>
+                                <option value="<?= $container->product_id ?>" selected><?= $container->product->sku; ?> <?= $container->product->name; ?> (<?= $container->product->unit->label; ?>)</option>
+                            <?php endif ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
                         <label>Container Code/SKU</label>
                         <input type="text" name="sku" value="<?= isset($container) ? $container->sku : null ?>" placeholder="Container Code/SKU" required>
                     </div>
@@ -57,12 +79,6 @@
                         </div>
                     <?php endif ?>
 
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Min. Quantity</label>
-                            <input type="number" name="min_qty" class="form-control" value="<?= isset($container) ? $container->min_qty : 10 ?>" placeholder="Minimum quantity">
-                        </div>
-                    </div>
                 <?php endif ?>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
@@ -72,7 +88,8 @@
                             <?php
                             if (isset($categories) && isset($container))
                                 foreach ($categories as $row) { ?>
-                                <option value="<?= $row->id ?>" <?= $row->id === $container->category_id ? 'selected' : '' ?>><?= $row->name; ?></option>
+                                <option value="<?= $row->id ?>" <?= $row->id === $container->category_id ? 'selected' : '' ?>><?= $row->name; ?>
+                                </option>
                                 <?php }
                             else if (isset($categories)) {
                                 foreach ($categories as $row) { ?>
@@ -82,7 +99,6 @@
                         </select>
                     </div>
                 </div>
-
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Brand</label>
@@ -91,7 +107,8 @@
                             <?php
                             if (isset($brands) && isset($container))
                                 foreach ($brands as $row) { ?>
-                                <option value="<?= $row->id ?>" <?= $row->id === $container->brand_id ? 'selected' : '' ?>><?= $row->name; ?></option>
+                                <option value="<?= $row->id ?>" <?= $row->id === $container->brand_id ? 'selected' : '' ?>>
+                                    <?= $row->name; ?></option>
                                 <?php }
                             else if (isset($brands)) {
                                 foreach ($brands as $row) { ?>
@@ -109,7 +126,8 @@
                             <?php
                             if (isset($units) && isset($container))
                                 foreach ($units as $row) { ?>
-                                <option value="<?= $row->id ?>" <?= $row->id === $container->unit_id ? 'selected' : '' ?>><?= $row->label; ?></option>
+                                <option value="<?= $row->id ?>" <?= $row->id === $container->unit_id ? 'selected' : '' ?>>
+                                    <?= $row->label; ?></option>
                                 <?php }
                             else if (isset($units)) {
                                 foreach ($units as $row) { ?>
@@ -125,22 +143,6 @@
                         <input type="number" name="unit_qty" class="form-control" value="<?= isset($container) ? $container->unit_qty : 1 ?>" placeholder="Unit quantity">
                     </div>
                 </div>
-                <?php if (setting('App.UseExpiration') === 'yes') : ?>
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Expiration Date</label>
-                            <input type="date" class="form-control" name="expiration" value="<?= isset($container) ? $container->expiration : null ?>">
-                        </div>
-                    </div>
-                <?php endif ?>
-                <?php if (setting('App.UsePurchaseDiscount') === 'yes') : ?>
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Purchase Discount</label>
-                            <input type="number" name="pdiscount" step="any" class="form-control" value="<?= isset($container) ? $container->pdiscount : "0.00" ?>" placeholder="Purchase Discount">
-                        </div>
-                    </div>
-                <?php endif ?>
                 <?php if (setting('App.ContainerDiffForStore') === 'yes') : ?>
                     <div class="col-lg-12">
                         <?php foreach ($stores as $key => $row) : ?>
@@ -214,7 +216,8 @@
                             <?php
                             if (isset($taxes) && isset($container))
                                 foreach ($taxes as $row) { ?>
-                                <option value="<?= $row->id ?>" <?= $row->id == $container->tax_id ? 'selected' : '' ?>><?= $row->label; ?></option>
+                                <option value="<?= $row->id ?>" <?= $row->id == $container->tax_id ? 'selected' : '' ?>>
+                                    <?= $row->label; ?></option>
                                 <?php }
                             else if (isset($taxes)) {
                                 foreach ($taxes as $row) { ?>
