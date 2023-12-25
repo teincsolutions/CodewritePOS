@@ -11,19 +11,12 @@
         <?= csrf_field() ?>
         <input id="order-status" type="hidden" name="order_status" value="completed">
         <input id="payment-status" type="hidden" name="payment_status" value="paid">
-        <input type="hidden" name="store_id" value="<?= isset($sales) ? $sales->store_id : '' ?>">
-        <input id="sales-total" type="hidden" name="total_amount" value="<?= isset($sales) ? $sales->total_amount : 0.00 ?>">
+        <input type="hidden" name="store_id" value="<?= isset($receiving) ? $receiving->store_id : '' ?>">
+        <input id="sales-total" type="hidden" name="total_amount" value="<?= isset($receiving) ? $receiving->total_amount : 0.00 ?>">
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <?php if (isset($error)) : ?>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert"><?= $error ?>
-                            <a href="<?= site_url('sales/pos') ?>" type="button" class="btn-close" aria-label="Close"></a>
-                        </div>
-                    <?php endif; ?>
-                </div>
-                <div class="row">
-                    <div class="col-lg-4 col-sm-6 col-12"  style="overflow-x: auto;">
+                    <div class="col-lg-4 col-sm-6 col-12" style="overflow-x: auto;">
                         <div class="form-group">
                             <label>Customer</label>
                             <select name="customer_id" class="select2-customer">
@@ -38,7 +31,7 @@
                                 <?php
                                 if (isset($stores))
                                     foreach ($stores as $row) { ?>
-                                    <option value="<?= $row->id ?>" <?= isset($sales) ? ($row->id === $sales->store_id ? 'selected' : '') : ($row->id === $settings->get('App.DefaultStore', $context) ? 'selected' : '') ?>>
+                                    <option value="<?= $row->id ?>" <?= isset($receiving) ? ($row->id === $receiving->store_id ? 'selected' : '') : ($row->id === $settings->get('App.DefaultStore', $context) ? 'selected' : '') ?>>
                                         <?= $row->name; ?><?= $row->location ? "($row->location)" : null; ?>
                                     </option>
                                 <?php } ?>
@@ -96,7 +89,7 @@
                         <div class="form-group">
                             <label>Order Tax</label>
                             <div class="input-group">
-                                <input type="text" name="tax" value="<?= isset($sales) ? $sales->tax : null ?>" class="form-control" placeholder="Sales taxes" readonly>
+                                <input type="text" name="tax" value="<?= isset($receiving) ? $receiving->tax : null ?>" class="form-control" placeholder="Sales taxes" readonly>
                                 <span class="input-group-text">%</span>
                             </div>
                         </div>
@@ -105,7 +98,7 @@
                         <div class="form-group">
                             <label>Customer Discount</label>
                             <div class="input-group">
-                                <input onkeyup="updateTotals()" type="number" name="discount" value="<?= isset($sales) ? $sales->discount : null ?>" class="form-control addon-inline" placeholder="Sales discount" readonly>
+                                <input onkeyup="updateTotals()" type="number" name="discount" value="<?= isset($receiving) ? $receiving->discount : null ?>" class="form-control addon-inline" placeholder="Sales discount" readonly>
                                 <span class="input-group-text">%</span>
                             </div>
                         </div>
@@ -113,13 +106,13 @@
                     <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Shipping</label>
-                            <input onkeyup="updateTotals()" type="number" name="shipping" value="<?= isset($sales) ? $sales->shipping : null ?>" class="form-control" placeholder="Shipping amount">
+                            <input onkeyup="updateTotals()" type="number" name="shipping" value="<?= isset($receiving) ? $receiving->shipping : null ?>" class="form-control" placeholder="Shipping amount">
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
-                            <label>Change</label>
-                            <input type="number" name="paid" id="paid" class="form-control" placeholder="Change Amount">
+                            <label>Paid</label>
+                            <input type="number" name="paid" id="paid" class="form-control" placeholder="Change Amount" readonly>
                         </div>
                     </div>
                 </div>
@@ -151,15 +144,14 @@
                                     <h4>A/c Balance </h4>
                                     <h5 class="customer-balance">GHS 0.00</h5>
                                 </li>
-                                <li class="total-value">
-                                    <h4>Change/Due</h4>
-                                    <h5 class="dueTotal">GHS 0.00</h5>
-                                </li>
                             </ul>
+                            <button onclick="$('.post-form').submit()" type="button" class="btn btn-success d-flex justify-content-between w-100 text-left me-2 mt-3">
+                                <h5>Checkout</h5>
+                                <h5 class="grandTotal">GHS 0.00</h5>
+                            </button>
                         </div>
                     </div>
-                    <div class="col-lg-12">
-                        <button onclick="$('.post-form').submit()" type="button" class="btn btn-submit me-2">Submit Return</button>
+                    <div class="col-lg-12 text-right">
                     </div>
                 </div>
             </div>
