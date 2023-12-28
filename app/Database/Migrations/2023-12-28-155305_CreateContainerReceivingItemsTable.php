@@ -5,8 +5,9 @@ namespace App\Database\Migrations;
 use CodeIgniter\Database\Migration;
 use Config\Database;
 
-class CreateContainerReturnItemsTable extends Migration
+class CreateContainerReceivingItemsTable extends Migration
 {
+   
     public function up()
     {
         $forge = Database::forge();
@@ -28,7 +29,7 @@ class CreateContainerReturnItemsTable extends Migration
                 'constraint' => 11,
                 'unsigned'  => true,
             ],
-            'container_return_id' => [
+            'container_receiving_id' => [
                 'type'       => 'BIGINT',
                 'constraint' => 18,
                 'unsigned'  => true,
@@ -61,17 +62,17 @@ class CreateContainerReturnItemsTable extends Migration
 
         $forge->addField($fields);
         $forge->addPrimaryKey('id');
-        $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_container_returns_items_store_id');
-        $forge->addForeignKey('container_return_id', 'container_returns', 'id', 'CASCADE', 'CASCADE', 'fk_container_returns_items_container_return_id');
-        $forge->addForeignKey('container_id', 'containers', 'id', 'RESTRICT', 'RESTRICT', 'fk_container_returns_items_container_id');
+        $forge->addForeignKey('store_id', 'stores', 'id', 'CASCADE', 'CASCADE', 'fk_container_receivings_items_store_id');
+        $forge->addForeignKey('container_receiving_id', 'container_receivings', 'id', 'CASCADE', 'CASCADE', 'fk_container_receivings_items_container_receiving_id');
+        $forge->addForeignKey('container_id', 'containers', 'id', 'RESTRICT', 'RESTRICT', 'fk_container_receivings_items_container_id');
 
         $attributes = ['ENGINE' => 'InnoDB'];
-        $forge->createTable('container_returns_items', true, $attributes);
+        $forge->createTable('container_receivings_items', true, $attributes);
     }
 
     public function down()
     {
         $forge = Database::forge();
-        $forge->dropTable('container_returns_items', true);
+        $forge->dropTable('container_receivings_items', true);
     }
 }

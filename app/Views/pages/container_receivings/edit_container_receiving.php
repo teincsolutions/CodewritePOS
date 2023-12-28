@@ -7,11 +7,11 @@
             <h6>Add/Update Container Receivings</h6>
         </div>
     </div>
-    <form class="post-form" action="<?= site_url('sales/returns') ?>" method="post">
+    <form class="post-form" action="<?= site_url('containers/receivings') ?>" method="post">
         <?= csrf_field() ?>
         <input id="order-status" type="hidden" name="order_status" value="completed">
-        <input id="payment-status" type="hidden" name="payment_status" value="paid">
-        <input type="hidden" name="store_id" value="<?= isset($receiving) ? $receiving->store_id : '' ?>">
+        <input id="payment-status" type="hidden" name="payment_status" value="pending">
+        <input id="sales-type" type="hidden" name="type" value="walk-in-customer">
         <input id="sales-total" type="hidden" name="total_amount" value="<?= isset($receiving) ? $receiving->total_amount : 0.00 ?>">
         <div class="card">
             <div class="card-body">
@@ -74,8 +74,6 @@
                                     <th>Product Name</th>
                                     <th>QTY</th>
                                     <th>Price</th>
-                                    <th>Discount</th>
-                                    <th>Tax</th>
                                     <th>Subtotal</th>
                                     <th></th>
                                 </tr>
@@ -85,34 +83,21 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="offset-lg-6"></div>
                     <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
-                            <label>Order Tax</label>
-                            <div class="input-group">
-                                <input type="text" name="tax" value="<?= isset($receiving) ? $receiving->tax : null ?>" class="form-control" placeholder="Sales taxes" readonly>
-                                <span class="input-group-text">%</span>
-                            </div>
+                            <label>Settlement Type</label>
+                            <select name="settlement" class="form-control select2-settlement" required>
+                                <option value="container">Containers</option>
+                                <option value="cash">Cash</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Customer Discount</label>
-                            <div class="input-group">
-                                <input onkeyup="updateTotals()" type="number" name="discount" value="<?= isset($receiving) ? $receiving->discount : null ?>" class="form-control addon-inline" placeholder="Sales discount" readonly>
-                                <span class="input-group-text">%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Shipping</label>
-                            <input onkeyup="updateTotals()" type="number" name="shipping" value="<?= isset($receiving) ? $receiving->shipping : null ?>" class="form-control" placeholder="Shipping amount">
-                        </div>
-                    </div>
+
                     <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Paid</label>
-                            <input type="number" name="paid" id="paid" class="form-control" placeholder="Change Amount" readonly>
+                            <input type="number" name="paid" id="paid" value="0" class="form-control" placeholder="Paid Amount" readonly>
                         </div>
                     </div>
                 </div>
@@ -123,18 +108,6 @@
                                 <li>
                                     <h4>SubTotal </h4>
                                     <h5 class="subTotal">GHS 0.00</h5>
-                                </li>
-                                <li>
-                                    <h4>Total Shipping </h4>
-                                    <h5 class="shippingTotal">GHS 0.00</h5>
-                                </li>
-                                <li>
-                                    <h4>Total Tax</h4>
-                                    <h5 class="orderTaxes">GHS 0.0</h5>
-                                </li>
-                                <li>
-                                    <h4>Total Discount</h4>
-                                    <h5 class="discountTotal">GHS 0.00</h5>
                                 </li>
                                 <li class="total-value">
                                     <h4>Grand Total </h4>

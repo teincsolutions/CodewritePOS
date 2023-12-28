@@ -57,7 +57,7 @@
                         </div>
                         <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
-                                <select name="sales_returns.store_id" class="select2-store" style="overflow-x: auto;">
+                                <select name="container_receivings.store_id" class="select2-store" style="overflow-x: auto;">
                                     <?php
                                     if (isset($stores))
                                         foreach ($stores as $row) { ?>
@@ -86,12 +86,7 @@
                         </div>
                         <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
-                                <input type="text" name="sales.invoice" placeholder="Enter Sales Ref. No" value="">
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 col-12">
-                            <div class="form-group">
-                                <input type="text" name="sales_returns.invoice" placeholder="Enter Returns Ref. No" value="">
+                                <input type="text" name="container_receivings.invoice" placeholder="Enter Returns Ref. No" value="">
                             </div>
                         </div>
                  
@@ -114,10 +109,7 @@
                             <th>Customer Name</th>
                             <th>Reference</th>
                             <th>Status</th>
-                            <th>Payment</th>
                             <th>Total</th>
-                            <th>Paid</th>
-                            <th>Due</th>
                             <th>Biller</th>
                             <th class="text-center">Action</th>
                         </tr>
@@ -132,5 +124,5 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/sales-returns.js?v=7') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/container-receivings.js?v=1') ?>"></script>
 <?= $this->endSection() ?>

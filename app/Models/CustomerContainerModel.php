@@ -13,7 +13,12 @@ class CustomerContainerModel extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+        'customer_id',
+        'store_id',
+        'container_id',
+        'instock',
+    ];
 
     // Dates
     protected $useTimestamps = false;

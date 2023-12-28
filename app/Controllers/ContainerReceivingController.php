@@ -6,7 +6,9 @@ use App\Controllers\BaseController;
 use App\Models\ContainerReceivingItemModel;
 use App\Models\ContainerReceivingModel;
 use App\Models\ContainerStockModel;
+use App\Models\CustomerContainerModel;
 use App\Models\CustomerLedgerModel;
+use App\Models\CustomerModel;
 use App\Models\SalesModel;
 use App\Models\UserModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
@@ -21,7 +23,7 @@ class ContainerReceivingController extends BaseController
      */
     public function index()
     {
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Container Receivings List',
@@ -43,7 +45,7 @@ class ContainerReceivingController extends BaseController
         $saleModel = new SalesModel();
         $lastItem = $model->orderBy('id', 'desc')->first();
         $lastId = $lastItem ? $lastItem->id : 1;
-        $stores =(new UserModel())->getMyStores();
+        $stores = (new UserModel())->getMyStores();
 
         $data = [
             'title' => 'Create Container Receivings',
@@ -98,6 +100,8 @@ class ContainerReceivingController extends BaseController
         $returnItemModel = new ContainerReceivingItemModel();
         $stockModel = new ContainerStockModel();
         $ledger = new CustomerLedgerModel();
+        $saleModel = new SalesModel();
+        $custContainerModel = new CustomerContainerModel();
 
         $inputs = $this->request->getVar();
         if (auth()->user())
@@ -109,7 +113,7 @@ class ContainerReceivingController extends BaseController
             [
                 'status' => false,
                 'data' => null,
-                'message' => "No product selected!",
+                'message' => "No container selected!",
                 'input' => $inputs,
             ]
         );
@@ -132,15 +136,13 @@ class ContainerReceivingController extends BaseController
                 $id = $model->getInsertID();
                 $returnItems = [];
                 $builder = $stockModel->builder();
+                $cbuilder = $custContainerModel->builder();
+
                 foreach ($items as $k => $row) {
                     $items[$k]['container_receiving_id'] = $id;
-
-                    if (is_null($items[$k]['tax_id']) || empty($items[$k]['tax_id']))
-                        $items[$k]['tax_id'] = null;
-
                     array_push($returnItems, $items[$k]);
                     $stockWhere = [
-                        'product_id' => $items[$k]['product_id'],
+                        'container_id' => $items[$k]['container_id'],
                         'store_id' => $items[$k]['store_id']
                     ];
 
@@ -149,32 +151,49 @@ class ContainerReceivingController extends BaseController
                             ->update(null, $stockWhere);
                     } else {
                         $builder->insert([
-                            'product_id' => $items[$k]['product_id'],
+                            'container_id' => $items[$k]['container_id'],
                             'store_id' =>  $items[$k]['store_id'],
                             'instock' => $items[$k]['qty']
                         ]);
                     }
+
+                    // receiving containers for customers
+                    if ($inputs['type'] === 'customer') {
+                        $custContWhere = array_merge($stockWhere, [
+                            'container_id' => $items[$k]['container_id'],
+                            'store_id' => $items[$k]['store_id'],
+                            'customer_id' => $inputs['customer_id']
+                        ]);
+                        if ($cbuilder->where($custContWhere)->get()->getRowObject()) {
+                            $cbuilder->set('instock', '(instock + ' . $items[$k]['qty'] . ')', false)
+                                ->update(null, $custContWhere);
+                        } else {
+                            $cbuilder->insert([
+                                'container_id' => $items[$k]['container_id'],
+                                'store_id' =>  $items[$k]['store_id'],
+                                'customer_id' => $inputs['customer_id'],
+                                'instock' => $items[$k]['qty']
+                            ]);
+                        }
+                    }
                 }
                 $returnItemModel->insertBatch($returnItems);
-                if ($inputs['customer_id']) {
+                if ($inputs['settlement'] === 'cash') {
+                    $data = array_merge($inputs, ['sales_date' => $inputs['return_date']]);
+                    $saleModel->save($data);
+
                     $data = [
                         'tdate' => $inputs['return_date'],
                         'customer_id' => $inputs['customer_id'],
-                        'sale_id' => $inputs['sale_id'],
+                        'sale_id' => $saleModel->getInsertID(),
                         'store_id' => $inputs['store_id'],
-                        'container_receiving_id' => $id,
                         'payment_type' => 'cash',
-                        'ledger_type' => 'returns',
-                        'credit' => 0,
-                        'debit' => $inputs['paid'],
-                        'user_id' => isset($inputs['user_id']) ? $inputs['user_id'] : null,
+                        'ledger_type' => 'sales',
+                        'credit' => $inputs['paid'],
+                        'debit' => 0,
+                        'user_id' => $inputs['user_id'],
                     ];
-                    if($inputs['paid'] > 0)  $ledger->save($data);
-                    $saleModel = new SalesModel();
-                    $saleModel->updatePaymentStatus($inputs['sale_id']);
-                    $data['credit'] = $inputs['total_amount'];
-                    $data['debit'] = 0;
-                    $ledger->makePayment($data);
+                    if ($inputs['paid'] > 0)  $ledger->save($data);
                 }
             }
             $this->db->transComplete();
@@ -197,12 +216,13 @@ class ContainerReceivingController extends BaseController
         return $this->response->setJSON($res);
     }
 
-       /**
+    /**
      * return json for receipt
      */
-    public function print($id) : Response {
+    public function print($id): Response
+    {
         $model = new ContainerReceivingModel();
-        $return =$model->where('id', $id)->first();
+        $return = $model->where('id', $id)->first();
         $res = [
             'status' => false,
             'data' => null,
@@ -213,7 +233,7 @@ class ContainerReceivingController extends BaseController
                 'status' => true,
                 'data' => $return,
                 'receipt' =>  view('pages/container_receivings/pos_receipt', ['returns' => $return]),
-                 'message' => "Invoice found!",
+                'message' => "Invoice found!",
             ]);
         }
         return $this->response->setJSON($res);
@@ -229,7 +249,6 @@ class ContainerReceivingController extends BaseController
         $inputs = $this->request->getVar();
         $model = new ContainerReceivingModel();
         $model->select('container_receivings.*');
-        $model->join('sales', 'sales.id=container_receivings.sale_id');
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
@@ -246,7 +265,7 @@ class ContainerReceivingController extends BaseController
             ->selectSum('container_receivings_items.qty', 'qty')
             ->join('container_receivings_items', 'container_receivings_items.container_receiving_id=container_receivings.id')
             ->join('sales', 'sales.id=container_receivings.sale_id')
-            ->where('product_id', $inputs['product_id'] ?? '')
+            ->where('container_id', $inputs['container_id'] ?? '')
             ->where('container_receivings.order_status', 'completed')
             ->groupBy('container_receivings.id');
 

@@ -224,7 +224,9 @@ $routes->get('sales/returns/datatable', [SalesReturnController::class, 'datatabl
 $routes->get('sales/stocks/datatable', [SalesController::class, 'stock_report_datatable']);
 $routes->get('sales/returns/stocks/datatable', [SalesReturnController::class, 'stock_report_datatable']);
 $routes->get('containers/returns/stocks/datatable', [ContainerReturnController::class, 'stock_report_datatable']);
-$routes->get('containers/recevings/stocks/datatable', [ContainerReceivingController::class, 'stock_report_datatable']);
+$routes->get('containers/receivings/stocks/datatable', [ContainerReceivingController::class, 'stock_report_datatable']);
+$routes->get('containers/returns/datatable', [ContainerReturnController::class, 'datatable']);
+$routes->get('containers/receivings/datatable', [ContainerReceivingController::class, 'datatable']);
 
 $routes->get('stores/datatable', [StoreController::class, 'datatable']);
 $routes->get('suppliers/datatable', [SupplierController::class, 'datatable']);
@@ -286,7 +288,7 @@ $routes->post('sales/hold', [SalesController::class, 'hold']);
 $routes->post('sales/returns', [SalesReturnController::class, 'save']);
 $routes->post('stores', [StoreController::class, 'save']);
 $routes->post('containers/returns', [ContainerReturnController::class, 'save']);
-$routes->post('containers/recevings', [ContainerReceivingController::class, 'save']);
+$routes->post('containers/receivings', [ContainerReceivingController::class, 'save']);
 $routes->post('suppliers', [SupplierController::class, 'save']);
 $routes->post('units', [UnitController::class, 'save']);
 $routes->post('cashup', [StoreLedgerController::class, 'save']);

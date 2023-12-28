@@ -6,13 +6,21 @@ use CodeIgniter\Model;
 
 class ContainerReceivingItemModel extends Model
 {
-    protected $table            = 'container_receiving_items';
+    protected $table            = 'container_receivings_items';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+        'container_id',
+        'unit_price',
+        'unit_cost',
+        'container_receiving_id',
+        'store_id',
+        'qty',
+        'subtotal'
+    ];
 
     // Dates
     protected $useTimestamps = false;

@@ -12,7 +12,15 @@ class ContainerReturnItemModel extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+        'container_id',
+        'unit_price',
+        'unit_cost',
+        'container_return_id',
+        'store_id',
+        'qty',
+        'subtotal'
+    ];
 
     // Dates
     protected $useTimestamps = false;

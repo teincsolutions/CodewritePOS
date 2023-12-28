@@ -73,7 +73,7 @@ let tableItems = $(".tr-items").DataTable({
 if (initCompleted) updateTotals();
 $("div.toolbar").html(
   "<span class='btn btn-danger clear-all'>Clear all</span>"
-).on("click",".clear-all", function (e) {
+).on("click", ".clear-all", function (e) {
   tableItems.rows().remove().draw();
   saleItemIds = [];
   updateTotals();
@@ -83,75 +83,57 @@ function updateItemRow(row) {
   let row1 = $(row).parents("tr").first();
   (qty = parseFloat(row1.find(".rqty").val())),
     (price = parseFloat(row1.find(".runit_price").val())),
-    (discount = parseFloat(row1.find(".rdiscount").val())),
-    (tax = parseFloat(row1.find(".rtax").val())),
-    (subtotal = qty * price + (tax / 100) * price * qty - qty * discount);
+    (subtotal = qty * price);
   $(".rsubtotal", row1).val(subtotal);
   $("td:eq(3)", row1).html(price.toFixed(2));
-  $("td:eq(4)", row1).html(discount.toFixed(2));
-  $("td:eq(5)", row1).html(tax.toFixed(2));
-  $("td:eq(6)", row1).html(subtotal.toFixed(2));
+  $("td:eq(4)", row1).html(subtotal.toFixed(2));
   tableItems.draw();
 }
 
 function updateTotals() {
-  let discountTotal = 0,
-    discountAmtTotal = 0;
-  (taxTotal = 0),
-    (taxAmtTotal = 0),
-    (amountTotal = 0),
-    (shipping = intVal($("[name='shipping']").val())),
-    (orderDiscount = intVal($("[name='discount']").val())),
-    (orderTax = intVal($("[name='tax']").val()));
+  (amountTotal = 0);
   grandTotal = 0;
   for (let i = 0; i < tableItems.rows().data().length; i++) {
     const row = $(`tr:eq(${i + 1})`, ".tr-items");
     (qty = intVal($(".rqty", row).val())),
       (amountTotal += intVal($(".runit_price", row).val()) * qty),
-      (discountTotal += intVal($(".rdiscount", row).val()) * qty),
-      (taxTotal += intVal($(".rtax", row).val())),
-      (taxAmtTotal +=
-        (intVal($(".rtax", row).val()) / 100) *
-        intVal($(".runit_price", row).val()) *
-        qty),
       (grandTotal += intVal($(".rsubtotal", row).val()));
   }
   $(".subTotal").html("GHS " + grandTotal.toFixed(2));
-  orderDiscountAmt = (orderDiscount / 100) * grandTotal;
-  taxTotal += orderTax;
-  discountTotal += orderDiscountAmt;
-  grandTotal += (orderTax / 100) * grandTotal;
-  taxAmtTotal += (orderTax / 100) * grandTotal;
-  grandTotal += shipping;
-  grandTotal -= discountAmtTotal;
   dueTotal = grandTotal + customerBalance;
 
   $(".grandTotal").html("GHS " + grandTotal.toFixed(2));
   $("#sales-total").val(grandTotal);
-  $(".shippingTotal").html("GHS " + shipping.toFixed(2));
-  $(".discountTotal").html("GHS " + discountTotal.toFixed(2));
-  $(".orderTaxes").html(
-    "GHS " + taxAmtTotal.toFixed(2) + " (" + taxTotal.toFixed(2) + "%)"
-  );
   $(".dueTotal").html(
     "GHS " +
-      (dueTotal < 0
-        ? "(" + Math.abs(dueTotal).toFixed(2) + ")"
-        : dueTotal.toFixed(2))
+    (dueTotal < 0
+      ? "(" + Math.abs(dueTotal).toFixed(2) + ")"
+      : dueTotal.toFixed(2))
   );
-  if (dueTotal > 0) $("#paid").val(dueTotal);
-  else $("#paid").val(0);
 }
 
 function checkout() {
   const type = $("#sales-type"),
     customer = $(".select2-customer");
+  const paymentStatus = $("#payment-status");
+  const paidAmt = parseFloat($("input[name='paid']").val());
+  const settlementType = $(".select2-settlement");
 
   if (customer.val() == "") {
     type.val("walk-in-customer");
+    if (dueTotal > 0 && settlementType.val() === 'cash') {
+      Swal.fire({
+        icon: "error",
+        title: "Due Payment Alert!",
+        text: "Walk in customer cannot owe sales. Add a new customer if not in the list.",
+      });
+      return false;
+    }
+    paymentStatus.val("paid");
   } else {
     type.val("customer");
-    customerBalance = dueTotal;
+    if (grandTotal - paidAmt > 0) paymentStatus.val("due");
+    else paymentStatus.val("paid");
   }
   return true;
 }
@@ -220,14 +202,14 @@ function autocomplete(inp) {
           return;
         } else {
           d.data.forEach((item, i) => {
-            if (saleItemIds.includes(item.sale_item_id) || item.max_qty <= 0)
+            if (saleItemIds.includes(item.container_id))
               return;
 
             b = document.createElement("DIV");
             info = [];
             (item.category ? info.push(item.category.name) : null) ||
               (item.brand ? info.push(item.brand.name) : null);
-            let instock = 0;
+            let instock = 0, storeId = $(".select2-store").val();
 
             if (item.inventory) {
               const stock = item.inventory.filter(
@@ -250,46 +232,24 @@ function autocomplete(inp) {
                                         <td>
                                         </td>
                                         <td class="productimgname">
-                                        ${
-                                          item.image_uri
-                                            ? `<a class="product-img"><img src="${baseUrl}${item.image_uri}" alt="container"></a>`
-                                            : '<a class="p-3"></a>'
-                                        }
-                                            <a target="_blank" href="${baseUrl}containers/${
-                item.id
-              }">${item.name}(${item.unit.label})</a></td>
+                                        ${item.image_uri
+                  ? `<a class="product-img"><img src="${baseUrl}${item.image_uri}" alt="container"></a>`
+                  : '<a class="p-3"></a>'
+                }
+                                            <a target="_blank" href="${baseUrl}containers/${item.id
+                }">${item.name}(${item.unit.label})</a></td>
                                         <td>
                                         <div class="increment-decrement">
                                             <div class="input-groups">
-                                                <input type='hidden' name="items[${prodIndex}][container_id]" value="${
-                item.id
-              }">
-              <input type='hidden' name="items[${prodIndex}][sale_item_id]" value="${
-                item.sale_item_id
-              }">
-                                                <input type="hidden" name="items[${prodIndex}][unit_price]" value="${
-                item.unit_price
-              }" class="runit_price">
-              <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
-                item.unit_cost
-              }" class="runit_cost">
-                                                <input type="hidden" name="items[${prodIndex}][tax_id]" value="${
-                item.tax_id ? item.tax_id : ""
-              }">
-                                                <input type="hidden" name="items[${prodIndex}][store_id]" value="${
-                item.store_id
-              }">
-                                                <input type="hidden" name="items[${prodIndex}][tax]" class="rtax" value="${
-                (item.unit_price * (item.tax ? item.tax.rate : 0)) / 100
-              }">
-                                                <input type="hidden" name="items[${prodIndex}][discount]" class="rdiscount" value="${
-                item?.discount
-              }">
-                                                <input type="hidden" name="items[${prodIndex}][subtotal]" class="rsubtotal" value="${
-                item.unit_price -
-                item?.discount +
-                (item.unit_price * (item.tax ? item.tax.rate : 0.0)) / 100
-              }">
+                                                <input type='hidden' name="items[${prodIndex}][container_id]" value="${item.id
+                }">
+                                                <input type="hidden" name="items[${prodIndex}][unit_price]" value="${item.unit_price
+                }" class="runit_price">
+              <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${item.unit_cost
+                }" class="runit_cost">
+                                                <input type="hidden" name="items[${prodIndex}][store_id]" value="${storeId}">
+                                                <input type="hidden" name="items[${prodIndex}][subtotal]" class="rsubtotal" value="${item.unit_price
+                }">
                                                 <input type="button" value="-" class="button-minus dec button">
                                                 <input onblur="updateItemRow(this)" min=".1" step="any" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field rqty" required>
                                                 <input type="button" value="+" class="button-plus inc button">
@@ -297,28 +257,10 @@ function autocomplete(inp) {
                                         </div>
                                         </td>
                                         <td>${item.unit_price}</td>
-                                        <td data-discount="${
-                                          item?.discount
-                                        }" class="suffix-percent">${
-                item?.discount
-              }</td>
-                                        <td data-tax="${
-                                          item.tax ? item.tax.rate : 0
-                                        }">${parseFloat(
-                (item.unit_price * (item.tax ? item.tax.rate : 0)) / 100
-              ).toFixed(2)}</td>
-                                        <td>${(
-                                          item.unit_price -
-                                          item?.discount +
-                                          (item.unit_price *
-                                            (item.tax ? item.tax.rate : 0.0)) /
-                                            100
-                                        ).toFixed(2)}</td>
-                                        <td><a   href="javascript:void(0);" class="delete-set" data-item-id="${
-                                          item.sale_item_id
-                                        }"><i class="fa text-danger fa-trash"></i></a></td>
+                                        <td>${item.unit_price}</td>
+                                        <td><a   href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
                                     </tr>`;
-              saleItemIds.push(item.sale_item_id);
+              saleItemIds.push(item.container_id);
               tableItems.row.add($(row)).draw();
               tableItems.draw();
               prodIndex++;
@@ -469,7 +411,7 @@ let select2Customer = $(".select2-customer")
         : `GHS ${customerBalance.toFixed(2)}`
     );
     $(".customer").html(data.text);
-    $("input[name='discount']").val(data.discount);
+
     $("#acc-bal").removeClass("d-none");
     updateTotals();
   })
@@ -481,11 +423,24 @@ let select2Customer = $(".select2-customer")
         : `GHS ${customerBalance.toFixed(2)}`
     );
     $(".customer").html("walk-in-customer");
-    $("input[name='discount']").val("");
+
     $("#acc-bal").addClass("d-none");
     updateTotals();
   });
 
 $(".select2-store").select2({
   placeholder: "Seach a store",
+});
+$(".select2-settlement").select2({
+  placeholder: "Select a settlement",
+}).on("select2:select select2:unselect", (e) => {
+
+  if ($(".select2-settlement").val() === 'cash') {
+    $("input[name='paid']").prop('readonly', false);
+    $("input[name='paid']").val('');
+  } else {
+    $("input[name='paid']").prop('readonly', true);
+    $("input[name='paid']").val(0);
+  }
+
 });
