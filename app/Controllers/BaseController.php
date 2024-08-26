@@ -51,9 +51,11 @@ abstract class BaseController extends Controller
     {
         $this->helpers = array_merge($this->helpers, ['setting']);
 
-        // Set the database group based on the subdomain
-        $this->db = \Config\Database::connect($this->getDbGroup($request)??'default');
-
+        $dbConfig = config('Database');
+        $dbConfig->default['database'] = env('database.' . $this->getDbGroup($request) . '.database');
+        $appConfig = config('App');
+        $appConfig->baseUrl =  $request->getServer('HTTP_HOST');
+   
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
