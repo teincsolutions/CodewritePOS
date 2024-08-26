@@ -173,30 +173,29 @@
                         <ul>
                             <?php if (auth()->user()->can('container-receivings.create', 'container-receivings.view')) : ?>
                                 <li class="submenu">
-                                    <a class="<?= getActiveUrl("container/receivings*", "subdrop active") ?>" href="javascript:void(0);">
+                                    <a class="<?= getActiveUrl("containers/receivings*", "subdrop active") ?>" href="javascript:void(0);">
                                         <i data-feather="layers"></i>
                                         <span>Cont. Receivings</span><span class="menu-arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a class="<?= getActiveUrl("container/receivings/create"); ?>" href="<?= site_url('container/receivings/create') ?>">Receive Containers</a></li>
-                                        <li><a class="<?= getActiveUrl("container/receivings"); ?>" href="<?= site_url("container/receivings") ?>">List Receivings</a></li>
+                                        <li><a class="<?= getActiveUrl("containers/receivings/create"); ?>" href="<?= site_url('containers/receivings/create') ?>">Receive Containers</a></li>
+                                        <li><a class="<?= getActiveUrl("containers/receivings"); ?>" href="<?= site_url("containers/receivings") ?>">List Receivings</a></li>
                                     </ul>
                                 </li>
                             <?php endif ?>
 
                             <?php if (auth()->user()->can('container-returns.create', 'container-returns.view')) : ?>
                                 <li class="submenu">
-                                    <a class="<?= getActiveUrl("container/returns*", "subdrop active") ?>" href="javascript:void(0);">
+                                    <a class="<?= getActiveUrl("containers/returns*", "subdrop active") ?>" href="javascript:void(0);">
                                         <i data-feather="corner-up-left"></i>
                                         <span>Rtn Sup. Containers</span><span class="menu-arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a class="<?= getActiveUrl("container/returns/create"); ?>" href="<?= site_url('container/returns/create') ?>">Return Containers</a></li>
-                                        <li><a class="<?= getActiveUrl("container/returns"); ?>" href="<?= site_url("container/returns") ?>">List Returns</a></li>
+                                        <li><a class="<?= getActiveUrl("containers/returns/create"); ?>" href="<?= site_url('containers/returns/create') ?>">Return Containers</a></li>
+                                        <li><a class="<?= getActiveUrl("containers/returns"); ?>" href="<?= site_url("containers/returns") ?>">List Returns</a></li>
                                     </ul>
                                 </li>
                             <?php endif ?>
-<<<<<<< HEAD
                             <?php if (auth()->user()->can('containers.create', 'containers.view', 'container-adjustments.create', 'container-adjustments.view')) : ?>
                                 <li class="submenu">
                                     <a class="<?= getActiveUrl("containers*", "subdrop active") ?>" href="javascript:void(0);">
@@ -222,23 +221,6 @@
                                                 </ul>
                                             </li>
                                         <?php endif ?>
-=======
-                            <?php if (auth()->user()->can('containers.view')) : ?>
-                                <li class="<?= getActiveUrl("containers", "active"); ?>"><a href="<?= site_url('containers') ?>"><i data-feather="box"></i><span>Containers</span></a></li>
-                            <?php endif ?>
-                            <?php if (auth()->user()->can('containers.create')) : ?>
-                                <li class="<?= getActiveUrl("containers/create", "active"); ?>"><a href="<?= site_url('containers/create') ?>"><i data-feather="plus-square"></i><span>Create Container</span></a></li>
-                            <?php endif ?>
-                            <?php if (auth()->user()->can('container-adjustments.create', 'adjustments.view')) : ?>
-                                <li class="submenu">
-                                    <a class="<?= getActiveUrl("container-adjustments*", "subdrop active") ?>" href="javascript:void(0);">
-                                        <i data-feather="align-justify"></i>
-                                        <span>Container Adjust.</span><span class="menu-arrow"></span>
-                                    </a>
-                                    <ul>
-                                        <li><a class="<?= getActiveUrl("container-adjustments/create"); ?>" href="<?= site_url('container-adjustments/create') ?>">Create Adjustment</a></li>
-                                        <li><a class="<?= getActiveUrl("container-adjustments"); ?>" href="<?= site_url("container-adjustments") ?>">List Adjustment</a></li>
->>>>>>> 5b2a478 (update sidebar)
                                     </ul>
                                 </li>
                             <?php endif ?>
