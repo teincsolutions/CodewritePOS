@@ -51,10 +51,6 @@ abstract class BaseController extends Controller
     {
         $this->helpers = array_merge($this->helpers, ['setting']);
 
-        $dbConfig = config('Database');
-        $dbConfig->default['database'] = env('database.' . $this->getDbGroup($request) . '.database');
-        $appConfig = config('App');
-        $appConfig->baseUrl =  $request->getServer('HTTP_HOST');
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
@@ -63,13 +59,4 @@ abstract class BaseController extends Controller
         // E.g.: $this->session = \Config\Services::session();
     }
 
-    protected function getDbGroup(RequestInterface $request)
-    {
-        $host =  $request->getServer('HTTP_HOST');
-        $parts = explode('.', $host);
-
-        if (count($parts) > 2) return $parts[0];
-
-        return null;
-    }
 }
