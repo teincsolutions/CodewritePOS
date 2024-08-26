@@ -5,6 +5,7 @@ namespace App\Controllers;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
+use CodeIgniter\HTTP\Request;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -50,11 +51,24 @@ abstract class BaseController extends Controller
     {
         $this->helpers = array_merge($this->helpers, ['setting']);
 
+        // Set the database group based on the subdomain
+        $this->db = \Config\Database::connect($this->getDbGroup($request)??'default');
+
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
         // Preload any models, libraries, etc, here.
 
         // E.g.: $this->session = \Config\Services::session();
+    }
+
+    protected function getDbGroup(RequestInterface $request)
+    {
+        $host =  $request->getServer('HTTP_HOST');
+        $parts = explode('.', $host);
+
+        if (count($parts) > 2) return $parts[0];
+
+        return null;
     }
 }
