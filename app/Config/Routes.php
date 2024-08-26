@@ -41,6 +41,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'DashboardController::index');
 $routes->get('products/search', 'ProductController::search');
 $routes->get('containers/search', 'ContainerController::search');
+$routes->get('containers/search', 'ContainerController::search');
 $routes->get('products/sales/search', 'ProductController::sale_search');
 $routes->get('products/purchases/search', 'ProductController::purchase_search');
 $routes->group('settings', static function (RouteCollection $routes) {
@@ -97,6 +98,10 @@ $routes->group('print', static function (RouteCollection $routes) {
     $routes->get('container-stocks', [InventoryController::class, 'container_stock_report']);
     $routes->get('container-stocks/container/(:num)', [InventoryController::class, 'view_containter_stock_report']);
     $routes->get('container-stocks/datatable', [InventoryController::class, 'container_stock_report_datatable']);
+    $routes->get('customers/containers/datatable', [CustomerContainerController::class, 'report_datatable']);
+    $routes->get('container-stocks', [InventoryController::class, 'container_stock_report']);
+    $routes->get('container-stocks/container/(:num)', [InventoryController::class, 'view_containter_stock_report']);
+    $routes->get('container-stocks/datatable', [InventoryController::class, 'container_stock_report_datatable']);
 });
 
 //indexs
@@ -137,8 +142,10 @@ $routes->get('closing', [ClosingController::class, 'index'], ['filter' => 'permi
 $routes->get('users/(:num)', [UserController::class, 'show/$1'], ['filter' => 'permission:users.view']);
 $routes->get('adjustments/(:num)', [AdjustmentController::class, 'show/$1'], ['filter' => 'permission:adjustments.view']);
 $routes->get('container-adjustments/(:num)', [ContainerAdjustmentController::class, 'show/$1'], ['filter' => 'permission:container-adjustments.view']);
+$routes->get('container-adjustments/(:num)', [ContainerAdjustmentController::class, 'show/$1'], ['filter' => 'permission:container-adjustments.view']);
 $routes->get('customers/(:num)', [CustomerController::class, 'show/$1'], ['filter' => 'permission:customers.view']);
 $routes->get('products/(:num)', [ProductController::class, 'show/$1'], ['filter' => 'permission:products.view']);
+$routes->get('containers/(:num)', [ContainerController::class, 'show/$1'], ['filter' => 'permission:containers.view']);
 $routes->get('containers/(:num)', [ContainerController::class, 'show/$1'], ['filter' => 'permission:containers.view']);
 $routes->get('transfers/products/(:num)', [ProductTransferController::class, 'show/$1'], ['filter' => 'permission:product-transfers.view']);
 $routes->get('transfers/units/(:num)', [ProductUnitTransferController::class, 'show/$1'], ['filter' => 'permission:unit-transfers.view']);
@@ -212,7 +219,9 @@ $routes->get('cashup', [StoreLedgerController::class, 'edit'], ['filter' => 'per
 $routes->get('users/datatable', [UserController::class, 'datatable']);
 $routes->get('adjustments/datatable', [AdjustmentController::class, 'datatable']);
 $routes->get('container-adjustments/datatable', [ContainerAdjustmentController::class, 'datatable']);
+$routes->get('container-adjustments/datatable', [ContainerAdjustmentController::class, 'datatable']);
 $routes->get('adjustments/reports/datatable', [AdjustmentController::class, 'stock_report_datatable']);
+$routes->get('container-adjustments/reports/datatable', [ContainerAdjustmentController::class, 'stock_report_datatable']);
 $routes->get('container-adjustments/reports/datatable', [ContainerAdjustmentController::class, 'stock_report_datatable']);
 $routes->get('brands/datatable', [BrandController::class, 'datatable']);
 $routes->get('categories/datatable', [CategoryController::class, 'datatable']);
@@ -223,6 +232,7 @@ $routes->get('expenses/categories/datatable', [ExpenseCategoryController::class,
 $routes->get('expenses/subcategories/datatable', [ExpenseSubCategoryController::class, 'datatable']);
 $routes->get('expenses/datatable', [ExpenseController::class, 'datatable']);
 $routes->get('products/datatable', [ProductController::class, 'datatable']);
+$routes->get('containers/datatable', [ContainerController::class, 'datatable']);
 $routes->get('containers/datatable', [ContainerController::class, 'datatable']);
 $routes->get('products/expired/datatable', [ProductController::class, 'expired_datatable']);
 $routes->get('instock/datatable', [InventoryController::class, 'instock_datatable']);
@@ -269,11 +279,14 @@ $routes->get('expenses/subcategories/select2', [ExpenseSubCategoryController::cl
 $routes->get('expenses/select2', [ExpenseController::class, 'select2']);
 $routes->get('products/select2', [ProductController::class, 'select2']);
 $routes->get('containers/select2', [ContainerController::class, 'select2']);
+$routes->get('containers/select2', [ContainerController::class, 'select2']);
 $routes->get('purchases/select2', [PurchaseController::class, 'select2']);
 $routes->get('purchases/returns/select2', [PurchaseReturnController::class, 'select2']);
 $routes->get('quotes/select2', [QuoteController::class, 'select2']);
 $routes->get('sales/select2', [SalesController::class, 'select2']);
 $routes->get('sales/returns/select2', [SalesReturnController::class, 'select2']);
+$routes->get('containers/returns/select2', [ContainerReturnController::class, 'select2']);
+$routes->get('containers/recevings/select2', [ContainerReceivingController::class, 'select2']);
 $routes->get('containers/returns/select2', [ContainerReturnController::class, 'select2']);
 $routes->get('containers/recevings/select2', [ContainerReceivingController::class, 'select2']);
 $routes->get('stores/select2', [StoreController::class, 'select2']);
@@ -297,6 +310,7 @@ $routes->post('expenses/categories', [ExpenseCategoryController::class, 'save'])
 $routes->post('expenses/subcategories', [ExpenseSubCategoryController::class, 'save']);
 $routes->post('expenses', [ExpenseController::class, 'save']);
 $routes->post('products', [ProductController::class, 'save']);
+$routes->post('containers', [ContainerController::class, 'save']);
 $routes->post('containers', [ContainerController::class, 'save']);
 $routes->post('suppliers/ledgers', [SupplierLedgerController::class, 'save']);
 $routes->post('suppliers/credit', [SupplierController::class, 'save_credit']);
@@ -330,6 +344,7 @@ $routes->put('expenses/categories', [ExpenseCategoryController::class, 'save']);
 $routes->put('expenses/subcategories', [ExpenseSubCategoryController::class, 'save']);
 $routes->put('expenses', [ExpenseController::class, 'save']);
 $routes->put('products', [ProductController::class, 'save']);
+$routes->put('containers', [ContainerController::class, 'save']);
 $routes->put('containers', [ContainerController::class, 'save']);
 $routes->put('suppliers/ledgers', [SupplierLedgerController::class, 'save']);
 $routes->put('customers/ledgers', [CustomerLedgerController::class, 'save']);
