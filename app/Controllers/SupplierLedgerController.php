@@ -253,6 +253,7 @@ class supplierLedgerController extends BaseController
         $inputs = $this->request->getVar();
         $model = new SupplierLedgerModel();
         $model->orderBy('id', 'desc');
+        if($inputs)
         return $this->response->setJSON(toDatatableResult($model, $inputs));
     }
 
@@ -274,9 +275,9 @@ class supplierLedgerController extends BaseController
             ->orderBy('id', 'desc');
         return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) use ($db) {
             $item->purchase = model('PurchaseModel')->where('id', $item->purchase_id)->first();
-            $item->purchase_return = model('PurchaseReturnModel')->where('id', $item->purchase_return_id)->first();
-            $item->supplier = model('SupplierModel')->where('id', $item->supplier_id)->first();
-            $item->user = model('UserModel')->where('id', $item->user_id)->first();
+            $item->purchase_return = model('PurchaseReturnModel')->builder()->where('id', $item->purchase_return_id)->get()->getFirstRow();
+            $item->supplier = model('SupplierModel')->builder()->where('id', $item->supplier_id)->get()->getFirstRow();
+            $item->user = model('UserModel')->builder()->where('id', $item->user_id)->get()->getFirstRow();
             $totals = $db->table('supplier_ledgers')
                 ->select('SUM((credit-debit)) as total_due')
                 ->where('supplier_id', $item->supplier_id)
