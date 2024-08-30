@@ -95,6 +95,8 @@ class SupplierLedgerModel extends Model
                 $bal = 0;
                 foreach (array_reverse($model['data'], true) as $key => $row) {
                     $model['data'][$key]->user = $userModel->builder()->where('id', $row->user_id)->get()->getFirstRow();
+                    $model['data'][$key]->purchase = $purchaseModel->builder()->where('id', $row->purchase_id)->get()->getFirstRow();
+                    $model['data'][$key]->purchase_return = $returnModel->builder()->where('id', $row->purchase_return_id)->get()->getFirstRow();
                     $model['data'][$key]->supplier = $supModel->builder()->where('id', $row->supplier_id)->get()->getFirstRow();
                     $bal +=  $model['data'][$key]->credit - $model['data'][$key]->debit;
                     $model['data'][$key]->balance = $bal;
