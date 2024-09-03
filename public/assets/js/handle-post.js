@@ -129,3 +129,17 @@ $(".select2-product")
       },
     },
   });
+
+  $(".select2-container")
+  .select2({
+    placeholder: "Search a container",
+    allowClear: true,
+    ajax: {
+      url: `${baseUrl}containers/select2`,
+      dataType: "json",
+      data: function (params) {
+        params.filter = {};
+        return params;
+      },
+    },
+  });
