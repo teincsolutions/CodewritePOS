@@ -302,5 +302,5 @@
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-post.js?v=3') ?>"></script>
+<script src="<?= base_url('assets/js/handle-post.js?v=4') ?>"></script>
 <?= $this->endSection() ?>
