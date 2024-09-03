@@ -143,7 +143,7 @@
                 <div id="related-container" class="col-lg-3 col-sm-6 col-12 <?= isset($product) ? (isset($product->container) ? '' : 'd-none') : 'd-none' ?>">
                     <div class="form-group">
                         <label>Related Container</label>
-                        <select class="select2-container" name="container_id" required>
+                        <select class="select2container" name="container_id" required>
                             <option value=""></option>
                             <?php if (isset($product) && isset($product->container)) : ?>
                                 <option value="<?= $product->container_id ?>" selected><?= $product->container->sku; ?> <?= $product->container->name; ?> (<?= $product->container->unit->label; ?>)</option>
