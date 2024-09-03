@@ -116,30 +116,34 @@ $(".select2-ctype")
     }
   });
 
-$(".select2-product")
-  .select2({
-    placeholder: "Search a product",
-    allowClear: true,
-    ajax: {
-      url: `${baseUrl}products/select2`,
-      dataType: "json",
-      data: function (params) {
-        params.filter = {};
-        return params;
-      },
+$(".select2-product").select2({
+  placeholder: "Search a product",
+  allowClear: true,
+  ajax: {
+    url: `${baseUrl}products/select2`,
+    dataType: "json",
+    data: function (params) {
+      params.filter = {};
+      return params;
     },
-  });
+  },
+});
 
-  $(".select2-container")
-  .select2({
-    placeholder: "Search a container",
-    allowClear: true,
-    ajax: {
-      url: `${baseUrl}containers/select2`,
-      dataType: "json",
-      data: function (params) {
-        params.filter = {};
-        return params;
-      },
+$(".select2-container").select2({
+  placeholder: "Search a container",
+  allowClear: true,
+  ajax: {
+    url: `${baseUrl}containers/select2`,
+    dataType: "json",
+    data: function (params) {
+      params.filter = {};
+      return params;
     },
-  });
+  },
+});
+
+$('input[name="has_container"]').change((e) => {
+  if ($('input[name="has_container"]:checked').val() === "1")
+    $("#related-container").removeClass("d-none");
+  else $("#related-container").addClass("d-none");
+});
