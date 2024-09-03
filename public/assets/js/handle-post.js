@@ -129,7 +129,7 @@ $(".select2-product").select2({
   },
 });
 
-$(".select2-container").select2({
+$(".select2container").select2({
   placeholder: "Search a container",
   allowClear: true,
   ajax: {
