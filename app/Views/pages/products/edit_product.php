@@ -1,14 +1,10 @@
 <?= $this->extend('template/default') ?>
 <?= $this->section('content') ?>
 <style>
-    #scanner-container {
-        position:relative;
-    }
-
     canvas.drawingBuffer,
     video {
         position: relative;
-        width: 200px;
+        width: auto;
         height: 200px;
     }
 </style>
@@ -30,8 +26,8 @@
         <input type="hidden" name="_method" value="<?= isset($product) ? 'put' : 'post' ?>">
         <div class="card-header">
             <div class="row">
-                <div>
-                    <div style="display: none;" id="scanner-container"></div>
+                <div class="col-xs-12 col-md-3">
+                    <div style="display: none; max-height:210px; text-align:center; overflow:hidden;" id="scanner-container"></div>
                 </div>
                 <div class="col-12 text-start">
                     <span class="text-bold">Scan Barcode</span>
