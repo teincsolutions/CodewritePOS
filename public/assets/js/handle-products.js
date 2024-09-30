@@ -56,9 +56,10 @@ form.on("submit", function (e) {
         if (d.status === true) {
           if (typeof d.input === "object") {
             if (d.input._method === "post") {
+              $('input[type="text"]').val("");
               //$("select").val("").trigger("change.select2");
             }
-            if (form.hasClass("modal")) form.modal('hide');
+            if (form.hasClass("modal")) form.modal("hide");
             if (form.hasClass("refresh-page")) location.reload();
           }
 
