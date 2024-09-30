@@ -1,5 +1,18 @@
 <?= $this->extend('template/default') ?>
 <?= $this->section('content') ?>
+<style>
+    #scanner-container {
+        position:relative;
+    }
+
+    canvas.drawingBuffer,
+    video {
+        position: relative;
+        width: 200px;
+        height: 200px;
+    }
+</style>
+
 <div class="content">
     <div class="page-header">
         <div class="page-title">
@@ -15,12 +28,24 @@
         <?= csrf_field() ?>
         <input type="hidden" name="id" value="<?= isset($product) ? $product->id : null ?>">
         <input type="hidden" name="_method" value="<?= isset($product) ? 'put' : 'post' ?>">
+        <div class="card-header">
+            <div class="row">
+                <div>
+                    <div style="display: none;" id="scanner-container"></div>
+                </div>
+                <div class="col-12 text-start">
+                    <span class="text-bold">Scan Barcode</span>
+                    <button id="startScan" type="button" class="btn btn-primary btn-sm btn-icon"><span><i class="fa fa-play"></i></span></button>
+                    <button id="stopScan" style="display: none;" type="button" class="btn btn-danger btn-sm btn-icon"><span><i class="fa fa-stop"></i></span></button>
+                </div>
+            </div>
+        </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Product Code/SKU</label>
-                        <input type="text" name="sku" value="<?= isset($product) ? $product->sku : '' ?>" placeholder="Product Code/SKU">
+                        <label>Product Code/SKU (Opt)</label>
+                        <input type="text" name="sku" value="<?= isset($product) ? $product->sku : '' ?>" placeholder="Product Code/SKU (Opt)">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
@@ -32,7 +57,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Product Barcode</label>
-                        <input type="text" name="barcode" value="<?= isset($product) ? $product->barcode : null ?>" placeholder="Barcode">
+                        <input id="barcodeInput" type="text" name="barcode" value="<?= isset($product) ? $product->barcode : null ?>" placeholder="Barcode">
                     </div>
                 </div>
                 <?php if (setting('App.ProductDiffForStore') !== 'yes') : ?>
@@ -277,4 +302,7 @@
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/handle-products.js?v=1') ?>"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+<script src="<?= base_url('assets/js/handle-scanner.js?v=0') ?>"></script>
+
 <?= $this->endSection() ?>
