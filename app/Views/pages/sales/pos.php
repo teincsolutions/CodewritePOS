@@ -79,10 +79,13 @@
                                 </div>
                             </div>
                             <div class="col-lg-12 col-sm-6 col-12 mb-3">
-                                <div class="form-group">
-                                    <div class="form-outline autocomplete">
-                                        <label class="form-label" for="form1">Search</label>
+                                <div class="form-group autocomplete">
+                                    <label class="form-label" for="form1">Search</label>
+                                    <div class="input-group">
                                         <input autocomplete="off" id="search-products" type="search" class="form-control" placeholder="Enter product name, barcode, sku..." />
+                                        <div class="input-group-append">
+                                            <span id="startScan" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#scan"><i class="fa fa-barcode"></i></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -601,27 +604,48 @@
     </div>
 </div>
 <?= $this->endSection() ?>
+<?= $this->section('modal') ?>
+<div class="modal fade" id="scan" tabindex="-1" aria-labelledby="scanbarcode" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Scan Barcode</h5>
+            </div>
+            <div class="modal-body">
+                <div class="col-12 text-center">
+                    <div style="max-height:400px; overflow:hidden;" id="scanner-container"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="stopScan" type="button" class="btn btn-danger" data-bs-dismiss="modal">Stop</button>
+            </div>
+        </div>
+    </div>
+    </form>
+    <?= $this->endSection() ?>
+    <?= $this->section('script') ?>
+    <script src="<?= base_url('assets/js/handle-pos.js?v=33') ?>"></script>
+    <script src="<?= base_url('assets/js/datatables/pos.modal.js?v=5') ?>"></script>
+    <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <script src="<?= base_url('assets/js/handle-scanner.js?v=0') ?>"></script>
 
-<?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-pos.js?v=33') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/pos.modal.js?v=5') ?>"></script>
-<script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
-<?php if (isset($sales) && $sales->customer) {
-    $customer = $sales->customer;
-    $customer->text = $customer->name . " (" . ($customer->address ? $customer->address : $customer->phone) . ")";
-?>
-    <script>
-        $(() => {
-            let customerData = <?= json_encode($customer) ?>;
-            var option = new Option(customerData.text, customerData.id, true, true);
-            select2Customer.append(option).trigger('change');
-            select2Customer.trigger({
-                type: 'select2:select',
-                params: {
-                    data: customerData
-                }
+    <?php if (isset($sales) && $sales->customer) {
+        $customer = $sales->customer;
+        $customer->text = $customer->name . " (" . ($customer->address ? $customer->address : $customer->phone) . ")";
+    ?>
+        <script>
+            $(() => {
+                let customerData = <?= json_encode($customer) ?>;
+                var option = new Option(customerData.text, customerData.id, true, true);
+                select2Customer.append(option).trigger('change');
+                select2Customer.trigger({
+                    type: 'select2:select',
+                    params: {
+                        data: customerData
+                    }
+                });
             });
-        });
-    </script>
-<?php } ?>
-<?= $this->endSection() ?>
+        </script>
+    <?php } ?>
+    <?= $this->endSection() ?>

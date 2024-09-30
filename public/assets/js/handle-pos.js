@@ -349,379 +349,349 @@ $(".tr-items").on("click", ".dec.button", function () {
   if (newValue > 0) $input.val(newValue);
   updateItemRow(this);
 });
+var suggestions = [];
+var inp = document.getElementById("search-products");
 
-function autocomplete(inp) {
-  var currentFocus;
-  var suggestions = [];
-  inp.addEventListener("input", function (e) {
-    var a,
-      b,
-      i,
-      val = this.value;
-    closeAllLists();
-    if (!val) {
-      return false;
-    }
-    currentFocus = -1;
-    a = document.createElement("DIV");
-    a.setAttribute("id", this.id + "autocomplete-list");
-    a.setAttribute("class", "autocomplete-items");
-    this.parentNode.appendChild(a);
-    searchParams.search.value = val;
+var lookup = function (inp) {
+  var a,
+    b,
+    i,
+    val = inp.value;
+  closeAllLists();
+  if (!val) {
+    return false;
+  }
+  currentFocus = -1;
+  a = document.createElement("DIV");
+  a.setAttribute("id", inp.id + "autocomplete-list");
+  a.setAttribute("class", "autocomplete-items");
+  inp.parentNode.appendChild(a);
+  searchParams.search.value = val;
 
-    b = document.createElement("DIV");
-    b.innerHTML = "<i>Searching...</i>";
-    a.appendChild(b);
+  b = document.createElement("DIV");
+  b.innerHTML = "<i>Searching...</i>";
+  a.appendChild(b);
 
-    if (Settings.ProductDiffForStore === "yes")
-      searchParams.store_id = $(".select2-store").val();
+  if (Settings.ProductDiffForStore === "yes")
+    searchParams.store_id = $(".select2-store").val();
 
-    $.ajax(`${baseUrl}products/search`, {
-      data: searchParams,
-      contentType: "application/json",
-    })
-      .done((d, s) => {
-        if (s !== "success") {
-          // if fail
-          b = document.createElement("DIV");
-          b.innerHTML = "<i>Unable load data!</i>";
-          a.appendChild(b);
-          // if fail
-          return;
-        }
-
-        if (d.data.length === 0) {
-          b = document.createElement("DIV");
-          b.innerHTML = "<span>No product found!</span>";
-          a.appendChild(b);
-          return;
-        } else {
-          suggestions = d.data;
-          a.innerHTML = "";
-          suggestions.filter(searchPrediction).forEach((item, i) => {
-            b = document.createElement("DIV");
-            info = [];
-            (item.category ? info.push(item.category.name) : null) ||
-              (item.brand ? info.push(item.brand.name) : null);
-            let instock = 0;
-
-            if (item.inventory) {
-              if ($(".select2-store").val() == "") {
-                item.inventory.forEach((stock, i) => {
-                  instock += parseFloat(stock.instock);
-                });
-              } else {
-                const storeId = $(".select2-store").val();
-                const stock = item.inventory.filter(
-                  (stock, i) => storeId == stock.store_id
-                );
-                if (stock.length > 0) instock = stock[0].instock;
-              }
-            }
-            info.push(`instock<strong>(${instock})</strong>`);
-
-            info = info.join(",");
-            let unitPrice = "0.00";
-            if (Settings.AllowWholeSalePrices === "yes") {
-              unitPrice =
-                customerType === "wholeseller"
-                  ? item.unit_ws_price
-                    ? item.unit_ws_price
-                    : "0.00"
-                  : item.unit_price;
-            } else {
-              unitPrice = item.unit_price;
-            }
-
-            b.innerHTML =
-              item.discontinued == 1
-                ? `<span class="d-flex justify-content-between" style="z-index:1000"><del><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></del>GHS ${unitPrice}</span>`
-                : `<span class="d-flex justify-content-between" style="z-index:1000"><span><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></span>GHS ${unitPrice}</span>`;
-
-            b.addEventListener("click", function (e) {
-              if (instock <= item.min_qty) {
-                Swal.fire({
-                  icon: "warning",
-                  title: "Short Stock Alert!",
-                  text:
-                    "You have (" + instock + ") stock left for " + item.name,
-                });
-              }
-              inp.value = "";
-
-              let row = `<tr>
-                                        <td>
-                                        </td>
-                                        <td class="productimgname">
-                                        ${
-                                          item.image_uri
-                                            ? `<a class="product-img"><img src="${baseUrl}${item.image_uri}" alt="product"></a>`
-                                            : '<a class="p-3"></a>'
-                                        }
-                                            <a target="_blank" href="${baseUrl}products/${
-                item.id
-              }">${Settings.ShowProductSKU === "yes" ? item.sku : ""} ${
-                item.name
-              }(${
-                item.unit.label
-              })</a><span class="badge bg-info">${instock}</span></td>
-                                        <td>
-                                        <div class="increment-decrement">
-                                            <div class="input-groups">
-                                                <input type='hidden' name="items[${prodIndex}][product_id]" value="${
-                item.id
-              }">
-                                                <input type="hidden" name="items[${prodIndex}][unit_price]" value="${unitPrice}" class="runit_price">
-            <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
-                item.unit_cost
-              }" class="runit_cost">
-                                              
-                                                <input type="hidden" name="items[${prodIndex}][store_id]" value="${$(
-                ".select2-store"
-              ).val()}">
-                                                <input type="hidden" name="items[${prodIndex}][tax]" class="rtax" value="${
-                item.tax ? item.tax : "0.00"
-              }">
-                                                <input type="hidden" name="items[${prodIndex}][discount]" class="rdiscount" value="${
-                item?.discount
-              }">
-                                                <input type="hidden" name="items[${prodIndex}][subtotal]" class="rsubtotal" value="${
-                unitPrice -
-                item?.discount +
-                (unitPrice * (item.tax ? item.tax : 0.0)) / 100
-              }">
-                                                <input type="button" value="-" class="button-minus dec button">
-                                                <input onkeyup="updateItemRow(this)" min="0.1" type="text" name="items[${prodIndex}][qty]" value="1" class="rqty quantity-field" required>
-                                                <input type="button" value="+" class="button-plus inc button">
-                                            </div>
-                                        </div>
-                                        </td>
-                                        <td>
-                                        ${unitPrice}
-                                        </td>
-                                        <td>${item?.discount}</td>
-                                        <td class="suffix-percent">${
-                                          item.tax
-                                            ? parseFloat(item.tax).toFixed(
-                                                2
-                                              )
-                                            : "0.00"
-                                        }</td>
-                                        <td>${(
-                                          unitPrice -
-                                          item?.discount +
-                                          (unitPrice *
-                                            (item.tax ? item.tax : 0.0)) /
-                                            100
-                                        ).toFixed(2)}</td>
-                                        <td> ${
-                                          Settings.AllowPriceChange === "yes" ||
-                                          Settings.AllowCustomerDiscountChange ===
-                                            "yes"
-                                            ? `<span class="edit-price btn btn-icon"><i class="fa fa-edit"></i></span>`
-                                            : ""
-                                        }
-                                        <a   href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
-                                    </tr>`;
-              tableItems.row.add($(row)).draw();
-              tableItems.draw();
-              prodIndex++;
-              closeAllLists();
-            });
-            a.appendChild(b);
-          });
-        }
-      })
-      .fail((err) => {
+  $.ajax(`${baseUrl}products/search`, {
+    data: searchParams,
+    contentType: "application/json",
+  })
+    .done((d, s) => {
+      if (s !== "success") {
+        // if fail
         b = document.createElement("DIV");
-        b.innerHTML = "<span>Couldn't load data!</span>";
+        b.innerHTML = "<i>Unable load data!</i>";
         a.appendChild(b);
-      });
-    suggestions.filter(searchPrediction).forEach((item, i) => {
-      b = document.createElement("DIV");
-      info = [];
-      (item.category ? info.push(item.category.name) : null) ||
-        (item.brand ? info.push(item.brand.name) : null);
-      let instock = 0;
-
-      if (item.inventory) {
-        if ($(".select2-store").val() == "") {
-          item.inventory.forEach((stock, i) => {
-            instock += parseFloat(stock.instock);
-          });
-        } else {
-          const storeId = $(".select2-store").val();
-          const stock = item.inventory.filter(
-            (stock, i) => storeId == stock.store_id
-          );
-          if (stock.length > 0) instock = stock[0].instock;
-        }
+        // if fail
+        return;
       }
-      info.push(`instock<strong>(${instock})</strong>`);
 
-      info = info.join(",");
-      let unitPrice = "0.00";
-      if (Settings.AllowWholeSalePrices === "yes") {
-        unitPrice =
-          customerType === "wholeseller"
-            ? item.unit_ws_price
-              ? item.unit_ws_price
-              : "0.00"
-            : item.unit_price;
+      if (d.data.length === 0) {
+        b = document.createElement("DIV");
+        b.innerHTML = "<span>No product found!</span>";
+        a.appendChild(b);
+        return;
       } else {
-        unitPrice = item.unit_price;
-      }
+        suggestions = d.data;
+        a.innerHTML = "";
+        suggestions.filter(searchPrediction).forEach((item, i) => {
+          b = document.createElement("DIV");
+          info = [];
+          (item.category ? info.push(item.category.name) : null) ||
+            (item.brand ? info.push(item.brand.name) : null);
+          let instock = 0;
 
-      b.innerHTML =
-        item.discontinued == 1
-          ? `<span class="d-flex justify-content-between" style="z-index:1000"><del><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></del>GHS ${unitPrice}</span>`
-          : `<span class="d-flex justify-content-between" style="z-index:1000"><span><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></span>GHS ${unitPrice}</span>`;
+          if (item.inventory) {
+            if ($(".select2-store").val() == "") {
+              item.inventory.forEach((stock, i) => {
+                instock += parseFloat(stock.instock);
+              });
+            } else {
+              const storeId = $(".select2-store").val();
+              const stock = item.inventory.filter(
+                (stock, i) => storeId == stock.store_id
+              );
+              if (stock.length > 0) instock = stock[0].instock;
+            }
+          }
+          info.push(`instock<strong>(${instock})</strong>`);
 
-      b.addEventListener("click", function (e) {
-        if (instock <= item.min_qty) {
-          Swal.fire({
-            icon: "warning",
-            title: "Short Stock Alert!",
-            text: "You have (" + instock + ") stock left for " + item.name,
+          info = info.join(",");
+          let unitPrice = "0.00";
+          if (Settings.AllowWholeSalePrices === "yes") {
+            unitPrice =
+              customerType === "wholeseller"
+                ? item.unit_ws_price
+                  ? item.unit_ws_price
+                  : "0.00"
+                : item.unit_price;
+          } else {
+            unitPrice = item.unit_price;
+          }
+
+          b.innerHTML =
+            item.discontinued == 1
+              ? `<span class="d-flex justify-content-between" style="z-index:1000"><del><code>${
+                  item.sku ?? ""
+                }</code> ${item.name}(${
+                  item.unit.label
+                }) - <i>${info}</i></del>GHS ${unitPrice}</span>`
+              : `<span class="d-flex justify-content-between" style="z-index:1000"><span><code>${
+                  item.sku ?? ""
+                }</code> ${item.name}(${
+                  item.unit.label
+                }) - <i>${info}</i></span>GHS ${unitPrice}</span>`;
+
+          b.addEventListener("click", function (e) {
+            if (instock <= item.min_qty) {
+              Swal.fire({
+                icon: "warning",
+                title: "Short Stock Alert!",
+                text: "You have (" + instock + ") stock left for " + item.name,
+              });
+            }
+            inp.value = "";
+
+            let row = `<tr>
+                                      <td>
+                                      </td>
+                                      <td class="productimgname">
+                                      ${
+                                        item.image_uri
+                                          ? `<a class="product-img"><img src="${baseUrl}${item.image_uri}" alt="product"></a>`
+                                          : '<a class="p-3"></a>'
+                                      }
+                                          <a target="_blank" href="${baseUrl}products/${
+              item.id
+            }">${Settings.ShowProductSKU === "yes" ? item.sku : ""} ${
+              item.name
+            }(${
+              item.unit.label
+            })</a><span class="badge bg-info">${instock}</span></td>
+                                      <td>
+                                      <div class="increment-decrement">
+                                          <div class="input-groups">
+                                              <input type='hidden' name="items[${prodIndex}][product_id]" value="${
+              item.id
+            }">
+                                              <input type="hidden" name="items[${prodIndex}][unit_price]" value="${unitPrice}" class="runit_price">
+          <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
+              item.unit_cost
+            }" class="runit_cost">
+                                            
+                                              <input type="hidden" name="items[${prodIndex}][store_id]" value="${$(
+              ".select2-store"
+            ).val()}">
+                                              <input type="hidden" name="items[${prodIndex}][tax]" class="rtax" value="${
+              item.tax ? item.tax : "0.00"
+            }">
+                                              <input type="hidden" name="items[${prodIndex}][discount]" class="rdiscount" value="${
+              item?.discount
+            }">
+                                              <input type="hidden" name="items[${prodIndex}][subtotal]" class="rsubtotal" value="${
+              unitPrice -
+              item?.discount +
+              (unitPrice * (item.tax ? item.tax : 0.0)) / 100
+            }">
+                                              <input type="button" value="-" class="button-minus dec button">
+                                              <input onkeyup="updateItemRow(this)" min="0.1" type="text" name="items[${prodIndex}][qty]" value="1" class="rqty quantity-field" required>
+                                              <input type="button" value="+" class="button-plus inc button">
+                                          </div>
+                                      </div>
+                                      </td>
+                                      <td>
+                                      ${unitPrice}
+                                      </td>
+                                      <td>${item?.discount}</td>
+                                      <td class="suffix-percent">${
+                                        item.tax
+                                          ? parseFloat(item.tax).toFixed(2)
+                                          : "0.00"
+                                      }</td>
+                                      <td>${(
+                                        unitPrice -
+                                        item?.discount +
+                                        (unitPrice *
+                                          (item.tax ? item.tax : 0.0)) /
+                                          100
+                                      ).toFixed(2)}</td>
+                                      <td> ${
+                                        Settings.AllowPriceChange === "yes" ||
+                                        Settings.AllowCustomerDiscountChange ===
+                                          "yes"
+                                          ? `<span class="edit-price btn btn-icon"><i class="fa fa-edit"></i></span>`
+                                          : ""
+                                      }
+                                      <a   href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
+                                  </tr>`;
+            tableItems.row.add($(row)).draw();
+            tableItems.draw();
+            prodIndex++;
+            closeAllLists();
           });
-        }
-        inp.value = "";
-
-        let row = `<tr>
-                                    <td>
-                                    </td>
-                                    <td class="productimgname">
-                                    ${
-                                      item.image_uri
-                                        ? `<a class="product-img"><img src="${baseUrl}${item.image_uri}" alt="product"></a>`
-                                        : '<a class="p-3"></a>'
-                                    }
-                                        <a target="_blank" href="${baseUrl}products/${
-          item.id
-        }">${Settings.ShowProductSKU === "yes" ? item.sku : ""} ${item.name}(${
-          item.unit.label
-        })</a><span class="badge bg-info">${instock}</span></td>
-                                    <td>
-                                    <div class="increment-decrement">
-                                        <div class="input-groups">
-                                            <input type='hidden' name="items[${prodIndex}][product_id]" value="${
-          item.id
-        }">
-                                            <input type="hidden" name="items[${prodIndex}][unit_price]" value="${unitPrice}" class="runit_price">
-        <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
-          item.unit_cost
-        }" class="runit_cost">
-        
-                                            <input type="hidden" name="items[${prodIndex}][store_id]" value="${$(
-          ".select2-store"
-        ).val()}">
-                                            <input type="hidden" name="items[${prodIndex}][tax]" class="rtax" value="${
-          item.tax ? item.tax : "0.00"
-        }">
-                                            <input type="hidden" name="items[${prodIndex}][discount]" class="rdiscount" value="${
-          item?.discount
-        }">
-                                            <input type="hidden" name="items[${prodIndex}][subtotal]" class="rsubtotal" value="${
-          unitPrice -
-          item?.discount +
-          (unitPrice * (item.tax ? item.tax : 0.0)) / 100
-        }">
-                                            <input type="button" value="-" class="button-minus dec button">
-                                            <input onkeyup="updateItemRow(this)" min="0.1" type="text" name="items[${prodIndex}][qty]" value="1" class="rqty quantity-field" required>
-                                            <input type="button" value="+" class="button-plus inc button">
-                                        </div>
-                                    </div>
-                                    </td>
-                                    <td>
-                                    ${unitPrice}
-                                    </td>
-                                    <td>${item?.discount}</td>
-                                    <td class="suffix-percent">${
-                                      item.tax
-                                        ? parseFloat(item.tax).toFixed(2)
-                                        : "0.00"
-                                    }</td>
-                                    <td>${(
-                                      unitPrice -
-                                      item?.discount +
-                                      (unitPrice *
-                                        (item.tax ? item.tax : 0.0)) /
-                                        100
-                                    ).toFixed(2)}</td>
-                                    <td> ${
-                                      Settings.AllowPriceChange === "yes" ||
-                                      Settings.AllowCustomerDiscountChange ===
-                                        "yes"
-                                        ? `<span class="edit-price btn btn-icon"><i class="fa fa-edit"></i></span>`
-                                        : ""
-                                    }
-                                    <a   href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
-                                </tr>`;
-        tableItems.row.add($(row)).draw();
-        tableItems.draw();
-        prodIndex++;
-        closeAllLists();
-      });
+          a.appendChild(b);
+        });
+      }
+    })
+    .fail((err) => {
+      b = document.createElement("DIV");
+      b.innerHTML = "<span>Couldn't load data!</span>";
       a.appendChild(b);
     });
-  });
-  /*execute a function presses a key on the keyboard:*/
-  inp.addEventListener("keydown", function (e) {
-    var x = document.getElementById(this.id + "autocomplete-list");
-    if (x) x = x.getElementsByTagName("div");
-    if (e.keyCode == 40) {
-      currentFocus++;
-      /*and and make the current item more visible:*/
-      addActive(x);
-    } else if (e.keyCode == 38) {
-      currentFocus--;
-      /*and and make the current item more visible:*/
-      addActive(x);
-    } else if (e.keyCode == 13) {
-      /*If the ENTER key is pressed, prevent the form from being submitted,*/
-      e.preventDefault();
-      if (currentFocus > -1) {
-        /*and simulate a click on the "active" item:*/
-        if (x) x[currentFocus].click();
+  suggestions.filter(searchPrediction).forEach((item, i) => {
+    b = document.createElement("DIV");
+    info = [];
+    (item.category ? info.push(item.category.name) : null) ||
+      (item.brand ? info.push(item.brand.name) : null);
+    let instock = 0;
+
+    if (item.inventory) {
+      if ($(".select2-store").val() == "") {
+        item.inventory.forEach((stock, i) => {
+          instock += parseFloat(stock.instock);
+        });
+      } else {
+        const storeId = $(".select2-store").val();
+        const stock = item.inventory.filter(
+          (stock, i) => storeId == stock.store_id
+        );
+        if (stock.length > 0) instock = stock[0].instock;
       }
     }
-  });
+    info.push(`instock<strong>(${instock})</strong>`);
 
-  function addActive(x) {
-    /*a function to classify an item as "active":*/
-    if (!x) return false;
-    /*start by removing the "active" class on all items:*/
-    removeActive(x);
-    if (currentFocus >= x.length) currentFocus = 0;
-    if (currentFocus < 0) currentFocus = x.length - 1;
-    /*add class "autocomplete-active":*/
-    x[currentFocus].classList.add("autocomplete-active");
-  }
-
-  function removeActive(x) {
-    /*a function to remove the "active" class from all autocomplete items:*/
-    for (var i = 0; i < x.length; i++) {
-      x[i].classList.remove("autocomplete-active");
+    info = info.join(",");
+    let unitPrice = "0.00";
+    if (Settings.AllowWholeSalePrices === "yes") {
+      unitPrice =
+        customerType === "wholeseller"
+          ? item.unit_ws_price
+            ? item.unit_ws_price
+            : "0.00"
+          : item.unit_price;
+    } else {
+      unitPrice = item.unit_price;
     }
-  }
 
-  function closeAllLists(elmnt) {
-    /*close all autocomplete lists in the document,
-            except the one passed as an argument:*/
-    var x = document.getElementsByClassName("autocomplete-items");
-    for (var i = 0; i < x.length; i++) {
-      if (elmnt != x[i] && elmnt != inp) {
-        x[i].parentNode.removeChild(x[i]);
+    b.innerHTML =
+      item.discontinued == 1
+        ? `<span class="d-flex justify-content-between" style="z-index:1000"><del><code>${
+            item.sku ?? ""
+          }</code> ${item.name}(${
+            item.unit.label
+          }) - <i>${info}</i></del>GHS ${unitPrice}</span>`
+        : `<span class="d-flex justify-content-between" style="z-index:1000"><span><code>${
+            item.sku ?? ""
+          }</code> ${item.name}(${
+            item.unit.label
+          }) - <i>${info}</i></span>GHS ${unitPrice}</span>`;
+
+    b.addEventListener("click", function (e) {
+      if (instock <= item.min_qty) {
+        Swal.fire({
+          icon: "warning",
+          title: "Short Stock Alert!",
+          text: "You have (" + instock + ") stock left for " + item.name,
+        });
       }
+      inp.value = "";
+
+      let row = `<tr>
+                                  <td>
+                                  </td>
+                                  <td class="productimgname">
+                                  ${
+                                    item.image_uri
+                                      ? `<a class="product-img"><img src="${baseUrl}${item.image_uri}" alt="product"></a>`
+                                      : '<a class="p-3"></a>'
+                                  }
+                                      <a target="_blank" href="${baseUrl}products/${
+        item.id
+      }">${Settings.ShowProductSKU === "yes" ? item.sku : ""} ${item.name}(${
+        item.unit.label
+      })</a><span class="badge bg-info">${instock}</span></td>
+                                  <td>
+                                  <div class="increment-decrement">
+                                      <div class="input-groups">
+                                          <input type='hidden' name="items[${prodIndex}][product_id]" value="${
+        item.id
+      }">
+                                          <input type="hidden" name="items[${prodIndex}][unit_price]" value="${unitPrice}" class="runit_price">
+      <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
+        item.unit_cost
+      }" class="runit_cost">
+      
+                                          <input type="hidden" name="items[${prodIndex}][store_id]" value="${$(
+        ".select2-store"
+      ).val()}">
+                                          <input type="hidden" name="items[${prodIndex}][tax]" class="rtax" value="${
+        item.tax ? item.tax : "0.00"
+      }">
+                                          <input type="hidden" name="items[${prodIndex}][discount]" class="rdiscount" value="${
+        item?.discount
+      }">
+                                          <input type="hidden" name="items[${prodIndex}][subtotal]" class="rsubtotal" value="${
+        unitPrice -
+        item?.discount +
+        (unitPrice * (item.tax ? item.tax : 0.0)) / 100
+      }">
+                                          <input type="button" value="-" class="button-minus dec button">
+                                          <input onkeyup="updateItemRow(this)" min="0.1" type="text" name="items[${prodIndex}][qty]" value="1" class="rqty quantity-field" required>
+                                          <input type="button" value="+" class="button-plus inc button">
+                                      </div>
+                                  </div>
+                                  </td>
+                                  <td>
+                                  ${unitPrice}
+                                  </td>
+                                  <td>${item?.discount}</td>
+                                  <td class="suffix-percent">${
+                                    item.tax
+                                      ? parseFloat(item.tax).toFixed(2)
+                                      : "0.00"
+                                  }</td>
+                                  <td>${(
+                                    unitPrice -
+                                    item?.discount +
+                                    (unitPrice * (item.tax ? item.tax : 0.0)) /
+                                      100
+                                  ).toFixed(2)}</td>
+                                  <td> ${
+                                    Settings.AllowPriceChange === "yes" ||
+                                    Settings.AllowCustomerDiscountChange ===
+                                      "yes"
+                                      ? `<span class="edit-price btn btn-icon"><i class="fa fa-edit"></i></span>`
+                                      : ""
+                                  }
+                                  <a   href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
+                              </tr>`;
+      tableItems.row.add($(row)).draw();
+      tableItems.draw();
+      prodIndex++;
+      closeAllLists();
+    });
+    a.appendChild(b);
+  });
+};
+
+function closeAllLists(elmnt) {
+  /*close all autocomplete lists in the document,
+          except the one passed as an argument:*/
+  var x = document.getElementsByClassName("autocomplete-items");
+  for (var i = 0; i < x.length; i++) {
+    if (elmnt != x[i] && elmnt != inp) {
+      x[i].parentNode.removeChild(x[i]);
     }
   }
-  /*execute a function when someone clicks in the document:*/
-  document.addEventListener("click", function (e) {
-    closeAllLists(e.target);
-  });
 }
-
-autocomplete(document.getElementById("search-products"));
+/*execute a function when someone clicks in the document:*/
+document.addEventListener("click", function (e) {
+  closeAllLists(e.target);
+});
+inp.addEventListener("input", (e) => lookup(inp));
 
 form.on("submit", function (e) {
   e.preventDefault();

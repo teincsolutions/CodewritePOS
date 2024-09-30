@@ -1041,7 +1041,7 @@ function rePrintInvoice(path) {
 }
 
 function searchPrediction(item, i) {
-  return (`${item.sku} ${item.name} ${item.unit.label}`).toLocaleLowerCase().includes(
+  return (`${item.barcode} ${item.sku} ${item.name} ${item.unit.label}`).toLocaleLowerCase().includes(
     searchParams.search.value.toLocaleLowerCase()
   );
 }

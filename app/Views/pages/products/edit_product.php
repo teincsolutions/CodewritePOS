@@ -5,7 +5,7 @@
     video {
         position: relative;
         width: 100%;
-        height: 200px;
+        height: 100%;
     }
 </style>
 
@@ -26,13 +26,10 @@
         <input type="hidden" name="_method" value="<?= isset($product) ? 'put' : 'post' ?>">
         <div class="card-header">
             <div class="row">
-                <div class="col-xs-12 col-md-3">
-                    <div style="display: none; max-height:210px; text-align:center; overflow:hidden;" id="scanner-container"></div>
-                </div>
+
                 <div class="col-12 text-start">
                     <span class="text-bold">Scan Barcode</span>
-                    <button id="startScan" type="button" class="btn btn-primary btn-sm btn-icon"><span><i class="fa fa-play"></i></span></button>
-                    <button id="stopScan" style="display: none;" type="button" class="btn btn-danger btn-sm btn-icon"><span><i class="fa fa-stop"></i></span></button>
+                    <button id="startScan" data-bs-toggle="modal" data-bs-target="#scan" type="button" class="btn btn-primary btn-sm btn-icon"><span><i class="fa fa-play"></i></span></button>
                 </div>
             </div>
         </div>
@@ -296,9 +293,29 @@
     </form>
 </div>
 <?= $this->endSection() ?>
-<?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-products.js?v=1') ?>"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
-<script src="<?= base_url('assets/js/handle-scanner.js?v=0') ?>"></script>
 
-<?= $this->endSection() ?>
+<?= $this->section('modal') ?>
+<div class="modal fade" id="scan" tabindex="-1" aria-labelledby="scanbarcode" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Scan Barcode</h5>
+            </div>
+            <div class="modal-body">
+                <div class="col-12 text-center">
+                    <div style="max-height:400px; overflow:hidden;" id="scanner-container"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="stopScan" type="button" class="btn btn-danger" data-bs-dismiss="modal">Stop</button>
+            </div>
+        </div>
+    </div>
+    </form>
+    <?= $this->endSection() ?>
+    <?= $this->section('script') ?>
+    <script src="<?= base_url('assets/js/handle-products.js?v=1') ?>"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <script src="<?= base_url('assets/js/handle-scanner.js?v=1') ?>"></script>
+
+    <?= $this->endSection() ?>
