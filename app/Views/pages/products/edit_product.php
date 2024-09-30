@@ -276,5 +276,5 @@
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-products.js') ?>"></script>
+<script src="<?= base_url('assets/js/handle-products.js?v=1') ?>"></script>
 <?= $this->endSection() ?>
