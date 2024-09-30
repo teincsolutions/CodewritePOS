@@ -20,7 +20,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Product Code/SKU</label>
-                        <input type="text" name="sku" value="<?= isset($product) ? $product->sku : $sku ?? '' ?>" placeholder="Product Code/SKU" required>
+                        <input type="text" name="sku" value="<?= isset($product) ? $product->sku : '' ?>" placeholder="Product Code/SKU">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
@@ -276,5 +276,5 @@
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-post.js') ?>"></script>
+<script src="<?= base_url('assets/js/handle-products.js') ?>"></script>
 <?= $this->endSection() ?>
