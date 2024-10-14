@@ -148,7 +148,7 @@
             cashup = intVal($("[name='cashup']").val()),
             saleTotal = intVal($("[name='sale_total']").val()),
             purchaseReturnTotal = intVal($("[name='purchase_return_total']").val()),
-            totalInflows = openingBalance + productTransferBalance + cashup + customerPayment + saleTotal;
+            totalInflows = openingBalance +purchaseReturnTotal+ productTransferBalance + cashup + customerPayment + saleTotal;
 
         let supplierPayment = intVal($("[name='supplier_payment']").val()),
             saleReturnTotal = intVal($("[name='sale_return_total']").val()),
