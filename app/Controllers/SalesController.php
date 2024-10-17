@@ -261,16 +261,17 @@ class SalesController extends BaseController
                     ];
 
                     $stock = $builder->where($stockWhere)->get()->getRowObject();
+                    $instock = $stock->instock ?? 0;
                     if (
                         setting('App.AllowNegativeStocks') !== 'yes'
-                        && ($stock->instock??0) < floatval($items[$k]['qty'])
+                        && ($instock) < floatval($items[$k]['qty'])
                     ) {
                         $product = $productModel->find($items[$k]['product_id']);
                         return $this->response->setJSON(
                             [
                                 'status' => false,
                                 'data' => null,
-                                'message' => "$product->name ({$product->unit->label}) has only $stock->instock left instock!",
+                                'message' => "$product->name ({$product->unit->label}) has only ($instock) left instock!",
                                 'input' => $inputs,
                             ]
                         );
