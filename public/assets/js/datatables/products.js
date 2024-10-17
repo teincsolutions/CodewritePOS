@@ -68,7 +68,8 @@ $(function () {
       {
         data: null,
         render: function (data, type, row) {
-          const desc = data.description!=""?` - ${data.description} `:"";
+          const desc =
+            data.description !== null ? ` - ${data.description} ` : "";
           return `${data.name} ${desc}(${data.unit.label})`;
         },
       },
