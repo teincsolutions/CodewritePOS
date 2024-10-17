@@ -263,7 +263,7 @@ class SalesController extends BaseController
                     $stock = $builder->where($stockWhere)->get()->getRowObject();
                     if (
                         setting('App.AllowNegativeStocks') !== 'yes'
-                        && $stock->instock < floatval($items[$k]['qty'])
+                        && ($stock->instock??0) < floatval($items[$k]['qty'])
                     ) {
                         $product = $productModel->find($items[$k]['product_id']);
                         return $this->response->setJSON(
