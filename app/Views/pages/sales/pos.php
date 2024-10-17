@@ -624,7 +624,7 @@
     </form>
     <?= $this->endSection() ?>
     <?= $this->section('script') ?>
-    <script src="<?= base_url('assets/js/handle-pos.js?v=35') ?>"></script>
+    <script src="<?= base_url('assets/js/handle-pos.js?v=36') ?>"></script>
     <script src="<?= base_url('assets/js/datatables/pos.modal.js?v=5') ?>"></script>
     <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
