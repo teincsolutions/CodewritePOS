@@ -68,7 +68,8 @@ $(function () {
       {
         data: null,
         render: function (data, type, row) {
-          return `${data.name} (${data.unit.label})`;
+          const desc = data.description!==""?` - ${data.description} `:"";
+          return `${data.name} ${desc}(${data.unit.label})`;
         },
       },
       { data: "barcode", name: "products.barcode" },

@@ -431,17 +431,17 @@ var lookup = function (inp) {
           } else {
             unitPrice = item.unit_price;
           }
-
+          const desc = item.description!==""?` - ${item.description}`:"";
           b.innerHTML =
             item.discontinued == 1
               ? `<span class="d-flex justify-content-between" style="z-index:1000"><del><code>${
                   item.sku ?? ""
-                }</code> ${item.name}(${
+                }</code> ${item.name}${desc}(${
                   item.unit.label
                 }) - <i>${info}</i></del>GHS ${unitPrice}</span>`
               : `<span class="d-flex justify-content-between" style="z-index:1000"><span><code>${
                   item.sku ?? ""
-                }</code> ${item.name}(${
+                }</code> ${item.name}${desc}(${
                   item.unit.label
                 }) - <i>${info}</i></span>GHS ${unitPrice}</span>`;
 
