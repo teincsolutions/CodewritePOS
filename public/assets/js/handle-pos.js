@@ -431,7 +431,8 @@ var lookup = function (inp) {
           } else {
             unitPrice = item.unit_price;
           }
-          const desc = item.description!=""?` - ${item.description}`:"";
+          const desc =
+            item.description !== null ? ` - ${item.description}` : "";
           b.innerHTML =
             item.discontinued == 1
               ? `<span class="d-flex justify-content-between" style="z-index:1000"><del><code>${

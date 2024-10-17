@@ -216,7 +216,7 @@
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/handle-sale-return.js?v=26') ?>"></script>
+<script src="<?= base_url('assets/js/handle-sale-return.js?v=27') ?>"></script>
 <?php if (isset($sales) && $sales->customer) {
     $customer = $sales->customer;
     $customer->text = $customer->name . " (" . ($customer->address ? $customer->address : $customer->phone) . ")";

@@ -97,7 +97,7 @@
                 }
                 ?>
                 <tr>
-                    <td><?= $row->product->name; ?>(<?= $row->product->unit->label; ?>)</td>
+                    <td><?= $row->product->name; ?> <?= $row->product->description ?? ''; ?> (<?= $row->product->unit->label; ?>)</td>
                     <td>
                         <?= floatval($row->qty); ?>
                         <?php if (model('PurchaseModel')->hasReturns($purchases->id)) : ?>

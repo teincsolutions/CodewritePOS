@@ -261,61 +261,70 @@ function autocomplete(inp) {
     if (Settings.ProductDiffForStore === "yes")
       searchParams.store_id = $(".select2-store").val();
 
-     $.ajax(`${baseUrl}products/search`,{data: searchParams}) 
-    .done((d, s) => {
-      a.innerHTML = "";
-      if (s !== "success") {
-        // if fail
-        b = document.createElement("DIV");
-        b.innerHTML = "<i>Unable load data!</i>";
-        a.appendChild(b);
-        // if fail
-        return;
-      }
-
-      if (d.data.length === 0) {
-        b = document.createElement("DIV");
-        b.innerHTML = "<span>No product found!</span>";
-        a.appendChild(b);
-        return;
-      } else {
-        d.data.forEach((item, i) => {
+    $.ajax(`${baseUrl}products/search`, { data: searchParams })
+      .done((d, s) => {
+        a.innerHTML = "";
+        if (s !== "success") {
+          // if fail
           b = document.createElement("DIV");
-          info = [];
-          (item.category ? info.push(item.category.name) : null) ||
-            (item.brand ? info.push(item.brand.name) : null);
-          let instock = 0;
+          b.innerHTML = "<i>Unable load data!</i>";
+          a.appendChild(b);
+          // if fail
+          return;
+        }
 
-          if (item.inventory) {
-            if ($(".select2-store").val() == "") {
-              item.inventory.forEach((stock, i) => {
-                instock += parseFloat(stock.instock);
-              });
-            } else {
-              const storeId = $(".select2-store").val();
-              const stock = item.inventory.filter(
-                (stock, i) => storeId == stock.store_id
-              );
-              if (stock.length > 0) instock = stock[0].instock;
+        if (d.data.length === 0) {
+          b = document.createElement("DIV");
+          b.innerHTML = "<span>No product found!</span>";
+          a.appendChild(b);
+          return;
+        } else {
+          d.data.forEach((item, i) => {
+            b = document.createElement("DIV");
+            info = [];
+            (item.category ? info.push(item.category.name) : null) ||
+              (item.brand ? info.push(item.brand.name) : null);
+            let instock = 0;
+
+            if (item.inventory) {
+              if ($(".select2-store").val() == "") {
+                item.inventory.forEach((stock, i) => {
+                  instock += parseFloat(stock.instock);
+                });
+              } else {
+                const storeId = $(".select2-store").val();
+                const stock = item.inventory.filter(
+                  (stock, i) => storeId == stock.store_id
+                );
+                if (stock.length > 0) instock = stock[0].instock;
+              }
             }
-          }
-          info.push(`instock<strong>(${instock})</strong>`);
+            info.push(`instock<strong>(${instock})</strong>`);
 
-          info = info.join(",");
+            info = info.join(",");
 
-          const desc = item.description!=""?` - ${item.description}`:"";
-          b.innerHTML =
-            item.discontinued == 1
-              ? `<span class="d-flex justify-content-between" style="z-index:1000"><del><code>${item.sku??""}</code> ${item.name}${desc}(${item.unit.label}) - <i>${info}</i></del>GHS ${item.unit_cost}</span>`
-              : `<span class="d-flex justify-content-between" style="z-index:1000"><span><code>${item.sku??""}</code> ${item.name}${desc}(${item.unit.label}) - <i>${info}</i></span>GHS ${item.unit_cost}</span>`;
+            const desc =
+              item.description !== null ? ` - ${item.description}` : "";
+            b.innerHTML =
+              item.discontinued == 1
+                ? `<span class="d-flex justify-content-between" style="z-index:1000"><del><code>${
+                    item.sku ?? ""
+                  }</code> ${item.name}${desc}(${
+                    item.unit.label
+                  }) - <i>${info}</i></del>GHS ${item.unit_cost}</span>`
+                : `<span class="d-flex justify-content-between" style="z-index:1000"><span><code>${
+                    item.sku ?? ""
+                  }</code> ${item.name}${desc}(${
+                    item.unit.label
+                  }) - <i>${info}</i></span>GHS ${item.unit_cost}</span>`;
 
-          b.addEventListener("click", function (e) {
-            let store = "";
-            if ($(".select2-store").val() != "") {
-              store = "(" + $(".select2-store option:selected").text() + ")";
-            }
-            inp.value = "";
-            let row = ` <tr>
+            b.addEventListener("click", function (e) {
+              let store = "";
+              if ($(".select2-store").val() != "") {
+                store = "(" + $(".select2-store option:selected").text() + ")";
+              }
+              inp.value = "";
+              let row = ` <tr>
                                         <td>
                                         </td>
                                         <td class="productimgname">
@@ -325,33 +334,33 @@ function autocomplete(inp) {
                                             : '<a class="p-3"></a>'
                                         }
                                             <a target="_blank" href="${baseUrl}products/${
-              item.id
-            }">${Settings.ShowProductSKU === "yes" ? item.sku : ""} ${
-              item.name
-            }(${
-              item.unit.label
-            })</a><span class="badge bg-info">${instock}</span></td>
+                item.id
+              }">${Settings.ShowProductSKU === "yes" ? item.sku : ""} ${
+                item.name
+              }(${
+                item.unit.label
+              })</a><span class="badge bg-info">${instock}</span></td>
                                         <td>
                                         <div class="increment-decrement">
                                             <div class="input-groups">
                                                 <input type='hidden' name="items[${prodIndex}][product_id]" value="${
-              item.id
-            }">
+                item.id
+              }">
                                                 <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
-              item.unit_cost
-            }" class="runit_cost">
+                item.unit_cost
+              }" class="runit_cost">
             <input type="hidden" name="items[${prodIndex}][unit_price]" value="${
-              item.unit_price
-            }" class="runit_price">
+                item.unit_price
+              }" class="runit_price">
                                                 <input type="hidden" name="items[${prodIndex}][store_id]" value="${$(
-              ".select2-store"
-            ).val()}">
+                ".select2-store"
+              ).val()}">
             <input type="hidden" name="items[${prodIndex}][discount]" class="rdiscount" value="${
-              item?.pdiscount
-            }">
+                item?.pdiscount
+              }">
               <input type="hidden" name="items[${prodIndex}][subtotal]" class="rsubtotal" value="${
-              item.unit_cost - item?.pdiscount
-            }"> 
+                item.unit_cost - item?.pdiscount
+              }"> 
                             <input type="button" value="-" class="button-minus dec button">
                                                 <input onkeyup="updateItemRow(this)" min="0.1" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field rqty" required>
                                                 <input type="button" value="+" class="button-plus inc button">
@@ -375,23 +384,24 @@ function autocomplete(inp) {
                                         }
                                         <a   href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
                                     </tr>`;
-            tableItems.row.add($(row)).draw();
-            tableItems.draw();
-            prodIndex++;
-            closeAllLists();
+              tableItems.row.add($(row)).draw();
+              tableItems.draw();
+              prodIndex++;
+              closeAllLists();
+            });
+            a.appendChild(b);
           });
-          a.appendChild(b);
-        });
-        //for single item and paste event
-        if (e.inputType === "insertFromPaste" && d.data.length === 1) {
-          $(b).trigger("click");
+          //for single item and paste event
+          if (e.inputType === "insertFromPaste" && d.data.length === 1) {
+            $(b).trigger("click");
+          }
         }
-      }
-    }).fail((err) => {
-      b = document.createElement("DIV");
-      b.innerHTML = "<span>Couldn't load data!</span>";
-      a.appendChild(b);
-    });
+      })
+      .fail((err) => {
+        b = document.createElement("DIV");
+        b.innerHTML = "<span>Couldn't load data!</span>";
+        a.appendChild(b);
+      });
   });
   /*execute a function presses a key on the keyboard:*/
   inp.addEventListener("keydown", function (e) {
@@ -508,7 +518,7 @@ form.on("submit", function (e) {
       },
       error: function (r) {
         $("#submit").attr("disabled", false);
-        
+
         Swal.fire({
           icon: "error",
           text: "Unable to submit form! Please try agian.",

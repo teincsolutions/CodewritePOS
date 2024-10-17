@@ -246,7 +246,7 @@ class ProductController extends BaseController
         $inputs = $this->request->getVar();
         $model = new ProductModel();
         if (setting('App.ProductDiffForStore') === 'yes') {
-            $model->select('products.id,products.name,products.barcode,products.sku,products.pdiscount,ifnull(products.description,"") as description,' .
+            $model->select('products.id,products.name,products.barcode,products.sku,products.pdiscount,products.description,' .
                 'products.category_id,products.brand_id,products.unit_id,products.unit_qty,products.taxes' .
                 'products.user_id,products.expiration,store_products.*');
 
