@@ -294,9 +294,9 @@ $(function () {
           return null;
         },
       },
-      { data: "id", name: "supplier_ledgers.id" },
-      { data: "tdate", name: "supplier_ledgers.tdate" },
-      { data: "ledger_type", name: "supplier_ledgers.ledger_type" },
+      { data: "id" },
+      { data: "tdate" },
+      { data: "ledger_type"},
       {
         data: "total_due",
         render: function (data) {
@@ -327,10 +327,9 @@ $(function () {
       },
       { data: "payment_type", name: "supplier_ledgers.payment_type" },
       {
-        data: "user",
-        name: "supplier_ledgers.user_id",
+        data: "user_name",
         render: function (data, type, row) {
-          return data ? `${data.firstname} ${data.lastname}` : "";
+          return data ? `${data}` : "";
         },
       },
       {

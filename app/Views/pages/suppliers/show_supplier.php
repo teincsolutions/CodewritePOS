@@ -607,7 +607,7 @@
                 <div id="input_filter">
                     <input type="hidden" name="supplier_id" value="0">
                     <input type="hidden" name="purchase_return_id" value="0">
-                    <input type="hidden" name="created_at" value="000-00-00">
+                    <input type="hidden" name="created_at" value="">
                     <input type="hidden" name="ledger_type" value="">
                 </div>
                 <div class="table-responsive">
@@ -640,5 +640,5 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js?v=9') ?>"></script>
-<script src="<?= base_url('assets/js/supplier-details.js?v=28') ?>"></script>
+<script src="<?= base_url('assets/js/supplier-details.js?v=29') ?>"></script>
 <?= $this->endSection() ?>

@@ -267,17 +267,15 @@ class supplierLedgerController extends BaseController
         $model = new SupplierLedgerModel();
         $builder = $model->builder();
         $db = db_connect();
-        $builder->select('id,created_at,tdate,ledger_type,purchase_id,purchase_return_id, supplier_id,payment_type,user_id', false)
+        $builder->select('supplier_ledgers.id,supplier_ledgers.created_at,tdate,ledger_type,purchase_id,purchase_return_id, supplier_id,payment_type,user_id,supplier.name as supplier_name,concat(users.firstname," ",users.lastname) as user_name', false)
             ->selectSum('credit', 'total_credit')
             ->selectSum('debit', 'total_debit')
-            ->groupBy('created_at')
+            ->join('suppliers','suppliers.id=supplier_id','left')
+            ->join('users','users.id=user_id','left')
+            ->groupBy('supplier_ledgers.created_at')
             ->groupBy(['ledger_type', 'purchase_return_id'])
-            ->orderBy('id', 'desc');
+            ->orderBy('supplier_ledgers.id', 'desc');
         return $this->response->setJSON(toBuilderDatatableResult($builder, $inputs, function ($item) use ($db) {
-            $item->purchase = model('PurchaseModel')->where('id', $item->purchase_id)->first();
-            $item->purchase_return = model('PurchaseReturnModel')->builder()->where('id', $item->purchase_return_id)->get()->getFirstRow();
-            $item->supplier = model('SupplierModel')->builder()->where('id', $item->supplier_id)->get()->getFirstRow();
-            $item->user = model('UserModel')->builder()->where('id', $item->user_id)->get()->getFirstRow();
             $totals = $db->table('supplier_ledgers')
                 ->select('SUM((credit-debit)) as total_due')
                 ->where('supplier_id', $item->supplier_id)

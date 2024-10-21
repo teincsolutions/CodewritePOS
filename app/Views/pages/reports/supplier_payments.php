@@ -114,5 +114,5 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('script') ?>
-<script src="<?= base_url('assets/js/datatables/supplier-payment-report.js?v=9') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/supplier-payment-report.js?v=10') ?>"></script>
 <?= $this->endSection() ?>

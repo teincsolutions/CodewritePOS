@@ -72,14 +72,7 @@ $(function () {
       { data: "id", name: "supplier_ledgers.id" },
       { data: "tdate", name: "supplier_ledgers.tdate" },
       {
-        data: "supplier",
-        render: function (data, type, row) {
-          if (type === "display")
-            return data
-              ? `<a target="_blank" href="${baseUrl}suppliers/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
-              : null;
-          return data ? data.name : null;
-        },
+        data: "supplier_name",
       },
       { data: "ledger_type", name: "supplier_ledgers.ledger_type" },
       {
@@ -112,11 +105,7 @@ $(function () {
       },
       { data: "payment_type", name: "supplier_ledgers.payment_type" },
       {
-        data: "user",
-        name: "supplier_ledgers.user_id",
-        render: function (data, type, row) {
-          return data ? `${data.firstname} ${data.lastname}` : "";
-        },
+        data: "user_name",
       },
       {
         data: "id",
