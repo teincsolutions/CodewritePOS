@@ -257,7 +257,7 @@ $(function () {
         params.fields = filter;
       },
     },
-    processing: true,
+    processing: false,
     bFilter: true,
     dom: "fBtlpi",
     buttons: [
