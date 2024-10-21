@@ -23,8 +23,7 @@ $(function () {
               filter[field.attr("name")] = field
                 .children("option:selected")
                 .val();
-          } 
-          else if (typeof field.attr("name") !== "undefined") {
+          } else if (typeof field.attr("name") !== "undefined") {
             filter[field.attr("name")] = field.val();
           }
         });
@@ -248,11 +247,13 @@ $(function () {
         });
 
         filter["store_id"] = $(".select2-store").val();
-        filter["supplier_ledgers.supplier_id"] = $("input[name='supplier_id']").val();
+        filter["supplier_ledgers.supplier_id"] = $(
+          "input[name='supplier_id']"
+        ).val();
 
         params.date_range_column = "tdate";
-        params.date_from = $("#ledger-tab #date-from").val();
-        params.date_to = $("#ledger-tab #date-to").val();
+        params.date_from = $("#filter_inputs3 #date-from").val() ?? null;
+        params.date_to = $("#filter_inputs3 #date-to").val() ?? null;
         params.fields = filter;
       },
     },
@@ -644,8 +645,12 @@ $(function () {
         });
         filter["store_id"] = $(".select2-store").val();
         params.date_range_column = "created_at";
-        params.date_from = $("#view-payments #input_filter input[name='created_at']").val();
-        params.date_to = $("#view-payments #input_filter input[name='created_at']").val();
+        params.date_from = $(
+          "#view-payments #input_filter input[name='created_at']"
+        ).val();
+        params.date_to = $(
+          "#view-payments #input_filter input[name='created_at']"
+        ).val();
 
         params.fields = filter;
       },
@@ -754,8 +759,12 @@ $(function () {
       },
     ],
     initComplete: (settings, json) => {
-      $("#view-payments .dataTables_filter").appendTo("#view-payments #tableSearch");
-      $("#view-payments .dataTables_filter").appendTo("#view-payments .search-input");
+      $("#view-payments .dataTables_filter").appendTo(
+        "#view-payments #tableSearch"
+      );
+      $("#view-payments .dataTables_filter").appendTo(
+        "#view-payments .search-input"
+      );
       if ($('view-payments [data-bs-toggle="tooltip"]').length > 0) {
         var tooltipTriggerList = [].slice.call(
           document.querySelectorAll('#view-payments [data-bs-toggle="tooltip"]')
@@ -833,9 +842,8 @@ $(function () {
 
   form3.on("submit", function (e) {
     e.preventDefault();
-  
-    if ($(this).valid() === true) {
 
+    if ($(this).valid() === true) {
       Swal.fire({
         title: "Please wait !",
         allowOutsideClick: false,
@@ -843,7 +851,7 @@ $(function () {
           Swal.showLoading();
         },
       });
-      
+
       $.ajax({
         method: "POST",
         url: this.getAttribute("action"),
