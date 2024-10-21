@@ -267,7 +267,7 @@ class supplierLedgerController extends BaseController
         $model = new SupplierLedgerModel();
         $builder = $model->builder();
         $db = db_connect();
-        $builder->select('supplier_ledgers.id,supplier_ledgers.created_at,tdate,ledger_type,purchase_id,purchase_return_id, supplier_id,payment_type,supplier_ledgers.user_id,supplier.name as supplier_name,concat(users.firstname," ",users.lastname) as user_name', false)
+        $builder->select('supplier_ledgers.id,supplier_ledgers.created_at,tdate,ledger_type,purchase_id,purchase_return_id, supplier_id,payment_type,supplier_ledgers.user_id,suppliers.name as supplier_name,concat(users.firstname," ",users.lastname) as user_name', false)
             ->selectSum('credit', 'total_credit')
             ->selectSum('debit', 'total_debit')
             ->join('suppliers','suppliers.id=supplier_id','left')
