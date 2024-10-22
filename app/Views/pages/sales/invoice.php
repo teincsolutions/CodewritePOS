@@ -236,7 +236,7 @@
                                     <h5 class="grandTotal"><?= number_format($sales->total_amount, 2) ?></h5>
                                 </li>
                                 <li class="total">
-                                    <h4>Checkout Sales Total</h4>
+                                    <h4>Checkout Paid</h4>
                                     <h5 class="grandTotal"><?= number_format($sales->paid, 2) ?></h5>
                                 </li>
                             </ul>
