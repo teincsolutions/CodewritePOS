@@ -24,7 +24,7 @@ class SalesModel extends Model
         'order_status',
         'payment_status',
         'store_id',
-       // 'tax',
+        // 'tax',
         'discount',
         'shipping',
         'payment_type',
@@ -85,6 +85,7 @@ class SalesModel extends Model
                         ->where('sale_id', $model['data']->id)
                         ->get()
                         ->getRowObject()->total;
+                    $model['data']->checkoutPaid = $model['data']->paid;
                     $model['data']->paid = $total ?? 0.00;
                 }
             } else {
@@ -98,7 +99,7 @@ class SalesModel extends Model
                             ->where('sale_id', $row->id)
                             ->get()
                             ->getRowObject()->total;
-
+                        $model['data']->checkoutPaid = $model['data']->paid;
                         $model['data'][$key]->paid = $total ?? 0.00;
                     }
                     $model['data'][$key]->store = $storeModel->where('id', $row->store_id)->first();
@@ -327,5 +328,4 @@ class SalesModel extends Model
         $total =  $builder->get()->getFirstRow()->total;
         return $total ? $total : 0.00;
     }
-
 }

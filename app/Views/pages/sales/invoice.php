@@ -233,7 +233,7 @@
                                 </li>
                                 <li class="total">
                                     <h4>Checkout Paid</h4>
-                                    <h5 class="grandTotal"><?= number_format($sales->paid, 2) ?></h5>
+                                    <h5 class="grandTotal"><?= number_format($sales->checkoutPaid, 2) ?></h5>
                                 </li>
                                 <li class="total">
                                     <h4>Sales Total</h4>
