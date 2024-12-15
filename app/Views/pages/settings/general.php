@@ -80,6 +80,22 @@
                                                     <input type="text" class="form-control border-0 border-bottom w-75" name="companyTaxId" value="<?= setting('App.companyTaxId') ?>" placeholder="Tax ID">
                                                 </td>
                                             </tr>
+                                            <tr>
+                                                <td>Show Store Balance</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="ShowStoreBalance" value="yes" <?= setting('App.ShowStoreBalance') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="ShowStoreBalance" value="no" <?= setting('App.ShowStoreBalance') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
                                         </table>
                                     </div>
                                 </div>
@@ -567,6 +583,22 @@
                                                         </label>
                                                         <label class="inputcheck text-capitalize">No
                                                             <input type="radio" name="ShowStoreContact" value="no" <?= setting('App.ShowStoreContact') === 'no' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>Show Order Number</td>
+                                                <td>
+                                                    <div class="d-flex gap-5">
+                                                        <label class="inputcheck text-capitalize">Yes
+                                                            <input type="radio" name="ShowOrderNum" value="yes" <?= setting('App.ShowOrderNum') === 'yes' ? 'checked' : '' ?>>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                        <label class="inputcheck text-capitalize">No
+                                                            <input type="radio" name="ShowOrderNum" value="no" <?= setting('App.ShowOrderNum') === 'no' ? 'checked' : '' ?>>
                                                             <span class="checkmark"></span>
                                                         </label>
                                                     </div>

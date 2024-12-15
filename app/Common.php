@@ -107,9 +107,10 @@ if (!function_exists('toBuilderDatatableResult')) {
             foreach ($inputs['fields'] as $field => $val) {
                 if (!empty(trim($val)) && in_array($field, [
                     'type', 'user_id', 'payment_type',
+                    'sales.type', 'sales.user_id', 'sales.payment_type',
                     'customer_id', 'customer_ledgers.customer_id', 'supplier_ledgers.supplier_id','sales.store_id',
                     'customer_legers.store_id','supplier_ledgers.store_id', 'supplier_id','purchases.supplier_id',
-                    'store_id','unit_id','products.unit_id',
+                    'store_id','unit_id','products.unit_id','saels.store_id','unit_id','products.unit_id',
                 ]))
                     $model->where($field, $val);
                 else if (!empty(trim($val))) $model->like($field, $val);

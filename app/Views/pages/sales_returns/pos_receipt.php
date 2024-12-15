@@ -11,10 +11,20 @@
     <?php endif ?>
 
     <?php if (setting('App.ShowMainBranchAddress') === 'yes') : ?>
-        <p class="text-center"><?= setting('App.companyAddress') ? 'Main Branch: ' : '' ?> <?= setting('App.companyAddress') ?> | tel:<?= setting('App.companyContacts') ?></p>
+        <p class="text-center">
+            <?= setting('App.companyAddress') ?>
+            <br> Tel:<?= setting('App.companyContacts') ?>
+        </p>
+    <?php else: ?>
+        <h4>Branch: <?= $returns->sales->store->name; ?></h4>
+        <?php if (setting('App.ShowStoreContact') === 'yes') : ?>
+            <h5>Mobile: <?= $sales->store->phone ?? ''; ?></h5>
+        <?php endif ?>
     <?php endif ?>
 
-    <h4>Branch: <?= $returns->sale->store->name; ?> at <?= $returns->sale->store->location; ?></h4>
+    <?php if (setting('App.ShowOrderNum')) : ?>
+        <h2>Order# <?= substr($returns->invoice, -4) ?></h2>
+    <?php endif ?>
 </header>
 <main>
     <table>
@@ -26,10 +36,6 @@
                             <tr>
                                 <th>Customer:</th>
                                 <td><?= $returns->sale->customer->name; ?></td>
-                            </tr>
-                            <tr>
-                                <th>Address:</th>
-                                <td><?= $returns->sale->customer->address; ?></td>
                             </tr>
                             <tr>
                                 <th>Phone Number:</th>
@@ -48,7 +54,7 @@
                 <table class="raw info">
                     <tr>
                         <th>Time:</th>
-                        <td><?= date('d/m/y  h:i a', strtotime($returns->created_at)); ?></td>
+                        <td><?= date('d/m/y  h:i A', strtotime($returns->created_at)); ?></td>
                     </tr>
                     <tr>
                         <th>Reference:</th>
@@ -87,7 +93,7 @@
         <tbody>
             <?php
             $total_discount = ($returns->discount ?? 0);
-           $items = $returns->items;
+            $items = $returns->items;
             foreach ($items as $k => $row) : ?>
                 <?php
                 $total_discount += $row->discount;
@@ -133,7 +139,7 @@
             <?php if ($returns->sale->type === 'customer') : ?>
                 <tr>
                     <th>
-                       Change
+                        Change
                     </th>
                     <td></td>
                     <td colspan="2">

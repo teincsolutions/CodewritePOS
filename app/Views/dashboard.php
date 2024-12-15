@@ -1,50 +1,7 @@
 <?= $this->extend('template/default') ?>
 <?= $this->section('content') ?>
 <div class="content">
-    <div class="row">
-        <?php if (auth()->user()->can('stocks.report')) : ?>
-            <div class="col-lg-3 col-sm-6 col-12">
-                <div class="dash-count das3">
-                    <div class="dash-widgetcontent">
-                        <h4>GHC <span class="counters" data-count="<?= model('SalesModel')->getTodayProfit($activeStore->id ?? 0) ?>">0.00</span></h4>
-                        <h6>Today's Revenue</h6>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6 col-12">
-                <div class="dash-count">
-                    <div class="dash-widgetcontent">
-                        <h4>GHC <span class="counters" data-count="<?= model('SalesModel')->getTodayDueAmount($activeStore->id ?? 0) ?>">0.00</span></h4>
-                        <h6>Today's Sales Due</h6>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6 col-12">
-                <div class="dash-count das2">
-                    <div class="dash-widgetcontent">
-                        <h4>GHC <span class="counters" data-count="<?= model('StockModel')->getValue($activeStore->id ?? 0) ?>">0.00</span></h4>
-                        <h6>Store Balance</h6>
-                    </div>
-                </div>
-            </div>
-        <?php endif; ?>
-        <div class="col-lg-3 col-sm-6 col-12">
-            <div class="form-group">
-                <label for="store_id">Active Store</label>
-                <select name="store_id" class="select2-store">
-                    <option value=""></option>
-                    <?php
-                    if (isset($stores))
-                        foreach ($stores as $row) { ?>
-                        <option value="<?= $row->id ?>" <?= $activeStore ? ($activeStore->id === $row->id ? 'selected' : '') : ($row->id === $settings->get('App.DefaultStore', $context) ? 'selected' : '') ?>>
-                            <?= $row->name; ?> (<?= $row->location; ?>)
-                        </option>
-                    <?php } ?>
-                </select>
-            </div>
-
-        </div>
-    </div>
+   
     <div class="row">
         <div class="col-lg-3 col-sm-6 col-12">
             <div class="dash-widget dash1">
@@ -191,7 +148,36 @@
             </div>
         </div>
     </div>
-
+    <div class="row">
+        <?php if (auth()->user()->can('stocks.report')) : ?>
+            <div class="col-lg-3 col-sm-6 col-12">
+                <div class="dash-count das3">
+                    <div class="dash-widgetcontent">
+                        <h4>GHC <span class="counters" data-count="<?= model('SalesModel')->getTodayProfit($activeStore->id ?? 0) ?>">0.00</span></h4>
+                        <h6>Today's Revenue</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-12">
+                <div class="dash-count">
+                    <div class="dash-widgetcontent">
+                        <h4>GHC <span class="counters" data-count="<?= model('SalesModel')->getTodayDueAmount($activeStore->id ?? 0) ?>">0.00</span></h4>
+                        <h6>Today's Sales Due</h6>
+                    </div>
+                </div>
+            </div>
+            <?php if (setting('App.ShowStoreBalance')) : ?>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="dash-count das2">
+                        <div class="dash-widgetcontent">
+                            <h4>GHC <span class="counters" data-count="<?= model('StockModel')->getValue($activeStore->id ?? 0) ?>">0.00</span></h4>
+                            <h6>Store Balance</h6>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
     <div class="row">
         <div class="col-lg-7 col-sm-12 col-12 d-flex">
             <div class="card flex-fill">
