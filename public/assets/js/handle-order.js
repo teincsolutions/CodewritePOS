@@ -61,12 +61,12 @@ form.validate({
   },
 });
 let initCompleted = false;
-
+let rowCount = 1;
 let tableItems = $(".tr-items").DataTable({
   dom: "fti",
   pageLength: 100,
+  order: [[0, "desc"]],
   rowCallback: function (row, data, dispNum) {
-    $("td:eq(0)", row).html(dispNum + 1);
     if (initCompleted) updateTotals();
   },
   initComplete: function (settings, json) {
@@ -308,15 +308,14 @@ function autocomplete(inp) {
               ? `<span class="d-flex justify-content-between" style="z-index:1000"><del><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></del>GHS ${item.unit_cost}</span>`
               : `<span class="d-flex justify-content-between" style="z-index:1000"><span><code>${item.sku}</code> ${item.name}(${item.unit.label}) - <i>${info}</i></span>GHS ${item.unit_cost}</span>`;
 
-          b.addEventListener("click", function (e) {
-            let store = "";
-            if ($(".select2-store").val() != "") {
-              store = "(" + $(".select2-store option:selected").text() + ")";
-            }
-            inp.value = "";
-            let row = ` <tr>
-                                        <td>
-                                        </td>
+            b.addEventListener("click", function (e) {
+              let store = "";
+              if ($(".select2-store").val() != "") {
+                store = "(" + $(".select2-store option:selected").text() + ")";
+              }
+              inp.value = "";
+              let row = ` <tr>
+                                        <td>${rowCount++}</td>
                                         <td class="productimgname">
                                         ${
                                           item.image_uri
@@ -492,6 +491,7 @@ form.on("submit", function (e) {
         if (d.status === true) {
           if (printInvoice(d)) {
             form.trigger("reset");
+            rowCount = 1;
             $("input[name='invoice']").val(parseInt(d.data.invoice) + 1);
             $("#order-id").html(parseInt(d.data.invoice) + 1);
             tableItems.clear().draw();

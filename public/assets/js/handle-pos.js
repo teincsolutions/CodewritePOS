@@ -64,12 +64,12 @@ form.validate({
   },
 });
 let initCompleted = false;
-
+let rowCount = 1;
 let tableItems = $(".tr-items").DataTable({
   dom: "fti",
   pageLength: 100,
+  order: [[0, "desc"]],
   rowCallback: function (row, data, dispNum) {
-    $("td:eq(0)", row).html(dispNum + 1);
     if (initCompleted) updateTotals();
   },
   initComplete: function (settings, json) {
@@ -376,9 +376,167 @@ function autocomplete(inp) {
     if (Settings.ProductDiffForStore === "yes")
       searchParams.store_id = $(".select2-store").val();
 
-    $.ajax(`${baseUrl}products/search`, {
-      data: searchParams,
-      contentType: "application/json",
+  $.ajax(`${baseUrl}products/search`, {
+    data: searchParams,
+    contentType: "application/json",
+  })
+    .done((d, s) => {
+      if (s !== "success") {
+        // if fail
+        b = document.createElement("DIV");
+        b.innerHTML = "<i>Unable load data!</i>";
+        a.appendChild(b);
+        // if fail
+        return;
+      }
+
+      if (d.data.length === 0) {
+        b = document.createElement("DIV");
+        b.innerHTML = "<span>No product found!</span>";
+        a.appendChild(b);
+        return;
+      } else {
+        suggestions = d.data;
+        a.innerHTML = "";
+        suggestions.filter(searchPrediction).forEach((item, i) => {
+          b = document.createElement("DIV");
+          info = [];
+          (item.category ? info.push(item.category.name) : null) ||
+            (item.brand ? info.push(item.brand.name) : null);
+          let instock = 0;
+
+          if (item.inventory) {
+            if ($(".select2-store").val() == "") {
+              item.inventory.forEach((stock, i) => {
+                instock += parseFloat(stock.instock);
+              });
+            } else {
+              const storeId = $(".select2-store").val();
+              const stock = item.inventory.filter(
+                (stock, i) => storeId == stock.store_id
+              );
+              if (stock.length > 0) instock = stock[0].instock;
+            }
+          }
+          info.push(`instock<strong>(${instock})</strong>`);
+
+          info = info.join(",");
+          let unitPrice = "0.00";
+          if (Settings.AllowWholeSalePrices === "yes") {
+            unitPrice =
+              customerType === "wholeseller"
+                ? item.unit_ws_price
+                  ? item.unit_ws_price
+                  : "0.00"
+                : item.unit_price;
+          } else {
+            unitPrice = item.unit_price;
+          }
+          const desc =
+            item.description !== null ? ` - ${item.description}` : "";
+          b.innerHTML =
+            item.discontinued == 1
+              ? `<span class="d-flex justify-content-between" style="z-index:1000"><del><code>${
+                  item.sku ?? ""
+                }</code> ${item.name}${desc}(${
+                  item.unit.label
+                }) - <i>${info}</i></del>GHS ${unitPrice}</span>`
+              : `<span class="d-flex justify-content-between" style="z-index:1000"><span><code>${
+                  item.sku ?? ""
+                }</code> ${item.name}${desc}(${
+                  item.unit.label
+                }) - <i>${info}</i></span>GHS ${unitPrice}</span>`;
+
+          b.addEventListener("click", function (e) {
+            if (instock <= item.min_qty) {
+              Swal.fire({
+                icon: "warning",
+                title: "Short Stock Alert!",
+                text: "You have (" + instock + ") stock left for " + item.name,
+              });
+            }
+            inp.value = "";
+
+            let row = `<tr>
+                                      <td>${rowCount++}
+                                      </td>
+                                      <td class="productimgname">
+                                      ${
+                                        item.image_uri
+                                          ? `<a class="product-img"><img src="${baseUrl}${item.image_uri}" alt="product"></a>`
+                                          : '<a class="p-3"></a>'
+                                      }
+                                          <a target="_blank" href="${baseUrl}products/${
+              item.id
+            }">${Settings.ShowProductSKU === "yes" ? item.sku : ""} ${
+              item.name
+            }(${
+              item.unit.label
+            })</a><span class="badge bg-info">${instock}</span></td>
+                                      <td>
+                                      <div class="increment-decrement">
+                                          <div class="input-groups">
+                                              <input type='hidden' name="items[${prodIndex}][product_id]" value="${
+              item.id
+            }">
+                                              <input type="hidden" name="items[${prodIndex}][unit_price]" value="${unitPrice}" class="runit_price">
+          <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${
+              item.unit_cost
+            }" class="runit_cost">
+                                            
+                                              <input type="hidden" name="items[${prodIndex}][store_id]" value="${$(
+              ".select2-store"
+            ).val()}">
+                                              <input type="hidden" name="items[${prodIndex}][tax]" class="rtax" value="${
+              item.tax ? item.tax : "0.00"
+            }">
+                                              <input type="hidden" name="items[${prodIndex}][discount]" class="rdiscount" value="${
+              item?.discount
+            }">
+                                              <input type="hidden" name="items[${prodIndex}][subtotal]" class="rsubtotal" value="${
+              unitPrice -
+              item?.discount +
+              (unitPrice * (item.tax ? item.tax : 0.0)) / 100
+            }">
+                                              <input type="button" value="-" class="button-minus dec button">
+                                              <input onkeyup="updateItemRow(this)" min="0.1" type="text" name="items[${prodIndex}][qty]" value="1" class="rqty quantity-field" required>
+                                              <input type="button" value="+" class="button-plus inc button">
+                                          </div>
+                                      </div>
+                                      </td>
+                                      <td>
+                                      ${unitPrice}
+                                      </td>
+                                      <td>${item?.discount}</td>
+                                      <td class="suffix-percent">${
+                                        item.tax
+                                          ? parseFloat(item.tax).toFixed(2)
+                                          : "0.00"
+                                      }</td>
+                                      <td>${(
+                                        unitPrice -
+                                        item?.discount +
+                                        (unitPrice *
+                                          (item.tax ? item.tax : 0.0)) /
+                                          100
+                                      ).toFixed(2)}</td>
+                                      <td> ${
+                                        Settings.AllowPriceChange === "yes" ||
+                                        Settings.AllowCustomerDiscountChange ===
+                                          "yes"
+                                          ? `<span class="edit-price btn btn-icon"><i class="fa fa-edit"></i></span>`
+                                          : ""
+                                      }
+                                      <a   href="javascript:void(0);" class="delete-set"><i class="fa text-danger fa-trash"></i></a></td>
+                                  </tr>`;
+            tableItems.row.add($(row)).draw();
+            tableItems.draw();
+            prodIndex++;
+            closeAllLists();
+          });
+          a.appendChild(b);
+        });
+      }
     })
       .done((d, s) => {
         if (s !== "success") {
@@ -770,6 +928,7 @@ form.on("submit", function (e) {
         if (d.status === true) {
           if (printInvoice(d)) {
             form.trigger("reset");
+            rowCount = 1;
             $("input[name='invoice']").val(parseInt(d.data.invoice) + 1);
             $("#order-id").html(parseInt(d.data.invoice) + 1);
             tableItems.clear().draw();

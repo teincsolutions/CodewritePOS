@@ -601,6 +601,31 @@
     </div>
 </div>
 <?= $this->endSection() ?>
+<?= $this->section('modal') ?>
+<div class="modal fade" id="scan" tabindex="-1" aria-labelledby="scanbarcode" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Scan Barcode</h5>
+            </div>
+            <div class="modal-body">
+                <div class="col-12 text-center">
+                    <div style="max-height:400px; overflow:hidden;" id="scanner-container"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="stopScan" type="button" class="btn btn-danger" data-bs-dismiss="modal">Stop</button>
+            </div>
+        </div>
+    </div>
+    </form>
+    <?= $this->endSection() ?>
+    <?= $this->section('script') ?>
+    <script src="<?= base_url('assets/js/handle-pos.js?v=38') ?>"></script>
+    <script src="<?= base_url('assets/js/datatables/pos.modal.js?v=5') ?>"></script>
+    <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <script src="<?= base_url('assets/js/handle-scanner.js?v=1') ?>"></script>
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/handle-pos.js?v=34') ?>"></script>
