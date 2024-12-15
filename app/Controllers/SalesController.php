@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\BrandModel;
+use App\Models\CategoryModel;
 use App\Models\CustomerLedgerModel;
 use App\Models\CustomerModel;
 use App\Models\ProductModel;
@@ -10,6 +12,8 @@ use App\Models\SalesItemModel;
 use App\Models\SalesModel;
 use App\Models\StockModel;
 use App\Models\StoreModel;
+use App\Models\TaxModel;
+use App\Models\UnitModel;
 use App\Models\UserModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\HTTP\Response;
@@ -81,6 +85,29 @@ class SalesController extends BaseController
         ];
 
         return view('pages/reports/daily_sales', $data);
+    }
+
+    /**
+     * return view for list
+     * @return Response - http response
+     */
+    public function product_sales_report()
+    {
+        $catModel = new CategoryModel();
+        $unitModel = new UnitModel();
+        $brandModel = new BrandModel();
+        $stores = (new UserModel())->getMyStores();
+        $data = [
+            'title' => 'Product Sales Report',
+            'stores' => $stores,
+            'categories' => $catModel->findAll(),
+            'units' => $unitModel->findAll(),
+            'brands' => $brandModel->findAll(),
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
+        ];
+
+        return view('pages/reports/product_sales', $data);
     }
 
     /**
@@ -546,6 +573,37 @@ class SalesController extends BaseController
             return $item;
         }));
     }
+
+    /**
+     * return json for datatables
+     * @return Response - http response
+     */
+    public function product_sales_report_datatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new SalesModel();
+        $builder = $model->builder();
+
+        $builder->select([
+            'sales_items.product_id',
+            'concat(ifnull(concat(products.sku," "),""),products.name," ",ifnull(brands.name,"")," (",units.label, ")") as product_name',
+            'sales_items.unit_price',
+            'SUM((sales_items.qty - ifnull(sales_returns_items.qty,0))) as qty',
+            'SUM((sales_items.discount - ifnull(sales_returns_items.discount,0))) as discount',
+            'SUM((sales_items.subtotal - ifnull(sales_returns_items.subtotal,0))) as subtotal',
+        ], false)
+            ->join('sales_items', 'sales_items.sale_id=sales.id')
+            ->join('sales_returns_items', 'sales_returns_items.sale_item_id=sales_items.id', 'left')
+            ->join('products', 'sales_items.product_id=products.id')
+            ->join('units', 'units.id=products.unit_id')
+            ->join('categories', 'categories.id=products.category_id')
+            ->join('brands', 'brands.id=products.brand_id', 'left')
+            ->where('sales.order_status', 'completed')
+            ->groupBy('products.id');
+
+        return $this->response->setJSON(toBuilderDatatableResult($builder,$inputs));
+    }
+
 
 
     /**

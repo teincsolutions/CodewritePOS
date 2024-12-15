@@ -41,12 +41,23 @@ use CodeIgniter\Shield\Authorization\Groups;
                             <span><i data-feather="search" class="feather-14"></i></span>
                         </div>
                     </div>
-
                 </form>
             </div>
         </li>
 
-
+        <?php if (isset($stores) && isset($activeStore)): ?>
+            <li class="nav-item">
+                <select name="store_id" class="select2-store">
+                    <option value=""></option>
+                    <?php
+                    foreach ($stores as $row) { ?>
+                        <option value="<?= $row->id ?>" <?= $activeStore ? ($activeStore->id === $row->id ? 'selected' : '') : ($row->id === $settings->get('App.DefaultStore', $context) ? 'selected' : '') ?>>
+                            <?= $row->name; ?> (<?= $row->location; ?>)
+                        </option>
+                    <?php } ?>
+                </select>
+            </li>
+        <?php endif ?>
         <li class="nav-item dropdown has-arrow flag-nav nav-item-box">
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="javascript:void(0);" role="button">
                 <i data-feather="globe"></i>
@@ -57,6 +68,7 @@ use CodeIgniter\Shield\Authorization\Groups;
                 </a>
             </div>
         </li>
+
 
         <li class="nav-item nav-item-box">
             <a href="javascript:void(0);" id="btnFullscreen">

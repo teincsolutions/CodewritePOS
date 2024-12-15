@@ -11,10 +11,20 @@
     <?php endif ?>
 
     <?php if (setting('App.ShowMainBranchAddress') === 'yes') : ?>
-        <p class="text-center"><?= setting('App.companyAddress') ? 'Main Branch: ' : '' ?> <?= setting('App.companyAddress') ?> | tel:<?= setting('App.companyContacts') ?></p>
+        <p class="text-center">
+            <?= setting('App.companyAddress') ?>
+            <br> Tel:<?= setting('App.companyContacts') ?>
+        </p>
+    <?php else: ?>
+        <h4>Branch: <?= $sales->store->name; ?></h4>
+        <?php if (setting('App.ShowStoreContact') === 'yes') : ?>
+            <h5>Mobile: <?= $sales->store->phone ?? ''; ?></h5>
+        <?php endif ?>
     <?php endif ?>
 
-    <h4>Branch: <?= $sales->store->name; ?> at <?= $sales->store->location; ?></h4>
+    <?php if (setting('App.ShowOrderNum')) : ?>
+        <h2>Order# <?= substr($sales->invoice, -4) ?></h2>
+    <?php endif ?>
 </header>
 <main>
     <table>
@@ -26,10 +36,6 @@
                             <tr>
                                 <th>Customer:</th>
                                 <td><?= $sales->customer->name; ?></td>
-                            </tr>
-                            <tr>
-                                <th>Address:</th>
-                                <td><?= $sales->customer->address; ?></td>
                             </tr>
                             <tr>
                                 <th>Phone Number:</th>
@@ -48,7 +54,7 @@
                 <table class="raw info">
                     <tr>
                         <th>Time:</th>
-                        <td><?= date('d/m/y  h:i a', strtotime($sales->created_at)); ?></td>
+                        <td><?= date('d/m/y  h:i A', strtotime($sales->created_at)); ?></td>
                     </tr>
                     <tr>
                         <th>Reference:</th>
@@ -57,12 +63,6 @@
                     <tr>
                         <th>Sales Person:</th>
                         <td><?= $sales->user->firstname; ?> <?= $sales->user->lastname; ?></td>
-                    </tr>
-                    <tr>
-                        <?php if (setting('App.ShowStoreContact') === 'yes') : ?>
-                            <th>Contact Store:</th>
-                            <td><?= $sales->store->phone ?? ''; ?></td>
-                        <?php endif ?>
                     </tr>
                 </table>
             </td>
@@ -208,6 +208,6 @@
 </main>
 <footer class="text-center">
     <p><b>Thank you for your business!</b></p>
-    <p><small>Codewrite Technology Ltd. Copyright &copy; 2023 version <?= env('app.version') ?> Mobile: 0246092155/0553035684</small></p>
+    <p><small>Codewrite Technology Ltd. Copyright &copy; 2024 version <?= env('app.version') ?> Mobile: 0246092155</small></p>
 </footer>
 <?= $this->endSection() ?>

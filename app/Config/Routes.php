@@ -55,6 +55,7 @@ $routes->group('settings', static function (RouteCollection $routes) {
 $routes->group('reports', static function (RouteCollection $routes) {
     $routes->get('closing', [ClosingController::class, 'report'],['filter' => 'permission:closing.report']);
     $routes->get('sales', [SalesController::class, 'daily_report'],['filter' => 'permission:sales.report']);
+    $routes->get('product-sales', [SalesController::class, 'product_sales_report'],['filter' => 'permission:sales.report']);
     $routes->get('sales/print', [SalesController::class, 'daily_report_print']);
     $routes->get('purchases', [PurchaseController::class, 'daily_report'],['filter' => 'permission:purchases.report']);
     $routes->get('purchases/print', [PurchaseController::class, 'daily_report_print']);
@@ -215,6 +216,7 @@ $routes->get('cashup/datatable', [StoreLedgerController::class, 'datatable']);
 $routes->get('suppliers/creditors/datatable', [SupplierLedgerController::class, 'creditors_datatable']);
 $routes->get('units/datatable', [UnitController::class, 'datatable']);
 $routes->get('closing/datatable', [ClosingController::class, 'datatable']);
+$routes->get('product-sales/datatable', [SalesController::class, 'product_sales_report_datatable']);
 
 //select2
 $routes->get('users/select2', [UserController::class, 'select2']);

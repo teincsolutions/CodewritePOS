@@ -305,6 +305,12 @@
                                                 <span>Closing Report</span></a>
                                         </li>
                                     <?php endif ?>
+                                    <?php if (auth()->user()->can('sales.report')) : ?>
+                                        <li class="<?= getActiveUrl("reports/product-sales", "active"); ?>">
+                                            <a href="<?= site_url('reports/product-sales') ?>">
+                                                <span>Products Sold Report</span></a>
+                                        </li>
+                                    <?php endif ?>
                                 </ul>
                             </li>
                             <?php if (setting('App.AllowCustomerLimit') === 'yes') : ?>

@@ -159,7 +159,7 @@ class CustomerController extends BaseController
             if ($model->save($inputs)) {
                 $id = $model->getInsertID();
                 if (auth()->user()->can('customer-ledgers.edit-debit'))
-                    $model->addInitialBalance($id, $inputs['store_id'], $inputs['initial_balance']);
+                    $model->addInitialBalance($id, $inputs['store_id'], $inputs['initial_balance'], date("Y-m-d"));
 
                 $res = array_merge($res, [
                     'status' => true,
