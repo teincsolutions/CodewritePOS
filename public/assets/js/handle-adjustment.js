@@ -62,12 +62,12 @@ form.validate({
   },
 });
 let initCompleted = false;
-
+let rowCount = 1;
 let tableItems = $(".tr-items").DataTable({
   dom: "fti",
+  order: [[0, "desc"]],
   pageLength: 100,
   rowCallback: function (row, data, dispNum) {
-    $("td:eq(0)", row).html(dispNum + 1);
     if (initCompleted) updateTotals();
   },
   initComplete: function (settings, json) {
@@ -279,8 +279,7 @@ function autocomplete(inp) {
               }
               inp.value = "";
               let row = ` <tr>
-                                          <td>
-                                          </td>
+                                          <td>${rowCount++}</td>
                                           <td class="productimgname">
                                           ${
                                             item.image_uri
@@ -532,6 +531,7 @@ form.on("submit", function (e) {
         if (d.status === true) {
           if (printInvoice(d)) {
             form.trigger("reset");
+            rowCount = 1;
             $("input[name='invoice']").val(parseInt(d.data.invoice) + 1);
             $("#order-id").html(parseInt(d.data.invoice) + 1);
             tableItems.clear().draw();
@@ -547,7 +547,7 @@ form.on("submit", function (e) {
       },
       error: function (r) {
         $("#submit").attr("disabled", false);
-        
+
         Swal.fire({
           icon: "error",
           text: "Unable to submit form! Please try agian.",
