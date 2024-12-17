@@ -620,13 +620,6 @@
     </div>
     </form>
     <?= $this->endSection() ?>
-    <?= $this->section('script') ?>
-    <script src="<?= base_url('assets/js/handle-pos.js?v=38') ?>"></script>
-    <script src="<?= base_url('assets/js/datatables/pos.modal.js?v=5') ?>"></script>
-    <script src="<?= base_url('assets/js/record-actions.js') ?>"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
-    <script src="<?= base_url('assets/js/handle-scanner.js?v=1') ?>"></script>
-
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/handle-pos.js?v=34') ?>"></script>
 <script src="<?= base_url('assets/js/datatables/pos.modal.js?v=5') ?>"></script>
