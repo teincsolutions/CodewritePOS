@@ -382,7 +382,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                          
+
                                             <thead class="border-top-0">
                                                 <th style="width: 25%;">Purchases & Returns</th>
                                                 <th>Value</th>
@@ -522,6 +522,20 @@
                                                 <th>Value</th>
                                             </thead>
                                             <tr>
+                                                <td>Printer</td>
+                                                <td>
+                                                    <div class="d-flex gap-3">
+                                                        <button class="btn btn-primary btn-sm" type="button" id="check-devices">Check for Devices</button>
+                                                        <div class="w-50">
+                                                            <select name="SelectedPrint" class="form-control" id="device-list"></select>
+                                                        </div>
+                                                        <button class="btn btn-secondary btn-sm" type="button" id="select-device" style="display: none;">View Device Info</button>
+                                                        <button class="btn btn-secondary btn-sm" type="button" onclick="connectAndPrint">Test Printer</button>
+                                                    </div>
+                                                    <div id="device-info"></div>
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <td>Show Main Branch Address</td>
                                                 <td>
                                                     <div class="d-flex gap-5">
@@ -609,4 +623,105 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/handle-post.js') ?>"></script>
+<script>
+    $("#device-list").select2({
+        placeholder: "Select a printer",
+    });
+    const checkDevicesButton = document.getElementById("check-devices");
+    const deviceList = document.getElementById("device-list");
+    const selectDeviceButton = document.getElementById("select-device");
+    const deviceInfo = document.getElementById("device-info");
+
+    let availableDevices = [];
+    const getDevices = async () => {
+        const devices = await navigator.usb.getDevices();
+        for (let index = 0; index < devices.length; index++) {
+            const device = devices[index];
+            const option = document.createElement("option");
+            option.value = 0;
+            option.textContent = `Device Name: ${device.productName} (ID: ${device.vendorId})`;
+            deviceList.appendChild(option);
+        }
+        $("#device-list").val('<?= setting('App.SelectedPrint') ?>');
+    };
+    getDevices();
+    // Check for devices when the button is clicked
+    checkDevicesButton.addEventListener("click", async () => {
+        try {
+            const device = await navigator.usb.requestDevice({
+                filters: [] // Leave empty to show all devices or add specific filters
+            });
+
+            availableDevices = [device]; // Store the selected device
+            deviceList.innerHTML = ""; // Clear previous options
+
+            const option = document.createElement("option");
+            option.value = 0;
+            option.textContent = `Device Name: ${device.productName} (ID: ${device.vendorId})`;
+            deviceList.appendChild(option);
+
+            deviceList.style.display = "block";
+            selectDeviceButton.style.display = "block";
+            deviceInfo.innerHTML = ""; // Clear previous device info
+        } catch (error) {
+            console.error("Error requesting device:", error);
+            alert("No device selected or an error occurred.");
+        }
+    });
+
+    // Select a device and display its details
+    selectDeviceButton.addEventListener("click", async () => {
+        const selectedIndex = deviceList.value;
+        if (selectedIndex === "") {
+            alert("Please select a device from the list.");
+            return;
+        }
+
+        const selectedDevice = availableDevices[selectedIndex];
+        try {
+            await selectedDevice.open(); // Open the device to interact
+            deviceInfo.innerHTML = `
+                    <h4>Device Information</h4>
+                    <div><strong>Vendor ID:</strong> ${selectedDevice.vendorId}</div>
+                    <div><strong>Product ID:</strong> ${selectedDevice.productId}</div>
+                    <div><strong>Manufacturer:</strong> ${selectedDevice.manufacturerName || "N/A"}</div>
+                    <div><strong>Product Name:</strong> ${selectedDevice.productName || "N/A"}</div>
+                `;
+            await selectedDevice.close(); // Close the device
+        } catch (error) {
+            console.error("Error opening device:", error);
+            alert("Failed to open the selected device.");
+        }
+    });
+
+    let printerDevice = null;
+
+    async function connectAndPrint() {
+        try {
+            // Step 1: Request device access
+            printerDevice = await navigator.usb.requestDevice({
+                filters: [{
+                    vendorId: $("#device-list").val()
+                }] // Replace with actual vendorId
+            });
+
+            // Step 2: Open and configure the device
+            await printerDevice.open();
+            if (printerDevice.configuration === null) {
+                await printerDevice.selectConfiguration(1);
+            }
+            await printerDevice.claimInterface(0);
+
+            // Step 3: Send print data
+            const printData = "Hello, Printer!";
+            const encoder = new TextEncoder();
+            const encodedData = encoder.encode(printData);
+            await printerDevice.transferOut(1, encodedData);
+
+            console.log("Print command sent successfully!");
+        } catch (error) {
+            console.error("Error during printing process:", error);
+        }
+    }
+</script>
 <?= $this->endSection() ?>
