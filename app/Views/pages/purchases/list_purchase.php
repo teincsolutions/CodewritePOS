@@ -197,9 +197,185 @@
         </div>
     </div>
 </form>
+<form action="<?= site_url('purchases/items/save') ?>" class="modal fade" id="editItemsForm" tabindex="-1" aria-labelledby="editItemsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editItemsModalLabel">Edit Purchase Items</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <?= $this->include('pages/purchases/edit_items') ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</form>
 <?= $this->endSection() ?>
+
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
 <script src="<?= base_url('assets/js/datatables/purchases.js?v=24') ?>"></script>
+<script>
+$(function () {
+    // Handle Edit Items button click for purchases
+    $(document).on("click", ".edit-purchase-items", function () {
+        var id = $(this).data("id");
+        var invoice = $(this).data("invoice");
+        
+        // Show loading state
+        Swal.fire({
+            title: "Loading items...",
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+        
+        // AJAX load items for this purchase
+        $.ajax({
+            url: baseUrl + "/purchases/items/datatable",
+            type: "GET",
+            data: { purchase_id: id },
+            dataType: "json",
+            success: function (response) {
+                if (response.status && response.data) {
+                    var items = response.data;
+                    var form = $("#editItemsForm");
+                    
+                    // Set purchase_id hidden field
+                    form.find("input[name='purchase_id']").val(id);
+                    
+                    // Clear and populate item table
+                    var tbody = form.find("tbody");
+                    tbody.empty();
+                    
+                    var idx = 1;
+                    $.each(items, function (k, row) {
+                        var subtotal = row.subtotal ? parseFloat(row.subtotal) : 0;
+                        var unit_price = row.unit_price ? parseFloat(row.unit_price) : 0;
+                        var qty = row.qty ? parseFloat(row.qty) : 0;
+                        var discount = row.discount ? parseFloat(row.discount) : 0;
+                        var tax = row.tax ? parseFloat(row.tax) : 0;
+                        
+                        var rowHtml = `
+                            <tr>
+                                <td>${idx}</td>
+                                <td>
+                                    ${row.product_name ? row.product_name : 'N/A'}
+                                    ${row.product_sku ? ' (' + row.product_sku + ')' : ''}
+                                </td>
+                                <td>
+                                    <input type="number" name="items[${row.id}][qty]" value="${qty}" min="0" class="form-control form-control-sm" required>
+                                </td>
+                                <td>
+                                    <input type="number" name="items[${row.id}][unit_cost]" value="${unit_price}" min="0" step="0.01" class="form-control form-control-sm" required>
+                                </td>
+                                <td>
+                                    <input type="number" name="items[${row.id}][unit_price]" value="${unit_price}" min="0" step="0.01" class="form-control form-control-sm" required>
+                                </td>
+                                <td>
+                                    <input type="number" name="items[${row.id}][discount]" value="${discount}" min="0" step="0.01" class="form-control form-control-sm">
+                                </td>
+                                <td>
+                                    <input type="number" name="items[${row.id}][tax]" value="${tax}" min="0" step="0.01" class="form-control form-control-sm">
+                                </td>
+                                <td>
+                                    <input type="text" name="items[${row.id}][subtotal]" value="${subtotal.toFixed(2)}" readonly class="form-control form-control-sm">
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm delete-item-row" data-id="${row.id}"><i class="fa fa-trash"></i> Remove</button>
+                                </td>
+                            </tr>`;
+                        tbody.append(rowHtml);
+                        idx++;
+                    });
+                    
+                    // Show modal
+                    $("#editItemsModal").find(".modal-title").text("Edit Purchase Items - " + invoice);
+                    $("#editItemsModal").modal("show");
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        text: response.message || "Failed to load items!"
+                    });
+                }
+            },
+            error: function () {
+                Swal.fire({
+                    icon: "error",
+                    text: "Unable to load items. Please try again."
+                });
+            }
+        });
+    });
+    
+    // Handle form submit for editing items
+    $(document).on("submit", "#editItemsForm", function (e) {
+        e.preventDefault();
+        
+        var form = $(this);
+        var formData = new FormData(form[0]);
+        
+        Swal.fire({
+            title: "Saving changes...",
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+        
+        $.ajax({
+            url: form.attr("action"),
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: "json",
+            success: function (response) {
+                if (response.status) {
+                    Swal.fire({
+                        icon: "success",
+                        text: response.message
+                    });
+                    $("#editItemsModal").modal("hide");
+                    // Reload the purchase datatable
+                    table = $("#dt-purchases").DataTable();
+                    table.ajax.reload();
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        text: response.message
+                    });
+                }
+            },
+            error: function () {
+                Swal.fire({
+                    icon: "error",
+                    text: "Unable to save changes. Please try again."
+                });
+            }
+        });
+    });
+    
+    // Handle remove row in edit items form
+    $(document).on("click", ".delete-item-row", function () {
+        $(this).closest("tr").remove();
+        recalculateEditItemsTotal();
+    });
+    
+    function recalculateEditItemsTotal() {
+        var total = 0;
+        $("#editItemsForm tbody tr").each(function () {
+            var subtotal = parseFloat($(this).find("input[name*='subtotal']").val()) || 0;
+            total += subtotal;
+        });
+        $("#editItemsTotal").html(total.toFixed(2));
+    }
+});
+</script>
 <?= $this->endSection() ?>

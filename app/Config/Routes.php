@@ -121,11 +121,11 @@ $routes->get('closing', [ClosingController::class, 'index'], ['filter' => 'permi
 
 //shows
 $routes->get('users/(:num)', [UserController::class, 'show/$1'], ['filter' => 'permission:users.view']);
-$routes->get('adjustments/(:num)', [AdjustmentController::class, 'show/$1'], ['filter' => 'permission:adjustments.view']);
-$routes->get('customers/(:num)', [CustomerController::class, 'show/$1'], ['filter' => 'permission:customers.view']);
-$routes->get('products/(:num)', [ProductController::class, 'show/$1'], ['filter' => 'permission:products.view']);
-$routes->get('transfers/products/(:num)', [ProductTransferController::class, 'show/$1'], ['filter' => 'permission:product-transfers.view']);
-$routes->get('transfers/units/(:num)', [ProductUnitTransferController::class, 'show/$1'], ['filter' => 'permission:unit-transfers.view']);
+$routes->get('adjustments/(:num)', [AdjustmentController::class, 'show/$1'],['filter'=>'permission:adjustments.view']);
+$routes->get('customers/(:num)', [CustomerController::class, 'show/$1'],['filter'=>'permission:customers.view']);
+$routes->get('products/(:num)', [ProductController::class, 'show/$1'],['filter'=>'permission:products.view']);
+$routes->get('transfers/products/(:num)', [ProductTransferController::class, 'show/$1'],['filter'=>'permission:product-transfers.view']);
+$routes->get('transfers/units/(:num)', [ProductUnitTransferController::class, 'show/$1'],['filter'=>'permission:unit-transfers.view']);
 $routes->get('purchases/(:num)', [PurchaseController::class, 'show/$1'], ['filter' => 'permission:purchases.view']);
 $routes->get('purchases/returns/(:num)', [PurchaseReturnController::class, 'show/$1'], ['filter' => 'permission:purchase-returns.view']);
 $routes->get('quotes/(:num)', [QuoteController::class, 'show/$1'], ['filter' => 'permission:quotes.view']);
@@ -134,6 +134,10 @@ $routes->get('sales/returns/(:num)', [SalesReturnController::class, 'show/$1'], 
 $routes->get('stores/(:num)', [StoreController::class, 'show/$1'], ['filter' => 'permission:stores.view']);
 $routes->get('suppliers/(:num)', [SupplierController::class, 'show/$1'], ['filter' => 'permission:suppliers.view']);
 $routes->get('closing/(:num)', [ClosingController::class, 'show/$1'], ['filter' => 'permission:closing.view']);
+
+//edit
+$routes->get('purchases/items/edit/(:num)', [PurchaseController::class, 'editItems/$1'],['filter'=>'permission:purchases.edit']);
+$routes->get('sales/items/edit/(:num)', [SalesController::class, 'editItems/$1'],['filter'=>'permission:sales.edit']);
 
 //edit
 $routes->get('users/edit/(:num)', [UserController::class, 'edit/$1'],['filter'=>'permission:users.edit']);
@@ -199,20 +203,19 @@ $routes->get('transfers/units/datatable', [ProductUnitTransferController::class,
 $routes->get('transfers/units/reports/datatable', [ProductUnitTransferController::class, 'stock_report_datatable']);
 $routes->get('purchases/datatable', [PurchaseController::class, 'datatable']);
 $routes->get('purchases/returns/datatable', [PurchaseReturnController::class, 'datatable']);
-$routes->get('purchases/stocks/datatable', [PurchaseController::class, 'stock_report_datatable']);
+$routes->get('purchases/items/datatable', [PurchaseController::class, 'itemsDatatable']);  // NEW
 $routes->get('purchases/returns/stocks/datatable', [PurchaseReturnController::class, 'stock_report_datatable']);
 $routes->get('quotes/datatable', [QuoteController::class, 'datatable']);
 $routes->get('quotes/stocks/datatable', [QuoteController::class, 'stock_report_datatable']);
 $routes->get('sales/datatable', [SalesController::class, 'datatable']);
 $routes->get('daily-sales/datatable', [SalesController::class, 'daily_datatable']);
-$routes->get('daily-purchases/datatable', [PurchaseController::class, 'daily_datatable']);
 $routes->get('sales/returns/datatable', [SalesReturnController::class, 'datatable']);
+$routes->get('sales/items/datatable', [SalesController::class, 'itemsDatatable']);  // NEW
 $routes->get('sales/stocks/datatable', [SalesController::class, 'stock_report_datatable']);
 $routes->get('sales/returns/stocks/datatable', [SalesReturnController::class, 'stock_report_datatable']);
 $routes->get('stores/datatable', [StoreController::class, 'datatable']);
 $routes->get('suppliers/datatable', [SupplierController::class, 'datatable']);
 $routes->get('suppliers/ledger/datatable', [SupplierLedgerController::class, 'datatable']);
-$routes->get('cashup/datatable', [StoreLedgerController::class, 'datatable']);
 $routes->get('suppliers/creditors/datatable', [SupplierLedgerController::class, 'creditors_datatable']);
 $routes->get('units/datatable', [UnitController::class, 'datatable']);
 $routes->get('closing/datatable', [ClosingController::class, 'datatable']);
@@ -262,10 +265,12 @@ $routes->post('transfers/products', [ProductTransferController::class, 'save']);
 $routes->post('transfers/units', [ProductUnitTransferController::class, 'save']);
 $routes->post('purchases', [PurchaseController::class, 'save']);
 $routes->post('purchases/returns', [PurchaseReturnController::class, 'save']);
+$routes->post('purchases/items', [PurchaseController::class, 'saveItems']);  // NEW
 $routes->post('quotes', [QuoteController::class, 'save']);
 $routes->post('sales', [SalesController::class, 'save']);
 $routes->post('sales/hold', [SalesController::class, 'hold']);
 $routes->post('sales/returns', [SalesReturnController::class, 'save']);
+$routes->post('sales/items', [SalesController::class, 'saveItems']);  // NEW
 $routes->post('stores', [StoreController::class, 'save']);
 $routes->post('suppliers', [SupplierController::class, 'save']);
 $routes->post('units', [UnitController::class, 'save']);

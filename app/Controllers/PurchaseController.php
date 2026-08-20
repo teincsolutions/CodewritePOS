@@ -402,6 +402,165 @@ class PurchaseController extends BaseController
     }
 
     /**
+     * return json for items datatables
+     * @return Response - http response
+     */
+    public function itemsDatatable(): Response
+    {
+        $inputs = $this->request->getVar();
+        $model = new PurchaseItemModel();
+
+        return $this->response->setJSON(toDatatableResult($model, $inputs));
+    }
+
+    /**
+     * return view for edit items
+     * @return Response - http response
+     */
+    public function editItems($id = null)
+    {
+        $model = new PurchaseModel();
+        $itemModel = new PurchaseItemModel();
+
+        $stores = (new UserModel())->getMyStores();
+        $supModel = new SupplierModel();
+
+        $data = [
+            'title' => 'Edit Purchase Items',
+            'stores' => $stores,
+            'suppliers' => $supModel->findAll(),
+            'context' => 'user:' . user_id(),
+            'settings' => service('settings'),
+        ];
+
+        if ($id) {
+            $purchase = $model->where('id', $id, 'order_status' => 'pending')->first();
+            if ($purchase) {
+                $data = array_merge($data, [
+                    'purchase' => $purchase,
+                    'items' => $itemModel->where('purchase_id', $id)->findAll(),
+                    'title' => 'Edit Purchase Items - ' . $purchase->invoice,
+                ]);
+            } else {
+                $data['error'] = "Purchase not found or not pending!";
+            }
+        }
+
+        return view('pages/purchases/edit_items', $data);
+    }
+
+    /**
+     * return json for save items
+     * @return Response - http response
+     */
+    public function saveItems()
+    {
+        if (!auth()->user()->can('purchases.create'))
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => "Don't have permission to create this record!"
+            ]);
+
+        $model = new PurchaseModel();
+        $itemModel = new PurchaseItemModel();
+        $stockModel = new StockModel();
+        $ledger = new SupplierLedgerModel();
+
+        $inputs = $this->request->getVar();
+
+        if (auth()->user())
+            $inputs['user_id'] = (auth()->user()->id ?? 0);
+
+        $id = $inputs['purchase_id'] ?? null;
+        $items = $inputs['items'] ?? [];
+
+        if (!$id || !$items) return $this->response->setJSON(
+            [
+                'status' => false,
+                'data' => null,
+                'message' => "Missing purchase ID or items!",
+                'input' => $inputs,
+            ]
+        );
+
+        $purchase = $model->where('id', $id)->first();
+        if (!$purchase) return $this->response->setJSON(
+            [
+                'status' => false,
+                'data' => null,
+                'message' => "Purchase not found!",
+            ]
+        );
+
+        $res = [
+            'status' => false,
+            'data' => null,
+            'message' => "Items couldn't be saved!",
+            'input' => $inputs,
+        ];
+
+        $this->db = Database::connect();
+
+        try {
+            $this->db->transException(true)->transStart();
+
+            foreach ($items as $k => $row) {
+                $subtotal = 0;
+                if (!empty($row['qty']) && !empty($row['unit_price'])) {
+                    $subtotal = floatval($row['qty']) * floatval($row['unit_price']);
+                }
+                if (!empty($row['discount'])) {
+                    $subtotal -= floatval($row['discount']);
+                }
+                if (!empty($row['tax'])) {
+                    $subtotal += floatval($row['tax']);
+                }
+
+                $updateData = [
+                    'qty' => $row['qty'] ?? 0,
+                    'unit_price' => $row['unit_price'] ?? 0,
+                    'discount' => $row['discount'] ?? 0,
+                    'tax' => $row['tax'] ?? 0,
+                    'subtotal' => $subtotal,
+                ];
+
+                $itemModel->update($row['id'], $updateData);
+            }
+
+            $this->db->transComplete();
+
+            if ($this->db->transStatus()) {
+                $purchase = $model->find($id);
+                $items = $itemModel->where('purchase_id', $id)->findAll();
+
+                $totalAmount = 0;
+                foreach ($items as $item) {
+                    $totalAmount += floatval($item->subtotal);
+                }
+
+                $res = array_merge($res, [
+                    'status' => true,
+                    'data' => [
+                        'purchase' => $purchase,
+                        'items' => $items,
+                        'total_amount' => number_format($totalAmount, 2),
+                    ],
+                    'message' => "Items updated successfully!",
+                ]);
+            } else {
+                $res = array_merge($res, ['status' => false]);
+            }
+        } catch (DatabaseException $e) {
+            $this->db->transRollingBack();
+            $res = array_merge($res, [
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        return $this->response->setJSON($res);
+    }
+
+    /**
      * return json for datatables
      * @return Response - http response
      */
