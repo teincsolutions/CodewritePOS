@@ -21,6 +21,16 @@
                 <?= csrf_field() ?>
                 <input type="hidden" name="sale_id" value="<?= isset($sale) ? $sale->id : '' ?>">
                 
+                <!-- Search Product Box -->
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input type="text" id="search-products" class="form-control" placeholder="Search product by name, SKU, barcode..." autocomplete="off">
+                        <input type="hidden" id="sale_id_for_search" value="<?= isset($sale) ? $sale->id : '' ?>">
+                        <span class="input-group-text"><i class="fa fa-search"></i></span>
+                    </div>
+                    <div id="search-results" class="autocomplete-items" style="display:none; position:absolute; z-index:1000; width:100%; max-height:300px; overflow-y:auto;"></div>
+                </div>
+                
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead>
@@ -86,22 +96,177 @@
 <?= $this->section('script') ?>
 <script>
 $(function () {
+    // Track existing item IDs to prevent duplicates
+    var saleItemIds = [];
+    <?php foreach (isset($items) ? $items : [] as $row): ?>
+        saleItemIds.push(<?= $row->id ?>);
+    <?php endforeach; ?>
+    
+    var prodIndex = 0;
+    
+    // Product search autocomplete
+    function autocomplete(inp) {
+        var currentFocus;
+        inp.addEventListener("input", function (e) {
+            var a, b, i, val = this.value;
+            closeAllLists();
+            if (!val) { return false; }
+            currentFocus = -1;
+            a = document.createElement("DIV");
+            a.setAttribute("id", this.id + "autocomplete-list");
+            a.setAttribute("class", "autocomplete-items");
+            this.parentNode.appendChild(a);
+            b = document.createElement("DIV");
+            b.innerHTML = "<i>Searching...</i>";
+            a.appendChild(b);
+
+            $.get(
+                "<?= base_url('products/sales/search') ?>?sale_id=" + $("#sale_id_for_search").val(),
+                { 
+                    search: { value: val },
+                    columns: [
+                        { name: "products.name", searchable: "true" },
+                        { name: "products.description", searchable: "true" },
+                        { name: "products.barcode", searchable: "true" },
+                        { name: "products.sku", searchable: "true" }
+                    ],
+                    start: "0",
+                    length: "10"
+                },
+                (d, s) => {
+                    a.innerHTML = "";
+                    if (s !== "success") {
+                        b = document.createElement("DIV");
+                        b.innerHTML = "<i>Unable load data!</i>";
+                        a.appendChild(b);
+                        return;
+                    }
+                    if (d.data.length === 0) {
+                        b = document.createElement("DIV");
+                        b.innerHTML = "<span>No product found!</span>";
+                        a.appendChild(b);
+                        return;
+                    }
+                    d.data.forEach((item, i) => {
+                        if (saleItemIds.includes(item.sale_item_id) || item.max_qty <= 0) return;
+                        b = document.createElement("DIV");
+                        info = [];
+                        (item.category ? info.push(item.category.name) : null) || (item.brand ? info.push(item.brand.name) : null);
+                        let instock = 0;
+                        if (item.inventory) {
+                            const stock = item.inventory.filter(stock => item.store_id == stock.store_id);
+                            if (stock.length > 0) instock = stock[0].instock;
+                        }
+                        info.push(`instock<strong>(${instock})</strong>`);
+                        info = info.join(",");
+                        const desc = item.description !== null ? ` - ${item.description}` : "";
+                        b.innerHTML = item.discontinued == 1
+                            ? `<span class="d-flex justify-content-between" style="z-index:1000"><del><code>${item.sku}</code> ${item.name}${desc}(${item.unit.label}) - <i>${info}</i></del>GHS ${item.unit_price}</span>`
+                            : `<span class="d-flex justify-content-between" style="z-index:1000"><span><code>${item.sku}</code> ${item.name}${desc}(${item.unit.label}) - <i>${info}</i></span>GHS ${item.unit_price}</span>`;
+                        b.addEventListener("click", function (e) {
+                            inp.value = "";
+                            let store = ` (${item.store.name}(${item.store.location ? item.store.location : ""}))`;
+                            let rowHtml = ` <tr>
+                                        <td></td>
+                                        <td class="productimgname">
+                                        ${item.image_uri ? `<a class="product-img"><img src="${baseUrl}${item.image_uri}" alt="product"></a>` : '<a class="p-3"></a>'}
+                                        <a target="_blank" href="<?= base_url('products/') ?>${item.id}">${Settings.ShowProductSKU === "yes" ? item.sku : ""} ${item.name}(${item.unit.label})</a><span class="badge bg-info">${instock}</span></td>
+                                        <td><div class="increment-decrement"><div class="input-groups">
+                                            <input type='hidden' name="items[${prodIndex}][product_id]" value="${item.id}">
+                                            <input type='hidden' name="items[${prodIndex}][sale_item_id]" value="${item.sale_item_id}">
+                                            <input type="hidden" name="items[${prodIndex}][unit_price]" value="${item.unit_price}" class="runit_price">
+                                            <input type="hidden" name="items[${prodIndex}][unit_cost]" value="${item.unit_cost}" class="runit_cost">
+                                            <input type="hidden" name="items[${prodIndex}][store_id]" value="${item.store_id}">
+                                            <input type="hidden" name="items[${prodIndex}][tax]" class="rtax" value="${(item.unit_price * (item.tax ? item.tax : 0)) / 100}">
+                                            <input type="hidden" name="items[${prodIndex}][discount]" class="rdiscount" value="${item.discount}">
+                                            <input type="hidden" name="items[${prodIndex}][subtotal]" class="rsubtotal" value="${item.unit_price - item.discount + (item.unit_price * (item.tax ? item.tax : 0.0)) / 100}">
+                                            <input type="button" value="-" class="button-minus dec button">
+                                            <input onkeyup="updateItemRow(this)" min=".1" max="${item.max_qty}" type="text" name="items[${prodIndex}][qty]" value="1" class="quantity-field rqty" required>
+                                            <input type="button" value="+" class="button-plus inc button">
+                                        </div></div></td>
+                                        <td>${item.unit_price}</td>
+                                        <td data-discount="${item.discount}" class="suffix-percent">${item.discount}</td>
+                                        <td data-tax="${item.tax ? item.tax : 0}">${parseFloat((item.unit_price * (item.tax ? item.tax : 0)) / 100).toFixed(2)}</td>
+                                        <td>${(item.unit_price - item.discount + (item.unit_price * (item.tax ? item.tax : 0.0)) / 100).toFixed(2)}</td>
+                                        <td><a href="javascript:void(0);" class="delete-set" data-item-id="${item.sale_item_id}"><i class="fa text-danger fa-trash"></i></a></td>
+                                    </tr>`;
+                            saleItemIds.push(item.sale_item_id);
+                            $("#editItemsForm tbody").append(rowHtml);
+                            prodIndex++;
+                            closeAllLists();
+                        });
+                        a.appendChild(b);
+                    });
+                }
+            ).fail(() => {
+                b = document.createElement("DIV");
+                b.innerHTML = "<span>Couldn't load data!</span>";
+                a.appendChild(b);
+            });
+        });
+        
+        inp.addEventListener("keydown", function (e) {
+            var x = document.getElementById(this.id + "autocomplete-list");
+            if (x) x = x.getElementsByTagName("div");
+            if (e.keyCode == 40) { currentFocus++; addActive(x); }
+            else if (e.keyCode == 38) { currentFocus--; addActive(x); }
+            else if (e.keyCode == 13) { e.preventDefault(); if (currentFocus > -1 && x) x[currentFocus].click(); }
+        });
+        
+        function addActive(x) { if (!x) return false; removeActive(x); if (currentFocus >= x.length) currentFocus = 0; if (currentFocus < 0) currentFocus = x.length - 1; x[currentFocus].classList.add("autocomplete-active"); }
+        function removeActive(x) { for (var i = 0; i < x.length; i++) x[i].classList.remove("autocomplete-active"); }
+        function closeAllLists(elmnt) {
+            var x = document.getElementsByClassName("autocomplete-items");
+            for (var i = 0; i < x.length; i++) { if (elmnt != x[i] && elmnt != inp) x[i].parentNode.removeChild(x[i]); }
+        }
+        document.addEventListener("click", function (e) { closeAllLists(e.target); });
+    }
+    
+    autocomplete(document.getElementById("search-products"));
+    
+    // Handle save via AJAX
+    $("#btnSaveItems").on("click", function () {
+        var form = $("#editItemsForm");
+        var formData = new FormData(form[0]);
+        
+        Swal.fire({
+            title: "Saving changes...",
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+        
+        $.ajax({
+            url: "<?= site_url('sales/items') ?>",
+            type: "POST",
+            data: new FormData(form[0]),
+            processData: false,
+            contentType: false,
+            dataType: "json",
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            success: function (response) {
+                if (response.status) {
+                    Swal.fire({ icon: "success", text: response.message }).then(() => { window.location.href = "<?= site_url('sales') ?>"; });
+                } else {
+                    Swal.fire({ icon: "error", text: response.message });
+                }
+            },
+            error: function () {
+                Swal.fire({ icon: "error", text: "Unable to save changes. Please try again." });
+            }
+        });
+    });
+    
     // Calculate subtotal when qty, price, discount, or tax changes
     $("#editItemsForm").on("change keyup", "input[name^='items']", function () {
         var row = $(this).closest("tr");
         var id = $(this).attr("name").match(/items\[(\d+)\]\[(\w+)\]$/);
-        
         if (!id) return;
-        
         var qty = parseFloat(row.find("input[name*='qty']").val()) || 0;
         var unit_price = parseFloat(row.find("input[name*='unit_price']").val()) || 0;
         var discount = parseFloat(row.find("input[name*='discount']").val()) || 0;
         var tax = parseFloat(row.find("input[name*='tax']").val()) || 0;
-        
         var subtotal = qty * unit_price - discount + tax;
         row.find("input[name*='subtotal']").val(subtotal.toFixed(2));
-        
-        // Recalculate total
         recalculateEditItemsTotal();
     });
     
@@ -116,56 +281,23 @@ $(function () {
     
     // Handle remove row
     $(document).on("click", ".delete-item-row", function () {
+        var id = $(this).data("id");
+        saleItemIds = saleItemIds.filter(item => item != id);
         $(this).closest("tr").remove();
         recalculateEditItemsTotal();
     });
     
-    // Handle save via AJAX
-    $("#btnSaveItems").on("click", function () {
-        var form = $("#editItemsForm");
-        var formData = new FormData(form[0]);
-        
-        Swal.fire({
-            title: "Saving changes...",
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
-        
-        $.ajax({
-            url: "<?= site_url('sales/items') ?>",
-            type: "POST",
-            data: formData,
-            processData: false,
-            contentType: false,
-            dataType: "json",
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            success: function (response) {
-                if (response.status) {
-                    Swal.fire({
-                        icon: "success",
-                        text: response.message
-                    }).then(() => {
-                        window.location.href = "<?= site_url('sales') ?>";
-                    });
-                } else {
-                    Swal.fire({
-                        icon: "error",
-                        text: response.message
-                    });
-                }
-            },
-            error: function () {
-                Swal.fire({
-                    icon: "error",
-                    text: "Unable to save changes. Please try again."
-                });
-            }
-        });
-    });
+    function updateItemRow(row) {
+        let row1 = $(row).parents("tr").first();
+        let qty = parseFloat(row1.find(".rqty").val());
+        let price = parseFloat(row1.find(".runit_price").val());
+        let discount = parseFloat(row1.find(".rdiscount").val());
+        let tax = parseFloat(row1.find(".rtax").val());
+        let subtotal = qty * price - qty * discount;
+        $(".rsubtotal", row1).val(subtotal);
+        $("td:eq(6)", row1).html(subtotal.toFixed(2));
+        recalculateEditItemsTotal();
+    }
 });
 </script>
 <?= $this->endSection() ?>
