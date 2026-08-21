@@ -31,7 +31,7 @@
                             </thead>
                             <tbody>
                                 <?php $idx = 1; ?>
-                                <?php foreach ($items as $row): ?>
+                                <?php foreach (isset($items) ? $items : [] as $row): ?>
                                 <tr>
                                     <td><?= $idx++ ?></td>
                                     <td>
