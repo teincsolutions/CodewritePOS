@@ -17,7 +17,7 @@
                 <div class="alert alert-danger"><?= $error ?></div>
             <?php endif ?>
 
-            <form id="editItemsForm" action="<?= site_url('sales/items/save') ?>" method="POST">
+            <form id="editItemsForm" action="<?= site_url('sales/items') ?>" method="POST">
                 <?= csrf_field() ?>
                 <input type="hidden" name="sale_id" value="<?= isset($sale) ? $sale->id : '' ?>">
                 
