@@ -17,7 +17,7 @@
                 <div class="alert alert-danger"><?= $error ?></div>
             <?php endif ?>
 
-            <form id="editItemsForm" action="<?= site_url('sales/items') ?>" method="POST">
+            <form id="editItemsForm">
                 <?= csrf_field() ?>
                 <input type="hidden" name="sale_id" value="<?= isset($sale) ? $sale->id : '' ?>">
                 
@@ -75,7 +75,7 @@
                 </div>
                 <div class="mt-3">
                     <a href="<?= site_url('sales') ?>" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Cancel</a>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save Changes</button>
+                    <button type="button" id="btnSaveItems" class="btn btn-primary"><i class="fa fa-save"></i> Save Changes</button>
                 </div>
             </form>
         </div>
@@ -118,6 +118,53 @@ $(function () {
     $(document).on("click", ".delete-item-row", function () {
         $(this).closest("tr").remove();
         recalculateEditItemsTotal();
+    });
+    
+    // Handle save via AJAX
+    $("#btnSaveItems").on("click", function () {
+        var form = $("#editItemsForm");
+        var formData = new FormData(form[0]);
+        
+        Swal.fire({
+            title: "Saving changes...",
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+        
+        $.ajax({
+            url: "<?= site_url('sales/items') ?>",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: "json",
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function (response) {
+                if (response.status) {
+                    Swal.fire({
+                        icon: "success",
+                        text: response.message
+                    }).then(() => {
+                        window.location.href = "<?= site_url('sales') ?>";
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        text: response.message
+                    });
+                }
+            },
+            error: function () {
+                Swal.fire({
+                    icon: "error",
+                    text: "Unable to save changes. Please try again."
+                });
+            }
+        });
     });
 });
 </script>
