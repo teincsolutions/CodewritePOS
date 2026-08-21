@@ -549,7 +549,7 @@ class SalesController extends BaseController
         ];
 
         if ($id) {
-            $sale = $model->where(['id' => $id, 'order_status' => 'pending'])->first();
+            $sale = $model->where('id', $id)->first();
             if ($sale) {
                 $data = array_merge($data, [
                     'sale' => $sale,
@@ -557,7 +557,7 @@ class SalesController extends BaseController
                     'title' => 'Edit Sales Items - ' . $sale->invoice,
                 ]);
             } else {
-                $data['error'] = "Sale not found or not pending!";
+                $data['error'] = "Sale not found!";
             }
         }
 
