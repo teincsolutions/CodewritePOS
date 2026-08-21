@@ -74,7 +74,7 @@ $(function () {
         render: function (data, type, row) {
           if (type === "display")
             return data
-              ? `<a target="_blank" href="${baseUrl}customers/${data.id}" class="btn btn-link btn-sm">${data.name}</a>`
+              ? '<a target="_blank" href="' + baseUrl + 'customers/' + data.id + '" class="btn btn-link btn-sm">' + data.name + '</a>'
               : "walk-in-customer";
           return data ? data.name : null;
         },
@@ -89,9 +89,8 @@ $(function () {
               completed: "bg-lightgreen",
               pending: "bg-lightred",
             };
-            return `<span class="badges ${badges[data]}">${data}</span>`;
+            return '<span class="badges ' + badges[data] + '">' + data + '</span>';
           }
-
           return data;
         },
       },
@@ -104,23 +103,22 @@ $(function () {
               paid: "bg-lightgreen",
               due: "bg-lightred",
             };
-            return `<span class="badges ${badges[data]}">${data}</span>`;
+            return '<span class="badges ' + badges[data] + '">' + data + '</span>';
           }
-
           return data;
         },
       },
       {
         data: "total_amount",
         render: function (data) {
-          return ` ${parseFloat(data).toFixed(2)}`;
+          return ' ' + parseFloat(data).toFixed(2);
         },
       },
       {
         data: "paid",
         name: "sales.paid",
         render: function (data) {
-          return ` ${parseFloat(data).toFixed(2)}`;
+          return ' ' + parseFloat(data).toFixed(2);
         },
       },
       {
@@ -128,8 +126,8 @@ $(function () {
         render: function (data, type, row) {
           due = data.total_amount - data.paid;
           return due < 0
-            ? `(${Math.abs(due).toFixed(2)})`
-            : ` ${due.toFixed(2)}`;
+            ? '(' + Math.abs(due).toFixed(2) + ')'
+            : ' ' + due.toFixed(2);
         },
       },
       {
@@ -137,8 +135,8 @@ $(function () {
         name: "sales.user_id",
         render: function (data, type, row) {
           if (type === "display")
-            return data ? `${data.firstname} ${data.lastname}` : null;
-          return data ? `${data.firstname} ${data.lastname}` : null;
+            return data ? data.firstname + ' ' + data.lastname : null;
+          return data ? data.firstname + ' ' + data.lastname : null;
         },
       },
       {
@@ -146,48 +144,42 @@ $(function () {
         name: "sales.id",
         render: function (data, type, row) {
           if (type === "display") {
-            return `<div class="d-flex align-items-center">
-                        ${
-                          row.payment_status === "due" && row.customer
-                            ? `  <a  href="javascript:void(0);" class="me-3" onclick="editRow('#add-payment',{sale_id:${data},invoice_balance:${(
-153:
-                                row.total_amount - row.paid
-154:
-                              ).toFixed(2)},credit:${(
-155:
-                                row.total_amount - row.paid
-156:
-                              ).toFixed(2)}},{text:'${row.invoice} (${
-157:
-                                row.customer.name
-158:
-                              } -  ${row.total_amount})',id:${
-158:
-                                row.id
-159:
-                              },name:'sale_id'})"><i class="fa fa-money-bill fa-lg"></i></a>`
-                            : ""
-                        }
-                        <a target="_blank" href="${baseUrl}sales/${data}" class="me-3"><i class="fa fa-eye fa-lg"></i></a>
-                        ${
-                          row.order_status === "completed"
-                            ? `<a href="${baseUrl}sales/returns/create?invoice=${row.invoice}" class="me-3"><i class="fa fa-reply fa-lg"></i></a>`
-                            : `<a href="${baseUrl}sales/pos/${data}" class="me-3"><i class="fa fa-play fa-lg"></i></a>`
-                        }
-                        <!-- NEW: Edit Items Button -->
-                        ${
-                          row.order_status !== "completed"
-                            ? ` <a href="javascript:void(0)" class="me-3 edit-sales-items" data-id="${data}" data-invoice="${row.invoice}" title="Edit Items"><i class="fa fa-edit fa-lg text-primary"></i></a>`
-                            : ""
-                        }
-                        <a ${
-                          row.order_status === "completed"
-                            ? Settings.AllowDeleteSales === "yes"
-                              ? ""
-                              : "hidden"
-                            : ""
-                        } class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ${data}, '${baseUrl}sales')"><i class="fa fa-trash fa-lg"></i></a>
-                    </div>`;
+            var html = '<div class="d-flex align-items-center">';
+            
+            // Payment button
+            if (row.payment_status === "due" && row.customer) {
+              var balance = row.total_amount - row.paid;
+              html += '  <a  href="javascript:void(0);" class="me-3" onclick="editRow(\'#add-payment\',{sale_id:' + data + ',invoice_balance:' + balance.toFixed(2) + ',credit:' + balance.toFixed(2) + '},{text:\'' + row.invoice + ' (' + row.customer.name + ' -  ' + row.total_amount + ')\',id:' + row.id + ',name:\'sale_id\'})"><i class="fa fa-money-bill fa-lg"></i></a>';
+            }
+            
+            // View button
+            html += '<a target="_blank" href="' + baseUrl + 'sales/' + data + '" class="me-3"><i class="fa fa-eye fa-lg"></i></a>';
+            
+            // Return or Edit button
+            if (row.order_status === "completed") {
+              html += ' <a href="' + baseUrl + 'sales/returns/create?invoice=' + row.invoice + '" class="me-3"><i class="fa fa-reply fa-lg"></i></a>';
+            } else {
+              html += ' <a href="' + baseUrl + 'sales/pos/' + data + '" class="me-3"><i class="fa fa-play fa-lg"></i></a>';
+            }
+            
+            // Edit Items Button (NEW)
+            if (row.order_status !== "completed") {
+              html += ' <a href="javascript:void(0)" class="me-3 edit-sales-items" data-id="' + data + '" data-invoice="' + row.invoice + '" title="Edit Items"><i class="fa fa-edit fa-lg text-primary"></i></a>';
+            }
+            
+            // Delete button
+            if (row.order_status === "completed") {
+              if (typeof Settings !== "undefined" && Settings.AllowDeleteSales === "yes") {
+                html += '<a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ' + data + ', \'' + baseUrl + 'sales\')"><i class="fa fa-trash fa-lg"></i></a>';
+              } else {
+                html += '<a class="text-danger hidden" href="javascript:void(0);" onclick="deleteRow(table, ' + data + ', \'' + baseUrl + 'sales\')"><i class="fa fa-trash fa-lg"></i></a>';
+              }
+            } else {
+              html += '<a class="text-danger" href="javascript:void(0);" onclick="deleteRow(table, ' + data + ', \'' + baseUrl + 'sales\')"><i class="fa fa-trash fa-lg"></i></a>';
+            }
+            
+            html += '</div>';
+            return html;
           }
           return data;
         },
@@ -289,7 +281,7 @@ $(function () {
 
   $(".select2-customer").select2({
     ajax: {
-      url: `${baseUrl}customers/select2`,
+      url: baseUrl + "customers/select2",
       dataType: "json",
     },
     allowClear: true,
@@ -385,7 +377,7 @@ $(function () {
   let select2Invoices = $(".select2-invoices")
     .select2({
       ajax: {
-        url: `${baseUrl}sales/select2`,
+        url: baseUrl + "sales/select2",
         dataType: "json",
         data: function (params) {
           params.filter = {
@@ -451,32 +443,31 @@ $(function () {
             var discount = row.discount ? parseFloat(row.discount) : 0;
             var tax = row.tax ? parseFloat(row.tax) : 0;
             
-            var rowHtml = `
-                <tr>
-                    <td>${idx}</td>
-                    <td>
-                        ${row.product_name ? row.product_name : 'N/A'}
-                        ${row.product_sku ? ' (' + row.product_sku + ')' : ''}
-                    </td>
-                    <td>
-                        <input type="number" name="items[${row.id}][qty]" value="${qty}" min="0" class="form-control form-control-sm" required>
-                    </td>
-                    <td>
-                        <input type="number" name="items[${row.id}][unit_price]" value="${unit_price}" min="0" step="0.01" class="form-control form-control-sm" required>
-                    </td>
-                    <td>
-                        <input type="number" name="items[${row.id}][discount]" value="${discount}" min="0" step="0.01" class="form-control form-control-sm">
-                    </td>
-                    <td>
-                        <input type="number" name="items[${row.id}][tax]" value="${tax}" min="0" step="0.01" class="form-control form-control-sm">
-                    </td>
-                    <td>
-                        <input type="text" name="items[${row.id}][subtotal]" value="${subtotal.toFixed(2)}" readonly class="form-control form-control-sm">
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-danger btn-sm delete-item-row" data-id="${row.id}"><i class="fa fa-trash"></i> Remove</button>
-                    </td>
-                </tr>`;
+            var rowHtml = '<tr>' +
+              '<td>' + idx + '</td>' +
+              '<td>' +
+                (row.product_name ? row.product_name : 'N/A') +
+                (row.product_sku ? ' (' + row.product_sku + ')' : '') +
+              '</td>' +
+              '<td>' +
+                '<input type="number" name="items[' + row.id + '][qty]" value="' + qty + '" min="0" class="form-control form-control-sm" required>' +
+              '</td>' +
+              '<td>' +
+                '<input type="number" name="items[' + row.id + '][unit_price]" value="' + unit_price + '" min="0" step="0.01" class="form-control form-control-sm" required>' +
+              '</td>' +
+              '<td>' +
+                '<input type="number" name="items[' + row.id + '][discount]" value="' + discount + '" min="0" step="0.01" class="form-control form-control-sm">' +
+              '</td>' +
+              '<td>' +
+                '<input type="number" name="items[' + row.id + '][tax]" value="' + tax + '" min="0" step="0.01" class="form-control form-control-sm">' +
+              '</td>' +
+              '<td>' +
+                '<input type="text" name="items[' + row.id + '][subtotal]" value="' + subtotal.toFixed(2) + '" readonly class="form-control form-control-sm">' +
+              '</td>' +
+              '<td>' +
+                '<button type="button" class="btn btn-danger btn-sm delete-item-row" data-id="' + row.id + '"><i class="fa fa-trash"></i> Remove</button>' +
+              '</td>' +
+            '</tr>';
             tbody.append(rowHtml);
             idx++;
           });
