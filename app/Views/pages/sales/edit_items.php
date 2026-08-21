@@ -1,77 +1,83 @@
-<?= $this->section('main') ?>
-<div class="modal fade" id="editItemsModal" tabindex="-1" aria-labelledby="editItemsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editItemsModalLabel">Edit Sales Items - <?= isset($sale) ? $sale->invoice : '' ?></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <?php if (isset($error) && $error): ?>
-                    <div class="alert alert-danger"><?= $error ?></div>
-                <?php endif ?>
+<?= $this->extend('template/default') ?>
+<?= $this->section('content') ?>
+<div class="content">
+    <div class="page-header">
+        <div class="page-title">
+            <h4>Edit Sales Items - <?= isset($sale) ? $sale->invoice : '' ?></h4>
+            <h6>Edit items for sale <?= isset($sale) ? $sale->invoice : '' ?></h6>
+        </div>
+        <div class="page-btn">
+            <a href="<?= site_url('sales') ?>" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Back</a>
+        </div>
+    </div>
 
-                <form id="editItemsForm">
-                    <input type="hidden" name="sale_id" value="<?= isset($sale) ? $sale->id : '' ?>">
-                    
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Product</th>
-                                    <th>Qty</th>
-                                    <th>Unit Price</th>
-                                    <th>Discount</th>
-                                    <th>Tax %</th>
-                                    <th>Subtotal</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php $idx = 1; ?>
-                                <?php foreach (isset($items) ? $items : [] as $row): ?>
-                                <tr>
-                                    <td><?= $idx++ ?></td>
-                                    <td>
-                                        <?= $row->product ? $row->product->name : 'N/A' ?>
-                                        <?= $row->product ? ' ('.$row->product->sku.')' : '' ?>
-                                    </td>
-                                    <td>
-                                        <input type="number" name="items[<?= $row->id ?>][qty]" value="<?= $row->qty ?? 0 ?>" min="0" class="form-control form-control-sm" required>
-                                    </td>
-                                    <td>
-                                        <input type="number" name="items[<?= $row->id ?>][unit_price]" value="<?= $row->unit_price ?? 0 ?>" min="0" step="0.01" class="form-control form-control-sm" required>
-                                    </td>
-                                    <td>
-                                        <input type="number" name="items[<?= $row->id ?>][discount]" value="<?= $row->discount ?? 0 ?>" min="0" step="0.01" class="form-control form-control-sm">
-                                    </td>
-                                    <td>
-                                        <input type="number" name="items[<?= $row->id ?>][tax]" value="<?= $row->tax ?? 0 ?>" min="0" step="0.01" class="form-control form-control-sm">
-                                    </td>
-                                    <td>
-                                        <input type="text" name="items[<?= $row->id ?>][subtotal]" value="<?= $row->subtotal ?? 0 ?>" readonly class="form-control form-control-sm">
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-danger btn-sm delete-item-row" data-id="<?= $row->id ?>"><i class="fa fa-trash"></i> Remove</button>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="8" class="text-end"><strong>Total:</strong></td>
-                                    <td><strong id="editItemsTotal"><?= isset($sale) ? number_format($sale->total_amount ?? 0, 2) : '0.00' ?></strong></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="editItemsForm" class="btn btn-primary">Save Changes</button>
-            </div>
+    <div class="card">
+        <div class="card-body">
+            <?php if (isset($error) && $error): ?>
+                <div class="alert alert-danger"><?= $error ?></div>
+            <?php endif ?>
+
+            <form id="editItemsForm" action="<?= site_url('sales/items/save') ?>" method="POST">
+                <?= csrf_field() ?>
+                <input type="hidden" name="sale_id" value="<?= isset($sale) ? $sale->id : '' ?>">
+                
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Product</th>
+                                <th>Qty</th>
+                                <th>Unit Price</th>
+                                <th>Discount</th>
+                                <th>Tax %</th>
+                                <th>Subtotal</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $idx = 1; ?>
+                            <?php foreach (isset($items) ? $items : [] as $row): ?>
+                            <tr>
+                                <td><?= $idx++ ?></td>
+                                <td>
+                                    <?= $row->product ? $row->product->name : 'N/A' ?>
+                                    <?= $row->product ? ' ('.$row->product->sku.')' : '' ?>
+                                </td>
+                                <td>
+                                    <input type="number" name="items[<?= $row->id ?>][qty]" value="<?= $row->qty ?? 0 ?>" min="0" class="form-control form-control-sm" required>
+                                </td>
+                                <td>
+                                    <input type="number" name="items[<?= $row->id ?>][unit_price]" value="<?= $row->unit_price ?? 0 ?>" min="0" step="0.01" class="form-control form-control-sm" required>
+                                </td>
+                                <td>
+                                    <input type="number" name="items[<?= $row->id ?>][discount]" value="<?= $row->discount ?? 0 ?>" min="0" step="0.01" class="form-control form-control-sm">
+                                </td>
+                                <td>
+                                    <input type="number" name="items[<?= $row->id ?>][tax]" value="<?= $row->tax ?? 0 ?>" min="0" step="0.01" class="form-control form-control-sm">
+                                </td>
+                                <td>
+                                    <input type="text" name="items[<?= $row->id ?>][subtotal]" value="<?= $row->subtotal ?? 0 ?>" readonly class="form-control form-control-sm">
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm delete-item-row" data-id="<?= $row->id ?>"><i class="fa fa-trash"></i> Remove</button>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="8" class="text-end"><strong>Total:</strong></td>
+                                <td><strong id="editItemsTotal"><?= isset($sale) ? number_format($sale->total_amount ?? 0, 2) : '0.00' ?></strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="mt-3">
+                    <a href="<?= site_url('sales') ?>" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Cancel</a>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save Changes</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
