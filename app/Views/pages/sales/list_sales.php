@@ -238,7 +238,7 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/sales.js?v=21') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/sales.js?v=22') ?>"></script>
 <script>
 $(function () {
     // Handle Edit Items button click for sales
