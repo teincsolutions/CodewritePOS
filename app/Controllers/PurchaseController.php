@@ -434,7 +434,7 @@ class PurchaseController extends BaseController
         ];
 
         if ($id) {
-            $purchase = $model->where('id', $id, 'order_status' => 'pending')->first();
+            $purchase = $model->where(['id' => $id, 'order_status' => 'pending'])->first();
             if ($purchase) {
                 $data = array_merge($data, [
                     'purchase' => $purchase,

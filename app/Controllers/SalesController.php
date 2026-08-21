@@ -549,7 +549,7 @@ class SalesController extends BaseController
         ];
 
         if ($id) {
-            $sale = $model->where('id', $id, 'order_status' => 'pending')->first();
+            $sale = $model->where(['id' => $id, 'order_status' => 'pending'])->first();
             if ($sale) {
                 $data = array_merge($data, [
                     'sale' => $sale,
