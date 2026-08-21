@@ -504,7 +504,7 @@ class PurchaseController extends BaseController
         try {
             $this->db->transException(true)->transStart();
 
-            foreach ($items as $k => $row) {
+            foreach ($items as $itemId => $row) {
                 $subtotal = 0;
                 if (!empty($row['qty']) && !empty($row['unit_price'])) {
                     $subtotal = floatval($row['qty']) * floatval($row['unit_price']);
@@ -524,7 +524,7 @@ class PurchaseController extends BaseController
                     'subtotal' => $subtotal,
                 ];
 
-                $itemModel->update($row['id'], $updateData);
+                $itemModel->update($itemId, $updateData);
             }
 
             $this->db->transComplete();
