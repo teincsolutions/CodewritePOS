@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editItemsModalLabel">Edit Sales Items - <?= $sale ? $sale->invoice : '' ?></h5>
+                <h5 class="modal-title" id="editItemsModalLabel">Edit Sales Items - <?= isset($sale) ? $sale->invoice : '' ?></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
