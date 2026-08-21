@@ -164,10 +164,8 @@ $(function () {
               html += ' <a href="' + baseUrl + 'purchases/edit/' + data + '" class="me-3"><i class="fa fa-play fa-lg"></i></a>';
             }
             
-            // Edit Items Button (NEW)
-            if (row.order_status !== "completed") {
-              html += ' <a href="javascript:void(0)" class="me-3 edit-purchase-items" data-id="' + data + '" data-invoice="' + row.invoice + '" title="Edit Items"><i class="fa fa-edit fa-lg text-primary"></i></a>';
-            }
+            // Edit Items Button (NEW) - always visible like View and Delete
+            html += ' <a href="javascript:void(0)" class="me-3 edit-purchase-items" data-id="' + data + '" data-invoice="' + row.invoice + '" title="Edit Items"><i class="fa fa-edit fa-lg text-primary"></i></a>';
             
             // Delete button
             if (row.order_status === "completed") {

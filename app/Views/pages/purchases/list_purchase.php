@@ -219,7 +219,7 @@
 
 <?= $this->section('script') ?>
 <script src="<?= base_url('assets/js/datatables/actions.js') ?>"></script>
-<script src="<?= base_url('assets/js/datatables/purchases.js?v=26') ?>"></script>
+<script src="<?= base_url('assets/js/datatables/purchases.js?v=27') ?>"></script>
 <script>
 $(function () {
     // Handle Edit Items button click for purchases
