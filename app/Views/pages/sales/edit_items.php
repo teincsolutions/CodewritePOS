@@ -7,12 +7,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <?php if ($error): ?>
+                <?php if (isset($error) && $error): ?>
                     <div class="alert alert-danger"><?= $error ?></div>
                 <?php endif ?>
 
                 <form id="editItemsForm">
-                    <input type="hidden" name="sale_id" value="<?= $sale ? $sale->id : '' ?>">
+                    <input type="hidden" name="sale_id" value="<?= isset($sale) ? $sale->id : '' ?>">
                     
                     <div class="table-responsive">
                         <table class="table table-bordered">
